@@ -515,4 +515,10 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
+
+	//adds the stored side column pieces to the board.
+	public void addSideColumns()
+	{
+
+	}
 }

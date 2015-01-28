@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Holder_Script.cs" />
+     <Compile Include="Assets\Scripts\SideColumn.cs" />
      <Compile Include="Assets\Scripts\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\piece_script.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />

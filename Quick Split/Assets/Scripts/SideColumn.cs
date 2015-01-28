@@ -1,0 +1,83 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class SideColumn : MonoBehaviour {
+
+	//List of piece prefabs to randomize from
+	public GameObject[] pieces;
+
+	//will track if it's left or right, then keep its proper X value
+	public string side;
+	int sideXValue;
+
+	//Will contain the gameobjects, similar to the grids in the gamecontroller
+	public GameObject[] column = new GameObject[8];
+	public string[] colorColumn = new string[8];
+
+	// Use this for initialization
+	void Start () {
+
+		// begin by poisitioning these at the right locations
+		if (side == "Left" || side == "left" || side == "L" || side == "l") {
+			Vector2 tempPos = new Vector2(-9, 0);
+			this.transform.position = tempPos;
+			sideXValue = -9;
+		}
+		else if (side == "Right" || side == "right" || side == "R" || side == "R")
+		{
+			Vector2 tempPos = new Vector2(8, 0);
+			this.transform.position = tempPos;
+			sideXValue = 8;
+		}
+		else
+		{
+			//stupid mistake was made
+			Debug.Log ("Side Column Error: side not assigned with a valid position string");
+			Destroy(this);
+			return;
+		}
+
+		//now load it up
+		for (int row = 0; row < 8; row++) {
+			int randPiece = Random.Range (0, 8);
+			column[row] = Instantiate (pieces[randPiece], new Vector2 ( sideXValue, row), Quaternion.identity) as GameObject;
+			column[row].GetComponent<piece_script> ().locked = true;
+			column[row].GetComponent<piece_script> ().lockPos = new Vector2 ( sideXValue, row);
+			column[row].GetComponent<piece_script> ().inHolder = true;
+			colorColumn[row] = column[row].GetComponent<piece_script>().pieceColor;
+		}
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+
+	//empties the column, ideally after the objects have been taken from it already
+	public void empty()
+	{
+		for (int row = 0; row < 8; row++) {
+			column[row] = null;
+			colorColumn[row] = null;
+		}
+	}
+
+	//reloads column after it's been taken by the grid. Only for use by the gamecontroller
+	public void reload()
+	{
+		if(column[0] == null || colorColumn[0] == null)
+		{
+			Debug.Log ("Side Column Error: Trying to reload a loaded column");
+			return;
+		}
+
+		for (int row = 0; row < 8; row++) {
+			int randPiece = Random.Range (0, 8);
+			column[row] = Instantiate (pieces[randPiece], new Vector2 ( sideXValue, row), Quaternion.identity) as GameObject;
+			column[row].GetComponent<piece_script> ().locked = true;
+			column[row].GetComponent<piece_script> ().lockPos = new Vector2 ( sideXValue, row);
+			column[row].GetComponent<piece_script> ().inHolder = true;
+			colorColumn[row] = column[row].GetComponent<piece_script>().pieceColor;
+		}
+	}
+}
