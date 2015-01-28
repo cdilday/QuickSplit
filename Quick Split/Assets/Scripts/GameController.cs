@@ -20,8 +20,9 @@ public class GameController : MonoBehaviour {
 	public GUIText movesText;
 	public int score;
 	public GUIText scoreText;
-
+	
 	//booleans and GuIText for the powers
+	#region
 	public bool redReady;
 	public bool orangeReady;
 	public bool yellowReady;
@@ -38,6 +39,7 @@ public class GameController : MonoBehaviour {
 	public GUIText purpleText;
 	public GUIText greyText;
 	public GUIText whiteText;
+	#endregion
 
 	//pieces places is used to ensure both pieces have landed before checking the grid in Update()
 	public int piecesPlaced;
@@ -315,7 +317,6 @@ public class GameController : MonoBehaviour {
 		piecesPlaced = 2;
 	}
 
-
 	//scanner goes through and checks every adjacent piece recursively, then returns the amount of pieces in a cluster.
 	public int scanner(int x, int y, string color, int adj)
 	{
@@ -458,5 +459,60 @@ public class GameController : MonoBehaviour {
 	public void WhitePower() //consider renaming to ability, in hindsight I probably should've looked at that first
 	{
 		
+	}
+
+	// MoveInward will move every piece towards the center and create free columns near the edges
+	public void MoveInward()
+	{
+		//First check to see if this action would createa gameover
+		for (int r = 0; r <= 7; r++){
+			if((colorGrid[r,6] != null && grid[r,6] != null) ||
+			   (colorGrid[r,9] != null && grid[r,9] != null)){
+				gameOverText.text = "Game Over\nPress R to Restart";
+				gameOver = true;
+				splitter.canShoot = false;
+			}
+		}
+
+		//next we iterate through the left side moving everything forward a column
+		for (int c = 6; c >= 0; c--) {
+			for(int r = 0; r <= 7; r++){
+				if(colorGrid[r,c] != null && grid[r,c] != null){
+					//piece exits, more rightward making sure to
+					//change the piece's stats to reflect the new position
+					grid[r,c].GetComponent<piece_script>().locked = false;
+					grid[r,c].transform.position = new Vector2((c+1) - 8, r);
+					grid[r,c].GetComponent<piece_script>().lockPos = new Vector2((c+1) - 8, r);
+					grid[r,c].GetComponent<piece_script>().gridPos = new Vector2(r, (c+1));
+					grid[r,c].GetComponent<piece_script>().locked = true;
+					//re-assign all grids to fit the new position, add 1 to tempCol
+					grid[r,c+1] = grid[r,c];
+					grid[r,c] = null;
+					colorGrid[r,(c+1)] = colorGrid[r,c];
+					colorGrid[r,c] = null;
+				}
+			}
+		}
+
+		//and now iterate through the right
+		//next we iterate through the left side moving everything forward a column
+		for (int c = 9; c <= 15; c++) {
+			for(int r = 0; r <= 7; r++){
+				if(colorGrid[r,c] != null && grid[r,c] != null){
+					//piece exits, more rightward making sure to
+					//change the piece's stats to reflect the new position
+					grid[r,c].GetComponent<piece_script>().locked = false;
+					grid[r,c].transform.position = new Vector2((c-1) - 8, r);
+					grid[r,c].GetComponent<piece_script>().lockPos = new Vector2((c-1) - 8, r);
+					grid[r,c].GetComponent<piece_script>().gridPos = new Vector2(r, (c-1));
+					grid[r,c].GetComponent<piece_script>().locked = true;
+					//re-assign all grids to fit the new position, add 1 to tempCol
+					grid[r,c-1] = grid[r,c];
+					grid[r,c] = null;
+					colorGrid[r,(c-1)] = colorGrid[r,c];
+					colorGrid[r,c] = null;
+				}
+			}
+		}
 	}
 }

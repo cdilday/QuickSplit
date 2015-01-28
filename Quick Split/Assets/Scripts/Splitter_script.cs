@@ -152,6 +152,12 @@ public class Splitter_script : MonoBehaviour {
 
 		//}//ending bracket for mouse/keyboard exclusivity
 
+		//some debug keys
+		if(Input.GetKeyDown(KeyCode.Keypad0))
+		{
+			gameController.MoveInward();
+		}
+
 		//checks if the splitter is currently between grid movement. 
 		if(isMoving)
 		{
