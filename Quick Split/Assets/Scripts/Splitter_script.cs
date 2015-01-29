@@ -155,7 +155,7 @@ public class Splitter_script : MonoBehaviour {
 		//some debug keys
 		if(Input.GetKeyDown(KeyCode.Keypad0))
 		{
-			gameController.MoveInward();
+			gameController.addSideColumns();
 		}
 
 		//checks if the splitter is currently between grid movement. 

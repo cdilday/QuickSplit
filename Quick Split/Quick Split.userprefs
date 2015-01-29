@@ -1,11 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\SideColumn.cs">
     <Files>
-      <File FileName="Assets\Scripts\GameController.cs" Line="508" Column="46" />
+      <File FileName="Assets\Scripts\SideColumn.cs" Line="17" Column="1" />
+      <File FileName="Assets\Scripts\GameController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\piece_script.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Splitter_script.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Holder_Script.cs" Line="8" Column="39" />
+      <File FileName="Assets\Scripts\Holder_Script.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

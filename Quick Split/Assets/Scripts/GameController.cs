@@ -12,6 +12,8 @@ public class GameController : MonoBehaviour {
 	//keeps track of every piece in a cluster during checks.
 	public GameObject[] cluster = new GameObject[16];
 
+	public SideColumn[] sideColumns = new SideColumn[2];
+
 	//text that pops up during a game over
 	public GUIText gameOverText;
 
@@ -84,6 +86,24 @@ public class GameController : MonoBehaviour {
 			splitter = splitterObject.GetComponent <Splitter_script>();
 		}
 		gameOver = false;
+
+		sideColumns [0] = null;
+		sideColumns [1] = null;
+		//load the side columns if they exist
+		GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
+		if (scols [0] != null && scols [1] != null) {
+			//make sure they're loaded properly, left is 0, right is 1
+			if(scols[0].GetComponent <SideColumn>().sideInt == 0)
+			{
+				sideColumns[0] = scols[0].GetComponent<SideColumn>();
+				sideColumns[1] = scols[1].GetComponent<SideColumn>();
+			}
+			else{
+				sideColumns[0] = scols[1].GetComponent<SideColumn>();
+				sideColumns[1] = scols[0].GetComponent<SideColumn>();
+			}
+		}
+
 		//initially update the moves and scores
 		updateMoves ();
 		updateScore ();
@@ -519,6 +539,42 @@ public class GameController : MonoBehaviour {
 	//adds the stored side column pieces to the board.
 	public void addSideColumns()
 	{
+		if (sideColumns [0] == null || sideColumns [1] == null) {
+			Debug.Log("GameController Error: Attempting to add nonexistant side columns");
+			return;
+		}
+
+		//make room for the new columns
+		MoveInward ();
+
+		//loading left
+		for (int r = 0; r < 8; r++) {
+			colorGrid[r, 0] = sideColumns[0].colorColumn[r];
+			grid[r,0] = sideColumns[0].column[r];
+			grid[r,0].GetComponent<piece_script>().locked = false;
+			grid[r,0].transform.position = new Vector2(-8, r);
+			grid[r,0].GetComponent<piece_script>().lockPos = new Vector2(-8, r);
+			grid[r,0].GetComponent<piece_script>().gridPos = new Vector2(r, 0);
+			grid[r,0].GetComponent<piece_script>().locked = true;
+		}
+		sideColumns[0].empty();
+		sideColumns [0].reload ();
+
+		//loading right
+		for (int r = 0; r <8; r++) {
+			colorGrid[r, 15] = sideColumns[1].colorColumn[r];
+			grid[r,15] = sideColumns[1].column[r];
+			grid[r,15].GetComponent<piece_script>().locked = false;
+			grid[r,15].transform.position = new Vector2(15-8, r);
+			grid[r,15].GetComponent<piece_script>().lockPos = new Vector2(15-8, r);
+			grid[r,15].GetComponent<piece_script>().gridPos = new Vector2(r, 15);
+			grid[r,15].GetComponent<piece_script>().locked = true;
+		}
+		sideColumns[1].empty();
+		sideColumns [1].reload ();
+
+		//and finally check to get rid of new matches.
+		checkBoard ();
 
 	}
 }

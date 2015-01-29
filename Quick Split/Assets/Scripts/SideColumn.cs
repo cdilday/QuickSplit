@@ -8,7 +8,11 @@ public class SideColumn : MonoBehaviour {
 
 	//will track if it's left or right, then keep its proper X value
 	public string side;
+	public int sideInt;
 	int sideXValue;
+
+	// for moving the pieces closer and how many moves are required before adding this row
+	public int stepValue;
 
 	//Will contain the gameobjects, similar to the grids in the gamecontroller
 	public GameObject[] column = new GameObject[8];
@@ -22,12 +26,14 @@ public class SideColumn : MonoBehaviour {
 			Vector2 tempPos = new Vector2(-9, 0);
 			this.transform.position = tempPos;
 			sideXValue = -9;
+			sideInt = 0;
 		}
 		else if (side == "Right" || side == "right" || side == "R" || side == "R")
 		{
 			Vector2 tempPos = new Vector2(8, 0);
 			this.transform.position = tempPos;
 			sideXValue = 8;
+			sideInt = 1;
 		}
 		else
 		{
@@ -65,7 +71,7 @@ public class SideColumn : MonoBehaviour {
 	//reloads column after it's been taken by the grid. Only for use by the gamecontroller
 	public void reload()
 	{
-		if(column[0] == null || colorColumn[0] == null)
+		if(column[0] != null || colorColumn[0] != null)
 		{
 			Debug.Log ("Side Column Error: Trying to reload a loaded column");
 			return;
