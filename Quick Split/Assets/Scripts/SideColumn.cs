@@ -9,7 +9,7 @@ public class SideColumn : MonoBehaviour {
 	//will track if it's left or right, then keep its proper X value
 	public string side;
 	public int sideInt;
-	int sideXValue;
+	float sideXValue;
 
 	// for moving the pieces closer and how many moves are required before adding this row
 	public int stepValue;
@@ -23,16 +23,16 @@ public class SideColumn : MonoBehaviour {
 
 		// begin by poisitioning these at the right locations
 		if (side == "Left" || side == "left" || side == "L" || side == "l") {
-			Vector2 tempPos = new Vector2(-9, 0);
+			Vector2 tempPos = new Vector2(-9.5f, 0);
 			this.transform.position = tempPos;
-			sideXValue = -9;
+			sideXValue = -9.5f;
 			sideInt = 0;
 		}
 		else if (side == "Right" || side == "right" || side == "R" || side == "R")
 		{
-			Vector2 tempPos = new Vector2(8, 0);
+			Vector2 tempPos = new Vector2(8.5f, 0);
 			this.transform.position = tempPos;
-			sideXValue = 8;
+			sideXValue = 8.5f;
 			sideInt = 1;
 		}
 		else

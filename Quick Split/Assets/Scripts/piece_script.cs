@@ -89,4 +89,15 @@ public class piece_script : MonoBehaviour {
 			}
 		}
 	}
+
+	//takes in a vector2 for the new location and does the appropriate changes
+	public void movePiece(Vector2 newLoc)
+	{
+		locked = false;
+		transform.position = newLoc;
+		lockPos = newLoc;
+		// the strange vector2 is because the grid has no negatives and the x/y are switched
+		gridPos = new Vector2(newLoc.y, newLoc.x + 8);
+		locked = true;
+	}
 }

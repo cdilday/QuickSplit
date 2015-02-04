@@ -134,6 +134,7 @@ public class GameController : MonoBehaviour {
 		if(piecesPlaced >= 2)
 		{
 			piecesPlaced = 0;
+			checkGameOver = true;
 			if(checkFlag)
 			{
 				checkBoard ();
@@ -286,11 +287,7 @@ public class GameController : MonoBehaviour {
 				else if(adjusted && grid[r,c] != null)
 				{
 					//change the piece's stats to reflect the new position
-					grid[r,c].GetComponent<piece_script>().locked = false;
-					grid[r,c].transform.position = new Vector2(tempCol - 8, r);
-					grid[r,c].GetComponent<piece_script>().lockPos = new Vector2(tempCol - 8, r);
-					grid[r,c].GetComponent<piece_script>().gridPos = new Vector2(r, tempCol);
-					grid[r,c].GetComponent<piece_script>().locked = true;
+					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2(tempCol - 8, r));
 					//re-assign all grids to fit the new position, add 1 to tempCol
 					grid[r,tempCol] = grid[r,c];
 					grid[r,c] = null;
@@ -318,11 +315,7 @@ public class GameController : MonoBehaviour {
 				else if(adjusted && grid[r,c] != null)
 				{
 					//change the piece's stats to reflect the new position
-					grid[r,c].GetComponent<piece_script>().locked = false;
-					grid[r,c].transform.position = new Vector2(tempCol - 8, r);
-					grid[r,c].GetComponent<piece_script>().lockPos = new Vector2(tempCol - 8, r);
-					grid[r,c].GetComponent<piece_script>().gridPos = new Vector2(r, tempCol);
-					grid[r,c].GetComponent<piece_script>().locked = true;
+					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2(tempCol - 8, r));
 					//re-assign all grids to fit the new position, subtract to tempCol
 					grid[r,tempCol] = grid[r,c];
 					grid[r,c] = null;
@@ -334,7 +327,7 @@ public class GameController : MonoBehaviour {
 				}
 			}
 		}
-		piecesPlaced = 2;
+		checkBoard ();
 	}
 
 	//scanner goes through and checks every adjacent piece recursively, then returns the amount of pieces in a cluster.
@@ -500,11 +493,7 @@ public class GameController : MonoBehaviour {
 				if(colorGrid[r,c] != null && grid[r,c] != null){
 					//piece exits, more rightward making sure to
 					//change the piece's stats to reflect the new position
-					grid[r,c].GetComponent<piece_script>().locked = false;
-					grid[r,c].transform.position = new Vector2((c+1) - 8, r);
-					grid[r,c].GetComponent<piece_script>().lockPos = new Vector2((c+1) - 8, r);
-					grid[r,c].GetComponent<piece_script>().gridPos = new Vector2(r, (c+1));
-					grid[r,c].GetComponent<piece_script>().locked = true;
+					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2((c+1) - 8, r));
 					//re-assign all grids to fit the new position, add 1 to tempCol
 					grid[r,c+1] = grid[r,c];
 					grid[r,c] = null;
@@ -521,11 +510,7 @@ public class GameController : MonoBehaviour {
 				if(colorGrid[r,c] != null && grid[r,c] != null){
 					//piece exits, more rightward making sure to
 					//change the piece's stats to reflect the new position
-					grid[r,c].GetComponent<piece_script>().locked = false;
-					grid[r,c].transform.position = new Vector2((c-1) - 8, r);
-					grid[r,c].GetComponent<piece_script>().lockPos = new Vector2((c-1) - 8, r);
-					grid[r,c].GetComponent<piece_script>().gridPos = new Vector2(r, (c-1));
-					grid[r,c].GetComponent<piece_script>().locked = true;
+					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2((c-1) - 8, r));
 					//re-assign all grids to fit the new position, add 1 to tempCol
 					grid[r,c-1] = grid[r,c];
 					grid[r,c] = null;
@@ -551,11 +536,7 @@ public class GameController : MonoBehaviour {
 		for (int r = 0; r < 8; r++) {
 			colorGrid[r, 0] = sideColumns[0].colorColumn[r];
 			grid[r,0] = sideColumns[0].column[r];
-			grid[r,0].GetComponent<piece_script>().locked = false;
-			grid[r,0].transform.position = new Vector2(-8, r);
-			grid[r,0].GetComponent<piece_script>().lockPos = new Vector2(-8, r);
-			grid[r,0].GetComponent<piece_script>().gridPos = new Vector2(r, 0);
-			grid[r,0].GetComponent<piece_script>().locked = true;
+			grid[r,0].GetComponent<piece_script>().movePiece(new Vector2(-8, r));
 		}
 		sideColumns[0].empty();
 		sideColumns [0].reload ();
@@ -564,11 +545,7 @@ public class GameController : MonoBehaviour {
 		for (int r = 0; r <8; r++) {
 			colorGrid[r, 15] = sideColumns[1].colorColumn[r];
 			grid[r,15] = sideColumns[1].column[r];
-			grid[r,15].GetComponent<piece_script>().locked = false;
-			grid[r,15].transform.position = new Vector2(15-8, r);
-			grid[r,15].GetComponent<piece_script>().lockPos = new Vector2(15-8, r);
-			grid[r,15].GetComponent<piece_script>().gridPos = new Vector2(r, 15);
-			grid[r,15].GetComponent<piece_script>().locked = true;
+			grid[r,15].GetComponent<piece_script>().movePiece(new Vector2(15-8, r));
 		}
 		sideColumns[1].empty();
 		sideColumns [1].reload ();
