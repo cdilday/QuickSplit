@@ -60,6 +60,8 @@ public class GameController : MonoBehaviour {
 	//set to true to check for game over in the update loop
 	bool checkGameOver;
 
+	public string gameType;
+
 	// Use this for initialization
 	void Start () {
 		//instantiate the grids with their appropriate starting values
@@ -86,22 +88,40 @@ public class GameController : MonoBehaviour {
 			splitter = splitterObject.GetComponent <Splitter_script>();
 		}
 		gameOver = false;
-
 		sideColumns [0] = null;
 		sideColumns [1] = null;
 		//load the side columns if they exist
 		GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
-		if (scols [0] != null && scols [1] != null) {
-			//make sure they're loaded properly, left is 0, right is 1
-			if(scols[0].GetComponent <SideColumn>().sideInt == 0)
-			{
-				sideColumns[0] = scols[0].GetComponent<SideColumn>();
-				sideColumns[1] = scols[1].GetComponent<SideColumn>();
+		if(gameType == "Wit"){
+			//Wit does not use the sidecolumns, get rid of them
+			Destroy(scols[1]);
+			Destroy(scols[0]);
+		}
+		else if(gameType == "Quick")
+		{	
+			if (scols [0] != null && scols [1] != null) {
+				//make sure they're loaded properly, left is 0, right is 1
+				if(scols[0].GetComponent <SideColumn>().sideInt == 0)
+				{
+					sideColumns[0] = scols[0].GetComponent<SideColumn>();
+					sideColumns[1] = scols[1].GetComponent<SideColumn>();
+				}
+				else{
+					sideColumns[0] = scols[1].GetComponent<SideColumn>();
+					sideColumns[1] = scols[0].GetComponent<SideColumn>();
+				}
 			}
-			else{
-				sideColumns[0] = scols[1].GetComponent<SideColumn>();
-				sideColumns[1] = scols[0].GetComponent<SideColumn>();
-			}
+		}
+
+		if (gameType == "Wit") {
+			redText.text = "";
+			orangeText.text = "";
+			yellowText.text = "";
+			greenText.text = "";
+			blueText.text = "";
+			purpleText.text = "";
+			greyText.text = "";
+			whiteText.text = "";
 		}
 
 		//initially update the moves and scores
@@ -257,6 +277,7 @@ public class GameController : MonoBehaviour {
 		//if the board changed, collapse & check it again
 		if (deleted) {
 			collapse ();
+			StartCoroutine(boardWaiter());
 		}
 		else {
 			multiplier = 1;
@@ -327,7 +348,6 @@ public class GameController : MonoBehaviour {
 				}
 			}
 		}
-		checkBoard ();
 	}
 
 	//scanner goes through and checks every adjacent piece recursively, then returns the amount of pieces in a cluster.
@@ -477,45 +497,47 @@ public class GameController : MonoBehaviour {
 	// MoveInward will move every piece towards the center and create free columns near the edges
 	public void MoveInward()
 	{
-		//First check to see if this action would createa gameover
-		for (int r = 0; r <= 7; r++){
-			if((colorGrid[r,6] != null && grid[r,6] != null) ||
-			   (colorGrid[r,9] != null && grid[r,9] != null)){
-				gameOverText.text = "Game Over\nPress R to Restart";
-				gameOver = true;
-				splitter.canShoot = false;
-			}
-		}
-
-		//next we iterate through the left side moving everything forward a column
-		for (int c = 6; c >= 0; c--) {
-			for(int r = 0; r <= 7; r++){
-				if(colorGrid[r,c] != null && grid[r,c] != null){
-					//piece exits, more rightward making sure to
-					//change the piece's stats to reflect the new position
-					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2((c+1) - 8, r));
-					//re-assign all grids to fit the new position, add 1 to tempCol
-					grid[r,c+1] = grid[r,c];
-					grid[r,c] = null;
-					colorGrid[r,(c+1)] = colorGrid[r,c];
-					colorGrid[r,c] = null;
+		if(gameType != "Wit"){
+			//First check to see if this action would createa gameover
+			for (int r = 0; r <= 7; r++){
+				if((colorGrid[r,6] != null && grid[r,6] != null) ||
+				   (colorGrid[r,9] != null && grid[r,9] != null)){
+					gameOverText.text = "Game Over\nPress R to Restart";
+					gameOver = true;
+					splitter.canShoot = false;
 				}
 			}
-		}
 
-		//and now iterate through the right
-		//next we iterate through the left side moving everything forward a column
-		for (int c = 9; c <= 15; c++) {
-			for(int r = 0; r <= 7; r++){
-				if(colorGrid[r,c] != null && grid[r,c] != null){
-					//piece exits, more rightward making sure to
-					//change the piece's stats to reflect the new position
-					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2((c-1) - 8, r));
-					//re-assign all grids to fit the new position, add 1 to tempCol
-					grid[r,c-1] = grid[r,c];
-					grid[r,c] = null;
-					colorGrid[r,(c-1)] = colorGrid[r,c];
-					colorGrid[r,c] = null;
+			//next we iterate through the left side moving everything forward a column
+			for (int c = 6; c >= 0; c--) {
+				for(int r = 0; r <= 7; r++){
+					if(colorGrid[r,c] != null && grid[r,c] != null){
+						//piece exits, more rightward making sure to
+						//change the piece's stats to reflect the new position
+						grid[r,c].GetComponent<piece_script>().movePiece(new Vector2((c+1) - 8, r));
+						//re-assign all grids to fit the new position, add 1 to tempCol
+						grid[r,c+1] = grid[r,c];
+						grid[r,c] = null;
+						colorGrid[r,(c+1)] = colorGrid[r,c];
+						colorGrid[r,c] = null;
+					}
+				}
+			}
+
+			//and now iterate through the right
+			//next we iterate through the left side moving everything forward a column
+			for (int c = 9; c <= 15; c++) {
+				for(int r = 0; r <= 7; r++){
+					if(colorGrid[r,c] != null && grid[r,c] != null){
+						//piece exits, more rightward making sure to
+						//change the piece's stats to reflect the new position
+						grid[r,c].GetComponent<piece_script>().movePiece(new Vector2((c-1) - 8, r));
+						//re-assign all grids to fit the new position, add 1 to tempCol
+						grid[r,c-1] = grid[r,c];
+						grid[r,c] = null;
+						colorGrid[r,(c-1)] = colorGrid[r,c];
+						colorGrid[r,c] = null;
+					}
 				}
 			}
 		}
@@ -524,34 +546,40 @@ public class GameController : MonoBehaviour {
 	//adds the stored side column pieces to the board.
 	public void addSideColumns()
 	{
-		if (sideColumns [0] == null || sideColumns [1] == null) {
-			Debug.Log("GameController Error: Attempting to add nonexistant side columns");
-			return;
+		if(gameType != "Wit"){
+			if (sideColumns [0] == null || sideColumns [1] == null) {
+				Debug.Log("GameController Error: Attempting to add nonexistant side columns");
+				return;
+			}
+
+			//make room for the new columns
+			MoveInward ();
+
+			//loading left
+			for (int r = 0; r < 8; r++) {
+				colorGrid[r, 0] = sideColumns[0].colorColumn[r];
+				grid[r,0] = sideColumns[0].column[r];
+				grid[r,0].GetComponent<piece_script>().movePiece(new Vector2(-8, r));
+			}
+			sideColumns[0].empty();
+			sideColumns [0].reload ();
+
+			//loading right
+			for (int r = 0; r <8; r++) {
+				colorGrid[r, 15] = sideColumns[1].colorColumn[r];
+				grid[r,15] = sideColumns[1].column[r];
+				grid[r,15].GetComponent<piece_script>().movePiece(new Vector2(15-8, r));
+			}
+			sideColumns[1].empty();
+			sideColumns [1].reload ();
+
+			//and finally check to get rid of new matches.
+			checkBoard ();
 		}
-
-		//make room for the new columns
-		MoveInward ();
-
-		//loading left
-		for (int r = 0; r < 8; r++) {
-			colorGrid[r, 0] = sideColumns[0].colorColumn[r];
-			grid[r,0] = sideColumns[0].column[r];
-			grid[r,0].GetComponent<piece_script>().movePiece(new Vector2(-8, r));
-		}
-		sideColumns[0].empty();
-		sideColumns [0].reload ();
-
-		//loading right
-		for (int r = 0; r <8; r++) {
-			colorGrid[r, 15] = sideColumns[1].colorColumn[r];
-			grid[r,15] = sideColumns[1].column[r];
-			grid[r,15].GetComponent<piece_script>().movePiece(new Vector2(15-8, r));
-		}
-		sideColumns[1].empty();
-		sideColumns [1].reload ();
-
-		//and finally check to get rid of new matches.
+	}
+	public IEnumerator boardWaiter()
+	{
+		yield return new WaitForSeconds (0.25f);
 		checkBoard ();
-
 	}
 }

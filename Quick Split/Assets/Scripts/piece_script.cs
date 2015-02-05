@@ -12,6 +12,11 @@ public class piece_script : MonoBehaviour {
 	public Vector2 gridPos;
 	public Vector2 prevPos;
 
+	Vector2 moveToPos;
+	int moveProgress;
+	float moveStep;
+	bool isMoving;
+
 	//value assigned to each piece that shows how many pieces are in a group of adjacent stuff.
 	public int groupValue;
 
@@ -21,6 +26,7 @@ public class piece_script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		isMoving = false;
 		groupValue = 1;
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
@@ -38,11 +44,31 @@ public class piece_script : MonoBehaviour {
 	void Update () {
 		//this code is to ensure collisions don't offset piece's individual positions
 		prevPos = transform.position;
-		if (locked && lockPos != prevPos) {
+		if (!isMoving && locked && lockPos != prevPos) {
 			transform.position = lockPos;
 			if(!inHolder)
 				gridPos = new Vector2((int)lockPos.y + 8, (int)lockPos.y);
 		}
+
+		if(isMoving && moveProgress <= 10)
+		{
+			transform.position = new Vector2(transform.position.x + (moveStep), transform.position.y);
+			moveProgress++;
+		}
+		else if(isMoving)
+		{
+			transform.position = moveToPos;
+			isMoving = false;
+		}
+
+		if(!inSplitter && !inHolder)
+			this.name = pieceColor + " piece (" + gridPos.x + ", " + gridPos.y + ")";
+		else if (inHolder)
+		{
+			this.name = pieceColor + " in Holder";
+		}
+		else if (inSplitter)
+			this.name = pieceColor + " in Splitter";
 
 	}
 		
@@ -50,7 +76,7 @@ public class piece_script : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		//if the piece hasn't already been assigned a position, begin to assign it
-		if(!locked && !inSplitter){
+		if(!isMoving && !locked && !inSplitter){
 			piece_script colPiece = col.gameObject.GetComponent<piece_script> ();
 			//if it collided with the side of a grid, place it in the grid
 			if (colPiece == null) {
@@ -93,8 +119,11 @@ public class piece_script : MonoBehaviour {
 	//takes in a vector2 for the new location and does the appropriate changes
 	public void movePiece(Vector2 newLoc)
 	{
+		moveStep = (newLoc.x - transform.position.x) / 10f;
+		isMoving = true;
 		locked = false;
-		transform.position = newLoc;
+		moveToPos = newLoc;
+		moveProgress = 0;
 		lockPos = newLoc;
 		// the strange vector2 is because the grid has no negatives and the x/y are switched
 		gridPos = new Vector2(newLoc.y, newLoc.x + 8);
