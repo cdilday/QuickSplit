@@ -7,6 +7,9 @@ public class GameController : MonoBehaviour {
 	public GameObject[,] grid = new GameObject[8,16];
 	public string[,] colorGrid = new string[8, 16];
 
+	//Pieces available
+	public int availableCount;
+
 	//checkgrid keeps track of what tiles have been checked
 	public bool[,] checkGrid = new bool[8,16];
 	//keeps track of every piece in a cluster during checks.
@@ -63,7 +66,7 @@ public class GameController : MonoBehaviour {
 	public string gameType;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		//instantiate the grids with their appropriate starting values
 		for(int r = 0; r <=7; r++ )
 		{
@@ -93,12 +96,16 @@ public class GameController : MonoBehaviour {
 		//load the side columns if they exist
 		GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
 		if(gameType == "Wit"){
+
+			availableCount = 8;
+
 			//Wit does not use the sidecolumns, get rid of them
 			Destroy(scols[1]);
 			Destroy(scols[0]);
 		}
 		else if(gameType == "Quick")
 		{	
+			availableCount = 4;
 			if (scols [0] != null && scols [1] != null) {
 				//make sure they're loaded properly, left is 0, right is 1
 				if(scols[0].GetComponent <SideColumn>().sideInt == 0)
@@ -574,7 +581,7 @@ public class GameController : MonoBehaviour {
 			sideColumns [1].reload ();
 
 			//and finally check to get rid of new matches.
-			checkBoard ();
+			StartCoroutine(boardWaiter());
 		}
 	}
 	public IEnumerator boardWaiter()

@@ -34,8 +34,8 @@ public class Splitter_script : MonoBehaviour {
 			holder = holderObject.GetComponent <Holder_Script>();
 		}
 		//start the game with random pieces in the holder
-		int left = Random.Range (0, 8);
-		int right = Random.Range (0, 8);
+		int left = Random.Range (0, gameController.availableCount);
+		int right = Random.Range (0, gameController.availableCount);
 		leftSlot = Instantiate(pieces[left], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
 		rightSlot = Instantiate(pieces[right], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
 		leftSlot.GetComponent<piece_script> ().inSplitter = true;
@@ -181,10 +181,10 @@ public class Splitter_script : MonoBehaviour {
 
 		//bugfix to ensure that both slots are full
 		if (leftSlot == null && rightSlot != null) {
-			leftSlot = Instantiate(pieces[Random.Range (0, 8)], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
+			leftSlot = Instantiate(pieces[Random.Range (0, gameController.availableCount)], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
 		}
 		if (rightSlot == null && leftSlot != null) {
-			rightSlot = Instantiate(pieces[Random.Range (0, 8)], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
+			rightSlot = Instantiate(pieces[Random.Range (0, gameController.availableCount)], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
 		}
 
 		//checks if it's reached its next spot by seeing if it's y position is a whole number. 

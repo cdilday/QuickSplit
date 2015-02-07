@@ -18,8 +18,15 @@ public class SideColumn : MonoBehaviour {
 	public GameObject[] column = new GameObject[8];
 	public string[] colorColumn = new string[8];
 
+	public GameController gameController;
+
 	// Use this for initialization
 	void Start () {
+
+		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
+		if (gameControllerObject != null) {
+			gameController = gameControllerObject.GetComponent <GameController>();
+		}
 
 		// begin by poisitioning these at the right locations
 		if (side == "Left" || side == "left" || side == "L" || side == "l") {
@@ -45,7 +52,7 @@ public class SideColumn : MonoBehaviour {
 
 		//now load it up
 		for (int row = 0; row < 8; row++) {
-			int randPiece = Random.Range (0, 8);
+			int randPiece = Random.Range (0, gameController.availableCount);
 			column[row] = Instantiate (pieces[randPiece], new Vector2 ( sideXValue, row), Quaternion.identity) as GameObject;
 			column[row].GetComponent<piece_script> ().locked = true;
 			column[row].GetComponent<piece_script> ().lockPos = new Vector2 ( sideXValue, row);
@@ -78,7 +85,7 @@ public class SideColumn : MonoBehaviour {
 		}
 
 		for (int row = 0; row < 8; row++) {
-			int randPiece = Random.Range (0, 8);
+			int randPiece = Random.Range (0, gameController.availableCount);
 			column[row] = Instantiate (pieces[randPiece], new Vector2 ( sideXValue, row), Quaternion.identity) as GameObject;
 			column[row].GetComponent<piece_script> ().locked = true;
 			column[row].GetComponent<piece_script> ().lockPos = new Vector2 ( sideXValue, row);
