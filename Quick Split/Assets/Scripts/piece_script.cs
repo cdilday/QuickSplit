@@ -80,6 +80,7 @@ public class piece_script : MonoBehaviour {
 			piece_script colPiece = col.gameObject.GetComponent<piece_script> ();
 			//if it collided with the side of a grid, place it in the grid
 			if (colPiece == null) {
+				transform.rigidbody2D.velocity = new Vector2 (0,0);
 				rigidbody2D.isKinematic = false;
 				locked = true;
 				lockPos = new Vector2(Mathf.Round (transform.position.x), Mathf.Round (transform.position.y));
