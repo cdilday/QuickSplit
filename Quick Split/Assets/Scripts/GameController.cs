@@ -65,6 +65,8 @@ public class GameController : MonoBehaviour {
 
 	public string gameType;
 
+	bool sidesChecked;
+
 	// Use this for initialization
 	void Awake () {
 		//instantiate the grids with their appropriate starting values
@@ -131,6 +133,8 @@ public class GameController : MonoBehaviour {
 			whiteText.text = "";
 		}
 
+		sidesChecked = false;
+
 		//initially update the moves and scores
 		updateMoves ();
 		updateScore ();
@@ -166,13 +170,19 @@ public class GameController : MonoBehaviour {
 			{
 				checkBoard ();
 				checkFlag = false;
+				//check to see if it's time to move the sides in
 			}
 			else{
 				splitter.canShoot = true;
 			}
+			if(gameType == "Quick" && movesMade % 16 == 0 && !sidesChecked){
+				addSideColumns();
+				sidesChecked = true;
+			}
 		}
+		
 	}
-
+	
 	//puts the pieces in the grid after they've settled into their place
 	public void placePiece (GameObject piece)
 	{
@@ -411,6 +421,13 @@ public class GameController : MonoBehaviour {
 	public void updateMoves()
 	{
 		movesText.text = "Splits made: " + movesMade;
+		sidesChecked = false;
+
+		if(movesMade % 50 == 0 && availableCount != 8 && movesMade != 0)
+		{
+			availableCount++;
+		}
+
 	}
 	//call this when the score counter needs to be updated
 	public void updateScore()
@@ -584,9 +601,11 @@ public class GameController : MonoBehaviour {
 			StartCoroutine(boardWaiter());
 		}
 	}
+
 	public IEnumerator boardWaiter()
 	{
 		yield return new WaitForSeconds (0.25f);
 		checkBoard ();
 	}
+
 }
