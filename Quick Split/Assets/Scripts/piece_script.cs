@@ -6,6 +6,7 @@ public class piece_script : MonoBehaviour {
 	public string pieceColor;
 	public bool inSplitter;
 	public bool inHolder;
+	public bool inSideHolder;
 
 	public bool locked;
 	public Vector2 lockPos;
@@ -76,7 +77,7 @@ public class piece_script : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		//if the piece hasn't already been assigned a position, begin to assign it
-		if(!isMoving && !locked && !inSplitter){
+		if(!isMoving && !locked && !inSplitter && !inSideHolder){
 			piece_script colPiece = col.gameObject.GetComponent<piece_script> ();
 			//if it collided with the side of a grid, place it in the grid
 			if (colPiece == null) {

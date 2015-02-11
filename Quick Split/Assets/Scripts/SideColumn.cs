@@ -11,6 +11,10 @@ public class SideColumn : MonoBehaviour {
 	public int sideInt;
 	float sideXValue;
 
+	Vector2 permPosition;
+
+	public bool isShaking;
+
 	// for moving the pieces closer and how many moves are required before adding this row
 	public int stepValue;
 
@@ -51,19 +55,17 @@ public class SideColumn : MonoBehaviour {
 		}
 
 		//now load it up
-		for (int row = 0; row < 8; row++) {
-			int randPiece = Random.Range (0, gameController.availableCount);
-			column[row] = Instantiate (pieces[randPiece], new Vector2 ( sideXValue, row), Quaternion.identity) as GameObject;
-			column[row].GetComponent<piece_script> ().locked = true;
-			column[row].GetComponent<piece_script> ().lockPos = new Vector2 ( sideXValue, row);
-			column[row].GetComponent<piece_script> ().inHolder = true;
-			colorColumn[row] = column[row].GetComponent<piece_script>().pieceColor;
-		}
+		empty ();
+		reload ();
+		isShaking = false;
+
+		permPosition = transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if(isShaking)
+			shake ();
 	}
 
 	//empties the column, ideally after the objects have been taken from it already
@@ -73,6 +75,12 @@ public class SideColumn : MonoBehaviour {
 			column[row] = null;
 			colorColumn[row] = null;
 		}
+	}
+
+	public void shake ()
+	{
+		transform.position = new Vector2 (Random.Range (-0.1f, 0.1f) + permPosition.x, 
+		                                  Random.Range (-0.1f, 0.1f) + permPosition.y);
 	}
 
 	//reloads column after it's been taken by the grid. Only for use by the gamecontroller
@@ -87,9 +95,10 @@ public class SideColumn : MonoBehaviour {
 		for (int row = 0; row < 8; row++) {
 			int randPiece = Random.Range (0, gameController.availableCount);
 			column[row] = Instantiate (pieces[randPiece], new Vector2 ( sideXValue, row), Quaternion.identity) as GameObject;
-			column[row].GetComponent<piece_script> ().locked = true;
+			//column[row].GetComponent<piece_script> ().locked = true;
 			column[row].GetComponent<piece_script> ().lockPos = new Vector2 ( sideXValue, row);
-			column[row].GetComponent<piece_script> ().inHolder = true;
+			column[row].GetComponent<piece_script> ().inSideHolder = true;
+			column[row].transform.parent = transform;
 			colorColumn[row] = column[row].GetComponent<piece_script>().pieceColor;
 		}
 	}

@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour {
 	//keeps track of every piece in a cluster during checks.
 	public GameObject[] cluster = new GameObject[16];
 
-	public SideColumn[] sideColumns = new SideColumn[2];
+	SideColumn[] sideColumns = new SideColumn[2];
 
 	//text that pops up during a game over
 	public GUIText gameOverText;
@@ -47,9 +47,9 @@ public class GameController : MonoBehaviour {
 	#endregion
 
 	//pieces places is used to ensure both pieces have landed before checking the grid in Update()
-	public int piecesPlaced;
+	int piecesPlaced;
 	//checkFlag will make sure that a boardcheck is run when necessary
-	public bool checkFlag;
+	bool checkFlag;
 
 	//Splitter keeps track of the splitter for easy access
 	public Splitter_script splitter;
@@ -58,13 +58,14 @@ public class GameController : MonoBehaviour {
 	public bool gameOver;
 
 	//keeps track of the current score multiplier during checks
-	public int multiplier;
+	int multiplier;
 
 	//set to true to check for game over in the update loop
 	bool checkGameOver;
 
 	public string gameType;
 
+	public int sideMovesLimit = 16;
 	bool sidesChecked;
 
 	// Use this for initialization
@@ -175,8 +176,15 @@ public class GameController : MonoBehaviour {
 			else{
 				splitter.canShoot = true;
 			}
-			if(gameType == "Quick" && movesMade % 16 == 0 && !sidesChecked){
-				addSideColumns();
+			if(gameType == "Quick" && !sidesChecked){
+				if( movesMade % sideMovesLimit == 0){
+					addSideColumns();
+				}
+				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 3)
+				{
+					sideColumns[0].isShaking = true;
+					sideColumns[1].isShaking = true;
+				}
 				sidesChecked = true;
 			}
 		}
@@ -538,6 +546,7 @@ public class GameController : MonoBehaviour {
 					if(colorGrid[r,c] != null && grid[r,c] != null){
 						//piece exits, more rightward making sure to
 						//change the piece's stats to reflect the new position
+						grid[r,c].transform.parent = null;
 						grid[r,c].GetComponent<piece_script>().movePiece(new Vector2((c+1) - 8, r));
 						//re-assign all grids to fit the new position, add 1 to tempCol
 						grid[r,c+1] = grid[r,c];
@@ -596,6 +605,9 @@ public class GameController : MonoBehaviour {
 			}
 			sideColumns[1].empty();
 			sideColumns [1].reload ();
+
+			sideColumns[0].isShaking = false;
+			sideColumns[1].isShaking = false;
 
 			//and finally check to get rid of new matches.
 			StartCoroutine(boardWaiter());
