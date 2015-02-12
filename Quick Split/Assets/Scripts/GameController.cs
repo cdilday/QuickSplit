@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
 	public GameObject[,] grid = new GameObject[8,16];
 	public string[,] colorGrid = new string[8, 16];
 
-	//Pieces available
+	//Pieces available to pull from
 	public int availableCount;
 
 	//checkgrid keeps track of what tiles have been checked
@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour {
 	//keeps track of every piece in a cluster during checks.
 	public GameObject[] cluster = new GameObject[16];
 
+	//columns that contain pieces to be pushed in at some point
 	SideColumn[] sideColumns = new SideColumn[2];
 
 	//text that pops up during a game over
@@ -26,7 +27,7 @@ public class GameController : MonoBehaviour {
 	public int score;
 	public GUIText scoreText;
 	
-	//booleans and GuIText for the powers
+	//booleans and GUIText for the powers
 	#region
 	public bool redReady;
 	public bool orangeReady;
@@ -63,12 +64,13 @@ public class GameController : MonoBehaviour {
 	//set to true to check for game over in the update loop
 	bool checkGameOver;
 
+	//gametype says what mode the board is in to easily set it up accordingly
 	public string gameType;
 
+	//how many moves until the sides are added onto the board
 	public int sideMovesLimit = 16;
 	bool sidesChecked;
-
-	// Use this for initialization
+	
 	void Awake () {
 		//instantiate the grids with their appropriate starting values
 		for(int r = 0; r <=7; r++ )
@@ -94,9 +96,9 @@ public class GameController : MonoBehaviour {
 			splitter = splitterObject.GetComponent <Splitter_script>();
 		}
 		gameOver = false;
+		//load the side columns if they exist
 		sideColumns [0] = null;
 		sideColumns [1] = null;
-		//load the side columns if they exist
 		GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
 		if(gameType == "Wit"){
 
@@ -176,6 +178,8 @@ public class GameController : MonoBehaviour {
 			else{
 				splitter.canShoot = true;
 			}
+
+			//here's where we do side-entering management
 			if(gameType == "Quick" && !sidesChecked){
 				if( movesMade % sideMovesLimit == 0){
 					addSideColumns();
@@ -221,7 +225,7 @@ public class GameController : MonoBehaviour {
 		// if it isn't in the grid, throw an error up and delete the offending piece.
 		else
 		{
-			Debug.Log ("Error in placing " + " piece with position" +(int)pieceStats.gridPos.x +" " + (int)pieceStats.gridPos.y);
+			Debug.LogError ("Error in placing piece with position" +(int)pieceStats.gridPos.x +" " + (int)pieceStats.gridPos.y);
 			Destroy(piece);
 		}
 
@@ -233,6 +237,7 @@ public class GameController : MonoBehaviour {
 	 * current multiplier.*/
 	public void checkBoard()
 	{
+		//reset the bool board for the current run
 		for(int r = 0; r <=7; r++ )
 		{
 			for(int c = 0; c<= 15; c++)
@@ -242,6 +247,7 @@ public class GameController : MonoBehaviour {
 		}
 		int groupCount = 0;
 		bool groupIncreased = false;
+
 		//nested for loops for checking the grid
 		for(int r = 0; r <=7; r++ )
 		{
@@ -429,6 +435,8 @@ public class GameController : MonoBehaviour {
 	public void updateMoves()
 	{
 		movesText.text = "Splits made: " + movesMade;
+
+		//this is the point where any post-move action should be taken
 		sidesChecked = false;
 
 		if(movesMade % 50 == 0 && availableCount != 8 && movesMade != 0)
@@ -614,6 +622,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	//this is solely to let the pieces fall into place aesthetically
 	public IEnumerator boardWaiter()
 	{
 		yield return new WaitForSeconds (0.25f);

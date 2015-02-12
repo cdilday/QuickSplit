@@ -11,7 +11,7 @@ public class piece_script : MonoBehaviour {
 	public bool locked;
 	public Vector2 lockPos;
 	public Vector2 gridPos;
-	public Vector2 prevPos;
+	Vector2 prevPos;
 
 	Vector2 moveToPos;
 	int moveProgress;
@@ -131,4 +131,12 @@ public class piece_script : MonoBehaviour {
 		gridPos = new Vector2(newLoc.y, newLoc.x + 8);
 		locked = true;
 	}
+
+	void OnDestroy()
+	{
+		//spawn a GUI text prefab that shows what number the square was worth
+
+	}
+
+
 }
