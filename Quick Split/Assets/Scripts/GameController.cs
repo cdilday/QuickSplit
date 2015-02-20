@@ -60,6 +60,7 @@ public class GameController : MonoBehaviour {
 
 	//keeps track of the current score multiplier during checks
 	int multiplier;
+	bool multiRun;
 
 	//set to true to check for game over in the update loop
 	bool checkGameOver;
@@ -76,6 +77,7 @@ public class GameController : MonoBehaviour {
 	public bool isQuitting;
 	
 	void Awake () {
+		multiRun = false;
 		//instantiate the grids with their appropriate starting values
 		for(int r = 0; r <=7; r++ )
 		{
@@ -175,6 +177,7 @@ public class GameController : MonoBehaviour {
 			checkGameOver = true;
 			if(checkFlag)
 			{
+				multiplier = 1;
 				checkBoard ();
 				checkFlag = false;
 				//check to see if it's time to move the sides in
@@ -277,7 +280,7 @@ public class GameController : MonoBehaviour {
 						groupCount++;
 						groupIncreased = true;
 					}
-					if(groupCount >= 2 && groupIncreased)
+					if((groupCount >= 2 || multiRun) && groupIncreased)
 					{
 						multiplier++;
 					}
@@ -298,7 +301,6 @@ public class GameController : MonoBehaviour {
 				//if the value is high enough it's in a group big enough to delete, so delete it
 				if(grid[r,c] != null && grid[r,c].GetComponent<piece_script>().groupValue >= 4)
 				{
-					score += grid[r,c].GetComponent<piece_script>().groupValue * multiplier;
 					grid[r,c].GetComponent<piece_script>().multiplier = multiplier;
 					updateScore();
 					//delete piece, mark that something was deleted
@@ -313,10 +315,11 @@ public class GameController : MonoBehaviour {
 		//if the board changed, collapse & check it again
 		if (deleted) {
 			collapse ();
+			multiRun = true;
 			StartCoroutine(boardWaiter());
 		}
 		else {
-			multiplier = 1;
+			multiRun = false;
 			checkGameOver = true;
 			if(!gameOver){
 				splitter.canShoot = true;
@@ -488,6 +491,8 @@ public class GameController : MonoBehaviour {
 				}
 			}
 		}
+		//check the board to update group values
+		checkBoard ();
 	}
 	//Orange atttack: switches all the pieces of a single color on one side with all the pieces of a different single color on the other side
 	//deletes leftover pieces if the switch is uneven.
@@ -510,7 +515,8 @@ public class GameController : MonoBehaviour {
 				grid[row,c] = null;
 			}
 		}
-		//you shouldn't need to check the board after this. 
+		//check the board to update group values
+		checkBoard ();
 	}
 	//Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
 	public void GreenPower()

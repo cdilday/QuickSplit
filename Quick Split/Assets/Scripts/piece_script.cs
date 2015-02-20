@@ -44,7 +44,7 @@ public class piece_script : MonoBehaviour {
 		}
 		//set grid position to -3,-3 until it's locked to prevent accidental cancelling.
 		gridPos = new Vector2 (-3, -3);
-		multiplier = 0;
+		//multiplier = 1;
 	}
 	
 	// Update is called once per frame
@@ -155,6 +155,8 @@ public class piece_script : MonoBehaviour {
 			thistext.scoreValue = groupValue * multiplier;
 		else
 			thistext.scoreValue = groupValue;
+		gameController.score += thistext.scoreValue;
+		gameController.updateScore();
 	}
 
 
