@@ -70,6 +70,10 @@ public class GameController : MonoBehaviour {
 	//how many moves until the sides are added onto the board
 	public int sideMovesLimit = 16;
 	bool sidesChecked;
+
+	//tells if the application is in the process of quitting, for cleanup
+	[HideInInspector]
+	public bool isQuitting;
 	
 	void Awake () {
 		//instantiate the grids with their appropriate starting values
@@ -295,6 +299,7 @@ public class GameController : MonoBehaviour {
 				if(grid[r,c] != null && grid[r,c].GetComponent<piece_script>().groupValue >= 4)
 				{
 					score += grid[r,c].GetComponent<piece_script>().groupValue * multiplier;
+					grid[r,c].GetComponent<piece_script>().multiplier = multiplier;
 					updateScore();
 					//delete piece, mark that something was deleted
 					Destroy(grid[r,c]);
@@ -627,6 +632,11 @@ public class GameController : MonoBehaviour {
 	{
 		yield return new WaitForSeconds (0.25f);
 		checkBoard ();
+	}
+
+	void OnApplicationQuit()
+	{
+		isQuitting = true;
 	}
 
 }

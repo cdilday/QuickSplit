@@ -8,6 +8,8 @@ public class piece_script : MonoBehaviour {
 	public bool inHolder;
 	public bool inSideHolder;
 
+	public GameObject scoreTextPrefab;
+
 	public bool locked;
 	public Vector2 lockPos;
 	public Vector2 gridPos;
@@ -20,6 +22,9 @@ public class piece_script : MonoBehaviour {
 
 	//value assigned to each piece that shows how many pieces are in a group of adjacent stuff.
 	public int groupValue;
+
+	//stores multiplier to reflect accurate score;
+	public int multiplier;
 
 	public GameController gameController;
 
@@ -39,6 +44,7 @@ public class piece_script : MonoBehaviour {
 		}
 		//set grid position to -3,-3 until it's locked to prevent accidental cancelling.
 		gridPos = new Vector2 (-3, -3);
+		multiplier = 0;
 	}
 	
 	// Update is called once per frame
@@ -132,10 +138,23 @@ public class piece_script : MonoBehaviour {
 		locked = true;
 	}
 
+
 	void OnDestroy()
 	{
+		//this means that the game just ended, don't spawn stuff
+		if (gameController.isQuitting)
+						return;
 		//spawn a GUI text prefab that shows what number the square was worth
-
+		Camera tempCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
+		Vector2 spawnPoint = tempCamera.WorldToViewportPoint (transform.position);
+		GameObject scoreText = Instantiate (scoreTextPrefab) as GameObject;
+		scoreText.transform.position = spawnPoint;
+		PieceScoreText thistext = scoreText.GetComponent<PieceScoreText> ();
+		thistext.pieceColor = pieceColor;
+		if (multiplier != 0)
+			thistext.scoreValue = groupValue * multiplier;
+		else
+			thistext.scoreValue = groupValue;
 	}
 
 
