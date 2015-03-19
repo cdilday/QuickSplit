@@ -12,7 +12,7 @@ public class PieceScoreText : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		text = guiText;
+		text = GetComponent<GUIText>();
 		switch (pieceColor) {
 		case "Red":
 			textColor = Color.red;

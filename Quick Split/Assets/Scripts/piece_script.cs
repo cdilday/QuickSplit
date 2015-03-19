@@ -87,8 +87,8 @@ public class piece_script : MonoBehaviour {
 			piece_script colPiece = col.gameObject.GetComponent<piece_script> ();
 			//if it collided with the side of a grid, place it in the grid
 			if (colPiece == null) {
-				transform.rigidbody2D.velocity = new Vector2 (0,0);
-				rigidbody2D.isKinematic = false;
+				transform.GetComponent<Rigidbody2D>().velocity = new Vector2 (0,0);
+				GetComponent<Rigidbody2D>().isKinematic = false;
 				locked = true;
 				lockPos = new Vector2(Mathf.Round (transform.position.x), Mathf.Round (transform.position.y));
 				transform.position = lockPos;
@@ -99,20 +99,20 @@ public class piece_script : MonoBehaviour {
 			else if(colPiece.locked == true && !colPiece.inSplitter)
 			{
 				//check if it was fired left
-				if(transform.rigidbody2D.velocity.x < 0 && !colPiece.inSplitter && !inSplitter)
+				if(transform.GetComponent<Rigidbody2D>().velocity.x < 0 && !colPiece.inSplitter && !inSplitter)
 				{
-					transform.rigidbody2D.velocity = new Vector2 (0,0);
-					rigidbody2D.isKinematic = false;
+					transform.GetComponent<Rigidbody2D>().velocity = new Vector2 (0,0);
+					GetComponent<Rigidbody2D>().isKinematic = false;
 					locked = true;
 					lockPos = new Vector2(Mathf.Round (col.transform.position.x + 1), Mathf.Round(col.transform.position.y));
 					transform.position = lockPos;
 					gridPos = new Vector2((int)lockPos.y, (int)lockPos.x + 8);
 				}
 				//check if it was fired right
-				else if(transform.rigidbody2D.velocity.x > 0 && !colPiece.inSplitter && !inSplitter)
+				else if(transform.GetComponent<Rigidbody2D>().velocity.x > 0 && !colPiece.inSplitter && !inSplitter)
 				{
-					transform.rigidbody2D.velocity = new Vector2 (0,0);
-					rigidbody2D.isKinematic = false;
+					transform.GetComponent<Rigidbody2D>().velocity = new Vector2 (0,0);
+					GetComponent<Rigidbody2D>().isKinematic = false;
 					locked = true;
 					lockPos = new Vector2(Mathf.Round (col.transform.position.x - 1), Mathf.Round(col.transform.position.y));
 					transform.position = lockPos;

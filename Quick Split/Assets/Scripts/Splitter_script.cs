@@ -212,8 +212,8 @@ public class Splitter_script : MonoBehaviour {
 		Transform righttemp = rightSlot;
 		leftSlot = null;
 		rightSlot = null;
-		lefttemp.rigidbody2D.velocity = new Vector2 (-20f, 0);
-		righttemp.rigidbody2D.velocity = new Vector2 (20f, 0);
+		lefttemp.GetComponent<Rigidbody2D>().velocity = new Vector2 (-20f, 0);
+		righttemp.GetComponent<Rigidbody2D>().velocity = new Vector2 (20f, 0);
 		yield return new WaitForSeconds (0.07f);
 		refill ();
 	}
