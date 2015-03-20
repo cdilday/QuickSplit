@@ -82,6 +82,9 @@ public class piece_script : MonoBehaviour {
 	//2D collision detection
 	void OnTriggerEnter2D(Collider2D col)
 	{
+		//ignore score bits
+		if (col.gameObject.tag == "Score Bit")
+			return;
 		//if the piece hasn't already been assigned a position, begin to assign it
 		if(!isMoving && !locked && !inSplitter && !inSideHolder){
 			piece_script colPiece = col.gameObject.GetComponent<piece_script> ();
