@@ -50,114 +50,105 @@ public class Splitter_script : MonoBehaviour {
 		//player Input
 		//checks if the player has opted for mouse control, if not uses key input. Uncomment to make them exclusive
 		//if (mouseControl) {
-			//uncomment to constantly see mouse position.
-			//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
-			mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			//checking that the mouse is within the grid
-			if(mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5 && mouseLocation.y <= 7.5)
-			{
+		//uncomment to constantly see mouse position.
+		//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
+		mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		//checking that the mouse is within the grid
+		if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5 && mouseLocation.y <= 7.5) {
 				//Moving up if the mouse is above the splitter's hitbox
 				if ((mouseLocation.y > transform.position.y + 0.5f) && !isMoving && transform.position.y < 7) {
-					moveDirection = 1;
-					StartCoroutine(MovementPause());
-					isMoving = true;
+						moveDirection = 1;
+						StartCoroutine (MovementPause ());
+						isMoving = true;
 				}
 				//Moving downwards if the mouse is below the splitter's hitbox
 				if ((mouseLocation.y < transform.position.y - 0.5f) && !isMoving && transform.position.y > 0) {
-					moveDirection = -1;
-					StartCoroutine(MovementPause());
-					isMoving = true;
+						moveDirection = -1;
+						StartCoroutine (MovementPause ());
+						isMoving = true;
 				}
 				//Swapping pieces with right click
-				if (Input.GetMouseButtonDown(1)) {
-					swap ();
+				if (Input.GetMouseButtonDown (1)) {
+						swap ();
 				}
 				//launching pieces with Left click while over the board
-				if (Input.GetMouseButtonDown(0) && moveDirection == 0 && rightSlot != null && leftSlot !=null && canShoot)
-				{
-					StartCoroutine(fire());
-					canShoot = false;
-					gameController.movesMade++;
-					gameController.updateMoves();
+				if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && canShoot) {
+						StartCoroutine (fire ());
+						canShoot = false;
+						gameController.movesMade++;
+						gameController.updateMoves ();
 				}
-			}
+		}
 		//}
 		//else{
-			//moving upwards with keys W or Up
-			if ((Input.GetKey ("w") || Input.GetKey("up")) && !isMoving && transform.position.y < 7) {
+		//moving upwards with keys W or Up
+		if ((Input.GetKey ("w") || Input.GetKey ("up")) && !isMoving && transform.position.y < 7) {
 				moveDirection = 1;
-				StartCoroutine(MovementPause());
+				StartCoroutine (MovementPause ());
 				isMoving = true;
-			}
-			//moving downwards with keys S or Down
-			if ((Input.GetKey ("s") || Input.GetKey("down")) && !isMoving && transform.position.y > 0) {
+		}
+		//moving downwards with keys S or Down
+		if ((Input.GetKey ("s") || Input.GetKey ("down")) && !isMoving && transform.position.y > 0) {
 				moveDirection = -1;
-				StartCoroutine(MovementPause());
+				StartCoroutine (MovementPause ());
 				isMoving = true;
-			}
-			//swapping pieces with keys A, D, Left, or Right
-			if (Input.GetKeyDown ("a") || Input.GetKeyDown("d") || Input.GetKeyDown("left") || Input.GetKeyDown("right")) {
+		}
+		//swapping pieces with keys A, D, Left, or Right
+		if (Input.GetKeyDown ("a") || Input.GetKeyDown ("d") || Input.GetKeyDown ("left") || Input.GetKeyDown ("right")) {
 				swap ();
-			}
-			//launching pieces with key Space
-			if (Input.GetKeyDown("space") && moveDirection == 0 && rightSlot != null && leftSlot !=null && canShoot)
-			{
-				StartCoroutine(fire());
+		}
+		//launching pieces with key Space
+		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && canShoot) {
+				StartCoroutine (fire ());
 				canShoot = false;
 				gameController.movesMade++;
-				gameController.updateMoves();
-			}
+				gameController.updateMoves ();
+		}
 
-			//attacks
-			//red
-			if(Input.GetKeyDown("1") && canShoot && !isMoving)
-			{
-				gameController.RedPower();
-			}
-			//orange
-			if(Input.GetKeyDown("2") && canShoot && !isMoving)
-			{
-				gameController.OrangePower();
-			}
-			//yellow
-			if(Input.GetKeyDown("3") && canShoot && !isMoving)
-		   	{
-				gameController.YellowPower();
-			}
-			//green
-			if(Input.GetKeyDown("4") && canShoot && !isMoving)
-			{
-				gameController.GreenPower();
-			}
-			//blue
-			if(Input.GetKeyDown("5") && canShoot && !isMoving)
-			{
-				gameController.BluePower();
-			}
-			//purple
-			if(Input.GetKeyDown("6") && canShoot && !isMoving)
-			{
-				gameController.PurplePower();
-			}
-			//grey
-			if(Input.GetKeyDown("7") && canShoot && !isMoving)
-			{
-				gameController.GreyPower();
-			}
-			//white
-			if(Input.GetKeyDown("8") && canShoot && !isMoving)
-			{
-				gameController.WhitePower();
-			}
+		//attacks
+		//red
+		if (Input.GetKeyDown ("1") && canShoot && !isMoving) {
+				gameController.RedPower ();
+		}
+		//orange
+		if (Input.GetKeyDown ("2") && canShoot && !isMoving) {
+				gameController.OrangePower ();
+		}
+		//yellow
+		if (Input.GetKeyDown ("3") && canShoot && !isMoving) {
+				gameController.YellowPower ();
+		}
+		//green
+		if (Input.GetKeyDown ("4") && canShoot && !isMoving) {
+				gameController.GreenPower ();
+		}
+		//blue
+		if (Input.GetKeyDown ("5") && canShoot && !isMoving) {
+				gameController.BluePower ();
+		}
+		//purple
+		if (Input.GetKeyDown ("6") && canShoot && !isMoving) {
+				gameController.PurplePower ();
+		}
+		//grey
+		if (Input.GetKeyDown ("7") && canShoot && !isMoving) {
+				gameController.GreyPower ();
+		}
+		//white
+		if (Input.GetKeyDown ("8") && canShoot && !isMoving) {
+				gameController.WhitePower ();
+		}
 
 		//}//ending bracket for mouse/keyboard exclusivity
 
 		//some debug keys
-		if(Input.GetKeyDown(KeyCode.Keypad0))
-		{
-			gameController.addSideColumns();
+		if (Input.GetKeyDown (KeyCode.Keypad0)) {
+				gameController.addSideColumns ();
 		}
 
+	}
+
+	void FixedUpdate(){
 		//checks if the splitter is currently between grid movement. 
 		if(isMoving)
 		{

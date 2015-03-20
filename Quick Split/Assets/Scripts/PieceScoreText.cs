@@ -42,7 +42,7 @@ public class PieceScoreText : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
 		text.text = "" + scoreValue;
 		text.color = textColor;

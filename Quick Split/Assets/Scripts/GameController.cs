@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
+
+	Camera mainCamera;
 
 	//grid stores the pieces themselves, while colorGrid only stores the color, allowing for easier access for calculations
 	public GameObject[,] grid = new GameObject[8,16];
@@ -71,12 +73,19 @@ public class GameController : MonoBehaviour {
 	//how many moves until the sides are added onto the board
 	public int sideMovesLimit = 16;
 	bool sidesChecked;
+	bool quickMoveSides;
 
 	//tells if the application is in the process of quitting, for cleanup
 	[HideInInspector]
 	public bool isQuitting;
 	
 	void Awake () {
+		mainCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+
+		//reposition score to wherever it may be
+		scoreText.transform.GetComponent<BoxCollider2D> ().offset = (mainCamera.ViewportToWorldPoint (scoreText.transform.position))
+																		- scoreText.transform.position;
+
 		multiRun = false;
 		//instantiate the grids with their appropriate starting values
 		for(int r = 0; r <=7; r++ )
@@ -110,6 +119,16 @@ public class GameController : MonoBehaviour {
 
 			availableCount = 8;
 
+			//no powers in Wit
+			redText.text = "";
+			orangeText.text = "";
+			yellowText.text = "";
+			greenText.text = "";
+			blueText.text = "";
+			purpleText.text = "";
+			greyText.text = "";
+			whiteText.text = "";
+
 			//Wit does not use the sidecolumns, get rid of them
 			Destroy(scols[1]);
 			Destroy(scols[0]);
@@ -129,9 +148,10 @@ public class GameController : MonoBehaviour {
 					sideColumns[1] = scols[0].GetComponent<SideColumn>();
 				}
 			}
-		}
+			quickMoveSides = false;
+			StartCoroutine("QuickSideTimer");
 
-		if (gameType == "Wit") {
+			// no powers in Quick, only Holy and Wiz
 			redText.text = "";
 			orangeText.text = "";
 			yellowText.text = "";
@@ -140,6 +160,40 @@ public class GameController : MonoBehaviour {
 			purpleText.text = "";
 			greyText.text = "";
 			whiteText.text = "";
+		}
+		else if(gameType == "Wiz")
+		{
+			//powers are in Wiz, start out with 5 kinds of blocks
+			availableCount = 5;
+			if (scols [0] != null && scols [1] != null) {
+				//make sure they're loaded properly, left is 0, right is 1
+				if(scols[0].GetComponent <SideColumn>().sideInt == 0)
+				{
+					sideColumns[0] = scols[0].GetComponent<SideColumn>();
+					sideColumns[1] = scols[1].GetComponent<SideColumn>();
+				}
+				else{
+					sideColumns[0] = scols[1].GetComponent<SideColumn>();
+					sideColumns[1] = scols[0].GetComponent<SideColumn>();
+				}
+			}
+		}
+		else if( gameType == "Holy")
+		{
+			//Holy has everything at once. Essentially hard mode
+			availableCount = 8;
+			if (scols [0] != null && scols [1] != null) {
+				//make sure they're loaded properly, left is 0, right is 1
+				if(scols[0].GetComponent <SideColumn>().sideInt == 0)
+				{
+					sideColumns[0] = scols[0].GetComponent<SideColumn>();
+					sideColumns[1] = scols[1].GetComponent<SideColumn>();
+				}
+				else{
+					sideColumns[0] = scols[1].GetComponent<SideColumn>();
+					sideColumns[1] = scols[0].GetComponent<SideColumn>();
+				}
+			}
 		}
 
 		sidesChecked = false;
@@ -150,7 +204,16 @@ public class GameController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
+		//code for restarting the game after a game over
+		if (gameOver && Input.GetKeyDown ("r")) {
+			Application.LoadLevel(Application.loadedLevel);
+		}
+	}
+
+
+	void FixedUpdate () {
 		//check to see if a piece is in the splitter area after each board check
 		if(checkGameOver){
 			for (int c = 7; c <= 8; c++) {
@@ -163,11 +226,6 @@ public class GameController : MonoBehaviour {
 				}
 			}
 			checkGameOver = false;
-		}
-
-		//code for restarting the game after a game over
-		if (gameOver && Input.GetKeyDown ("r")) {
-			Application.LoadLevel(Application.loadedLevel);
 		}
 
 		//if both pieces have been placed, set the checkGrid to false and check the board
@@ -187,14 +245,50 @@ public class GameController : MonoBehaviour {
 			}
 
 			//here's where we do side-entering management
-			if(gameType == "Quick" && !sidesChecked){
+			if((gameType == "Wiz" || gameType == "Holy") && !sidesChecked){
 				if( movesMade % sideMovesLimit == 0){
 					addSideColumns();
+					sideColumns[0].shakeStage = 0;
+					sideColumns[1].shakeStage =	0;
 				}
-				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 3)
+				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 4)
 				{
-					sideColumns[0].isShaking = true;
-					sideColumns[1].isShaking = true;
+					switch (sideMovesLimit - (movesMade % sideMovesLimit)){
+					case 1:
+						sideColumns[0].isShaking = false;
+						sideColumns [1].isShaking = false;
+						sideColumns[0].ready = true;
+						sideColumns[1].ready = true;
+						sideColumns[0].shakeStage = 0;
+						sideColumns[1].shakeStage = 0;
+						break;
+					case 2:
+						sideColumns[0].shakeStage = 3;
+						sideColumns[1].shakeStage = 3;
+						break;
+					case 3:
+						sideColumns[0].shakeStage = 2;
+						sideColumns[1].shakeStage = 2;
+						break;
+					case 4:
+						sideColumns[0].isShaking = true;
+						sideColumns[1].isShaking = true;
+						sideColumns[0].shakeStage = 1;
+						sideColumns[1].shakeStage = 1;
+						break;
+					}
+				}
+				sidesChecked = true;
+			}
+			else if((gameType == "Quick") && !sidesChecked){
+				//quick mode moves the sides in based off of time, not moves
+				if(quickMoveSides)
+				{
+					addSideColumns();
+					sideColumns[0].ready = false;
+					sideColumns[1].ready = false;
+					quickMoveSides = false;
+					StartCoroutine("QuickSideTimer");
 				}
 				sidesChecked = true;
 			}
@@ -256,9 +350,9 @@ public class GameController : MonoBehaviour {
 		bool groupIncreased = false;
 
 		//nested for loops for checking the grid
-		for(int r = 0; r <=7; r++ )
+		for(int r = 0; r <= 7; r++ )
 		{
-			for(int c = 0; c<= 15; c++)
+			for(int c = 0; c <= 15; c++)
 			{
 				//check if current piece has already been checked
 				if(checkGrid[r,c] == false && grid [r,c] != null)
@@ -445,7 +539,9 @@ public class GameController : MonoBehaviour {
 		movesText.text = "Splits made: " + movesMade;
 
 		//this is the point where any post-move action should be taken
-		sidesChecked = false;
+		if (gameType != "Wit") {
+			sidesChecked = false;
+		}
 
 		if(movesMade % 50 == 0 && availableCount != 8 && movesMade != 0)
 		{
@@ -549,7 +645,7 @@ public class GameController : MonoBehaviour {
 	public void MoveInward()
 	{
 		if(gameType != "Wit"){
-			//First check to see if this action would createa gameover
+			//First check to see if this action would create a gameover
 			for (int r = 0; r <= 7; r++){
 				if((colorGrid[r,6] != null && grid[r,6] != null) ||
 				   (colorGrid[r,9] != null && grid[r,9] != null)){
@@ -600,7 +696,7 @@ public class GameController : MonoBehaviour {
 	{
 		if(gameType != "Wit"){
 			if (sideColumns [0] == null || sideColumns [1] == null) {
-				Debug.Log("GameController Error: Attempting to add nonexistant side columns");
+				Debug.LogError ("GameController Error: Attempting to add nonexistant side columns");
 				return;
 			}
 
@@ -638,6 +734,29 @@ public class GameController : MonoBehaviour {
 	{
 		yield return new WaitForSeconds (0.25f);
 		checkBoard ();
+	}
+
+	public IEnumerator QuickSideTimer()
+	{
+		yield return new WaitForSeconds (11f);
+		sideColumns[0].isShaking = true;
+		sideColumns[1].isShaking = true;
+		sideColumns[0].shakeStage = 1;
+		sideColumns[1].shakeStage = 1;
+		yield return new WaitForSeconds (3f);
+		sideColumns[0].shakeStage = 2;
+		sideColumns[1].shakeStage = 2;
+		yield return new WaitForSeconds (3f);
+		sideColumns[0].shakeStage = 3;
+		sideColumns[1].shakeStage = 3;
+		yield return new WaitForSeconds (3f);
+		sideColumns[0].isShaking = false;
+		sideColumns [1].isShaking = false;
+		sideColumns[0].ready = true;
+		sideColumns[1].ready = true;
+		sideColumns[0].shakeStage = 0;
+		sideColumns[1].shakeStage = 0;
+		quickMoveSides = true;
 	}
 
 	void OnApplicationQuit()

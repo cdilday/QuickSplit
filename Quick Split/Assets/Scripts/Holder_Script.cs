@@ -34,11 +34,6 @@ public class Holder_Script : MonoBehaviour {
 			holder[slot, 1].GetComponent<piece_script> ().lockPos = new Vector2 ( 0 - slot * 2.5f, transform.position.y);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public void getNextPiece()
 	{

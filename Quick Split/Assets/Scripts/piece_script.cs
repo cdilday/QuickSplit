@@ -48,7 +48,7 @@ public class piece_script : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		//this code is to ensure collisions don't offset piece's individual positions
 		prevPos = transform.position;
 		if (!isMoving && locked && lockPos != prevPos) {
@@ -157,7 +157,16 @@ public class piece_script : MonoBehaviour {
 			thistext.scoreValue = groupValue;
 		gameController.score += thistext.scoreValue;
 		gameController.updateScore();
+
+		for (int i = 0; i < thistext.scoreValue; i++) {
+			GameObject newbit = Instantiate((GameObject) Resources.Load ("Score Bit"));
+			newbit.transform.position = transform.position;
+			newbit.GetComponent<ScoreBit>().target = gameController.scoreText.transform.GetComponent<BoxCollider2D>().offset 
+														+ new Vector2( gameController.scoreText.transform.position.x,
+				              											gameController.scoreText.transform.position.y);
+			newbit.GetComponent<ScoreBit>().changeColor(pieceColor);
+		}
 	}
-
-
+	
+	
 }

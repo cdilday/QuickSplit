@@ -11,9 +11,12 @@ public class SideColumn : MonoBehaviour {
 	public int sideInt;
 	float sideXValue;
 
-	Vector2 permPosition;
+	public Vector2 permPosition;
 
+	float shakeValue = 0.03f;
+	public int shakeStage = 0;
 	public bool isShaking;
+	public bool ready;
 
 	// for moving the pieces closer and how many moves are required before adding this row
 	public int stepValue;
@@ -58,14 +61,19 @@ public class SideColumn : MonoBehaviour {
 		empty ();
 		reload ();
 		isShaking = false;
-
+		shakeStage = 0;
+		ready = false;
 		permPosition = transform.position;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(isShaking)
+	void FixedUpdate () {
+		if (isShaking)
 			shake ();
+		else if (ready)
+			pulse ();
+		else
+			transform.position = permPosition;
 	}
 
 	//empties the column, ideally after the objects have been taken from it already
@@ -79,8 +87,19 @@ public class SideColumn : MonoBehaviour {
 
 	public void shake ()
 	{
-		transform.position = new Vector2 (Random.Range (-0.1f, 0.1f) + permPosition.x, 
-		                                  Random.Range (-0.1f, 0.1f) + permPosition.y);
+		//use shake stage to make a sense of progression.
+		transform.position = new Vector2 (Random.Range (-1 * shakeStage * shakeValue, shakeStage * shakeValue) + permPosition.x, 
+		                                  Random.Range (-1 * shakeStage * shakeValue, shakeStage * shakeValue) + permPosition.y);
+	}
+
+	public void pulse()
+	{
+		//pulse will make the columns pulse around the grid signify they're ready to enter
+		if(sideInt == 0)
+			transform.position = new Vector2 ((Mathf.Sin (Time.time * 4) *0.5f) + permPosition.x , permPosition.y);
+		else if(sideInt == 1)
+			transform.position = new Vector2 ((Mathf.Sin ((Time.time * 4) + Mathf.PI) *0.5f) + permPosition.x , permPosition.y);
+
 	}
 
 	//reloads column after it's been taken by the grid. Only for use by the gamecontroller
@@ -88,9 +107,13 @@ public class SideColumn : MonoBehaviour {
 	{
 		if(column[0] != null || colorColumn[0] != null)
 		{
-			Debug.Log ("Side Column Error: Trying to reload a loaded column");
+			Debug.LogError ("Side Column Error: Trying to reload a loaded column");
 			return;
 		}
+
+		isShaking = false;
+		ready = false;
+		transform.position = permPosition;
 
 		for (int row = 0; row < 8; row++) {
 			int randPiece = Random.Range (0, gameController.availableCount);
