@@ -49,6 +49,8 @@
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Holder_Script.cs" />
      <Compile Include="Assets\Scripts\PieceScoreText.cs" />
+     <Compile Include="Assets\Scripts\PowerHandler.cs" />
+     <Compile Include="Assets\Scripts\Pulser.cs" />
      <Compile Include="Assets\Scripts\ScoreBit.cs" />
      <Compile Include="Assets\Scripts\SideColumn.cs" />
      <Compile Include="Assets\Scripts\Splitter_script.cs" />

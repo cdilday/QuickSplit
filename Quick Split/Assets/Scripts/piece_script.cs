@@ -158,8 +158,8 @@ public class piece_script : MonoBehaviour {
 			thistext.scoreValue = groupValue * multiplier;
 		else
 			thistext.scoreValue = groupValue;
-		gameController.score += thistext.scoreValue;
-		gameController.updateScore();
+		//gameController.score += thistext.scoreValue;
+		//gameController.updateScore();
 
 		for (int i = 0; i < thistext.scoreValue; i++) {
 			GameObject newbit = Instantiate((GameObject) Resources.Load ("Score Bit"));

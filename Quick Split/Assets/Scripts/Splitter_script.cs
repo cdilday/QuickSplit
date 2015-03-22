@@ -105,40 +105,6 @@ public class Splitter_script : MonoBehaviour {
 				gameController.updateMoves ();
 		}
 
-		//attacks
-		//red
-		if (Input.GetKeyDown ("1") && canShoot && !isMoving) {
-				gameController.RedPower ();
-		}
-		//orange
-		if (Input.GetKeyDown ("2") && canShoot && !isMoving) {
-				gameController.OrangePower ();
-		}
-		//yellow
-		if (Input.GetKeyDown ("3") && canShoot && !isMoving) {
-				gameController.YellowPower ();
-		}
-		//green
-		if (Input.GetKeyDown ("4") && canShoot && !isMoving) {
-				gameController.GreenPower ();
-		}
-		//blue
-		if (Input.GetKeyDown ("5") && canShoot && !isMoving) {
-				gameController.BluePower ();
-		}
-		//purple
-		if (Input.GetKeyDown ("6") && canShoot && !isMoving) {
-				gameController.PurplePower ();
-		}
-		//grey
-		if (Input.GetKeyDown ("7") && canShoot && !isMoving) {
-				gameController.GreyPower ();
-		}
-		//white
-		if (Input.GetKeyDown ("8") && canShoot && !isMoving) {
-				gameController.WhitePower ();
-		}
-
 		//}//ending bracket for mouse/keyboard exclusivity
 
 		//some debug keys

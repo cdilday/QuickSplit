@@ -20,6 +20,9 @@ public class GameController : MonoBehaviour {
 	//columns that contain pieces to be pushed in at some point
 	SideColumn[] sideColumns = new SideColumn[2];
 
+	//Game Object for powers
+	GameObject powerHolder;
+
 	//text that pops up during a game over
 	public GUIText gameOverText;
 
@@ -28,26 +31,6 @@ public class GameController : MonoBehaviour {
 	public GUIText movesText;
 	public int score;
 	public GUIText scoreText;
-	
-	//booleans and GUIText for the powers
-	#region
-	public bool redReady;
-	public bool orangeReady;
-	public bool yellowReady;
-	public bool greenReady;
-	public bool blueReady;
-	public bool purpleReady;
-	public bool greyReady;
-	public bool whiteReady;
-	public GUIText redText;
-	public GUIText orangeText;
-	public GUIText yellowText;
-	public GUIText greenText;
-	public GUIText blueText;
-	public GUIText purpleText;
-	public GUIText greyText;
-	public GUIText whiteText;
-	#endregion
 
 	//pieces places is used to ensure both pieces have landed before checking the grid in Update()
 	int piecesPlaced;
@@ -115,19 +98,13 @@ public class GameController : MonoBehaviour {
 		sideColumns [0] = null;
 		sideColumns [1] = null;
 		GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
+		powerHolder = GameObject.Find ("Power Handler");
 		if(gameType == "Wit"){
 
 			availableCount = 8;
 
 			//no powers in Wit
-			redText.text = "";
-			orangeText.text = "";
-			yellowText.text = "";
-			greenText.text = "";
-			blueText.text = "";
-			purpleText.text = "";
-			greyText.text = "";
-			whiteText.text = "";
+			Destroy (powerHolder);
 
 			//Wit does not use the sidecolumns, get rid of them
 			Destroy(scols[1]);
@@ -152,14 +129,7 @@ public class GameController : MonoBehaviour {
 			StartCoroutine("QuickSideTimer");
 
 			// no powers in Quick, only Holy and Wiz
-			redText.text = "";
-			orangeText.text = "";
-			yellowText.text = "";
-			greenText.text = "";
-			blueText.text = "";
-			purpleText.text = "";
-			greyText.text = "";
-			whiteText.text = "";
+			Destroy (powerHolder);
 		}
 		else if(gameType == "Wiz")
 		{
@@ -543,7 +513,7 @@ public class GameController : MonoBehaviour {
 			sidesChecked = false;
 		}
 
-		if(movesMade % 50 == 0 && availableCount != 8 && movesMade != 0)
+		if(movesMade % 77 == 0 && availableCount != 8 && movesMade != 0)
 		{
 			availableCount++;
 		}
@@ -553,92 +523,6 @@ public class GameController : MonoBehaviour {
 	public void updateScore()
 	{
 		scoreText.text = "Score: " + score;
-	}
-
-	//Red attack: Burns a layer off the top of each side, specifically deleting the block in each row closest to the center
-	public void RedPower()
-	{
-		/*Deletion loops work by going to the splitter's columns outwards and deleting the first piece it comes across before moving on
-		 * likely the player would only use this ability when on the brink of losing, so this is better than going from outwards in.
-		 * Once the loop deletes the first thing it comes accross, it exits the inner loop to move onto the next row.*/
-		//left grid loop
-		for (int r = 0; r < 8; r++) {
-			for (int c = 7; c >=0; c--){
-				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(grid[r,c] != null)
-				{
-					Destroy (grid[r,c]);
-					colorGrid[r,c] = null;
-					grid[r,c] = null;
-					c = -1;
-				}
-			}
-		}
-		//right grid loop
-		for (int r = 0; r < 8; r++) {
-			for (int c = 8; c < 16; c++){
-				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(grid[r,c] != null)
-				{
-					Destroy (grid[r,c]);
-					colorGrid[r,c] = null;
-					grid[r,c] = null;
-					c = 16;
-				}
-			}
-		}
-		//check the board to update group values
-		checkBoard ();
-	}
-	//Orange atttack: switches all the pieces of a single color on one side with all the pieces of a different single color on the other side
-	//deletes leftover pieces if the switch is uneven.
-	public void OrangePower()
-	{
-		
-	}
-	//Yellow attack: launches a single lightning bolt to each side that removes any blocks in the splitter's row
-	public void YellowPower()
-	{
-		//get the row the splitter is in
-		int row = (int) splitter.transform.position.y;
-		//loop that deletes everything in the row
-		for (int c = 0; c < 16; c++) {
-
-			if (colorGrid[row,c] != null)
-			{
-				colorGrid[row,c] = null;
-				Destroy(grid[row,c]);
-				grid[row,c] = null;
-			}
-		}
-		//check the board to update group values
-		checkBoard ();
-	}
-	//Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
-	public void GreenPower()
-	{
-		
-	}
-	//Blue attack: rearrange every splitter/holder piece to any arrangement the player chooses
-	public void BluePower()
-	{
-		
-	}
-	//Purple attack: turns pieces in holder/splitter into "special" pieces
-	//special pieces are specially marked and do things such as increase score and multiplier
-	public void PurplePower()
-	{
-		
-	}
-	//Grey Power: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
-	public void GreyPower()
-	{
-		
-	}
-	//White Power: Sorts the board from rainbow down
-	public void WhitePower() //consider renaming to ability, in hindsight I probably should've looked at that first
-	{
-		
 	}
 
 	// MoveInward will move every piece towards the center and create free columns near the edges

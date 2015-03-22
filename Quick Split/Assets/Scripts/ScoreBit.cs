@@ -11,11 +11,29 @@ public class ScoreBit : MonoBehaviour {
 	float acceleration = 0.5f;
 	float speed;
 
+	GameController gameController;
+
+	bool powerActive = false;
+	PowerHandler powerHandler;
+
 	// Use this for initialization
 	void Start () {
 		isReturning = false;
 		moveVector = new Vector2 (Random.Range(-1f, 1f), (Random.Range(-1f, 1f)));
 		speed = 10f;
+		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
+		if (gameControllerObject != null) {
+			gameController = gameControllerObject.GetComponent <GameController>();
+			if(gameController.gameType == "Holy" || gameController.gameType == "Wiz")
+			{
+				powerActive = true;
+				powerHandler = GameObject.Find ("Power Handler").GetComponent<PowerHandler>();
+			}
+			else
+			{
+				powerActive = false;
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -43,6 +61,7 @@ public class ScoreBit : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 
 		if (other.gameObject.tag == "Bit Receptor") {
+			other.BroadcastMessage("beginPulse");
 			Destroy(gameObject);
 		}
 	}
@@ -77,6 +96,14 @@ public class ScoreBit : MonoBehaviour {
 			break;
 		}
 		gameObject.GetComponentInChildren<SpriteRenderer> ().color = thisColor;
+	}
+
+	void OnDestroy(){
+		gameController.score++;
+		gameController.updateScore();
+		if (powerActive) {
+			powerHandler.addBit(bitColor);
+		}
 	}
 
 }
