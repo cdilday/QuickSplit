@@ -145,8 +145,8 @@ public class piece_script : MonoBehaviour {
 	void OnDestroy()
 	{
 		//this means that the game just ended, don't spawn stuff
-		if (gameController.isQuitting)
-						return;
+		if (gameController.isQuitting || gameController.gameOver)
+			return;
 		//spawn a GUI text prefab that shows what number the square was worth
 		Camera tempCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
 		Vector2 spawnPoint = tempCamera.WorldToViewportPoint (transform.position);

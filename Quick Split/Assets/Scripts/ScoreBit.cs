@@ -38,6 +38,9 @@ public class ScoreBit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		if (gameController.gameOver) {
+			target = GameObject.FindGameObjectWithTag("Splitter").transform.position;
+		}
 		transform.Translate (new Vector3(moveVector.x *speed*Time.deltaTime, moveVector.y * speed * Time.deltaTime));
 		if (isReturning) {
 			speed += acceleration;
@@ -99,10 +102,12 @@ public class ScoreBit : MonoBehaviour {
 	}
 
 	void OnDestroy(){
-		gameController.score++;
-		gameController.updateScore();
-		if (powerActive) {
-			powerHandler.addBit(bitColor);
+		if(!gameController.gameOver){
+			gameController.score++;
+			gameController.updateScore();
+			if (powerActive) {
+				powerHandler.addBit(bitColor);
+			}
 		}
 	}
 

@@ -2,8 +2,18 @@
 using System.Collections;
 
 public class Splitter_script : MonoBehaviour {
+
+
+	public class State{
+		public bool isMoving; // checks if the splitter is in the middle of moving to the next grid spot
+		public bool canShoot;
+		public bool isActive;
+		public bool mouseControl;
+		public bool touchControl;
+	}
+
+	State splitState = new State ();
 	
-	public bool isMoving; // checks if the splitter is in the middle of moving to the next grid spot
 	public int moveDirection; // 1 if it's moving upwards, -1 if downwards, 0 if not currently moving
 
 	//prefabs containing all the different colored pieces
@@ -12,9 +22,7 @@ public class Splitter_script : MonoBehaviour {
 	//pieces currently in the splitter
 	public Transform leftSlot;
 	public Transform rightSlot;
-	public bool canShoot;
-
-	public bool mouseControl;
+	
 	Vector3 mouseLocation;
 
 	//objects the splitter will need to use
@@ -40,7 +48,7 @@ public class Splitter_script : MonoBehaviour {
 		rightSlot = Instantiate(pieces[right], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
 		leftSlot.GetComponent<piece_script> ().inSplitter = true;
 		rightSlot.GetComponent<piece_script> ().inSplitter = true;
-		canShoot = true;
+		splitState.canShoot = true;
 		//make a camera for mouse control to use
 	}
 	
@@ -56,25 +64,25 @@ public class Splitter_script : MonoBehaviour {
 		//checking that the mouse is within the grid
 		if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5 && mouseLocation.y <= 7.5) {
 				//Moving up if the mouse is above the splitter's hitbox
-				if ((mouseLocation.y > transform.position.y + 0.5f) && !isMoving && transform.position.y < 7) {
+				if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
 						moveDirection = 1;
 						StartCoroutine (MovementPause ());
-						isMoving = true;
+						splitState.isMoving = true;
 				}
 				//Moving downwards if the mouse is below the splitter's hitbox
-				if ((mouseLocation.y < transform.position.y - 0.5f) && !isMoving && transform.position.y > 0) {
+				if ((mouseLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0) {
 						moveDirection = -1;
 						StartCoroutine (MovementPause ());
-						isMoving = true;
+						splitState.isMoving = true;
 				}
 				//Swapping pieces with right click
 				if (Input.GetMouseButtonDown (1)) {
 						swap ();
 				}
 				//launching pieces with Left click while over the board
-				if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && canShoot) {
+				if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot) {
 						StartCoroutine (fire ());
-						canShoot = false;
+						splitState.canShoot = false;
 						gameController.movesMade++;
 						gameController.updateMoves ();
 				}
@@ -82,25 +90,25 @@ public class Splitter_script : MonoBehaviour {
 		//}
 		//else{
 		//moving upwards with keys W or Up
-		if ((Input.GetKey ("w") || Input.GetKey ("up")) && !isMoving && transform.position.y < 7) {
+		if ((Input.GetKey ("w") || Input.GetKey ("up")) && !splitState.isMoving && transform.position.y < 7) {
 				moveDirection = 1;
 				StartCoroutine (MovementPause ());
-				isMoving = true;
+				splitState.isMoving = true;
 		}
 		//moving downwards with keys S or Down
-		if ((Input.GetKey ("s") || Input.GetKey ("down")) && !isMoving && transform.position.y > 0) {
+		if ((Input.GetKey ("s") || Input.GetKey ("down")) && !splitState.isMoving && transform.position.y > 0) {
 				moveDirection = -1;
 				StartCoroutine (MovementPause ());
-				isMoving = true;
+				splitState.isMoving = true;
 		}
 		//swapping pieces with keys A, D, Left, or Right
 		if (Input.GetKeyDown ("a") || Input.GetKeyDown ("d") || Input.GetKeyDown ("left") || Input.GetKeyDown ("right")) {
 				swap ();
 		}
 		//launching pieces with key Space
-		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && canShoot) {
+		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot) {
 				StartCoroutine (fire ());
-				canShoot = false;
+				splitState.canShoot = false;
 				gameController.movesMade++;
 				gameController.updateMoves ();
 		}
@@ -116,7 +124,7 @@ public class Splitter_script : MonoBehaviour {
 
 	void FixedUpdate(){
 		//checks if the splitter is currently between grid movement. 
-		if(isMoving)
+		if(splitState.isMoving)
 		{
 			//move downwards if the direction is downwards
 			if (moveDirection == -1)
@@ -145,7 +153,7 @@ public class Splitter_script : MonoBehaviour {
 		}
 
 		//checks if it's reached its next spot by seeing if it's y position is a whole number. 
-		if (isMoving && transform.position.y % 1 == 0) {
+		if (splitState.isMoving && transform.position.y % 1 == 0) {
 			moveDirection = 0;
 		}
 	}
@@ -191,7 +199,54 @@ public class Splitter_script : MonoBehaviour {
 	public IEnumerator MovementPause()
 	{
 		yield return new WaitForSeconds (0.07f);
-		isMoving = false;
+		splitState.isMoving = false;
 	}
-	
+
+	public State getState()
+	{
+		return splitState;
+	}
+
+	public bool getState(string name)
+	{
+		switch (name){
+		case "isMoving":
+			return splitState.isMoving;
+		case "canShoot":
+			return splitState.canShoot;
+		case "isActive":
+			return splitState.isActive;
+		case "mouseControl":
+			return splitState.mouseControl;
+		case "touchControl":
+			return splitState.touchControl;
+		}
+		Debug.LogError ("State error: no state of name " + name + " detected.");
+
+		return false;
+	}
+
+	public bool setState(string name, bool value)
+	{
+		switch (name){
+		case "isMoving":
+			splitState.isMoving = value;
+			return true;
+		case "canShoot":
+			splitState.canShoot = value;
+			return true;
+		case "isActive":
+			splitState.isActive = value;
+			return true;
+		case "mouseControl":
+			splitState.mouseControl = value;
+			return true;
+		case "touchControl":
+			splitState.touchControl = value;
+			return true;
+		}
+
+		Debug.LogError ("State error: no state of name " + name + " detected.");
+		return false;
+	}
 }

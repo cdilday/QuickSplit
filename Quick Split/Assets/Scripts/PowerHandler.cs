@@ -89,7 +89,7 @@ public class PowerHandler : MonoBehaviour {
 	void Update () {
 		//attacks
 		//red
-		if (Input.GetKeyDown ("1") && splitter.canShoot && !splitter.isMoving && redReady) {
+		if (Input.GetKeyDown ("1") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && redReady) {
 			redReady = false;
 			redProgress = 0;
 			redGoal = (int) (redGoal * 1.5);
@@ -97,7 +97,7 @@ public class PowerHandler : MonoBehaviour {
 			RedPower ();
 		}
 		//orange
-		if (Input.GetKeyDown ("2") && splitter.canShoot && !splitter.isMoving && orangeReady) {
+		if (Input.GetKeyDown ("2") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && orangeReady) {
 			orangeReady = false;
 			orangeProgress = 0;
 			orangeGoal = (int) (orangeGoal * 1.5);
@@ -105,7 +105,7 @@ public class PowerHandler : MonoBehaviour {
 			OrangePower ();
 		}
 		//yellow
-		if (Input.GetKeyDown ("3") && splitter.canShoot && !splitter.isMoving && yellowReady) {
+		if (Input.GetKeyDown ("3") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && yellowReady) {
 			yellowReady = false;
 			yellowProgress = 0;
 			yellowGoal = (int) (yellowGoal * 1.5);
@@ -113,7 +113,7 @@ public class PowerHandler : MonoBehaviour {
 			YellowPower ();
 		}
 		//green
-		if (Input.GetKeyDown ("4") && splitter.canShoot && !splitter.isMoving && greenReady) {
+		if (Input.GetKeyDown ("4") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greenReady) {
 			greenReady = false;
 			greenProgress = 0;
 			greenGoal = (int) (greenGoal * 1.5);
@@ -121,7 +121,7 @@ public class PowerHandler : MonoBehaviour {
 			GreenPower ();
 		}
 		//blue
-		if (Input.GetKeyDown ("5") && splitter.canShoot && !splitter.isMoving && blueReady) {
+		if (Input.GetKeyDown ("5") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && blueReady) {
 			blueReady = false;
 			blueProgress = 0;
 			blueGoal = (int) (blueGoal * 1.5);
@@ -129,7 +129,7 @@ public class PowerHandler : MonoBehaviour {
 			BluePower ();
 		}
 		//purple
-		if (Input.GetKeyDown ("6") && splitter.canShoot && !splitter.isMoving && purpleReady) {
+		if (Input.GetKeyDown ("6") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && purpleReady) {
 			purpleReady = false;
 			purpleProgress = 0;
 			purpleGoal = (int) (purpleGoal * 1.5);
@@ -137,7 +137,7 @@ public class PowerHandler : MonoBehaviour {
 			PurplePower ();
 		}
 		//grey
-		if (Input.GetKeyDown ("7") && splitter.canShoot && !splitter.isMoving && greyReady) {
+		if (Input.GetKeyDown ("7") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greyReady) {
 			greyReady = false;
 			greyProgress = 0;
 			greyGoal = (int) (greyGoal * 1.5);
@@ -145,7 +145,7 @@ public class PowerHandler : MonoBehaviour {
 			GreyPower ();
 		}
 		//white
-		if (Input.GetKeyDown ("8") && splitter.canShoot && !splitter.isMoving && whiteReady) {
+		if (Input.GetKeyDown ("8") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && whiteReady) {
 			whiteReady = false;
 			whiteProgress = 0;
 			whiteGoal = (int) (whiteGoal * 1.5);

@@ -191,7 +191,7 @@ public class GameController : MonoBehaviour {
 					if(colorGrid[r,c] != null && grid[r,c] != null){
 						gameOverText.text = "Game Over\nPress R to Restart";
 						gameOver = true;
-						splitter.canShoot = false;
+						splitter.setState("canShoot", false);
 					}
 				}
 			}
@@ -211,7 +211,7 @@ public class GameController : MonoBehaviour {
 				//check to see if it's time to move the sides in
 			}
 			else{
-				splitter.canShoot = true;
+				splitter.setState("canShoot", true);
 			}
 
 			//here's where we do side-entering management
@@ -386,7 +386,7 @@ public class GameController : MonoBehaviour {
 			multiRun = false;
 			checkGameOver = true;
 			if(!gameOver){
-				splitter.canShoot = true;
+				splitter.setState("canShoot", true);
 			}
 		}
 	}
@@ -535,7 +535,7 @@ public class GameController : MonoBehaviour {
 				   (colorGrid[r,9] != null && grid[r,9] != null)){
 					gameOverText.text = "Game Over\nPress R to Restart";
 					gameOver = true;
-					splitter.canShoot = false;
+					splitter.setState("canShoot", false);
 				}
 			}
 
