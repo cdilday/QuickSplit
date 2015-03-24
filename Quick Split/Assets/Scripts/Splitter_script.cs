@@ -49,12 +49,14 @@ public class Splitter_script : MonoBehaviour {
 		leftSlot.GetComponent<piece_script> ().inSplitter = true;
 		rightSlot.GetComponent<piece_script> ().inSplitter = true;
 		splitState.canShoot = true;
+		splitState.isActive = true;
 		//make a camera for mouse control to use
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (!splitState.isActive)
+						return;
 		//player Input
 		//checks if the player has opted for mouse control, if not uses key input. Uncomment to make them exclusive
 		//if (mouseControl) {

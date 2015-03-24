@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PowerHandler : MonoBehaviour {
 
@@ -46,9 +47,14 @@ public class PowerHandler : MonoBehaviour {
 	public GUIText greyText;
 	public GUIText whiteText;
 	#endregion
+
+	string powerColor;
+	string pickedColor1;
+	string pickedColor2;
 	// Use this for initialization
 	void Start () {
-
+		pickedColor1 = null;
+		pickedColor2 = null;
 		GameObject gameControllerobject = GameObject.FindGameObjectWithTag ("GameController");
 		if (gameControllerobject == null) {
 			Debug.LogError("Power Handler Error: cannot find game controller");
@@ -193,7 +199,97 @@ public class PowerHandler : MonoBehaviour {
 	//deletes leftover pieces if the switch is uneven.
 	public void OrangePower()
 	{
-		
+		powerColor = "Orange";
+		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
+		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the left side");
+	}
+	void OrangeHelper ()
+	{
+		if (pickedColor2 == null) {
+			powerColor = "Orange";
+			GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
+			picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the right side");
+			return;
+		}
+
+		List<GameObject> leftPieces = new List<GameObject>();
+		List<GameObject> rightPieces = new List<GameObject>();
+
+		//go through left side, store all pieces of color 1 in an array
+		for (int r = 0; r < 8; r++) {
+			for (int c = 7; c >=0; c--){
+				//Debug.Log ("Checking position R: " + r + " C: " + c);
+				if(gameController.grid[r,c] != null)
+				{
+					if(gameController.colorGrid[r,c] == pickedColor1)
+					{
+						leftPieces.Add (gameController.grid[r,c]);
+					}
+				}
+			}
+		}
+		//same with right
+		for (int r = 0; r < 8; r++) {
+			for (int c = 8; c < 16; c++){
+				//Debug.Log ("Checking position R: " + r + " C: " + c);
+				if(gameController.grid[r,c] != null)
+				{
+					if(gameController.colorGrid[r,c] == pickedColor2)
+					{
+						rightPieces.Add (gameController.grid[r,c]);
+					}
+				}
+			}
+		}
+		//get both lengths and store the smallest size
+		int smallestSize = Mathf.Min (leftPieces.Count, rightPieces.Count);
+		int largestSize = Mathf.Max (leftPieces.Count, rightPieces.Count);
+		int difference = largestSize - smallestSize;
+		bool leftLarger = (leftPieces.Count >= rightPieces.Count);
+		//delete the remainder on the bigger side randomly
+		bool deleted = false;
+		if(leftLarger){
+			for (; difference > 0; difference--)
+			{
+				int randPiece = (int) Random.Range(0, leftPieces.Count);
+				int r =(int) leftPieces[randPiece].GetComponent<piece_script>().gridPos.x;
+				int c =(int) leftPieces[randPiece].GetComponent<piece_script>().gridPos.y;
+				leftPieces.RemoveAt(randPiece);
+				Destroy(gameController.grid[r,c]);
+				gameController.grid[r,c] = null;
+				gameController.colorGrid[r,c] = null;
+				deleted = true;
+			}
+		}
+		else {
+			for (; difference > 0; difference--)
+			{
+				int randPiece = (int) Random.Range(0, rightPieces.Count);
+				int r = (int) rightPieces[randPiece].GetComponent<piece_script>().gridPos.x;
+				int c = (int) rightPieces[randPiece].GetComponent<piece_script>().gridPos.y;
+				rightPieces.RemoveAt(randPiece);
+				Destroy(gameController.grid[r,c]);
+				gameController.grid[r,c] = null;
+				gameController.colorGrid[r,c] = null;
+				deleted = true;
+			}
+		}
+		if (deleted){
+			gameController.collapse();
+		}
+		//swap colors in each array
+		for (int i = 0; i < leftPieces.Count; i++) {
+			leftPieces[i].GetComponent<piece_script>().ConvertColor(pickedColor2);
+		}
+		for (int i = 0; i < rightPieces.Count; i++) {
+			rightPieces[i].GetComponent<piece_script>().ConvertColor(pickedColor1);
+		}
+		//check the board
+		StartCoroutine (gameController.boardWaiter ());
+		pickedColor1 = null;
+		pickedColor2 = null;
+		powerColor = null;
+		splitter.setState ("isActive", true);
 	}
 	//Yellow attack: launches a single lightning bolt to each side that removes any blocks in the splitter's row
 	public void YellowPower()
@@ -238,6 +334,34 @@ public class PowerHandler : MonoBehaviour {
 	public void WhitePower() //consider renaming to ability, in hindsight I probably should've looked at that first
 	{
 		
+	}
+
+	public void colorSelected(string color)
+	{
+		switch (powerColor) {
+		case "Orange":
+			if(pickedColor1 == null)
+			{
+				pickedColor1 = color;
+				GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
+				picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the right side");
+			}
+			else if(pickedColor2 == null)
+			{
+				pickedColor2 = color;
+				OrangeHelper();
+			}
+			break;
+		case "Green":
+		
+			break;
+		case "Blue":
+
+			break;
+		case "Purple":
+	
+			break;
+		}
 	}
 
 	public void addBit(string colorOfBit)

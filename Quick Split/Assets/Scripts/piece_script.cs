@@ -20,6 +20,7 @@ public class piece_script : MonoBehaviour {
 	float moveStep;
 	bool isMoving;
 
+	public Sprite[] sprites = new Sprite[8];
 	//value assigned to each piece that shows how many pieces are in a group of adjacent stuff.
 	public int groupValue;
 
@@ -141,6 +142,42 @@ public class piece_script : MonoBehaviour {
 		locked = true;
 	}
 
+	public void ConvertColor(string newColor)
+	{
+		if (newColor == pieceColor){
+			return;
+		}
+
+		pieceColor = newColor;
+		gameController.colorGrid [(int)gridPos.x, (int)gridPos.y] = newColor;
+		switch (newColor)
+		{
+		case "Red":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+			break;
+		case "Orange":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+			break;
+		case "Yellow":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+			break;
+		case "Green":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+			break;
+		case "Blue":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+			break;
+		case "Purple":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+			break;
+		case "Grey":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
+			break;
+		case "White":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
+			break;
+		}
+	}
 
 	void OnDestroy()
 	{
