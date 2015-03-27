@@ -5,14 +5,14 @@ public class Color_Selector : MonoBehaviour {
 
 	public GUIText selectionText;
 	Splitter_script splitter;
-	PowerHandler powerHandler;
+	SpellHandler spellHandler;
 
 	// Use this for initialization
 	void Start () {
 		selectionText.pixelOffset = new Vector2 (Screen.width / 2f, Screen.height / 2f);
 		splitter = GameObject.FindGameObjectWithTag ("Splitter").GetComponent<Splitter_script> ();
 		splitter.setState ("isActive", false);
-		powerHandler = GameObject.Find ("Power Handler").GetComponent<PowerHandler> ();
+		spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
 	}
 
 	public void givePurpose(string purpose)
@@ -22,13 +22,14 @@ public class Color_Selector : MonoBehaviour {
 
 	public void colorSelected(string color)
 	{
-		powerHandler.colorSelected (color);
+		spellHandler.colorSelected (color);
+		splitter.setState ("inTransition", true);
 		Destroy (gameObject);
 	}
 
 	void onDestroy()
 	{
-		//broadcast to power handler the color selected
+		//broadcast to spell handler the color selected
 		// make the splitter active again
 	}
 }

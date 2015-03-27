@@ -10,6 +10,7 @@ public class Splitter_script : MonoBehaviour {
 		public bool isActive;
 		public bool mouseControl;
 		public bool touchControl;
+		public bool inTransition;
 	}
 
 	State splitState = new State ();
@@ -50,6 +51,7 @@ public class Splitter_script : MonoBehaviour {
 		rightSlot.GetComponent<piece_script> ().inSplitter = true;
 		splitState.canShoot = true;
 		splitState.isActive = true;
+		splitState.inTransition = false;
 		//make a camera for mouse control to use
 	}
 	
@@ -82,7 +84,7 @@ public class Splitter_script : MonoBehaviour {
 						swap ();
 				}
 				//launching pieces with Left click while over the board
-				if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot) {
+			if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
 						StartCoroutine (fire ());
 						splitState.canShoot = false;
 						gameController.movesMade++;
@@ -108,13 +110,17 @@ public class Splitter_script : MonoBehaviour {
 				swap ();
 		}
 		//launching pieces with key Space
-		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot) {
+		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
 				StartCoroutine (fire ());
 				splitState.canShoot = false;
 				gameController.movesMade++;
 				gameController.updateMoves ();
 		}
 
+		if(Input.GetMouseButtonUp(0))
+		{
+			splitState.inTransition = false;
+		}
 		//}//ending bracket for mouse/keyboard exclusivity
 
 		//some debug keys
@@ -222,6 +228,8 @@ public class Splitter_script : MonoBehaviour {
 			return splitState.mouseControl;
 		case "touchControl":
 			return splitState.touchControl;
+		case "inTransition":
+			return splitState.inTransition;
 		}
 		Debug.LogError ("State error: no state of name " + name + " detected.");
 
@@ -245,6 +253,9 @@ public class Splitter_script : MonoBehaviour {
 			return true;
 		case "touchControl":
 			splitState.touchControl = value;
+			return true;
+		case "inTransition":
+			splitState.inTransition = value;
 			return true;
 		}
 

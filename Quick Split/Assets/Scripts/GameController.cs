@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class GameController : MonoBehaviour {
 
@@ -98,7 +100,7 @@ public class GameController : MonoBehaviour {
 		sideColumns [0] = null;
 		sideColumns [1] = null;
 		GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
-		powerHolder = GameObject.Find ("Power Handler");
+		powerHolder = GameObject.Find ("Spell Handler");
 		if(gameType == "Wit"){
 
 			availableCount = 8;
@@ -179,6 +181,10 @@ public class GameController : MonoBehaviour {
 		//code for restarting the game after a game over
 		if (gameOver && Input.GetKeyDown ("r")) {
 			Application.LoadLevel(Application.loadedLevel);
+		}
+
+		if (Input.GetKeyDown ("0")) {
+			recalculateBoard();
 		}
 	}
 
@@ -385,6 +391,7 @@ public class GameController : MonoBehaviour {
 		else {
 			multiRun = false;
 			checkGameOver = true;
+			recalculateBoard();
 			if(!gameOver){
 				splitter.setState("canShoot", true);
 			}
@@ -594,6 +601,8 @@ public class GameController : MonoBehaviour {
 				colorGrid[r, 0] = sideColumns[0].colorColumn[r];
 				grid[r,0] = sideColumns[0].column[r];
 				grid[r,0].GetComponent<piece_script>().movePiece(new Vector2(-8, r));
+				grid[r,0].GetComponent<piece_script>().inSideHolder = false;
+				grid[r,0].transform.parent = null;
 			}
 			sideColumns[0].empty();
 			sideColumns [0].reload ();
@@ -603,6 +612,8 @@ public class GameController : MonoBehaviour {
 				colorGrid[r, 15] = sideColumns[1].colorColumn[r];
 				grid[r,15] = sideColumns[1].column[r];
 				grid[r,15].GetComponent<piece_script>().movePiece(new Vector2(15-8, r));
+				grid[r,15].GetComponent<piece_script>().inSideHolder = false;
+				grid[r,15].transform.parent = null;
 			}
 			sideColumns[1].empty();
 			sideColumns [1].reload ();
@@ -651,14 +662,27 @@ public class GameController : MonoBehaviour {
 		grid = new GameObject[8, 16];
 		colorGrid = new string[8, 16];
 		GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
+		List<GameObject> offendingPieces = new List<GameObject>();
 		foreach (GameObject piece in allPieces) {
 			piece_script temp = piece.GetComponent<piece_script>();
 			//if it's on the grid, add it to the grid
-			if(!temp.inHolder && !temp.inSplitter && !temp.inSideHolder)
+			if(temp != null && !temp.inHolder && !temp.inSplitter && !temp.inSideHolder)
 			{
-				grid [(int)temp.gridPos.x, (int)temp.gridPos.y] = piece;
-				colorGrid [(int)temp.gridPos.x, (int)temp.gridPos.y] = temp.pieceColor;
+				//it's just been shot, ignore it for now
+				if(!(temp.gridPos.x < 0))
+				{
+					if( grid [(int)temp.gridPos.x, (int)temp.gridPos.y] == null)
+					{
+						grid [(int)temp.gridPos.x, (int)temp.gridPos.y] = piece;
+						colorGrid [(int)temp.gridPos.x, (int)temp.gridPos.y] = temp.pieceColor;
+					}
+					else
+						offendingPieces.Add(piece);
+				}
 			}
+		}
+		foreach (GameObject piece in offendingPieces) {
+			Destroy(piece);
 		}
 		collapse ();
 	}

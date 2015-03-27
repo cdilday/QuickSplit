@@ -7,6 +7,7 @@ public class piece_script : MonoBehaviour {
 	public bool inSplitter;
 	public bool inHolder;
 	public bool inSideHolder;
+	public bool isBomb;
 
 	public GameObject scoreTextPrefab;
 
@@ -34,10 +35,11 @@ public class piece_script : MonoBehaviour {
 
 	public Splitter_script splitter;
 
-	public PowerHandler powerHandler;
+	public SpellHandler spellHandler;
 
 	// Use this for initialization
 	void Start () {
+		isBomb = false;
 		isMoving = false;
 		groupValue = 1;
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
@@ -48,9 +50,9 @@ public class piece_script : MonoBehaviour {
 		if (splitterObject != null) {
 			splitter = splitterObject.GetComponent <Splitter_script>();
 		}
-		GameObject powerHandlerObject = GameObject.Find("Power Handler");
-		if (powerHandlerObject != null) {
-			powerHandler = powerHandlerObject.GetComponent <PowerHandler>();
+		GameObject spellHandlerObject = GameObject.Find("Spell Handler");
+		if (spellHandlerObject != null) {
+			spellHandler = spellHandlerObject.GetComponent <SpellHandler>();
 		}
 		//set grid position to -3,-3 until it's locked to prevent accidental cancelling.
 		gridPos = new Vector2 (-3, -3);
@@ -58,16 +60,17 @@ public class piece_script : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		//this code is to ensure collisions don't offset piece's individual positions
 		prevPos = transform.position;
 		if (!isMoving && locked && lockPos != prevPos) {
 			transform.position = lockPos;
-			if(!inHolder)
+			if(!inHolder && !inSideHolder){
 				gridPos = new Vector2((int)lockPos.y, (int)lockPos.x + 8);
+			}
 		}
 
-		if(isMoving && moveProgress <= 10)
+		if(isMoving && moveProgress < 10)
 		{
 			transform.position = new Vector2(transform.position.x + (moveStepx), transform.position.y + (moveStepy));
 			moveProgress++;
@@ -134,6 +137,8 @@ public class piece_script : MonoBehaviour {
 				//places the piece in the grid upkept by the game controller
 				gameController.placePiece(gameObject);
 			}
+			if(isBomb)
+				Destroy (gameObject);
 		}
 	}
 
@@ -234,15 +239,32 @@ public class piece_script : MonoBehaviour {
 			}
 
 		}
+		if (isBomb) {
+			for(int r = 0; r < 3; r++)
+			{
+				for (int c = 0; c < 3; c++)
+				{
+					//check to make sure it's a valid move
+					if((int)(gridPos.x-1+r) >= 0 && (int)(gridPos.x-1+r) <= 7 && (int)gridPos.y-1+c >= 0 && (int)gridPos.y-1+c <= 15 &&
+					   gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] != null)
+					{
+						Destroy(gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c]);
+						gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
+						gameController.colorGrid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
+					}
+				}
+			}
+			gameController.collapse ();
+		}
 	}
 
 	void OnMouseOver(){
 		if (selectable && Input.GetMouseButtonDown (0)) {
-			if(powerHandler.powerColor == "Green")
+			if(spellHandler.spellColor == "Green")
 			{
 				GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 				picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to change this piece to");
-				powerHandler.selectedPiece = this;
+				spellHandler.selectedPiece = this;
 				selectable = false;
 			}
 			//gameObject.GetComponentInParent<Color_Selector>().colorSelected(pieceColor);

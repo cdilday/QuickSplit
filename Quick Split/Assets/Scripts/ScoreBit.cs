@@ -14,8 +14,8 @@ public class ScoreBit : MonoBehaviour {
 
 	GameController gameController;
 
-	bool powerActive = false;
-	PowerHandler powerHandler;
+	bool spellActive = false;
+	SpellHandler spellHandler;
 
 	// Use this for initialization
 	void Start () {
@@ -27,12 +27,12 @@ public class ScoreBit : MonoBehaviour {
 			gameController = gameControllerObject.GetComponent <GameController>();
 			if(gameController.gameType == "Holy" || gameController.gameType == "Wiz")
 			{
-				powerActive = true;
-				powerHandler = GameObject.Find ("Power Handler").GetComponent<PowerHandler>();
+				spellActive = true;
+				spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler>();
 			}
 			else
 			{
-				powerActive = false;
+				spellActive = false;
 			}
 		}
 	}
@@ -108,8 +108,8 @@ public class ScoreBit : MonoBehaviour {
 		if(!gameController.gameOver){
 			gameController.score += value;
 			gameController.updateScore();
-			if (powerActive) {
-				powerHandler.addBit(bitColor);
+			if (spellActive) {
+				spellHandler.addBit(bitColor);
 			}
 		}
 	}

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class PowerHandler : MonoBehaviour {
+public class SpellHandler : MonoBehaviour {
 
 	GameController gameController;
 	Splitter_script splitter;
@@ -50,18 +50,18 @@ public class PowerHandler : MonoBehaviour {
 	public GUIText whiteText;
 	#endregion
 
-	public string powerColor;
+	public string spellColor;
 	public piece_script selectedPiece;
 	string pickedColor1;
 	string pickedColor2;
-	int powerLimit = 0;
+	int spellLimit = 0;
 	// Use this for initialization
 	void Start () {
 		pickedColor1 = null;
 		pickedColor2 = null;
 		GameObject gameControllerobject = GameObject.FindGameObjectWithTag ("GameController");
 		if (gameControllerobject == null) {
-			Debug.LogError("Power Handler Error: cannot find game controller");
+			Debug.LogError("spell Handler Error: cannot find game controller");
 		}
 		else{
 			gameController = gameControllerobject.GetComponent<GameController>();
@@ -69,7 +69,7 @@ public class PowerHandler : MonoBehaviour {
 
 		GameObject splitterObject = GameObject.FindGameObjectWithTag ("Splitter");
 		if (splitterObject == null) {
-			Debug.LogError("Power Handler Error: cannot find Splitter");
+			Debug.LogError("spell Handler Error: cannot find Splitter");
 		}
 		else{
 			splitter = splitterObject.GetComponent<Splitter_script>();
@@ -77,7 +77,7 @@ public class PowerHandler : MonoBehaviour {
 
 		GameObject holderObject = GameObject.FindGameObjectWithTag ("Holder");
 		if (holderObject == null) {
-			Debug.LogError("Power Handler Error: cannot find holder");
+			Debug.LogError("spell Handler Error: cannot find holder");
 		}
 		else{
 			holder = holderObject.GetComponent<Holder_Script>();
@@ -113,7 +113,7 @@ public class PowerHandler : MonoBehaviour {
 			redProgress = 0;
 			redGoal = (int) (redGoal * 1.5);
 			redText.text = "Not Ready";
-			RedPower ();
+			Redspell ();
 		}
 		//orange
 		if (Input.GetKeyDown ("2") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && orangeReady) {
@@ -121,7 +121,7 @@ public class PowerHandler : MonoBehaviour {
 			orangeProgress = 0;
 			orangeGoal = (int) (orangeGoal * 1.5);
 			orangeText.text = "Not Ready";
-			OrangePower ();
+			Orangespell ();
 		}
 		//yellow
 		if (Input.GetKeyDown ("3") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && yellowReady) {
@@ -129,7 +129,7 @@ public class PowerHandler : MonoBehaviour {
 			yellowProgress = 0;
 			yellowGoal = (int) (yellowGoal * 1.5);
 			yellowText.text = "Not Ready";
-			YellowPower ();
+			Yellowspell ();
 		}
 		//green
 		if (Input.GetKeyDown ("4") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greenReady) {
@@ -137,7 +137,7 @@ public class PowerHandler : MonoBehaviour {
 			greenProgress = 0;
 			greenGoal = (int) (greenGoal * 1.5);
 			greenText.text = "Not Ready";
-			GreenPower ();
+			Greenspell ();
 		}
 		//blue
 		if (Input.GetKeyDown ("5") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && blueReady) {
@@ -145,7 +145,7 @@ public class PowerHandler : MonoBehaviour {
 			blueProgress = 0;
 			blueGoal = (int) (blueGoal * 1.5);
 			blueText.text = "Not Ready";
-			BluePower ();
+			Bluespell ();
 		}
 		//purple
 		if (Input.GetKeyDown ("6") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && purpleReady) {
@@ -153,7 +153,7 @@ public class PowerHandler : MonoBehaviour {
 			purpleProgress = 0;
 			purpleGoal = (int) (purpleGoal * 1.5);
 			purpleText.text = "Not Ready";
-			PurplePower ();
+			Purplespell ();
 		}
 		//grey
 		if (Input.GetKeyDown ("7") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greyReady) {
@@ -161,7 +161,7 @@ public class PowerHandler : MonoBehaviour {
 			greyProgress = 0;
 			greyGoal = (int) (greyGoal * 1.5);
 			greyText.text = "Not Ready";
-			GreyPower ();
+			Greyspell ();
 		}
 		//white
 		if (Input.GetKeyDown ("8") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && whiteReady) {
@@ -169,12 +169,12 @@ public class PowerHandler : MonoBehaviour {
 			whiteProgress = 0;
 			whiteGoal = (int) (whiteGoal * 1.5);
 			whiteText.text = "Not Ready";
-			WhitePower ();
+			Whitespell ();
 		}
 	}
 
 	//Red attack: Burns a layer off the top of each side, specifically deleting the block in each row closest to the center
-	public void RedPower()
+	public void Redspell()
 	{
 		/*Deletion loops work by going to the splitter's columns outwards and deleting the first piece it comes across before moving on
 		 * likely the player would only use this ability when on the brink of losing, so this is better than going from outwards in.
@@ -210,16 +210,16 @@ public class PowerHandler : MonoBehaviour {
 	}
 	//Orange atttack: switches all the pieces of a single color on one side with all the pieces of a different single color on the other side
 	//deletes leftover pieces if the switch is uneven.
-	public void OrangePower()
+	public void Orangespell()
 	{
-		powerColor = "Orange";
+		spellColor = "Orange";
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the left side");
 	}
 	void OrangeHelper ()
 	{
 		if (pickedColor2 == null) {
-			powerColor = "Orange";
+			spellColor = "Orange";
 			GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 			picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the right side");
 			return;
@@ -301,11 +301,11 @@ public class PowerHandler : MonoBehaviour {
 		StartCoroutine (gameController.boardWaiter ());
 		pickedColor1 = null;
 		pickedColor2 = null;
-		powerColor = null;
+		spellColor = null;
 		splitter.setState ("isActive", true);
 	}
 	//Yellow attack: launches a single lightning bolt to each side that removes any blocks in the splitter's row
-	public void YellowPower()
+	public void Yellowspell()
 	{
 		//get the row the splitter is in
 		int row = (int) gameController.splitter.transform.position.y;
@@ -323,10 +323,10 @@ public class PowerHandler : MonoBehaviour {
 		gameController.checkBoard ();
 	}
 	//Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
-	public void GreenPower()
+	public void Greenspell()
 	{
-		powerColor = "Green";
-		powerLimit = 3;
+		spellColor = "Green";
+		spellLimit = 3;
 		splitter.leftSlot.GetComponent<piece_script> ().selectable = true;
 		splitter.rightSlot.GetComponent<piece_script> ().selectable = true;
 		for (int r = 0; r < 3; r++) {
@@ -339,9 +339,9 @@ public class PowerHandler : MonoBehaviour {
 	}
 	public void GreenHelper()
 	{
-		powerLimit--;
+		spellLimit--;
 
-		if (powerLimit <= 0) {
+		if (spellLimit <= 0) {
 			splitter.leftSlot.GetComponent<piece_script> ().selectable = false;
 			splitter.rightSlot.GetComponent<piece_script> ().selectable = false;
 
@@ -352,31 +352,32 @@ public class PowerHandler : MonoBehaviour {
 			}
 			pickedColor1 = null;
 			pickedColor2 = null;
-			powerColor = null;
+			spellColor = null;
 			selectedPiece = null;
-			powerLimit = 0;
+			spellLimit = 0;
 			splitter.setState ("isActive", true);
 		}
 	}
 
 	//Blue attack: rearrange every splitter/holder piece to any arrangement the player chooses
-	public void BluePower()
+	public void Bluespell()
 	{
 		
 	}
 	//Purple attack: turns pieces in holder/splitter into "special" pieces
 	//special pieces are specially marked and do things such as increase score and multiplier
-	public void PurplePower()
+	public void Purplespell()
 	{
 		
 	}
-	//Grey Power: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
-	public void GreyPower()
+	//Grey spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
+	public void Greyspell()
 	{
-		
+		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
+		splitter.leftSlot.GetComponent<piece_script> ().isBomb = true;
 	}
-	//White Power: Sorts the board from rainbow down
-	public void WhitePower() //consider renaming to ability, in hindsight I probably should've looked at that first
+	//White spell: Sorts the board from rainbow down
+	public void Whitespell() //consider renaming to ability, in hindsight I probably should've looked at that first
 	{
 		//get all pieces on left side
 		List<GameObject> leftPieces = new List<GameObject>();
@@ -445,12 +446,13 @@ public class PowerHandler : MonoBehaviour {
 		}
 
 		//check the board
+		gameController.recalculateBoard ();
 		StartCoroutine (gameController.boardWaiter ());
 	}
 
 	public void colorSelected(string color)
 	{
-		switch (powerColor) {
+		switch (spellColor) {
 		case "Orange":
 			if(pickedColor1 == null)
 			{
