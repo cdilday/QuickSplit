@@ -10,6 +10,7 @@ public class ScoreBit : MonoBehaviour {
 	bool isReturning;
 	float acceleration = 0.5f;
 	float speed;
+	public int value;
 
 	GameController gameController;
 
@@ -102,8 +103,10 @@ public class ScoreBit : MonoBehaviour {
 	}
 
 	void OnDestroy(){
+		if (value < 1)
+						value = 1;
 		if(!gameController.gameOver){
-			gameController.score++;
+			gameController.score += value;
 			gameController.updateScore();
 			if (powerActive) {
 				powerHandler.addBit(bitColor);

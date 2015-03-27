@@ -517,12 +517,14 @@ public class GameController : MonoBehaviour {
 		{
 			availableCount++;
 		}
-
+	
 	}
 	//call this when the score counter needs to be updated
 	public void updateScore()
 	{
-		scoreText.text = "Score: " + score;
+		if(!gameOver && !isQuitting){
+			scoreText.text = "Score: " + score;
+		}
 	}
 
 	// MoveInward will move every piece towards the center and create free columns near the edges
@@ -641,6 +643,24 @@ public class GameController : MonoBehaviour {
 		sideColumns[0].shakeStage = 0;
 		sideColumns[1].shakeStage = 0;
 		quickMoveSides = true;
+	}
+
+	//use this to double check to make sure the arrays are accurate;
+	public void recalculateBoard ()
+	{
+		grid = new GameObject[8, 16];
+		colorGrid = new string[8, 16];
+		GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
+		foreach (GameObject piece in allPieces) {
+			piece_script temp = piece.GetComponent<piece_script>();
+			//if it's on the grid, add it to the grid
+			if(!temp.inHolder && !temp.inSplitter && !temp.inSideHolder)
+			{
+				grid [(int)temp.gridPos.x, (int)temp.gridPos.y] = piece;
+				colorGrid [(int)temp.gridPos.x, (int)temp.gridPos.y] = temp.pieceColor;
+			}
+		}
+		collapse ();
 	}
 
 	void OnApplicationQuit()

@@ -17,8 +17,11 @@ public class piece_script : MonoBehaviour {
 
 	Vector2 moveToPos;
 	int moveProgress;
-	float moveStep;
+	float moveStepx;
+	float moveStepy;
 	bool isMoving;
+
+	public bool selectable = false;
 
 	public Sprite[] sprites = new Sprite[8];
 	//value assigned to each piece that shows how many pieces are in a group of adjacent stuff.
@@ -30,6 +33,8 @@ public class piece_script : MonoBehaviour {
 	public GameController gameController;
 
 	public Splitter_script splitter;
+
+	public PowerHandler powerHandler;
 
 	// Use this for initialization
 	void Start () {
@@ -43,6 +48,10 @@ public class piece_script : MonoBehaviour {
 		if (splitterObject != null) {
 			splitter = splitterObject.GetComponent <Splitter_script>();
 		}
+		GameObject powerHandlerObject = GameObject.Find("Power Handler");
+		if (powerHandlerObject != null) {
+			powerHandler = powerHandlerObject.GetComponent <PowerHandler>();
+		}
 		//set grid position to -3,-3 until it's locked to prevent accidental cancelling.
 		gridPos = new Vector2 (-3, -3);
 		//multiplier = 1;
@@ -55,12 +64,12 @@ public class piece_script : MonoBehaviour {
 		if (!isMoving && locked && lockPos != prevPos) {
 			transform.position = lockPos;
 			if(!inHolder)
-				gridPos = new Vector2((int)lockPos.y + 8, (int)lockPos.y);
+				gridPos = new Vector2((int)lockPos.y, (int)lockPos.x + 8);
 		}
 
 		if(isMoving && moveProgress <= 10)
 		{
-			transform.position = new Vector2(transform.position.x + (moveStep), transform.position.y);
+			transform.position = new Vector2(transform.position.x + (moveStepx), transform.position.y + (moveStepy));
 			moveProgress++;
 		}
 		else if(isMoving)
@@ -131,7 +140,8 @@ public class piece_script : MonoBehaviour {
 	//takes in a vector2 for the new location and does the appropriate changes
 	public void movePiece(Vector2 newLoc)
 	{
-		moveStep = (newLoc.x - transform.position.x) / 10f;
+		moveStepx = (newLoc.x - transform.position.x) / 10f;
+		moveStepy = (newLoc.y - transform.position.y) / 10f;
 		isMoving = true;
 		locked = false;
 		moveToPos = newLoc;
@@ -140,6 +150,10 @@ public class piece_script : MonoBehaviour {
 		// the strange vector2 is because the grid has no negatives and the x/y are switched
 		gridPos = new Vector2(newLoc.y, newLoc.x + 8);
 		locked = true;
+
+		//update the gamecontroller's grid
+		gameController.grid [(int)gridPos.x, (int)gridPos.y] = gameObject;
+		gameController.colorGrid [(int)gridPos.x, (int)gridPos.y] = pieceColor;
 	}
 
 	public void ConvertColor(string newColor)
@@ -149,7 +163,9 @@ public class piece_script : MonoBehaviour {
 		}
 
 		pieceColor = newColor;
-		gameController.colorGrid [(int)gridPos.x, (int)gridPos.y] = newColor;
+		if(!inHolder && !inSplitter){
+			gameController.colorGrid [(int)gridPos.x, (int)gridPos.y] = newColor;
+		}
 		switch (newColor)
 		{
 		case "Red":
@@ -197,14 +213,39 @@ public class piece_script : MonoBehaviour {
 			thistext.scoreValue = groupValue;
 		//gameController.score += thistext.scoreValue;
 		//gameController.updateScore();
+		int indivalue = thistext.scoreValue / 10;
+		int leftover = thistext.scoreValue % 10;
+		for (int i = 0; i < 10; i++) {
+			if(indivalue == 0 && leftover == 0)
+				break;
+			else{
+				GameObject newbit = Instantiate((GameObject) Resources.Load ("Score Bit"));
+				newbit.transform.position = transform.position;
+				newbit.GetComponent<ScoreBit>().target = gameController.scoreText.transform.GetComponent<BoxCollider2D>().offset 
+															+ new Vector2( gameController.scoreText.transform.position.x,
+					              											gameController.scoreText.transform.position.y);
+				newbit.GetComponent<ScoreBit>().changeColor(pieceColor);
+				newbit.GetComponent<ScoreBit>().value = indivalue;
+				if(leftover > 0)
+				{
+					leftover--;
+					newbit.GetComponent<ScoreBit>().value++;
+				}
+			}
 
-		for (int i = 0; i < thistext.scoreValue; i++) {
-			GameObject newbit = Instantiate((GameObject) Resources.Load ("Score Bit"));
-			newbit.transform.position = transform.position;
-			newbit.GetComponent<ScoreBit>().target = gameController.scoreText.transform.GetComponent<BoxCollider2D>().offset 
-														+ new Vector2( gameController.scoreText.transform.position.x,
-				              											gameController.scoreText.transform.position.y);
-			newbit.GetComponent<ScoreBit>().changeColor(pieceColor);
+		}
+	}
+
+	void OnMouseOver(){
+		if (selectable && Input.GetMouseButtonDown (0)) {
+			if(powerHandler.powerColor == "Green")
+			{
+				GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
+				picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to change this piece to");
+				powerHandler.selectedPiece = this;
+				selectable = false;
+			}
+			//gameObject.GetComponentInParent<Color_Selector>().colorSelected(pieceColor);
 		}
 	}
 	

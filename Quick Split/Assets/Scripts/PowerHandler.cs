@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PowerHandler : MonoBehaviour {
 
 	GameController gameController;
 	Splitter_script splitter;
+	Holder_Script holder;
 
 	#region
 	public bool redReady;
@@ -48,9 +50,11 @@ public class PowerHandler : MonoBehaviour {
 	public GUIText whiteText;
 	#endregion
 
-	string powerColor;
+	public string powerColor;
+	public piece_script selectedPiece;
 	string pickedColor1;
 	string pickedColor2;
+	int powerLimit = 0;
 	// Use this for initialization
 	void Start () {
 		pickedColor1 = null;
@@ -71,6 +75,14 @@ public class PowerHandler : MonoBehaviour {
 			splitter = splitterObject.GetComponent<Splitter_script>();
 		}
 
+		GameObject holderObject = GameObject.FindGameObjectWithTag ("Holder");
+		if (holderObject == null) {
+			Debug.LogError("Power Handler Error: cannot find holder");
+		}
+		else{
+			holder = holderObject.GetComponent<Holder_Script>();
+		}
+
 		redReady = false;
 		orangeReady = false;
 		yellowReady = false;
@@ -89,6 +101,7 @@ public class PowerHandler : MonoBehaviour {
 		greyText.text = "Not Ready";
 		whiteText.text = "Not Ready";
 
+		selectedPiece = null;
 	}
 	
 	// Update is called once per frame
@@ -312,8 +325,40 @@ public class PowerHandler : MonoBehaviour {
 	//Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
 	public void GreenPower()
 	{
-		
+		powerColor = "Green";
+		powerLimit = 3;
+		splitter.leftSlot.GetComponent<piece_script> ().selectable = true;
+		splitter.rightSlot.GetComponent<piece_script> ().selectable = true;
+		for (int r = 0; r < 3; r++) {
+			for (int c = 0; c < 2; c++){
+				holder.holder[r,c].gameObject.GetComponent<piece_script>().selectable = true;
+			}
+		}
+
+		splitter.setState ("isActive", false);
 	}
+	public void GreenHelper()
+	{
+		powerLimit--;
+
+		if (powerLimit <= 0) {
+			splitter.leftSlot.GetComponent<piece_script> ().selectable = false;
+			splitter.rightSlot.GetComponent<piece_script> ().selectable = false;
+
+			for (int r = 0; r < 3; r++) {
+				for (int c = 0; c < 2; c++){
+					holder.holder[r,c].GetComponent<piece_script>().selectable = false;
+				}
+			}
+			pickedColor1 = null;
+			pickedColor2 = null;
+			powerColor = null;
+			selectedPiece = null;
+			powerLimit = 0;
+			splitter.setState ("isActive", true);
+		}
+	}
+
 	//Blue attack: rearrange every splitter/holder piece to any arrangement the player chooses
 	public void BluePower()
 	{
@@ -333,7 +378,74 @@ public class PowerHandler : MonoBehaviour {
 	//White Power: Sorts the board from rainbow down
 	public void WhitePower() //consider renaming to ability, in hindsight I probably should've looked at that first
 	{
-		
+		//get all pieces on left side
+		List<GameObject> leftPieces = new List<GameObject>();
+		for (int r = 0; r < 8; r++) {
+			for (int c = 7; c >=0; c--){
+				//Debug.Log ("Checking position R: " + r + " C: " + c);
+				if(gameController.grid[r,c] != null)
+				{
+					leftPieces.Add (gameController.grid[r,c]);
+				}
+			}
+		}
+		//sort them by color, alphabetical will do
+		IEnumerable<GameObject> sorter = leftPieces;
+		sorter = sorter.OrderBy(colorName => colorName.GetComponent<piece_script>().pieceColor);
+		leftPieces = sorter.ToList ();
+		//make sure not to game over
+		int rowHeight;
+		if (leftPieces.Count % 8 == 0)
+			rowHeight = leftPieces.Count / 8;
+		else
+			rowHeight = (leftPieces.Count / 8) + 1;
+		//put them back evenly in sorted over
+		for (int r = 0; r < 8; r++) {
+			for (int c = 0; c < rowHeight; c++){
+				if(leftPieces.Count == 0)
+					break;
+				else{
+					leftPieces[0].GetComponent<piece_script>().movePiece(new Vector2((float) (c - 8),(float)r));
+					leftPieces.RemoveAt(0);
+				}
+			}
+		}
+
+		//now for the right
+		//get all pieces on left side
+		List<GameObject> rightPieces = new List<GameObject>();
+		for (int r = 0; r < 8; r++) {
+			for (int c = 8; c < 16; c++){
+				//Debug.Log ("Checking position R: " + r + " C: " + c);
+				if(gameController.grid[r,c] != null)
+				{
+					rightPieces.Add (gameController.grid[r,c]);
+				}
+			}
+		}
+		//sort them by color, alphabetical will do
+		sorter = rightPieces;
+		sorter = sorter.OrderBy(colorName => colorName.GetComponent<piece_script>().pieceColor);
+		rightPieces = sorter.ToList ();
+		//make sure not to game over
+		if (rightPieces.Count % 8 == 0)
+			rowHeight = rightPieces.Count / 8;
+		else
+			rowHeight = (rightPieces.Count / 8) + 1;
+		//put them back evenly in sorted over
+		for (int r = 0; r < 8; r++) {
+			for (int c = 15; c > (15 - rowHeight); c--){
+				if(rightPieces.Count == 0)
+					break;
+				else{
+					rightPieces[0].GetComponent<piece_script>().movePiece(new Vector2((float) (c - 8),(float)r));
+					rightPieces.RemoveAt(0);
+				}
+			}
+		}
+
+		//check the board
+		StartCoroutine (gameController.boardWaiter ());
 	}
 
 	public void colorSelected(string color)
@@ -353,7 +465,8 @@ public class PowerHandler : MonoBehaviour {
 			}
 			break;
 		case "Green":
-		
+			selectedPiece.ConvertColor(color);
+			GreenHelper();
 			break;
 		case "Blue":
 
