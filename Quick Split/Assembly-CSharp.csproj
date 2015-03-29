@@ -46,15 +46,18 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\High_Score_Displayer.cs" />
      <Compile Include="Assets\Scripts\Color_Selector.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Holder_Script.cs" />
+     <Compile Include="Assets\Scripts\Mode_Clicker.cs" />
      <Compile Include="Assets\Scripts\PieceScoreText.cs" />
      <Compile Include="Assets\Scripts\Pulser.cs" />
      <Compile Include="Assets\Scripts\ScoreBit.cs" />
      <Compile Include="Assets\Scripts\Selectable_Color.cs" />
      <Compile Include="Assets\Scripts\SideColumn.cs" />
      <Compile Include="Assets\Scripts\SpellHandler.cs" />
+     <Compile Include="Assets\Scripts\Spell_Text.cs" />
      <Compile Include="Assets\Scripts\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\piece_script.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />

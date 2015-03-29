@@ -92,84 +92,86 @@ public class SpellHandler : MonoBehaviour {
 		greyReady = false;
 		whiteReady = false;
 
-		redText.text = "Not Ready";
-		orangeText.text = "Not Ready";
-		yellowText.text = "Not Ready";
-		greenText.text = "Not Ready";
-		blueText.text = "Not Ready";
-		purpleText.text = "Not Ready";
-		greyText.text = "Not Ready";
-		whiteText.text = "Not Ready";
+		redText.text = "0%";
+		orangeText.text = "0%";
+		yellowText.text = "0%";
+		greenText.text = "0%";
+		blueText.text = "0%";
+		purpleText.text = "0%";
+		greyText.text = "0%";
+		whiteText.text = "0%";
 
 		selectedPiece = null;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//attacks
-		//red
-		if (Input.GetKeyDown ("1") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && redReady) {
-			redReady = false;
-			redProgress = 0;
-			redGoal = (int) (redGoal * 1.5);
-			redText.text = "Not Ready";
-			Redspell ();
-		}
-		//orange
-		if (Input.GetKeyDown ("2") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && orangeReady) {
-			orangeReady = false;
-			orangeProgress = 0;
-			orangeGoal = (int) (orangeGoal * 1.5);
-			orangeText.text = "Not Ready";
-			Orangespell ();
-		}
-		//yellow
-		if (Input.GetKeyDown ("3") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && yellowReady) {
-			yellowReady = false;
-			yellowProgress = 0;
-			yellowGoal = (int) (yellowGoal * 1.5);
-			yellowText.text = "Not Ready";
-			Yellowspell ();
-		}
-		//green
-		if (Input.GetKeyDown ("4") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greenReady) {
-			greenReady = false;
-			greenProgress = 0;
-			greenGoal = (int) (greenGoal * 1.5);
-			greenText.text = "Not Ready";
-			Greenspell ();
-		}
-		//blue
-		if (Input.GetKeyDown ("5") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && blueReady) {
-			blueReady = false;
-			blueProgress = 0;
-			blueGoal = (int) (blueGoal * 1.5);
-			blueText.text = "Not Ready";
-			Bluespell ();
-		}
-		//purple
-		if (Input.GetKeyDown ("6") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && purpleReady) {
-			purpleReady = false;
-			purpleProgress = 0;
-			purpleGoal = (int) (purpleGoal * 1.5);
-			purpleText.text = "Not Ready";
-			Purplespell ();
-		}
-		//grey
-		if (Input.GetKeyDown ("7") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greyReady) {
-			greyReady = false;
-			greyProgress = 0;
-			greyGoal = (int) (greyGoal * 1.5);
-			greyText.text = "Not Ready";
-			Greyspell ();
-		}
-		//white
-		if (Input.GetKeyDown ("8") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && whiteReady) {
-			whiteReady = false;
-			whiteProgress = 0;
-			whiteGoal = (int) (whiteGoal * 1.5);
-			whiteText.text = "Not Ready";
-			Whitespell ();
+		//attacks, only activatable one at a time
+		if(spellColor == null || spellColor == ""){
+			//red
+			if (Input.GetKeyDown ("1") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && redReady) {
+				redReady = false;
+				redProgress = 0;
+				redGoal = (int) (redGoal * 1.1);
+				redText.text = "0%";
+				Redspell ();
+			}
+			//orange
+			if (Input.GetKeyDown ("2") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && orangeReady) {
+				orangeReady = false;
+				orangeProgress = 0;
+				orangeGoal = (int) (orangeGoal * 1.1);
+				orangeText.text = "0%";
+				Orangespell ();
+			}
+			//yellow
+			if (Input.GetKeyDown ("3") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && yellowReady) {
+				yellowReady = false;
+				yellowProgress = 0;
+				yellowGoal = (int) (yellowGoal * 1.1);
+				yellowText.text = "0%";
+				Yellowspell ();
+			}
+			//green
+			if (Input.GetKeyDown ("4") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greenReady) {
+				greenReady = false;
+				greenProgress = 0;
+				greenGoal = (int) (greenGoal * 1.1);
+				greenText.text = "0%";
+				Greenspell ();
+			}
+			//blue
+			if (Input.GetKeyDown ("5") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && blueReady) {
+				blueReady = false;
+				blueProgress = 0;
+				blueGoal = (int) (blueGoal * 1.1);
+				blueText.text = "0%";
+				Bluespell ();
+			}
+			//purple
+			if (Input.GetKeyDown ("6") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && purpleReady) {
+				purpleReady = false;
+				purpleProgress = 0;
+				purpleGoal = (int) (purpleGoal * 1.1);
+				purpleText.text = "0%";
+				Purplespell ();
+			}
+			//grey
+			if (Input.GetKeyDown ("7") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greyReady) {
+				greyReady = false;
+				greyProgress = 0;
+				greyGoal = (int) (greyGoal * 1.1);
+				greyText.text = "0%";
+				Greyspell ();
+			}
+			//white
+			if (Input.GetKeyDown ("8") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && whiteReady) {
+				whiteReady = false;
+				whiteProgress = 0;
+				whiteGoal = (int) (whiteGoal * 1.1);
+				whiteText.text = "0%";
+				Whitespell ();
+			}
 		}
 	}
 
@@ -362,13 +364,71 @@ public class SpellHandler : MonoBehaviour {
 	//Blue attack: rearrange every splitter/holder piece to any arrangement the player chooses
 	public void Bluespell()
 	{
-		
+		spellColor = "Blue";
+		spellLimit = 3;
+
+		GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
+		foreach (GameObject piece in allPieces) {
+			piece_script temp = piece.GetComponent<piece_script>();
+			if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter)
+			{
+				temp.selectable = true;
+			}
+		}
+
+		splitter.setState ("isActive", false);
 	}
-	//Purple attack: turns pieces in holder/splitter into "special" pieces
-	//special pieces are specially marked and do things such as increase score and multiplier
+	void BlueHelper(){
+		spellLimit--;
+		
+		if (spellLimit <= 0) {
+			splitter.leftSlot.GetComponent<piece_script> ().selectable = false;
+			splitter.rightSlot.GetComponent<piece_script> ().selectable = false;
+			
+			GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
+			foreach (GameObject piece in allPieces) {
+				piece_script temp = piece.GetComponent<piece_script>();
+				if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter)
+				{
+					temp.selectable = false;
+				}
+			}
+			pickedColor1 = null;
+			pickedColor2 = null;
+			spellColor = null;
+			selectedPiece = null;
+			spellLimit = 0;
+			splitter.setState ("isActive", true);
+			gameController.checkBoard();
+		}
+	}
+
+
+	//Purple attack: deletes all pieces of the selected color on the board
 	public void Purplespell()
 	{
-		
+		spellColor = "Purple";
+		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
+		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to eliminate from the board");
+		splitter.setState ("isActive", false);
+	}
+	void PurpleHelper()
+	{
+		GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
+		foreach (GameObject piece in allPieces) {
+			piece_script temp = piece.GetComponent<piece_script>();
+			if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter && temp.pieceColor == pickedColor1)
+			{
+				gameController.grid[(int)temp.gridPos.x, (int)temp.gridPos.y] = null;
+				gameController.colorGrid[(int)temp.gridPos.x, (int)temp.gridPos.y] = null;
+				Destroy (piece);
+			}
+		}
+		gameController.collapse ();
+		StartCoroutine (gameController.boardWaiter ());
+		pickedColor1 = null;
+		spellColor = null;
+		splitter.setState ("isActive", true);
 	}
 	//Grey spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
 	public void Greyspell()
@@ -471,10 +531,12 @@ public class SpellHandler : MonoBehaviour {
 			GreenHelper();
 			break;
 		case "Blue":
-
+			selectedPiece.ConvertColor(color);
+			BlueHelper();
 			break;
 		case "Purple":
-	
+			pickedColor1 = color;
+			PurpleHelper();
 			break;
 		}
 	}
@@ -489,6 +551,9 @@ public class SpellHandler : MonoBehaviour {
 				redReady = true;
 				redText.text = "Ready!";
 			}
+			else{
+				redText.text = ((int) (((float)redProgress/(float)redGoal) * 100f)) + "%";
+			}
 			break;
 		case "Orange":
 			orangeProgress++;
@@ -496,6 +561,9 @@ public class SpellHandler : MonoBehaviour {
 				orangeProgress = orangeGoal;
 				orangeReady = true;
 				orangeText.text = "Ready!";
+			}
+			else{
+				orangeText.text = ((int) (((float)orangeProgress/(float)orangeGoal) * 100f)) + "%";
 			}
 			break;
 		case "Yellow":
@@ -505,6 +573,9 @@ public class SpellHandler : MonoBehaviour {
 				yellowReady = true;
 				yellowText.text = "Ready!";
 			}
+			else{
+				yellowText.text = ((int) (((float)yellowProgress/(float)yellowGoal) * 100f)) + "%";
+			}
 			break;
 		case "Green":
 			greenProgress++;
@@ -512,6 +583,9 @@ public class SpellHandler : MonoBehaviour {
 				greenProgress = greenGoal;
 				greenReady = true;
 				greenText.text = "Ready!";
+			}
+			else{
+				greenText.text = ((int) (((float)greenProgress/(float)greenGoal)* 100f)) + "%";
 			}
 			break;
 		case "Blue":
@@ -521,6 +595,9 @@ public class SpellHandler : MonoBehaviour {
 				blueReady = true;
 				blueText.text = "Ready!";
 			}
+			else{
+				blueText.text = ((int) (((float)blueProgress/(float)blueGoal) * 100f)) + "%";
+			}
 			break;
 		case "Purple":
 			purpleProgress++;
@@ -528,6 +605,9 @@ public class SpellHandler : MonoBehaviour {
 				purpleProgress = purpleGoal;
 				purpleReady = true;
 				purpleText.text = "Ready!";
+			}
+			else{
+				purpleText.text = ((int) (((float)purpleProgress/(float)purpleGoal) * 100f)) + "%";
 			}
 			break;
 		case "Grey":
@@ -537,6 +617,9 @@ public class SpellHandler : MonoBehaviour {
 				greyReady = true;
 				greyText.text = "Ready!";
 			}
+			else{
+				greyText.text = ((int) (((float)greyProgress/(float)greyGoal) * 100f)) + "%";
+			}
 			break;
 		case "White":
 			whiteProgress++;
@@ -544,6 +627,9 @@ public class SpellHandler : MonoBehaviour {
 				whiteProgress = whiteGoal;
 				whiteReady = true;
 				whiteText.text = "Ready!";
+			}
+			else{
+				whiteText.text = ((int) (((float)whiteProgress/(float)whiteGoal)* 100f)) + "%";
 			}
 			break;
 		}

@@ -65,6 +65,21 @@ public class GameController : MonoBehaviour {
 	public bool isQuitting;
 	
 	void Awake () {
+		switch (PlayerPrefs.GetInt ("Mode")) {
+		case 0:
+			gameType = "Wit";
+			break;
+		case 1: 
+			gameType = "Quick";
+			break;
+		case 2:
+			gameType = "Wiz";
+			break;
+		case 3:
+			gameType = "Holy";
+			break;
+		}
+
 		mainCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 
 		//reposition score to wherever it may be
@@ -168,6 +183,12 @@ public class GameController : MonoBehaviour {
 			}
 		}
 
+		if(gameType != "Wit" && sideColumns != null && sideColumns[0].side == "Right")
+		{
+			SideColumn temp = sideColumns[0];
+			sideColumns[0] = sideColumns[1];
+			sideColumns[1] = temp;
+		}
 		sidesChecked = false;
 
 		//initially update the moves and scores
@@ -182,6 +203,10 @@ public class GameController : MonoBehaviour {
 		if (gameOver && Input.GetKeyDown ("r")) {
 			Application.LoadLevel(Application.loadedLevel);
 		}
+		else if (gameOver && Input.GetKeyDown (KeyCode.Backspace))
+		{
+			Application.LoadLevel ("Split Title Scene");
+		}
 
 		if (Input.GetKeyDown ("0")) {
 			recalculateBoard();
@@ -195,9 +220,12 @@ public class GameController : MonoBehaviour {
 			for (int c = 7; c <= 8; c++) {
 				for (int r = 0; r <= 7; r++){
 					if(colorGrid[r,c] != null && grid[r,c] != null){
-						gameOverText.text = "Game Over\nPress R to Restart";
+						gameOverText.text = "Game Over\nPress R to Restart\nor Backspace to pick a new Game Mode";
 						gameOver = true;
 						splitter.setState("canShoot", false);
+						if(PlayerPrefs.GetInt(gameType, 0) < score){
+							PlayerPrefs.SetInt (gameType, score);
+						}
 					}
 				}
 			}
@@ -314,6 +342,7 @@ public class GameController : MonoBehaviour {
 	 * current multiplier.*/
 	public void checkBoard()
 	{
+		recalculateBoard();
 		//reset the bool board for the current run
 		for(int r = 0; r <=7; r++ )
 		{
@@ -391,7 +420,6 @@ public class GameController : MonoBehaviour {
 		else {
 			multiRun = false;
 			checkGameOver = true;
-			recalculateBoard();
 			if(!gameOver){
 				splitter.setState("canShoot", true);
 			}

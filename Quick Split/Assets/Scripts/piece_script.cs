@@ -260,7 +260,7 @@ public class piece_script : MonoBehaviour {
 
 	void OnMouseOver(){
 		if (selectable && Input.GetMouseButtonDown (0)) {
-			if(spellHandler.spellColor == "Green")
+			if(spellHandler.spellColor == "Green" || spellHandler.spellColor == "Blue")
 			{
 				GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 				picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to change this piece to");
