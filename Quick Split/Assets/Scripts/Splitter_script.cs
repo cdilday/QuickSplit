@@ -66,25 +66,32 @@ public class Splitter_script : MonoBehaviour {
 		//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
 		mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		//checking that the mouse is within the grid
-		if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5 && mouseLocation.y <= 7.5) {
-				//Moving up if the mouse is above the splitter's hitbox
-				if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
-						moveDirection = 1;
-						StartCoroutine (MovementPause ());
-						splitState.isMoving = true;
+		if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5) {
+			//Mobile friendly; can only move when mouse is on the right side
+			//Moving up if the mouse is above the splitter's hitbox
+			if(mouseLocation.x > 0){
+				if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7 && mouseLocation.x > 0) {
+					moveDirection = 1;
+					StartCoroutine (MovementPause ());
+					splitState.isMoving = true;
 				}
 				//Moving downwards if the mouse is below the splitter's hitbox
 				if ((mouseLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0) {
-						moveDirection = -1;
-						StartCoroutine (MovementPause ());
-						splitState.isMoving = true;
+					moveDirection = -1;
+					StartCoroutine (MovementPause ());
+					splitState.isMoving = true;
 				}
-				//Swapping pieces with right click
-				if (Input.GetMouseButtonDown (1)) {
-						swap ();
-				}
-				//launching pieces with Left click while over the board
-			if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
+			}
+			//Swapping pieces with right click if on PC
+			if (Input.GetMouseButtonDown (1) ) {
+				swap ();
+			}
+			else if (Input.GetMouseButtonDown(0) && mouseLocation.x <=0)
+			{
+				swap ();
+			}
+			//launching pieces with Left click while over the board
+			else if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
 						StartCoroutine (fire ());
 						splitState.canShoot = false;
 						gameController.movesMade++;

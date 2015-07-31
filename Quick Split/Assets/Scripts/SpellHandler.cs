@@ -434,7 +434,13 @@ public class SpellHandler : MonoBehaviour {
 	public void Greyspell()
 	{
 		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
+		Vector3 hsv = RGBandHSVconverter.RGBtoHSV (splitter.rightSlot.GetComponent<SpriteRenderer> ().color);
+		hsv = new Vector3(hsv.x, hsv.y, hsv.z - 0.5f);
+  		splitter.rightSlot.GetComponent<SpriteRenderer> ().color = RGBandHSVconverter.HSVtoRGB(hsv);
 		splitter.leftSlot.GetComponent<piece_script> ().isBomb = true;
+		hsv = RGBandHSVconverter.RGBtoHSV (splitter.leftSlot.GetComponent<SpriteRenderer> ().color);
+		hsv = new Vector3(hsv.x, hsv.y, hsv.z - 0.5f);
+		splitter.leftSlot.GetComponent<SpriteRenderer> ().color = RGBandHSVconverter.HSVtoRGB(hsv);
 	}
 	//White spell: Sorts the board from rainbow down
 	public void Whitespell() //consider renaming to ability, in hindsight I probably should've looked at that first
