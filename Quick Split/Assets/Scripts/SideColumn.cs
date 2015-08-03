@@ -37,16 +37,16 @@ public class SideColumn : MonoBehaviour {
 
 		// begin by poisitioning these at the right locations
 		if (side == "Left" || side == "left" || side == "L" || side == "l") {
-			Vector2 tempPos = new Vector2(-9.5f, 0);
+			Vector2 tempPos = new Vector2(-9f, 0);
 			this.transform.position = tempPos;
-			sideXValue = -9.5f;
+			sideXValue = -9f;
 			sideInt = 0;
 		}
 		else if (side == "Right" || side == "right" || side == "R" || side == "R")
 		{
-			Vector2 tempPos = new Vector2(8.5f, 0);
+			Vector2 tempPos = new Vector2(8f, 0);
 			this.transform.position = tempPos;
-			sideXValue = 8.5f;
+			sideXValue = 8f;
 			sideInt = 1;
 		}
 		else
@@ -96,9 +96,9 @@ public class SideColumn : MonoBehaviour {
 	{
 		//pulse will make the columns pulse around the grid signify they're ready to enter
 		if(sideInt == 0)
-			transform.position = new Vector2 ((Mathf.Sin (Time.time * 4) *0.5f) + permPosition.x , permPosition.y);
+			transform.position = new Vector2 ((Mathf.Sin (Time.time * 4) *0.25f) + (permPosition.x - 0.25f) , permPosition.y);
 		else if(sideInt == 1)
-			transform.position = new Vector2 ((Mathf.Sin ((Time.time * 4) + Mathf.PI) *0.5f) + permPosition.x , permPosition.y);
+			transform.position = new Vector2 ((Mathf.Sin ((Time.time * 4) + Mathf.PI) *0.25f) + (permPosition.x +0.25f) , permPosition.y);
 
 	}
 

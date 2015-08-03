@@ -16,6 +16,9 @@ public class Splitter_script : MonoBehaviour {
 	State splitState = new State ();
 	
 	public int moveDirection; // 1 if it's moving upwards, -1 if downwards, 0 if not currently moving
+	int moveTarget;
+	float moveStartTime;
+	const float moveDuration = 0.08f;
 
 	//prefabs containing all the different colored pieces
 	public Transform[] pieces;
@@ -58,7 +61,7 @@ public class Splitter_script : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!splitState.isActive)
-						return;
+			return;
 		//player Input
 		//checks if the player has opted for mouse control, if not uses key input. Uncomment to make them exclusive
 		//if (mouseControl) {
@@ -66,21 +69,15 @@ public class Splitter_script : MonoBehaviour {
 		//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
 		mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		//checking that the mouse is within the grid
-		if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5) {
-			//Mobile friendly; can only move when mouse is on the right side
-			//Moving up if the mouse is above the splitter's hitbox
-			if(mouseLocation.x > 0){
-				if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7 && mouseLocation.x > 0) {
-					moveDirection = 1;
-					StartCoroutine (MovementPause ());
-					splitState.isMoving = true;
-				}
-				//Moving downwards if the mouse is below the splitter's hitbox
-				if ((mouseLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0) {
-					moveDirection = -1;
-					StartCoroutine (MovementPause ());
-					splitState.isMoving = true;
-				}
+		/*if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5) {
+			// mobile controls: top third the screen moves it up, bottom moves it down, right mid fires, left mid swaps
+
+			if (Input.mousePosition.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
+				MoveUp();
+			}
+			//Moving downwards if the mouse is below the splitter's hitbox
+			if (Input.mousePosition.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
+				MoveDown();
 			}
 			//Swapping pieces with right click if on PC
 			if (Input.GetMouseButtonDown (1) ) {
@@ -92,25 +89,60 @@ public class Splitter_script : MonoBehaviour {
 			}
 			//launching pieces with Left click while over the board
 			else if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
-						StartCoroutine (fire ());
-						splitState.canShoot = false;
-						gameController.movesMade++;
-						gameController.updateMoves ();
+				StartCoroutine (fire ());
+				splitState.canShoot = false;
+				gameController.movesMade++;
+				gameController.updateMoves ();
+			}
+		}*/
+
+		bool hasMoveTouch = false;
+		bool hasFireTouch = false;
+
+		foreach (Touch poke in Input.touches) {
+			//we only want to put in one movement touch per frame, so take the first one and listen to that
+			if( !hasMoveTouch)
+			{
+				//moving up if user has touched top of play field
+				if (poke.position.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
+					MoveUp();
+					hasMoveTouch = true;
+					continue;
 				}
+				//moving down if user has touched bottom of play field
+				if (poke.position.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
+					MoveDown ();
+					hasMoveTouch = true;
+					continue;
+				}
+			}
+
+			if(!hasFireTouch && poke.phase == TouchPhase.Began)
+			{
+				if(poke.position.x / Screen.width < 0.5f)
+				{
+					swap ();
+					hasFireTouch = true;
+				}
+				else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
+					StartCoroutine (fire ());
+					splitState.canShoot = false;
+					gameController.movesMade++;
+					gameController.updateMoves ();
+					hasFireTouch = true;
+				}
+			}
 		}
-		//}
-		//else{
+
+		//mobile input, can't just fake it with the mouse
+
 		//moving upwards with keys W or Up
 		if ((Input.GetKey ("w") || Input.GetKey ("up")) && !splitState.isMoving && transform.position.y < 7) {
-				moveDirection = 1;
-				StartCoroutine (MovementPause ());
-				splitState.isMoving = true;
+			MoveUp ();
 		}
 		//moving downwards with keys S or Down
 		if ((Input.GetKey ("s") || Input.GetKey ("down")) && !splitState.isMoving && transform.position.y > 0) {
-				moveDirection = -1;
-				StartCoroutine (MovementPause ());
-				splitState.isMoving = true;
+			MoveDown ();
 		}
 		//swapping pieces with keys A, D, Left, or Right
 		if (Input.GetKeyDown ("a") || Input.GetKeyDown ("d") || Input.GetKeyDown ("left") || Input.GetKeyDown ("right")) {
@@ -141,14 +173,16 @@ public class Splitter_script : MonoBehaviour {
 		//checks if the splitter is currently between grid movement. 
 		if(splitState.isMoving)
 		{
-			//move downwards if the direction is downwards
-			if (moveDirection == -1)
+			//check to see if the movement time is up. If it is, put it to it's proper location
+			if(Mathf.Abs(moveStartTime - Time.time) > moveDuration)
 			{
-				transform.position = new Vector3(transform.position.x, transform.position.y - 0.25f,-1);
+				moveDirection = 0;
+				splitState.isMoving = false;
+				transform.position = new Vector3(transform.position.x, moveTarget,-1);
 			}
-			else if (moveDirection == 1) //move upwards if the direction is upwards
+			else //visually move it
 			{
-				transform.position = new Vector3(transform.position.x, transform.position.y + 0.25f,-1);
+				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * 0.25f) ,-1);
 			}
 		}
 
@@ -173,6 +207,35 @@ public class Splitter_script : MonoBehaviour {
 		}
 	}
 
+	void MoveUp()
+	{
+		//first check to make sure it's possible
+		if (splitState.isMoving || transform.position.y >= 6.9f) {
+			return;
+		}
+		
+		int currentLoc = (int) transform.position.y;
+		moveTarget = currentLoc + 1;
+		
+		moveDirection = 1;
+		moveStartTime = Time.time;
+		splitState.isMoving = true;
+	}
+
+	void MoveDown()
+	{
+		//first check to make sure it's possible
+		if (splitState.isMoving || transform.position.y <= 0.1f) {
+			return;
+		}
+
+		int currentLoc = (int) transform.position.y;
+		moveTarget = currentLoc - 1;
+
+		moveDirection = -1;
+		moveStartTime = Time.time;
+		splitState.isMoving = true;
+	}
 	//swaps the left and right slot
 	public void swap()
 	{
@@ -208,13 +271,6 @@ public class Splitter_script : MonoBehaviour {
 		rightSlot.GetComponent<piece_script> ().inHolder = false;
 		leftSlot.GetComponent<piece_script> ().inSplitter = true;
 		rightSlot.GetComponent<piece_script> ().inSplitter = true;
-	}
-
-	//Adds a short pause to allow for more precise movement, then sets is moving to false to allow the player to move again
-	public IEnumerator MovementPause()
-	{
-		yield return new WaitForSeconds (0.07f);
-		splitState.isMoving = false;
 	}
 
 	public State getState()

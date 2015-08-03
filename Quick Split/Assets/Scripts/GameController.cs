@@ -44,6 +44,7 @@ public class GameController : MonoBehaviour {
 
 	//true if the player's lost
 	public bool gameOver;
+	public GameObject retryObject;
 
 	//keeps track of the current score multiplier during checks
 	int multiplier;
@@ -220,7 +221,8 @@ public class GameController : MonoBehaviour {
 			for (int c = 7; c <= 8; c++) {
 				for (int r = 0; r <= 7; r++){
 					if(colorGrid[r,c] != null && grid[r,c] != null){
-						gameOverText.text = "Game Over\nPress R to Restart\nor Backspace to pick a new Game Mode";
+						retryObject.transform.position = new Vector3(-0.18f, 3.8f, -1);
+						gameOverText.text = "Game Over\nWould you like to Retry?";
 						gameOver = true;
 						splitter.setState("canShoot", false);
 						if(PlayerPrefs.GetInt(gameType, 0) < score){
