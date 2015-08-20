@@ -489,7 +489,7 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
-
+	
 	//scanner goes through and checks every adjacent piece recursively, then returns the amount of pieces in a cluster.
 	public int scanner(int x, int y, string color, int adj)
 	{

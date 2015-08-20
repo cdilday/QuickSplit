@@ -16,6 +16,9 @@ public class piece_script : MonoBehaviour {
 	public Vector2 gridPos;
 	Vector2 prevPos;
 
+	//maximum number of scorebits that can be spawned per piece. 2-3 is your best bet for performance
+	int scoreBitMax = 2;
+
 	Vector2 moveToPos;
 	int moveProgress;
 	float moveStepx;
@@ -58,11 +61,14 @@ public class piece_script : MonoBehaviour {
 		gridPos = new Vector2 (-3, -3);
 		//multiplier = 1;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void FixedUpdate () {
 		//this code is to ensure collisions don't offset piece's individual positions
-		prevPos = transform.position;
+		bool changedPos = false;
+		if (transform.position.x != prevPos.x || transform.position.y != prevPos.y) {
+			changedPos = true;
+			prevPos = transform.position;
+		}
 		if (!isMoving && locked && lockPos != prevPos) {
 			transform.position = lockPos;
 			if(!inHolder && !inSideHolder){
@@ -81,14 +87,17 @@ public class piece_script : MonoBehaviour {
 			isMoving = false;
 		}
 
-		if(!inSplitter && !inHolder)
-			this.name = pieceColor + " piece (" + gridPos.x + ", " + gridPos.y + ")";
-		else if (inHolder)
+		if(changedPos)
 		{
-			this.name = pieceColor + " in Holder";
+			if(!inSplitter && !inHolder)
+				this.name = pieceColor + " piece (" + gridPos.x + ", " + gridPos.y + ")";
+			else if (inHolder)
+			{
+				this.name = pieceColor + " in Holder";
+			}
+			else if (inSplitter)
+				this.name = pieceColor + " in Splitter";
 		}
-		else if (inSplitter)
-			this.name = pieceColor + " in Splitter";
 
 	}
 		
@@ -206,8 +215,7 @@ public class piece_script : MonoBehaviour {
 		if (gameController.isQuitting || gameController.gameOver)
 			return;
 		//spawn a GUI text prefab that shows what number the square was worth
-		Camera tempCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
-		Vector2 spawnPoint = tempCamera.WorldToViewportPoint (transform.position);
+		Vector2 spawnPoint = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>().WorldToViewportPoint (transform.position);
 		GameObject scoreText = Instantiate (scoreTextPrefab) as GameObject;
 		scoreText.transform.position = spawnPoint;
 		PieceScoreText thistext = scoreText.GetComponent<PieceScoreText> ();
@@ -218,9 +226,9 @@ public class piece_script : MonoBehaviour {
 			thistext.scoreValue = groupValue;
 		//gameController.score += thistext.scoreValue;
 		//gameController.updateScore();
-		int indivalue = thistext.scoreValue / 10;
-		int leftover = thistext.scoreValue % 10;
-		for (int i = 0; i < 10; i++) {
+		int indivalue = thistext.scoreValue / scoreBitMax;
+		int leftover = thistext.scoreValue % scoreBitMax;
+		for (int i = 0; i < scoreBitMax; i++) {
 			if(indivalue == 0 && leftover == 0)
 				break;
 			else{
