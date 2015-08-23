@@ -40,6 +40,8 @@ public class piece_script : MonoBehaviour {
 
 	public SpellHandler spellHandler;
 
+	Bit_Pool BitPool;
+
 	// Use this for initialization
 	void Start () {
 		isBomb = false;
@@ -59,6 +61,16 @@ public class piece_script : MonoBehaviour {
 		}
 		//set grid position to -3,-3 until it's locked to prevent accidental cancelling.
 		gridPos = new Vector2 (-3, -3);
+
+		GameObject BitPoolObject = GameObject.Find ("Bit Pool");
+		if (BitPoolObject == null) {
+			Debug.LogError("Piece Error: Cannot find the Bit Pool");
+		}
+		else
+		{
+			BitPool = BitPoolObject.GetComponent<Bit_Pool>();
+		}
+
 		//multiplier = 1;
 	}
 
@@ -224,29 +236,9 @@ public class piece_script : MonoBehaviour {
 			thistext.scoreValue = groupValue * multiplier;
 		else
 			thistext.scoreValue = groupValue;
-		//gameController.score += thistext.scoreValue;
-		//gameController.updateScore();
-		int indivalue = thistext.scoreValue / scoreBitMax;
-		int leftover = thistext.scoreValue % scoreBitMax;
-		for (int i = 0; i < scoreBitMax; i++) {
-			if(indivalue == 0 && leftover == 0)
-				break;
-			else{
-				GameObject newbit = Instantiate((GameObject) Resources.Load ("Score Bit"));
-				newbit.transform.position = transform.position;
-				newbit.GetComponent<ScoreBit>().target = gameController.scoreText.transform.GetComponent<BoxCollider2D>().offset 
-															+ new Vector2( gameController.scoreText.transform.position.x,
-					              											gameController.scoreText.transform.position.y);
-				newbit.GetComponent<ScoreBit>().changeColor(pieceColor);
-				newbit.GetComponent<ScoreBit>().value = indivalue;
-				if(leftover > 0)
-				{
-					leftover--;
-					newbit.GetComponent<ScoreBit>().value++;
-				}
-			}
 
-		}
+		BitPool.spawn_bits (thistext.scoreValue, transform.position, pieceColor);
+		
 		if (isBomb) {
 			for(int r = 0; r < 3; r++)
 			{

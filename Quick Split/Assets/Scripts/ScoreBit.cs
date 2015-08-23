@@ -12,6 +12,8 @@ public class ScoreBit : MonoBehaviour {
 	float speed;
 	public int value;
 
+	Bit_Pool BitPool;
+
 	GameController gameController;
 
 	bool spellActive = false;
@@ -19,46 +21,43 @@ public class ScoreBit : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		isReturning = false;
-		moveVector = new Vector2 (Random.Range(-1f, 1f), (Random.Range(-1f, 1f)));
-		speed = 10f;
-		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
-		if (gameControllerObject != null) {
-			gameController = gameControllerObject.GetComponent <GameController>();
-			if(gameController.gameType == "Holy" || gameController.gameType == "Wiz")
-			{
-				spellActive = true;
-				spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler>();
-			}
-			else
-			{
-				spellActive = false;
-			}
+		GameObject BitPoolObject = GameObject.Find ("Bit Pool");
+		if (BitPoolObject == null) {
+			Debug.LogError("ScoreBit Error: Cannot find the Bit Pool");
 		}
+		else
+		{
+			BitPool = BitPoolObject.GetComponent<Bit_Pool>();
+		}
+		transform.position = BitPoolObject.transform.position;
+		gameObject.SetActive (false);
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (gameController.gameOver) {
-			target = GameObject.FindGameObjectWithTag("Splitter").transform.position;
+		if(gameObject.activeSelf)
+		{
+			if (gameController.gameOver) {
+				target = GameObject.FindGameObjectWithTag("Splitter").transform.position;
+			}
+			transform.Translate (new Vector3(moveVector.x *speed*Time.deltaTime, moveVector.y * speed * Time.deltaTime));
+			if (isReturning) {
+				speed += acceleration;
+				if(prevMagnitude < Vector2.Distance (transform.position, target))
+				{
+					Destroy(gameObject);
+				}
+			} else {
+				speed -= acceleration;
+				if (speed <= 1.5){
+					isReturning = true;
+					Vector2 heading = target - new Vector2( transform.position.x, transform.position.y);
+					float distance = heading.magnitude;
+					moveVector = new Vector2((heading/distance).x, (heading/distance).y);
+				}
+			} 
+			prevMagnitude = Vector2.Distance (transform.position, target);
 		}
-		transform.Translate (new Vector3(moveVector.x *speed*Time.deltaTime, moveVector.y * speed * Time.deltaTime));
-		if (isReturning) {
-			speed += acceleration;
-			if(prevMagnitude < Vector2.Distance (transform.position, target))
-			{
-				Destroy(gameObject);
-			}
-		} else {
-			speed -= acceleration;
-			if (speed <= 1.5){
-				isReturning = true;
-				Vector2 heading = target - new Vector2( transform.position.x, transform.position.y);
-				float distance = heading.magnitude;
-				moveVector = new Vector2((heading/distance).x, (heading/distance).y);
-			}
-		} 
-		prevMagnitude = Vector2.Distance (transform.position, target);
 	
 	}
 
@@ -66,7 +65,7 @@ public class ScoreBit : MonoBehaviour {
 
 		if (other.gameObject.tag == "Bit Receptor") {
 			other.BroadcastMessage("beginPulse");
-			Destroy(gameObject);
+			End_Journey();
 		}
 	}
 
@@ -102,9 +101,33 @@ public class ScoreBit : MonoBehaviour {
 		gameObject.GetComponentInChildren<SpriteRenderer> ().color = thisColor;
 	}
 
-	void OnDestroy(){
+	//call once it begins to handle motion of the bit and spell activation 
+	public void Begin_Journey()
+	{
+		//reactivate this object
+		gameObject.SetActive (true);
+		isReturning = false;
+		moveVector = new Vector2 (Random.Range(-1f, 1f), (Random.Range(-1f, 1f)));
+		speed = 10f;
+		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
+		if (gameControllerObject != null) {
+			gameController = gameControllerObject.GetComponent <GameController>();
+			if(gameController.gameType == "Holy" || gameController.gameType == "Wiz")
+			{
+				spellActive = true;
+				spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler>();
+			}
+			else
+			{
+				spellActive = false;
+			}
+		}
+
+	}
+
+	void End_Journey(){
 		if (value < 1)
-						value = 1;
+			value = 1;
 		if(!gameController.gameOver){
 			gameController.score += value;
 			gameController.updateScore();
@@ -112,6 +135,8 @@ public class ScoreBit : MonoBehaviour {
 				spellHandler.addBit(bitColor);
 			}
 		}
+		BitPool.return_to_pool (gameObject);
+		gameObject.SetActive (false);
 	}
 
 }
