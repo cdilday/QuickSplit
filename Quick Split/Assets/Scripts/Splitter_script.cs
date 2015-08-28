@@ -11,6 +11,7 @@ public class Splitter_script : MonoBehaviour {
 		public bool mouseControl;
 		public bool touchControl;
 		public bool inTransition;
+		public bool yellowReady;
 	}
 
 	State splitState = new State ();
@@ -55,6 +56,7 @@ public class Splitter_script : MonoBehaviour {
 		splitState.canShoot = true;
 		splitState.isActive = true;
 		splitState.inTransition = false;
+		splitState.yellowReady = false;
 		//make a camera for mouse control to use
 	}
 	
@@ -89,10 +91,15 @@ public class Splitter_script : MonoBehaviour {
 			}
 			//launching pieces with Left click while over the board
 			else if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
-				StartCoroutine (fire ());
-				splitState.canShoot = false;
-				gameController.movesMade++;
-				gameController.updateMoves ();
+				if(splitState.yellowReady == true){
+					GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
+				}
+				else{
+					StartCoroutine (fire ());
+					splitState.canShoot = false;
+					gameController.movesMade++;
+					gameController.updateMoves ();
+				}
 			}
 		}*/
 
@@ -125,11 +132,16 @@ public class Splitter_script : MonoBehaviour {
 					hasFireTouch = true;
 				}
 				else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
-					StartCoroutine (fire ());
-					splitState.canShoot = false;
-					gameController.movesMade++;
-					gameController.updateMoves ();
-					hasFireTouch = true;
+					if(splitState.yellowReady == true){
+						GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
+					}
+					else{
+						StartCoroutine (fire ());
+						splitState.canShoot = false;
+						gameController.movesMade++;
+						gameController.updateMoves ();
+						hasFireTouch = true;
+					}
 				}
 			}
 		}
@@ -150,10 +162,15 @@ public class Splitter_script : MonoBehaviour {
 		}
 		//launching pieces with key Space
 		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
+			if(splitState.yellowReady == true){
+				GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
+			}
+			else{
 				StartCoroutine (fire ());
 				splitState.canShoot = false;
 				gameController.movesMade++;
 				gameController.updateMoves ();
+			}
 		}
 
 		if(Input.GetMouseButtonUp(0))
@@ -293,6 +310,8 @@ public class Splitter_script : MonoBehaviour {
 			return splitState.touchControl;
 		case "inTransition":
 			return splitState.inTransition;
+		case "yellowReady":
+			return splitState.yellowReady;
 		}
 		Debug.LogError ("State error: no state of name " + name + " detected.");
 
@@ -319,6 +338,9 @@ public class Splitter_script : MonoBehaviour {
 			return true;
 		case "inTransition":
 			splitState.inTransition = value;
+			return true;
+		case "yellowReady":
+			splitState.yellowReady = value;
 			return true;
 		}
 

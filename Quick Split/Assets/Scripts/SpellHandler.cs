@@ -307,8 +307,18 @@ public class SpellHandler : MonoBehaviour {
 		splitter.setState ("isActive", true);
 	}
 	//Yellow attack: launches a single lightning bolt to each side that removes any blocks in the splitter's row
+	//this method loads the splitter with the power to activate it on the next fire
 	public void Yellowspell()
 	{
+		splitter.setState ("yellowReady", true);
+		//recolor splitter to show it's ready to fire
+		splitter.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1, 1, 0, 1);
+	}
+
+	public void YellowActivate()
+	{
+		//set splitter to default color
+		splitter.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1, 1, 1, 1);
 		//get the row the splitter is in
 		int row = (int) gameController.splitter.transform.position.y;
 		//loop that deletes everything in the row
@@ -321,6 +331,8 @@ public class SpellHandler : MonoBehaviour {
 				gameController.grid[row,c] = null;
 			}
 		}
+		//make it so the splitter can't continually fire yellow spells
+		splitter.setState ("yellowReady", false);
 		//check the board to update group values
 		gameController.checkBoard ();
 	}

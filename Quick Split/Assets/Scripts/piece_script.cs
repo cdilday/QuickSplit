@@ -16,9 +16,6 @@ public class piece_script : MonoBehaviour {
 	public Vector2 gridPos;
 	Vector2 prevPos;
 
-	//maximum number of scorebits that can be spawned per piece. 2-3 is your best bet for performance
-	int scoreBitMax = 2;
-
 	Vector2 moveToPos;
 	int moveProgress;
 	float moveStepx;

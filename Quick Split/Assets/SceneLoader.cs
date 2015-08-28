@@ -7,12 +7,6 @@ public class SceneLoader : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		if(sceneNumber != null)
-		{
-			Application.LoadLevel (sceneNumber);
-		}
-		else{
-			Debug.Log ("No levl to load entered in settings!");
-		}
+		Application.LoadLevel (sceneNumber);
 	}
 }
