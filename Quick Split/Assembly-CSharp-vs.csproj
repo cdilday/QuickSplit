@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\Spell_Text.cs" />
      <Compile Include="Assets\Scripts\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\piece_script.cs" />
+     <Compile Include="Assets\Spell_Tab.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />

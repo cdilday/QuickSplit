@@ -110,66 +110,34 @@ public class SpellHandler : MonoBehaviour {
 		if(spellColor == null || spellColor == ""){
 			//red
 			if (Input.GetKeyDown ("1") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && redReady) {
-				redReady = false;
-				redProgress = 0;
-				redGoal = (int) (redGoal * 1.1);
-				redText.text = "0%";
 				Redspell ();
 			}
 			//orange
 			if (Input.GetKeyDown ("2") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && orangeReady) {
-				orangeReady = false;
-				orangeProgress = 0;
-				orangeGoal = (int) (orangeGoal * 1.1);
-				orangeText.text = "0%";
 				Orangespell ();
 			}
 			//yellow
 			if (Input.GetKeyDown ("3") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && yellowReady) {
-				yellowReady = false;
-				yellowProgress = 0;
-				yellowGoal = (int) (yellowGoal * 1.1);
-				yellowText.text = "0%";
 				Yellowspell ();
 			}
 			//green
 			if (Input.GetKeyDown ("4") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greenReady) {
-				greenReady = false;
-				greenProgress = 0;
-				greenGoal = (int) (greenGoal * 1.1);
-				greenText.text = "0%";
 				Greenspell ();
 			}
 			//blue
 			if (Input.GetKeyDown ("5") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && blueReady) {
-				blueReady = false;
-				blueProgress = 0;
-				blueGoal = (int) (blueGoal * 1.1);
-				blueText.text = "0%";
 				Bluespell ();
 			}
 			//purple
 			if (Input.GetKeyDown ("6") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && purpleReady) {
-				purpleReady = false;
-				purpleProgress = 0;
-				purpleGoal = (int) (purpleGoal * 1.1);
-				purpleText.text = "0%";
 				Purplespell ();
 			}
 			//grey
 			if (Input.GetKeyDown ("7") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greyReady) {
-				greyReady = false;
-				greyProgress = 0;
-				greyGoal = (int) (greyGoal * 1.1);
-				greyText.text = "0%";
 				Greyspell ();
 			}
 			//white
 			if (Input.GetKeyDown ("8") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && whiteReady) {
-				whiteReady = false;
-				whiteProgress = 0;
-				whiteGoal = (int) (whiteGoal * 1.1);
-				whiteText.text = "0%";
 				Whitespell ();
 			}
 		}
@@ -178,6 +146,10 @@ public class SpellHandler : MonoBehaviour {
 	//Red attack: Burns a layer off the top of each side, specifically deleting the block in each row closest to the center
 	public void Redspell()
 	{
+		redReady = false;
+		redProgress = 0;
+		redGoal = (int) (redGoal * 1.1);
+		redText.text = "0%";
 		/*Deletion loops work by going to the splitter's columns outwards and deleting the first piece it comes across before moving on
 		 * likely the player would only use this ability when on the brink of losing, so this is better than going from outwards in.
 		 * Once the loop deletes the first thing it comes accross, it exits the inner loop to move onto the next row.*/
@@ -214,6 +186,10 @@ public class SpellHandler : MonoBehaviour {
 	//deletes leftover pieces if the switch is uneven.
 	public void Orangespell()
 	{
+		orangeReady = false;
+		orangeProgress = 0;
+		orangeGoal = (int) (orangeGoal * 1.1);
+		orangeText.text = "0%";
 		spellColor = "Orange";
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the left side");
@@ -310,6 +286,10 @@ public class SpellHandler : MonoBehaviour {
 	//this method loads the splitter with the power to activate it on the next fire
 	public void Yellowspell()
 	{
+		yellowReady = false;
+		yellowProgress = 0;
+		yellowGoal = (int) (yellowGoal * 1.1);
+		yellowText.text = "0%";
 		splitter.setState ("yellowReady", true);
 		//recolor splitter to show it's ready to fire
 		splitter.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1, 1, 0, 1);
@@ -353,6 +333,10 @@ public class SpellHandler : MonoBehaviour {
 	}
 	public void GreenHelper()
 	{
+		greenReady = false;
+		greenProgress = 0;
+		greenGoal = (int) (greenGoal * 1.1);
+		greenText.text = "0%";
 		spellLimit--;
 
 		if (spellLimit <= 0) {
@@ -376,6 +360,11 @@ public class SpellHandler : MonoBehaviour {
 	//Blue attack: rearrange every splitter/holder piece to any arrangement the player chooses
 	public void Bluespell()
 	{
+		blueReady = false;
+		blueProgress = 0;
+		blueGoal = (int) (blueGoal * 1.1);
+		blueText.text = "0%";
+
 		spellColor = "Blue";
 		spellLimit = 3;
 
@@ -419,6 +408,10 @@ public class SpellHandler : MonoBehaviour {
 	//Purple attack: deletes all pieces of the selected color on the board
 	public void Purplespell()
 	{
+		purpleReady = false;
+		purpleProgress = 0;
+		purpleGoal = (int) (purpleGoal * 1.1);
+		purpleText.text = "0%";
 		spellColor = "Purple";
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to eliminate from the board");
@@ -445,6 +438,10 @@ public class SpellHandler : MonoBehaviour {
 	//Grey spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
 	public void Greyspell()
 	{
+		greyReady = false;
+		greyProgress = 0;
+		greyGoal = (int) (greyGoal * 1.1);
+		greyText.text = "0%";
 		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
 		Vector3 hsv = RGBandHSVconverter.RGBtoHSV (splitter.rightSlot.GetComponent<SpriteRenderer> ().color);
 		hsv = new Vector3(hsv.x, hsv.y, hsv.z - 0.5f);
@@ -457,6 +454,10 @@ public class SpellHandler : MonoBehaviour {
 	//White spell: Sorts the board from rainbow down
 	public void Whitespell() //consider renaming to ability, in hindsight I probably should've looked at that first
 	{
+		whiteReady = false;
+		whiteProgress = 0;
+		whiteGoal = (int) (whiteGoal * 1.1);
+		whiteText.text = "0%";
 		//get all pieces on left side
 		List<GameObject> leftPieces = new List<GameObject>();
 		for (int r = 0; r < 8; r++) {
