@@ -182,7 +182,7 @@ public class SpellHandler : MonoBehaviour {
 		//check the board to update group values
 		gameController.checkBoard ();
 	}
-	//Orange atttack: switches all the pieces of a single color on one side with all the pieces of a different single color on the other side
+	//Orange attack: switches all the pieces of a single color on one side with all the pieces of a different single color on the other side
 	//deletes leftover pieces if the switch is uneven.
 	public void Orangespell()
 	{
@@ -357,7 +357,7 @@ public class SpellHandler : MonoBehaviour {
 		}
 	}
 
-	//Blue attack: rearrange every splitter/holder piece to any arrangement the player chooses
+	//Blue attack: recolor any 3 pieces on the board
 	public void Bluespell()
 	{
 		blueReady = false;

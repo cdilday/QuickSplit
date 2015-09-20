@@ -10,10 +10,9 @@ public class Spell_Tab : MonoBehaviour {
 	 */
 
 	public string spellColor;
-	GameObject description;
-	Vector3 textStartPos;
 
 	SpellHandler spellHandler;
+	GameObject DescCanvas;
 
 	bool isReady;
 
@@ -23,10 +22,8 @@ public class Spell_Tab : MonoBehaviour {
 		if (shObject != null) {
 			spellHandler = shObject.GetComponent<SpellHandler>();
 		}
-		description = transform.GetChild(0).gameObject;
-		textStartPos = description.transform.position;
-		description.transform.position = new Vector3 (textStartPos.x + 20, textStartPos.y, textStartPos.z);
 		isReady = false;
+		DescCanvas = GameObject.Find ("Description Canvas");
 	}
 
 	void FixedUpdate()
@@ -73,12 +70,12 @@ public class Spell_Tab : MonoBehaviour {
 
 	void OnMouseOver()
 	{
-		description.transform.position = textStartPos;
+		DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
 	}
 	
 	void OnMouseExit()
 	{
-		description.transform.position = new Vector3 (textStartPos.x + 20, textStartPos.y, textStartPos.z);
+		DescCanvas.GetComponent<Spell_Descriptions> ().hide ();
 	}
 
 	void OnMouseDown()
