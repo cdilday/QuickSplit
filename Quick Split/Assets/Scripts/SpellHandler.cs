@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class SpellHandler : MonoBehaviour {
 
@@ -40,14 +41,14 @@ public class SpellHandler : MonoBehaviour {
 	#endregion
 
 	#region
-	public GUIText redText;
-	public GUIText orangeText;
-	public GUIText yellowText;
-	public GUIText greenText;
-	public GUIText blueText;
-	public GUIText purpleText;
-	public GUIText greyText;
-	public GUIText whiteText;
+	public Text redText;
+	public Text orangeText;
+	public Text yellowText;
+	public Text greenText;
+	public Text blueText;
+	public Text purpleText;
+	public Text greyText;
+	public Text whiteText;
 	#endregion
 
 	public string spellColor;

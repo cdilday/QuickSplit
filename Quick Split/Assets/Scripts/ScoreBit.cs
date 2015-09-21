@@ -132,7 +132,9 @@ public class ScoreBit : MonoBehaviour {
 			gameController.score += value;
 			gameController.updateScore();
 			if (spellActive) {
-				spellHandler.addBit(bitColor);
+				for(int i = 0; i < value; i++){
+					spellHandler.addBit(bitColor);
+				}
 			}
 		}
 		BitPool.return_to_pool (gameObject);
