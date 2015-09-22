@@ -45,7 +45,8 @@ public class ScoreBit : MonoBehaviour {
 				speed += acceleration;
 				if(prevMagnitude < Vector2.Distance (transform.position, target))
 				{
-					Destroy(gameObject);
+					GameObject.Find("Score Text").BroadcastMessage("beginPulse");
+					End_Journey();
 				}
 			} else {
 				speed -= acceleration;

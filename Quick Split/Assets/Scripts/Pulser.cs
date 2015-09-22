@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Pulser : MonoBehaviour {
-	GUIText thisText;
-	float defaultSize;
+	Text thisText;
+	public float defaultSize;
 
-	bool pulsing;
-	bool growing;
-	int counter;
+	public bool pulsing;
+	public bool growing;
+	public int counter;
 
 	// Use this for initialization
 	void Start () {
-		thisText = gameObject.GetComponent<GUIText> ();
+		thisText = gameObject.GetComponent<Text> ();
 		defaultSize = thisText.fontSize;
 		pulsing = false;
 		growing = false;
@@ -26,7 +27,7 @@ public class Pulser : MonoBehaviour {
 	void beginPulse(){
 		if(pulsing){
 			counter = 10;
-			thisText.fontSize = (int) defaultSize + counter;
+			thisText.fontSize = (int) (defaultSize + ((float)counter/2.5f));
 		}
 		else{
 			counter = 0;
@@ -39,7 +40,7 @@ public class Pulser : MonoBehaviour {
 	void handlePulse(){
 		if(growing){
 			counter +=6;
-			thisText.fontSize = (int) defaultSize + counter;
+			thisText.fontSize = (int) (defaultSize + ((float)counter/2.5f));
 			if(counter >= 10)
 			{
 				growing = false;
@@ -47,7 +48,7 @@ public class Pulser : MonoBehaviour {
 		}
 		else{
 			counter--;
-			thisText.fontSize = (int) defaultSize + counter;
+			thisText.fontSize = (int) (defaultSize + ((float)counter/2.5f));
 			if(counter <= 0){
 				pulsing = false;
 				thisText.fontSize = (int) defaultSize;

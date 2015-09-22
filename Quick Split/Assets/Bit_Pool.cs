@@ -50,9 +50,7 @@ public class Bit_Pool : MonoBehaviour {
 				newbit.SetActive(true);
 				newbit.GetComponent<ScoreBit>().changeColor(color);
 				newbit.transform.position = spawnLoc;
-				newbit.GetComponent<ScoreBit>().target = gameController.scoreText.transform.GetComponent<BoxCollider2D>().offset 
-					+ new Vector2( gameController.scoreText.transform.position.x,
-					              gameController.scoreText.transform.position.y);
+				newbit.GetComponent<ScoreBit>().target = gameController.scoreText.transform.position;
 				newbit.GetComponent<ScoreBit>().value = indivalue;
 				if(leftover > 0)
 				{

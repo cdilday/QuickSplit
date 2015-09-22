@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -26,13 +27,13 @@ public class GameController : MonoBehaviour {
 	GameObject powerHolder;
 
 	//text that pops up during a game over
-	public GUIText gameOverText;
+	public Text gameOverText;
 
 	//numbers and text for statistics the player should know
 	public int movesMade;
-	public GUIText movesText;
+	public Text movesText;
 	public int score;
-	public GUIText scoreText;
+	public Text scoreText;
 
 	//pieces places is used to ensure both pieces have landed before checking the grid in Update()
 	int piecesPlaced;
@@ -222,7 +223,7 @@ public class GameController : MonoBehaviour {
 				for (int r = 0; r <= 7; r++){
 					if(colorGrid[r,c] != null && grid[r,c] != null){
 						retryObject.transform.position = new Vector3(-0.18f, 3.8f, -1);
-						gameOverText.text = "Game Over\nWould you like to Retry?";
+						gameOverText.text = "Game Over\n\nWould you like to Retry?";
 						gameOver = true;
 						splitter.setState("canShoot", false);
 						if(PlayerPrefs.GetInt(gameType, 0) < score){
