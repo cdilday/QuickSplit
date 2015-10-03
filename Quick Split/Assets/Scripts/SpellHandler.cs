@@ -569,7 +569,7 @@ public class SpellHandler : MonoBehaviour {
 			if(redProgress >= redGoal){
 				redProgress = redGoal;
 				redReady = true;
-				redText.text = "Ready!";
+				redText.text = "";
 			}
 			else{
 				redText.text = ((int) (((float)redProgress/(float)redGoal) * 100f)) + "%";
@@ -580,7 +580,7 @@ public class SpellHandler : MonoBehaviour {
 			if(orangeProgress >= orangeGoal){
 				orangeProgress = orangeGoal;
 				orangeReady = true;
-				orangeText.text = "Ready!";
+				orangeText.text = "";
 			}
 			else{
 				orangeText.text = ((int) (((float)orangeProgress/(float)orangeGoal) * 100f)) + "%";
@@ -591,7 +591,7 @@ public class SpellHandler : MonoBehaviour {
 			if(yellowProgress >= yellowGoal){
 				yellowProgress = yellowGoal;
 				yellowReady = true;
-				yellowText.text = "Ready!";
+				yellowText.text = "";
 			}
 			else{
 				yellowText.text = ((int) (((float)yellowProgress/(float)yellowGoal) * 100f)) + "%";
@@ -602,7 +602,7 @@ public class SpellHandler : MonoBehaviour {
 			if(greenProgress >= greenGoal){
 				greenProgress = greenGoal;
 				greenReady = true;
-				greenText.text = "Ready!";
+				greenText.text = "";
 			}
 			else{
 				greenText.text = ((int) (((float)greenProgress/(float)greenGoal)* 100f)) + "%";
@@ -613,7 +613,7 @@ public class SpellHandler : MonoBehaviour {
 			if(blueProgress >= blueGoal){
 				blueProgress = blueGoal;
 				blueReady = true;
-				blueText.text = "Ready!";
+				blueText.text = "";
 			}
 			else{
 				blueText.text = ((int) (((float)blueProgress/(float)blueGoal) * 100f)) + "%";
@@ -624,7 +624,7 @@ public class SpellHandler : MonoBehaviour {
 			if(purpleProgress >= purpleGoal){
 				purpleProgress = purpleGoal;
 				purpleReady = true;
-				purpleText.text = "Ready!";
+				purpleText.text = "";
 			}
 			else{
 				purpleText.text = ((int) (((float)purpleProgress/(float)purpleGoal) * 100f)) + "%";
@@ -635,7 +635,7 @@ public class SpellHandler : MonoBehaviour {
 			if(greyProgress >= greyGoal){
 				greyProgress = greyGoal;
 				greyReady = true;
-				greyText.text = "Ready!";
+				greyText.text = "";
 			}
 			else{
 				greyText.text = ((int) (((float)greyProgress/(float)greyGoal) * 100f)) + "%";
@@ -646,7 +646,7 @@ public class SpellHandler : MonoBehaviour {
 			if(whiteProgress >= whiteGoal){
 				whiteProgress = whiteGoal;
 				whiteReady = true;
-				whiteText.text = "Ready!";
+				whiteText.text = "";
 			}
 			else{
 				whiteText.text = ((int) (((float)whiteProgress/(float)whiteGoal)* 100f)) + "%";

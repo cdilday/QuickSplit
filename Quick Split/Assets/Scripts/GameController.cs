@@ -65,7 +65,11 @@ public class GameController : MonoBehaviour {
 	//tells if the application is in the process of quitting, for cleanup
 	[HideInInspector]
 	public bool isQuitting;
-	
+
+	public bool isPaused;
+	public GameObject blackScreen;
+	public GameObject mainMenuButton;
+
 	void Awake () {
 		switch (PlayerPrefs.GetInt ("Mode")) {
 		case 0:
@@ -196,6 +200,13 @@ public class GameController : MonoBehaviour {
 		//initially update the moves and scores
 		updateMoves ();
 		updateScore ();
+
+		//get the pause stuff in order
+		isPaused = false;
+		blackScreen = GameObject.Find ("Black Screen");
+		blackScreen.GetComponent<RectTransform> ().localPosition = new Vector3 (0, 0, -130f);
+		mainMenuButton = GameObject.Find ("Return to Title Button");
+		mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3 (0, 0, -130f);
 	}
 	
 	// Update is called once per frame
@@ -716,6 +727,42 @@ public class GameController : MonoBehaviour {
 			Destroy(piece);
 		}
 		collapse ();
+	}
+
+	public void TogglePause()
+	{
+		if (gameOver)
+			return;
+
+		if(!isPaused)
+		{
+			isPaused = true;
+			Time.timeScale = 0;
+			gameOverText.text = "PAUSED";
+			blackScreen.GetComponent<RectTransform> ().localPosition = new Vector3(0,0,-120f);
+			mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3(0,0, -120f);
+			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Unpause";
+		}
+		else
+		{
+			isPaused = false;
+			Time.timeScale = 1;
+			gameOverText.text = "";
+			blackScreen.GetComponent<RectTransform> ().localPosition = new Vector3(0,0,-130f);
+			mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3(0,0,-130f);
+			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Pause";
+		}
+	}
+
+	public void LoadMainMenu()
+	{
+		//save current score
+		if(PlayerPrefs.GetInt(gameType, 0) < score){
+			PlayerPrefs.SetInt (gameType, score);
+		}
+		isQuitting = true;
+		//load the main menu
+		Application.LoadLevel ("Split Title Scene");
 	}
 
 	void OnApplicationQuit()
