@@ -761,6 +761,8 @@ public class GameController : MonoBehaviour {
 			PlayerPrefs.SetInt (gameType, score);
 		}
 		isQuitting = true;
+		//remember to properly reload time
+		Time.timeScale = 1;
 		//load the main menu
 		Application.LoadLevel ("Split Title Scene");
 	}

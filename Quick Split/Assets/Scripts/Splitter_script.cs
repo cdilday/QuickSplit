@@ -158,7 +158,7 @@ public class Splitter_script : MonoBehaviour {
 		}
 		//swapping pieces with keys A, D, Left, or Right
 		if (Input.GetKeyDown ("a") || Input.GetKeyDown ("d") || Input.GetKeyDown ("left") || Input.GetKeyDown ("right")) {
-				swap ();
+			swap ();
 		}
 		//launching pieces with key Space
 		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
