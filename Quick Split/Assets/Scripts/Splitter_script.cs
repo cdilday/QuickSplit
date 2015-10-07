@@ -53,7 +53,11 @@ public class Splitter_script : MonoBehaviour {
 		rightSlot = Instantiate(pieces[right], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
 		leftSlot.GetComponent<piece_script> ().inSplitter = true;
 		rightSlot.GetComponent<piece_script> ().inSplitter = true;
-		splitState.canShoot = true;
+		if (gameController.gameType != "Quick") {
+			splitState.canShoot = true;
+		} else {
+			splitState.canShoot = false;
+		}
 		splitState.isActive = true;
 		splitState.inTransition = false;
 		splitState.yellowReady = false;

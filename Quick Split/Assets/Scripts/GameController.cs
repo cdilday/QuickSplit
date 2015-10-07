@@ -62,6 +62,9 @@ public class GameController : MonoBehaviour {
 	bool sidesChecked;
 	bool quickMoveSides;
 
+	//boolean for whether or not the game is counting down
+	bool isCountingDown;
+
 	//tells if the application is in the process of quitting, for cleanup
 	[HideInInspector]
 	public bool isQuitting;
@@ -71,6 +74,9 @@ public class GameController : MonoBehaviour {
 	public GameObject mainMenuButton;
 
 	void Awake () {
+		//begin with the assumption that you're not in quick mode and there's not countdown
+		isCountingDown = false;
+
 		switch (PlayerPrefs.GetInt ("Mode")) {
 		case 0:
 			gameType = "Wit";
@@ -116,6 +122,7 @@ public class GameController : MonoBehaviour {
 		if (splitterObject != null) {
 			splitter = splitterObject.GetComponent <Splitter_script>();
 		}
+
 		gameOver = false;
 		//load the side columns if they exist
 		sideColumns [0] = null;
@@ -149,7 +156,8 @@ public class GameController : MonoBehaviour {
 				}
 			}
 			quickMoveSides = false;
-			StartCoroutine("QuickSideTimer");
+			StartCoroutine("StartingCountDown");
+			splitter.setState("canShoot", false);
 
 			// no powers in Quick, only Holy and Wiz
 			Destroy (powerHolder);
@@ -258,7 +266,7 @@ public class GameController : MonoBehaviour {
 				checkFlag = false;
 				//check to see if it's time to move the sides in
 			}
-			else{
+			else if (!isCountingDown){
 				splitter.setState("canShoot", true);
 			}
 
@@ -673,6 +681,24 @@ public class GameController : MonoBehaviour {
 	{
 		yield return new WaitForSeconds (0.25f);
 		checkBoard ();
+	}
+
+	public IEnumerator StartingCountDown()
+	{
+		isCountingDown = true;
+		yield return new WaitForSeconds (1f);
+		gameOverText.text = "3";
+		yield return new WaitForSeconds (1f);
+		gameOverText.text = "2";
+		yield return new WaitForSeconds (1f);
+		gameOverText.text = "1";
+		yield return new WaitForSeconds (1f);
+		gameOverText.text = "GO!";
+		splitter.setState("canShoot", true);
+		isCountingDown = false;
+		StartCoroutine("QuickSideTimer");
+		yield return new WaitForSeconds (1f);
+		gameOverText.text = "";
 	}
 
 	public IEnumerator QuickSideTimer()
