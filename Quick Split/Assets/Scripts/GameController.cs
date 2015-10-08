@@ -72,6 +72,7 @@ public class GameController : MonoBehaviour {
 	public bool isPaused;
 	public GameObject blackScreen;
 	public GameObject mainMenuButton;
+	public Shutter_Handler shutter;
 
 	void Awake () {
 		//begin with the assumption that you're not in quick mode and there's not countdown
@@ -215,6 +216,7 @@ public class GameController : MonoBehaviour {
 		blackScreen.GetComponent<RectTransform> ().localPosition = new Vector3 (0, 0, -130f);
 		mainMenuButton = GameObject.Find ("Return to Title Button");
 		mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3 (0, 0, -130f);
+		shutter.Begin_Horizontal_Open ();
 	}
 	
 	// Update is called once per frame
@@ -790,6 +792,12 @@ public class GameController : MonoBehaviour {
 		//remember to properly reload time
 		Time.timeScale = 1;
 		//load the main menu
+		StartCoroutine ("TitleTransition");
+	}
+
+	IEnumerator TitleTransition(){
+		shutter.Begin_Vertical_Close ();
+		yield return new WaitForSeconds (2f);
 		Application.LoadLevel ("Split Title Scene");
 	}
 

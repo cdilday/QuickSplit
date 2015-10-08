@@ -6,9 +6,11 @@ public class TitleController : MonoBehaviour {
 	public GameObject gameModeLayer;
 	public GameObject[] howToPlayLayers;
 	public GameObject creditsLayer;
+	public Shutter_Handler shutter;
 	// Use this for initialization
 	void Start () {
 		Goto_Game_Mode_Layer ();
+		shutter.Begin_Horizontal_Open ();
 	}
 
 	//loads the proper game mode into the playerprefs for the game scene to read, then loads the game scene
@@ -16,7 +18,7 @@ public class TitleController : MonoBehaviour {
 	public void Load_Game(int gameMode)
 	{
 		PlayerPrefs.SetInt("Mode", gameMode);
-		Application.LoadLevel("Game Scene");
+		StartCoroutine ("GameTransition");
 	}
 
 	//loads the game mode layer and unloads the other layers
@@ -54,4 +56,10 @@ public class TitleController : MonoBehaviour {
 		howToPlayLayers[1].SetActive (false);
 	}
 
+	public IEnumerator GameTransition()
+	{
+		shutter.Begin_Vertical_Close ();
+		yield return new WaitForSeconds(2f);
+		Application.LoadLevel("Game Scene");
+	}
 }
