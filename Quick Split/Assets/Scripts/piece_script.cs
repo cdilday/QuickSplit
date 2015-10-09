@@ -114,7 +114,7 @@ public class piece_script : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		//ignore score bits
-		if (col.gameObject.tag == "Score Bit")
+		if (col.gameObject.tag == "Score Bit" || col.gameObject.tag == "Spell Tab")
 			return;
 		//if the piece hasn't already been assigned a position, begin to assign it
 		if(!isMoving && !locked && !inSplitter && !inSideHolder){

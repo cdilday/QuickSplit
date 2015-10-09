@@ -6,6 +6,7 @@ public class TitleController : MonoBehaviour {
 	public GameObject gameModeLayer;
 	public GameObject[] howToPlayLayers;
 	public GameObject creditsLayer;
+	public GameObject optionsLayer;
 	public Shutter_Handler shutter;
 	// Use this for initialization
 	void Start () {
@@ -28,6 +29,7 @@ public class TitleController : MonoBehaviour {
 		howToPlayLayers[0].SetActive (false);
 		howToPlayLayers[1].SetActive (false);
 		creditsLayer.SetActive (false);
+		optionsLayer.SetActive (false);
 	}
 
 	//loads the How to Play Layer and unloads the other layers
@@ -37,6 +39,7 @@ public class TitleController : MonoBehaviour {
 		howToPlayLayers[1].SetActive (false);
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
+		optionsLayer.SetActive (false);
 	}
 
 	public void Goto_Controls_Layer()
@@ -45,6 +48,7 @@ public class TitleController : MonoBehaviour {
 		howToPlayLayers[1].SetActive (true);
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
+		optionsLayer.SetActive (false);
 	}
 
 	//loads the Credits layer and unloads the other layers
@@ -54,6 +58,16 @@ public class TitleController : MonoBehaviour {
 		gameModeLayer.SetActive (false);
 		howToPlayLayers[0].SetActive (false);
 		howToPlayLayers[1].SetActive (false);
+		optionsLayer.SetActive (false);
+	}
+
+	public void Goto_Options_Layer()
+	{
+		optionsLayer.SetActive (true);
+		howToPlayLayers[0].SetActive (false);
+		howToPlayLayers[1].SetActive (false);
+		gameModeLayer.SetActive (false);
+		creditsLayer.SetActive (false);
 	}
 
 	public IEnumerator GameTransition()

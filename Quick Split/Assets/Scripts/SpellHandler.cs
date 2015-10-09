@@ -329,7 +329,7 @@ public class SpellHandler : MonoBehaviour {
 				holder.holder[r,c].gameObject.GetComponent<piece_script>().selectable = true;
 			}
 		}
-
+		gameController.gameOverText.text = "Select pieces in the holder/splitter to change";
 		splitter.setState ("isActive", false);
 	}
 	public void GreenHelper()
@@ -354,6 +354,7 @@ public class SpellHandler : MonoBehaviour {
 			spellColor = null;
 			selectedPiece = null;
 			spellLimit = 0;
+			gameController.gameOverText.text = "";
 			splitter.setState ("isActive", true);
 		}
 	}
@@ -368,7 +369,7 @@ public class SpellHandler : MonoBehaviour {
 
 		spellColor = "Blue";
 		spellLimit = 3;
-
+		gameController.gameOverText.text = "Select pieces on the board to change";
 		GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
 		foreach (GameObject piece in allPieces) {
 			piece_script temp = piece.GetComponent<piece_script>();

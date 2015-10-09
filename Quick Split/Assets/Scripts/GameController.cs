@@ -70,9 +70,11 @@ public class GameController : MonoBehaviour {
 	public bool isQuitting;
 
 	public bool isPaused;
-	public GameObject blackScreen;
+	public GameObject pauseLayer;
 	public GameObject mainMenuButton;
 	public Shutter_Handler shutter;
+
+	Music_Controller mc;
 
 	void Awake () {
 		//begin with the assumption that you're not in quick mode and there's not countdown
@@ -94,6 +96,10 @@ public class GameController : MonoBehaviour {
 		}
 
 		mainCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+
+		//let's grab the music controller
+		GameObject MCobject = GameObject.FindGameObjectWithTag ("Music Controller");
+		mc = MCobject.GetComponent<Music_Controller> ();
 
 		//reposition score to wherever it may be
 		scoreText.transform.GetComponent<BoxCollider2D> ().offset = (mainCamera.ViewportToWorldPoint (scoreText.transform.position))
@@ -140,6 +146,7 @@ public class GameController : MonoBehaviour {
 			//Wit does not use the sidecolumns, get rid of them
 			Destroy(scols[1]);
 			Destroy(scols[0]);
+			mc.Play_Music(gameType);
 		}
 		else if(gameType == "Quick")
 		{	
@@ -179,6 +186,7 @@ public class GameController : MonoBehaviour {
 					sideColumns[1] = scols[0].GetComponent<SideColumn>();
 				}
 			}
+			mc.Play_Music(gameType);
 		}
 		else if( gameType == "Holy")
 		{
@@ -196,6 +204,7 @@ public class GameController : MonoBehaviour {
 					sideColumns[1] = scols[0].GetComponent<SideColumn>();
 				}
 			}
+			mc.Play_Music(gameType);
 		}
 
 		if(gameType != "Wit" && sideColumns != null && sideColumns[0].side == "Right")
@@ -212,8 +221,6 @@ public class GameController : MonoBehaviour {
 
 		//get the pause stuff in order
 		isPaused = false;
-		blackScreen = GameObject.Find ("Black Screen");
-		blackScreen.GetComponent<RectTransform> ().localPosition = new Vector3 (0, 0, -130f);
 		mainMenuButton = GameObject.Find ("Return to Title Button");
 		mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3 (0, 0, -130f);
 		shutter.Begin_Horizontal_Open ();
@@ -246,6 +253,7 @@ public class GameController : MonoBehaviour {
 						retryObject.transform.position = new Vector3(-0.18f, 3.8f, -1);
 						gameOverText.text = "Game Over\n\nWould you like to Retry?";
 						gameOver = true;
+						mc.Stop_Music();
 						splitter.setState("canShoot", false);
 						if(PlayerPrefs.GetInt(gameType, 0) < score){
 							PlayerPrefs.SetInt (gameType, score);
@@ -597,6 +605,7 @@ public class GameController : MonoBehaviour {
 					gameOverText.text = "Game Over\nPress R to Restart";
 					gameOver = true;
 					splitter.setState("canShoot", false);
+					mc.Stop_Music();
 				}
 			}
 
@@ -698,6 +707,7 @@ public class GameController : MonoBehaviour {
 		gameOverText.text = "GO!";
 		splitter.setState("canShoot", true);
 		isCountingDown = false;
+		mc.Play_Music(gameType);
 		StartCoroutine("QuickSideTimer");
 		yield return new WaitForSeconds (1f);
 		gameOverText.text = "";
@@ -767,18 +777,18 @@ public class GameController : MonoBehaviour {
 			isPaused = true;
 			Time.timeScale = 0;
 			gameOverText.text = "PAUSED";
-			blackScreen.GetComponent<RectTransform> ().localPosition = new Vector3(0,0,-120f);
-			mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3(0,0, -120f);
+			pauseLayer.SetActive(true);
 			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Unpause";
+			mc.Pause_Music();
 		}
 		else
 		{
 			isPaused = false;
 			Time.timeScale = 1;
 			gameOverText.text = "";
-			blackScreen.GetComponent<RectTransform> ().localPosition = new Vector3(0,0,-130f);
-			mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3(0,0,-130f);
+			pauseLayer.SetActive(false);
 			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Pause";
+			mc.Resume_Music();
 		}
 	}
 
@@ -791,11 +801,14 @@ public class GameController : MonoBehaviour {
 		isQuitting = true;
 		//remember to properly reload time
 		Time.timeScale = 1;
+		//stop the music
+		mc.Stop_Music ();
 		//load the main menu
 		StartCoroutine ("TitleTransition");
 	}
 
 	IEnumerator TitleTransition(){
+		mc.Stop_Music ();
 		shutter.Begin_Vertical_Close ();
 		yield return new WaitForSeconds (2f);
 		Application.LoadLevel ("Split Title Scene");
