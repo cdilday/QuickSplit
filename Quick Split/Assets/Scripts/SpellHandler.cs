@@ -402,6 +402,7 @@ public class SpellHandler : MonoBehaviour {
 			selectedPiece = null;
 			spellLimit = 0;
 			splitter.setState ("isActive", true);
+			gameController.gameOverText.text =  "";
 			gameController.checkBoard();
 		}
 	}

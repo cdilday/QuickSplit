@@ -11,7 +11,7 @@ public class TitleController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Goto_Game_Mode_Layer ();
-		shutter.Begin_Horizontal_Open ();
+		shutter.Begin_Vertical_Open ();
 	}
 
 	//loads the proper game mode into the playerprefs for the game scene to read, then loads the game scene

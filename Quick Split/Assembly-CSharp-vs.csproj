@@ -46,7 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Music_Slider.cs" />
+     <Compile Include="Assets\Fader.cs" />
      <Compile Include="Assets\Scripts\Bit_Pool.cs" />
      <Compile Include="Assets\Scripts\Color_Selector.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\Holder_Script.cs" />
      <Compile Include="Assets\Scripts\Mode_Clicker.cs" />
      <Compile Include="Assets\Scripts\Music_Controller.cs" />
+     <Compile Include="Assets\Scripts\Music_Slider.cs" />
      <Compile Include="Assets\Scripts\PieceScoreText.cs" />
      <Compile Include="Assets\Scripts\Pulser.cs" />
      <Compile Include="Assets\Scripts\RGBandHSVconverter.cs" />

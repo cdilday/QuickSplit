@@ -45,7 +45,7 @@ public class GameController : MonoBehaviour {
 
 	//true if the player's lost
 	public bool gameOver;
-	public GameObject retryObject;
+	public GameObject GameOverLayer;
 
 	//keeps track of the current score multiplier during checks
 	int multiplier;
@@ -71,7 +71,6 @@ public class GameController : MonoBehaviour {
 
 	public bool isPaused;
 	public GameObject pauseLayer;
-	public GameObject mainMenuButton;
 	public Shutter_Handler shutter;
 
 	Music_Controller mc;
@@ -221,8 +220,7 @@ public class GameController : MonoBehaviour {
 
 		//get the pause stuff in order
 		isPaused = false;
-		mainMenuButton = GameObject.Find ("Return to Title Button");
-		mainMenuButton.GetComponent<RectTransform> ().localPosition = new Vector3 (0, 0, -130f);
+		GameOverLayer.SetActive (false);
 		shutter.Begin_Horizontal_Open ();
 	}
 	
@@ -250,9 +248,10 @@ public class GameController : MonoBehaviour {
 			for (int c = 7; c <= 8; c++) {
 				for (int r = 0; r <= 7; r++){
 					if(colorGrid[r,c] != null && grid[r,c] != null){
-						retryObject.transform.position = new Vector3(-0.18f, 3.8f, -1);
-						gameOverText.text = "Game Over\n\nWould you like to Retry?";
+						gameOverText.text = "Game Over";
 						gameOver = true;
+						GameOverLayer.SetActive(true);
+						GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
 						mc.Stop_Music();
 						splitter.setState("canShoot", false);
 						if(PlayerPrefs.GetInt(gameType, 0) < score){
@@ -602,7 +601,9 @@ public class GameController : MonoBehaviour {
 			for (int r = 0; r <= 7; r++){
 				if((colorGrid[r,6] != null && grid[r,6] != null) ||
 				   (colorGrid[r,9] != null && grid[r,9] != null)){
-					gameOverText.text = "Game Over\nPress R to Restart";
+					gameOverText.text = "Game Over";
+					GameOverLayer.SetActive(true);
+					GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
 					gameOver = true;
 					splitter.setState("canShoot", false);
 					mc.Stop_Music();
@@ -807,9 +808,27 @@ public class GameController : MonoBehaviour {
 		StartCoroutine ("TitleTransition");
 	}
 
-	IEnumerator TitleTransition(){
+	public void Retry()
+	{
+		StartCoroutine ("ReloadScene");
+	}
+
+	IEnumerator ReloadScene(){
+		if(PlayerPrefs.GetInt(gameType, 0) < score){
+			PlayerPrefs.SetInt (gameType, score);
+		}
+		isQuitting = true;
+		//remember to properly reload time
+		Time.timeScale = 1;
 		mc.Stop_Music ();
 		shutter.Begin_Vertical_Close ();
+		yield return new WaitForSeconds (2f);
+		Application.LoadLevel (Application.loadedLevel);
+	}
+
+	IEnumerator TitleTransition(){
+		mc.Stop_Music ();
+		shutter.Begin_Horizontal_Close ();
 		yield return new WaitForSeconds (2f);
 		Application.LoadLevel ("Split Title Scene");
 	}
