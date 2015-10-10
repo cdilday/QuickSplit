@@ -69,73 +69,28 @@ public class Splitter_script : MonoBehaviour {
 		if (!splitState.isActive)
 			return;
 		//player Input
-		//checks if the player has opted for mouse control, if not uses key input. Uncomment to make them exclusive
-		//if (mouseControl) {
-		//uncomment to constantly see mouse position.
-		//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
-		mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		//checking that the mouse is within the grid
-		/*if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5) {
-			// mobile controls: top third the screen moves it up, bottom moves it down, right mid fires, left mid swaps
-
-			if (Input.mousePosition.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
-				MoveUp();
-			}
-			//Moving downwards if the mouse is below the splitter's hitbox
-			if (Input.mousePosition.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
-				MoveDown();
-			}
-			//Swapping pieces with right click if on PC
-			if (Input.GetMouseButtonDown (1) ) {
-				swap ();
-			}
-			else if (Input.GetMouseButtonDown(0) && mouseLocation.x <=0)
-			{
-				swap ();
-			}
-			//launching pieces with Left click while over the board
-			else if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
-				if(splitState.yellowReady == true){
-					GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
-				}
-				else{
-					StartCoroutine (fire ());
-					splitState.canShoot = false;
-					gameController.movesMade++;
-					gameController.updateMoves ();
-				}
-			}
-		}*/
-
-		bool hasMoveTouch = false;
-		bool hasFireTouch = false;
-
-		foreach (Touch poke in Input.touches) {
-			//we only want to put in one movement touch per frame, so take the first one and listen to that
-			if( !hasMoveTouch)
-			{
-				//moving up if user has touched top of play field
-				if (poke.position.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
+		//checks if the player is playing on a mobile phone, if not activate mouse control
+		if (!Application.isMobilePlatform) {
+			//uncomment to constantly see mouse position.
+			//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
+			mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+			//Debug.Log ("Mouse Position: X:" + mouseLocation.x + "    Y: " + mouseLocation.y);
+			//checking that the mouse is within the grid
+			if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= 0 && mouseLocation.y <= 7.5) {
+				if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
 					MoveUp();
-					hasMoveTouch = true;
-					continue;
 				}
-				//moving down if user has touched bottom of play field
-				if (poke.position.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
-					MoveDown ();
-					hasMoveTouch = true;
-					continue;
+				//Moving downwards if the mouse is below the splitter's hitbox
+				if ((mouseLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0) {
+					MoveDown();
 				}
-			}
-
-			if(!hasFireTouch && poke.phase == TouchPhase.Began)
-			{
-				if(poke.position.x / Screen.width < 0.5f)
-				{
+				//Swapping pieces with right click if on PC
+				if (Input.GetMouseButtonDown (1) ) {
 					swap ();
-					hasFireTouch = true;
 				}
-				else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
+				//launching pieces with Left click while over the board
+				else if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot 
+				         && !splitState.inTransition && splitState.isActive) {
 					if(splitState.yellowReady == true){
 						GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
 					}
@@ -144,7 +99,52 @@ public class Splitter_script : MonoBehaviour {
 						splitState.canShoot = false;
 						gameController.movesMade++;
 						gameController.updateMoves ();
+					}
+				}
+			}
+		}
+
+		bool hasMoveTouch = false;
+		bool hasFireTouch = false;
+
+		//touch controls
+		if(Application.isMobilePlatform){
+			foreach (Touch poke in Input.touches) {
+				//we only want to put in one movement touch per frame, so take the first one and listen to that
+				if( !hasMoveTouch)
+				{
+					//moving up if user has touched top of play field
+					if (poke.position.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
+						MoveUp();
+						hasMoveTouch = true;
+						continue;
+					}
+					//moving down if user has touched bottom of play field
+					if (poke.position.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
+						MoveDown ();
+						hasMoveTouch = true;
+						continue;
+					}
+				}
+
+				if(!hasFireTouch && poke.phase == TouchPhase.Began)
+				{
+					if(poke.position.x / Screen.width < 0.5f)
+					{
+						swap ();
 						hasFireTouch = true;
+					}
+					else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
+						if(splitState.yellowReady == true){
+							GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
+						}
+						else{
+							StartCoroutine (fire ());
+							splitState.canShoot = false;
+							gameController.movesMade++;
+							gameController.updateMoves ();
+							hasFireTouch = true;
+						}
 					}
 				}
 			}
@@ -260,11 +260,13 @@ public class Splitter_script : MonoBehaviour {
 	//swaps the left and right slot
 	public void swap()
 	{
-		Transform temp = leftSlot;
-		leftSlot = rightSlot;
-		rightSlot = temp;
-		leftSlot.transform.position = new Vector2(-1, transform.position.y);
-		rightSlot.transform.position = new Vector2(0, transform.position.y);
+		if(leftSlot != null && rightSlot != null){
+			Transform temp = leftSlot;
+			leftSlot = rightSlot;
+			rightSlot = temp;
+			leftSlot.transform.position = new Vector2(-1, transform.position.y);
+			rightSlot.transform.position = new Vector2(0, transform.position.y);
+		}
 	}
 
 	//shoots the pieces in the correct directions

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class TitleController : MonoBehaviour {
 
@@ -8,6 +9,8 @@ public class TitleController : MonoBehaviour {
 	public GameObject creditsLayer;
 	public GameObject optionsLayer;
 	public Shutter_Handler shutter;
+	int resetPresses = 0;
+
 	// Use this for initialization
 	void Start () {
 		Goto_Game_Mode_Layer ();
@@ -68,6 +71,25 @@ public class TitleController : MonoBehaviour {
 		howToPlayLayers[1].SetActive (false);
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
+	}
+
+	public void Reset_High_Scores()
+	{
+		if (resetPresses == 0)
+		{
+			Text rhst = GameObject.Find ("Reset High Scores Text").GetComponent<Text>();
+			resetPresses++;
+			rhst.text = "Are you sure?";
+		}
+		else
+		{
+			PlayerPrefs.SetInt ("Wit", 0);
+			PlayerPrefs.SetInt ("Quick", 0);
+			PlayerPrefs.SetInt ("Wiz", 0);
+			PlayerPrefs.SetInt ("Holy", 0);
+			Text rhst = GameObject.Find ("Reset High Scores Text").GetComponent<Text>();
+			rhst.text = "High Scores Reset!";
+		}
 	}
 
 	public IEnumerator GameTransition()

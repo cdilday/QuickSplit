@@ -6,9 +6,9 @@ public class Fader : MonoBehaviour {
 
 	public bool isFadingIn;
 	public bool isFadingOut;
-	public Image blackScreen;
+	Image blackScreen;
 	public float duration;
-	public float startTime;
+	float startTime;
 
 	// Use this for initialization
 	void Awake () {

@@ -34,6 +34,9 @@ public class GameController : MonoBehaviour {
 	public Text movesText;
 	public int score;
 	public Text scoreText;
+	bool newHighScore;
+	public Text HighScoreText;
+
 
 	//pieces places is used to ensure both pieces have landed before checking the grid in Update()
 	int piecesPlaced;
@@ -222,6 +225,10 @@ public class GameController : MonoBehaviour {
 		isPaused = false;
 		GameOverLayer.SetActive (false);
 		shutter.Begin_Horizontal_Open ();
+
+		//high score stuff
+		newHighScore = false;
+		HighScoreText.text = "";
 	}
 	
 	// Update is called once per frame
@@ -560,6 +567,7 @@ public class GameController : MonoBehaviour {
 			if(grid [x, y-1 ].GetComponent<piece_script>().locked){
 				adj++;
 				//add to group cluster
+				//TODO: Possible bug here; using the white power on a full board in Wiz cause a game-breaking index out of range error. Cannot easily replicate
 				cluster[adj-1] = grid[x,y-1];
 				adj = scanner (x, y-1, color, adj);
 			}
@@ -590,6 +598,16 @@ public class GameController : MonoBehaviour {
 	{
 		if(!gameOver && !isQuitting){
 			scoreText.text = "Score: " + score;
+		}
+		//save current score
+		if(PlayerPrefs.GetInt(gameType, 0) < score){
+			PlayerPrefs.SetInt (gameType, score);
+			if(!newHighScore)
+			{
+				//TODO: SFX for high score
+				newHighScore = true;
+				HighScoreText.text = "New High Score!";
+			}
 		}
 	}
 
@@ -779,6 +797,7 @@ public class GameController : MonoBehaviour {
 			Time.timeScale = 0;
 			gameOverText.text = "PAUSED";
 			pauseLayer.SetActive(true);
+			splitter.setState("isActive", false);
 			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Unpause";
 			mc.Pause_Music();
 		}
@@ -787,6 +806,7 @@ public class GameController : MonoBehaviour {
 			isPaused = false;
 			Time.timeScale = 1;
 			gameOverText.text = "";
+			splitter.setState("isActive", true);
 			pauseLayer.SetActive(false);
 			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Pause";
 			mc.Resume_Music();
@@ -821,7 +841,7 @@ public class GameController : MonoBehaviour {
 		//remember to properly reload time
 		Time.timeScale = 1;
 		mc.Stop_Music ();
-		shutter.Begin_Vertical_Close ();
+		shutter.Begin_Horizontal_Close ();
 		yield return new WaitForSeconds (2f);
 		Application.LoadLevel (Application.loadedLevel);
 	}

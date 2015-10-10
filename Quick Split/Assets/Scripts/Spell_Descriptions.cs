@@ -4,18 +4,18 @@ using UnityEngine.UI;
 
 public class Spell_Descriptions : MonoBehaviour {
 
-	GameObject popupObject;
-	Image popup;
+	//GameObject popupObject;
+	//Image popup;
 	GameObject descObject;
 	Text description;
 
 
 	// Use this for initialization
 	void Start () {
-		popupObject = transform.GetChild (0).gameObject;
+		/*popupObject = transform.GetChild (0).gameObject;
 		if (popupObject != null) {
 			popup = popupObject.GetComponent<Image>();
-		}
+		}*/
 		descObject = transform.GetChild (1).gameObject;
 		if (descObject != null) {
 			description = descObject.GetComponent<Text>();

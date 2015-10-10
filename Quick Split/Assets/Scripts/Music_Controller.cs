@@ -51,6 +51,7 @@ public class Music_Controller : MonoBehaviour {
 		}
 
 		MusicSource.volume = PlayerPrefs.GetFloat ("Music Volume", 1);
+		SFXVolume = PlayerPrefs.GetFloat ("SFX Volume", 1);
 	}
 
 	public void Stop_Music()

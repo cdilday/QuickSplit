@@ -46,9 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Fader.cs" />
      <Compile Include="Assets\Scripts\Bit_Pool.cs" />
      <Compile Include="Assets\Scripts\Color_Selector.cs" />
+     <Compile Include="Assets\Scripts\Fader.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\High_Score_Displayer.cs" />
      <Compile Include="Assets\Scripts\Holder_Script.cs" />
@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\PieceScoreText.cs" />
      <Compile Include="Assets\Scripts\Pulser.cs" />
      <Compile Include="Assets\Scripts\RGBandHSVconverter.cs" />
+     <Compile Include="Assets\Scripts\SFX_Slider.cs" />
      <Compile Include="Assets\Scripts\SceneLoader.cs" />
      <Compile Include="Assets\Scripts\ScoreBit.cs" />
      <Compile Include="Assets\Scripts\Selectable_Color.cs" />
