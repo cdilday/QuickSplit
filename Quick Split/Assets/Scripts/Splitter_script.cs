@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Splitter_script : MonoBehaviour {
-
+	public bool mobileDebugging;
 
 	public class State{
 		public bool isMoving; // checks if the splitter is in the middle of moving to the next grid spot
@@ -70,7 +70,7 @@ public class Splitter_script : MonoBehaviour {
 			return;
 		//player Input
 		//checks if the player is playing on a mobile phone, if not activate mouse control
-		if (!Application.isMobilePlatform) {
+		if (!Application.isMobilePlatform && !mobileDebugging) {
 			//uncomment to constantly see mouse position.
 			//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
 			mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
@@ -103,12 +103,11 @@ public class Splitter_script : MonoBehaviour {
 				}
 			}
 		}
-
-		bool hasMoveTouch = false;
-		bool hasFireTouch = false;
-
-		//touch controls
-		if(Application.isMobilePlatform){
+		else
+		{
+			bool hasMoveTouch = false;
+			bool hasFireTouch = false;
+			//touch controls
 			foreach (Touch poke in Input.touches) {
 				//we only want to put in one movement touch per frame, so take the first one and listen to that
 				if( !hasMoveTouch)
@@ -125,29 +124,39 @@ public class Splitter_script : MonoBehaviour {
 						hasMoveTouch = true;
 						continue;
 					}
-				}
+				}		
 
+				Vector2 pokeLocation = Camera.main.ScreenToWorldPoint (poke.position);
 				if(!hasFireTouch && poke.phase == TouchPhase.Began)
 				{
-					if(poke.position.x / Screen.width < 0.5f)
+					//check to make sure they touched an area of the screen devoted to actions
+					if(poke.position.y / Screen.height <= 0.66f && poke.position.y / Screen.height >= 0.27f)
 					{
-						swap ();
-						hasFireTouch = true;
-					}
-					else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
-						if(splitState.yellowReady == true){
-							GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
-						}
-						else{
-							StartCoroutine (fire ());
-							splitState.canShoot = false;
-							gameController.movesMade++;
-							gameController.updateMoves ();
+						if(poke.position.x / Screen.width < 0.5f)
+						{
+							swap ();
 							hasFireTouch = true;
+						}
+						else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition && !hasMoveTouch) {
+							if(splitState.yellowReady == true){
+								GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
+							}
+							else{
+								StartCoroutine (fire ());
+								splitState.canShoot = false;
+								gameController.movesMade++;
+								gameController.updateMoves ();
+								hasFireTouch = true;
+							}
 						}
 					}
 				}
 			}
+
+		
+
+		//touch controls
+	
 		}
 
 		//mobile input, can't just fake it with the mouse
