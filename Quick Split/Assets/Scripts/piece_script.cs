@@ -39,7 +39,7 @@ public class piece_script : MonoBehaviour {
 
 	Bit_Pool BitPool;
 
-	AudioSource clackSound;
+	GameObject clacker;
 	// Use this for initialization
 	void Start () {
 		isBomb = false;
@@ -69,7 +69,7 @@ public class piece_script : MonoBehaviour {
 			BitPool = BitPoolObject.GetComponent<Bit_Pool>();
 		}
 
-		clackSound = gameObject.GetComponent<AudioSource> ();
+		clacker = GameObject.Find("Clacker");
 
 		//multiplier = 1;
 	}
@@ -131,7 +131,7 @@ public class piece_script : MonoBehaviour {
 				transform.position = lockPos;
 				gridPos = new Vector2((int)lockPos.y, (int)lockPos.x + 8);
 				gameController.placePiece(gameObject);
-				PlayClack();
+				clacker.BroadcastMessage("PlaySound");
 			}
 			//if it collided with another piece, determine where that piece is and place it relative to that piece
 			else if(colPiece.locked == true && !colPiece.inSplitter)
@@ -158,7 +158,7 @@ public class piece_script : MonoBehaviour {
 				}
 				//places the piece in the grid upkept by the game controller
 				gameController.placePiece(gameObject);
-				PlayClack();
+				clacker.BroadcastMessage("PlaySound");
 			}
 			if(isBomb)
 				Destroy (gameObject);
@@ -273,11 +273,6 @@ public class piece_script : MonoBehaviour {
 		}
 	}
 
-	void PlayClack(){
-		clackSound.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
-		clackSound.pitch = 1 + Random.Range (-0.5f, 0.5f);
-		clackSound.Play ();
-	}
-	
+
 	
 }

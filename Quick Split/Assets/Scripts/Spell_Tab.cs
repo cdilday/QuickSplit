@@ -11,6 +11,8 @@ public class Spell_Tab : MonoBehaviour {
 
 	public string spellColor;
 
+	Splitter_script splitter;
+
 	SpellHandler spellHandler;
 	GameObject DescCanvas;
 
@@ -24,6 +26,7 @@ public class Spell_Tab : MonoBehaviour {
 		}
 		isReady = false;
 		DescCanvas = GameObject.Find ("Description Canvas");
+		splitter = GameObject.FindGameObjectWithTag ("Splitter").GetComponent<Splitter_script> ();
 	}
 
 	void FixedUpdate()
@@ -70,11 +73,14 @@ public class Spell_Tab : MonoBehaviour {
 
 	void OnMouseOver()
 	{
+		//prevent mouse controls from firing when you click on the tab
+		splitter.setState ("canShoot", false);
 		DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
 	}
 	
 	void OnMouseExit()
 	{
+		splitter.setState ("canShoot", true);
 		DescCanvas.GetComponent<Spell_Descriptions> ().hide ();
 	}
 
@@ -109,6 +115,7 @@ public class Spell_Tab : MonoBehaviour {
 				break;
 			}
 			transform.position = new Vector3 (transform.position.x, transform.position.y - 3f, transform.position.z);
+			isReady = false;
 		}
 	}
 

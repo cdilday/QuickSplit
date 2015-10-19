@@ -76,7 +76,7 @@ public class Splitter_script : MonoBehaviour {
 			mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			//Debug.Log ("Mouse Position: X:" + mouseLocation.x + "    Y: " + mouseLocation.y);
 			//checking that the mouse is within the grid
-			if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= 0 && mouseLocation.y <= 7.5) {
+			if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5 && mouseLocation.y <= 7.5) {
 				if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
 					MoveUp();
 				}
