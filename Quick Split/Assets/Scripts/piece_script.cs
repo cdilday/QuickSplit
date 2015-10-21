@@ -40,6 +40,8 @@ public class piece_script : MonoBehaviour {
 	Bit_Pool BitPool;
 
 	GameObject clacker;
+
+	Piece_Sprite_Holder spriteHolder;
 	// Use this for initialization
 	void Start () {
 		isBomb = false;
@@ -70,6 +72,37 @@ public class piece_script : MonoBehaviour {
 		}
 
 		clacker = GameObject.Find("Clacker");
+
+		//time to set up piece visuals
+		spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
+		sprites = spriteHolder.Get_Sprites ();
+		switch (pieceColor)
+		{
+		case "Red":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+			break;
+		case "Orange":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+			break;
+		case "Yellow":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+			break;
+		case "Green":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+			break;
+		case "Blue":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+			break;
+		case "Purple":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+			break;
+		case "Grey":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
+			break;
+		case "White":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
+			break;
+		}
 
 		//multiplier = 1;
 	}

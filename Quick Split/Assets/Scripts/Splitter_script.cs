@@ -208,11 +208,11 @@ public class Splitter_script : MonoBehaviour {
 			{
 				moveDirection = 0;
 				splitState.isMoving = false;
-				transform.position = new Vector3(transform.position.x, moveTarget,-1);
+				transform.position = new Vector3(transform.position.x, moveTarget,-0.5f);
 			}
 			else //visually move it
 			{
-				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * 0.25f) ,-1);
+				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * 0.25f) ,-0.5f);
 			}
 		}
 

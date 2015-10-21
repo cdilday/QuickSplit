@@ -10,7 +10,7 @@ public class Sound_Effector : MonoBehaviour {
 	//attatch as many audiosources as the maximum number of sounds  may need toplay at once
 	List<AudioSource> aSources;
 	//marks which ones are and aren't busy
-	List<bool> availableSource;
+	public List<bool> availableSource;
 
 	//for pitch variations
 	public bool variation;
@@ -60,6 +60,7 @@ public class Sound_Effector : MonoBehaviour {
 					aSources[i].pitch = 1f + Random.Range (-1f * variationAmount, variationAmount);
 				}
 				aSources.ElementAt(i).Play ();
+				return;
 			}
 		}
 	}

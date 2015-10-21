@@ -18,6 +18,9 @@ public class Spell_Tab : MonoBehaviour {
 
 	bool isReady;
 
+	Piece_Sprite_Holder spriteHolder;
+	public Sprite[] sprites = new Sprite[8];
+
 	void Start () {
 		transform.position = new Vector3 (transform.position.x, transform.position.y - 3f, transform.position.z);
 		GameObject shObject = transform.parent.gameObject;
@@ -27,6 +30,36 @@ public class Spell_Tab : MonoBehaviour {
 		isReady = false;
 		DescCanvas = GameObject.Find ("Description Canvas");
 		splitter = GameObject.FindGameObjectWithTag ("Splitter").GetComponent<Splitter_script> ();
+
+		spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
+		sprites = spriteHolder.Get_Sprites ();
+		switch (spellColor)
+		{
+		case "Red":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+			break;
+		case "Orange":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+			break;
+		case "Yellow":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+			break;
+		case "Green":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+			break;
+		case "Blue":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+			break;
+		case "Purple":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+			break;
+		case "Grey":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
+			break;
+		case "White":
+			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
+			break;
+		}
 	}
 
 	void FixedUpdate()
