@@ -34,6 +34,9 @@ public class Splitter_script : MonoBehaviour {
 	public Holder_Script holder;
 	public GameController gameController;
 
+	Piece_Sprite_Holder spriteHolder;
+
+
 	// Use this for initialization
 	void Start () {
 		//get the gamecontroller
@@ -61,7 +64,8 @@ public class Splitter_script : MonoBehaviour {
 		splitState.isActive = true;
 		splitState.inTransition = false;
 		splitState.yellowReady = false;
-		//make a camera for mouse control to use
+
+		gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter ();
 	}
 	
 	// Update is called once per frame
