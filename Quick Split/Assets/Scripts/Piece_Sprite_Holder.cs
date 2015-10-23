@@ -17,7 +17,8 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	public string PieceSet;
 	public string SplitterType;
 
-	public RuntimeAnimatorController[] animations;
+	public RuntimeAnimatorController[] DefaultAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] KingAnimations = new RuntimeAnimatorController[8];
 
 	// Use this for initialization
 	void Start () {
@@ -77,13 +78,13 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 		}
 	}
 
-	public RuntimeAnimatorController Get_Animator()
+	public RuntimeAnimatorController[] Get_Animations()
 	{
 		switch (PieceSet) {
 		case "Default":
-			return animations[0];
+			return DefaultAnimations;
 		case "King":
-			return animations[1];
+			return KingAnimations;
 		case "Retro":
 			return null;
 		case "Programmer":
@@ -92,7 +93,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 		//this should never happen
 			return null;
 		default:
-			return animations[0];
+			return DefaultAnimations;
 		}
 	}
 }

@@ -42,7 +42,7 @@ public class piece_script : MonoBehaviour {
 	GameObject clacker;
 
 	Piece_Sprite_Holder spriteHolder;
-	RuntimeAnimatorController pieceanim;
+	RuntimeAnimatorController[] animations;
 	int colornum;
 	int prevColorNum;
 	// Use this for initialization
@@ -79,59 +79,57 @@ public class piece_script : MonoBehaviour {
 		//time to set up piece visuals
 		spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
 		sprites = spriteHolder.Get_Sprites ();
-		pieceanim = spriteHolder.Get_Animator ();
-		if (pieceanim != null)
-			gameObject.GetComponent<Animator> ().runtimeAnimatorController = pieceanim;
-		else 
+		animations = spriteHolder.Get_Animations ();
+		if (animations == null)
 			Destroy (gameObject.GetComponent<Animator>());
 		switch (pieceColor) {
 		case "Red":
 			colornum = 0;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [0];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 0);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Orange":
 			colornum = 1;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [1];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 1);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Yellow":
 			colornum = 2;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [2];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 2);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Green":
 			colornum = 3;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [3];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 3);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Blue":
 			colornum = 4;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [4];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 4);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Purple":
 			colornum = 5;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [5];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 5);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Grey":
 			colornum = 6;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [6];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 6);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "White":
 			colornum = 7;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [7];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 7);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		}
 		prevColorNum = ((int)Time.time) % 8;
@@ -176,11 +174,16 @@ public class piece_script : MonoBehaviour {
 		}
 
 		//animations
-		if ( ((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == colornum) {
-			//play the animation
-
+		if(animations != null){
+			if ( ((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == colornum) {
+				gameObject.GetComponent<Animator>().SetBool("isPlaying", true);
+			}
+			else if( ((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 != colornum)
+			{
+				gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
+			}
+			prevColorNum = ((int)Time.time) % 8;
 		}
-		prevColorNum = ((int)Time.time) % 8;
 	}
 		
 	//2D collision detection
@@ -268,51 +271,51 @@ public class piece_script : MonoBehaviour {
 		{
 		case "Red":
 			colornum = 0;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 0);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Orange":
 			colornum = 1;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 1);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Yellow":
 			colornum = 2;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 2);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Green":
 			colornum = 3;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 3);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Blue":
 			colornum = 4;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 4);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Purple":
 			colornum = 5;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 5);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Grey":
 			colornum = 6;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 6);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "White":
 			colornum = 7;
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
-			if (pieceanim != null)
-				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 7);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+			if (animations != null)
+				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		}
 	}
