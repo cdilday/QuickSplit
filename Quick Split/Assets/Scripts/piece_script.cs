@@ -42,6 +42,9 @@ public class piece_script : MonoBehaviour {
 	GameObject clacker;
 
 	Piece_Sprite_Holder spriteHolder;
+	RuntimeAnimatorController pieceanim;
+	int colornum;
+	int prevColorNum;
 	// Use this for initialization
 	void Start () {
 		isBomb = false;
@@ -76,34 +79,62 @@ public class piece_script : MonoBehaviour {
 		//time to set up piece visuals
 		spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
 		sprites = spriteHolder.Get_Sprites ();
-		switch (pieceColor)
-		{
+		pieceanim = spriteHolder.Get_Animator ();
+		if (pieceanim != null)
+			gameObject.GetComponent<Animator> ().runtimeAnimatorController = pieceanim;
+		else 
+			Destroy (gameObject.GetComponent<Animator>());
+		switch (pieceColor) {
 		case "Red":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+			colornum = 0;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [0];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 0);
 			break;
 		case "Orange":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+			colornum = 1;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [1];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 1);
 			break;
 		case "Yellow":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+			colornum = 2;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [2];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 2);
 			break;
 		case "Green":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+			colornum = 3;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [3];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 3);
 			break;
 		case "Blue":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+			colornum = 4;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [4];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 4);
 			break;
 		case "Purple":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+			colornum = 5;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [5];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 5);
 			break;
 		case "Grey":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
+			colornum = 6;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [6];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 6);
 			break;
 		case "White":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
+			colornum = 7;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [7];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger ("PieceColorNum", 7);
 			break;
 		}
-
+		prevColorNum = ((int)Time.time) % 8;
 		//multiplier = 1;
 	}
 
@@ -144,6 +175,12 @@ public class piece_script : MonoBehaviour {
 				this.name = pieceColor + " in Splitter";
 		}
 
+		//animations
+		if ( ((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == colornum) {
+			//play the animation
+
+		}
+		prevColorNum = ((int)Time.time) % 8;
 	}
 		
 	//2D collision detection
@@ -230,28 +267,52 @@ public class piece_script : MonoBehaviour {
 		switch (newColor)
 		{
 		case "Red":
+			colornum = 0;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 0);
 			break;
 		case "Orange":
+			colornum = 1;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 1);
 			break;
 		case "Yellow":
+			colornum = 2;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 2);
 			break;
 		case "Green":
+			colornum = 3;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 3);
 			break;
 		case "Blue":
+			colornum = 4;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 4);
 			break;
 		case "Purple":
+			colornum = 5;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 5);
 			break;
 		case "Grey":
+			colornum = 6;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 6);
 			break;
 		case "White":
+			colornum = 7;
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
+			if (pieceanim != null)
+				gameObject.GetComponent<Animator> ().SetInteger("PieceColorNum", 7);
 			break;
 		}
 	}

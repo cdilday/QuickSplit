@@ -17,6 +17,8 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	public string PieceSet;
 	public string SplitterType;
 
+	public RuntimeAnimatorController[] animations;
+
 	// Use this for initialization
 	void Start () {
 		if (PieceSet == "")
@@ -72,6 +74,25 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 			return ProgrammerSplitter;
 		default:
 			return DefaultSplitter;
+		}
+	}
+
+	public RuntimeAnimatorController Get_Animator()
+	{
+		switch (PieceSet) {
+		case "Default":
+			return animations[0];
+		case "King":
+			return animations[1];
+		case "Retro":
+			return null;
+		case "Programmer":
+			return null;
+		case "Face":
+		//this should never happen
+			return null;
+		default:
+			return animations[0];
 		}
 	}
 }
