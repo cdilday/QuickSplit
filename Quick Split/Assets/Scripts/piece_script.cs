@@ -45,6 +45,8 @@ public class piece_script : MonoBehaviour {
 	RuntimeAnimatorController[] animations;
 	int colornum;
 	int prevColorNum;
+	bool hasPlayedAnim;
+	float animStartTime;
 	// Use this for initialization
 	void Start () {
 		isBomb = false;
@@ -134,6 +136,7 @@ public class piece_script : MonoBehaviour {
 		}
 		prevColorNum = ((int)Time.time) % 8;
 		//multiplier = 1;
+		hasPlayedAnim = false;
 	}
 
 	void FixedUpdate () {
@@ -177,10 +180,16 @@ public class piece_script : MonoBehaviour {
 		if(animations != null){
 			if ( ((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == colornum) {
 				gameObject.GetComponent<Animator>().SetBool("isPlaying", true);
+				hasPlayedAnim = true;
+				animStartTime = Time.time;
 			}
-			else if( ((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 != colornum)
+			else if(hasPlayedAnim && ((int)Time.time) % 8 == colornum)
 			{
-				gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
+				if(gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time)
+				{
+					gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
+					hasPlayedAnim = false;
+				}
 			}
 			prevColorNum = ((int)Time.time) % 8;
 		}

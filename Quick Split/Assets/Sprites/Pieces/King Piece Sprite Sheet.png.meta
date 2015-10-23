@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7a53613782d01ee49ac298ce7a5dc90e
-timeCreated: 1445570044
+timeCreated: 1445631017
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -38,7 +38,7 @@ TextureImporter:
     21300062: King Orange 7
     21300064: King Purple 0
     21300066: King Purple 1
-    21300068: King Purple
+    21300068: King Purple 2
     21300070: King Purple 3
     21300072: King Purple 4
     21300074: King Purple 5
@@ -68,7 +68,6 @@ TextureImporter:
     21300122: King Yellow 5
     21300124: King Yellow 6
     21300126: King Yellow 7
-    21300128: King Purple 2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
