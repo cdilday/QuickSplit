@@ -20,28 +20,52 @@ public class Piece_Colorer : MonoBehaviour {
 		switch (pieceColor)
 		{
 		case "Red":
-			gameObject.GetComponent<Image>().sprite = sprites[0];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[0];
 			break;
 		case "Orange":
-			gameObject.GetComponent<Image>().sprite = sprites[1];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[1];
 			break;
 		case "Yellow":
-			gameObject.GetComponent<Image>().sprite = sprites[2];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[2];
 			break;
 		case "Green":
-			gameObject.GetComponent<Image>().sprite = sprites[3];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[3];
 			break;
 		case "Blue":
-			gameObject.GetComponent<Image>().sprite = sprites[4];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[4];
 			break;
 		case "Purple":
-			gameObject.GetComponent<Image>().sprite = sprites[5];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[5];
 			break;
 		case "Grey":
-			gameObject.GetComponent<Image>().sprite = sprites[6];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[6];
 			break;
 		case "White":
-			gameObject.GetComponent<Image>().sprite = sprites[7];
+			if(gameObject.GetComponent<SpriteRenderer>())
+				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
+			else
+				gameObject.GetComponent<Image>().sprite = sprites[7];
 			break;
 		}
 

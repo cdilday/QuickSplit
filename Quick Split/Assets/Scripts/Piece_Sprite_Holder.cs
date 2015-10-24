@@ -19,6 +19,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 
 	public RuntimeAnimatorController[] DefaultAnimations = new RuntimeAnimatorController[8];
 	public RuntimeAnimatorController[] KingAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] RetroAnimations = new RuntimeAnimatorController[8];
 
 	// Use this for initialization
 	void Start () {
@@ -86,7 +87,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 		case "King":
 			return KingAnimations;
 		case "Retro":
-			return null;
+			return RetroAnimations;
 		case "Programmer":
 			return null;
 		case "Face":
