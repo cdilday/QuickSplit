@@ -7,6 +7,12 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	public Sprite[] ProgrammerSprites = new Sprite[8];
 	public Sprite[] ArcaneSprites = new Sprite[8];
 	public Sprite[] DefaultSprites = new Sprite[8];
+	public Sprite[] BlobSprites = new Sprite[8];
+	public Sprite[] DominoSprites = new Sprite[8];
+	public Sprite[] PresentSprites = new Sprite[8];
+	public Sprite[] PumpkinSprites = new Sprite[8];
+	public Sprite[] SymbolSprites = new Sprite[8];
+	public Sprite[] TechnoSprites = new Sprite[8];
 	//don't ever use these this is a joke
 	public Sprite[] FaceSprites = new Sprite[8];
 
@@ -20,6 +26,12 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	public RuntimeAnimatorController[] DefaultAnimations = new RuntimeAnimatorController[8];
 	public RuntimeAnimatorController[] ArcaneAnimations = new RuntimeAnimatorController[8];
 	public RuntimeAnimatorController[] RetroAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] BlobAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] DominoAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] PresentAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] PumpkinAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] SymbolAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] TechnoAnimations = new RuntimeAnimatorController[8];
 
 	// Use this for initialization
 	void Start () {
@@ -41,6 +53,18 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 			return ProgrammerSprites;
 		case "Default":
 			return DefaultSprites;
+		case "Blob":
+			return BlobSprites;
+		case "Domino":
+			return DominoSprites;
+		case "Present":
+			return PresentSprites;
+		case "Pumpkin":
+			return PumpkinSprites;
+		case "Symbol":
+			return SymbolSprites;
+		case "Techno":
+			return TechnoSprites;
 		case "Face":
 			//this should never happen
 			return FaceSprites;
@@ -90,6 +114,18 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 			return RetroAnimations;
 		case "Programmer":
 			return null;
+		case "Blob":
+			return BlobAnimations;
+		case "Domino":
+			return DominoAnimations;
+		case "Present":
+			return PresentAnimations;
+		case "Pumpkin":
+			return PumpkinAnimations;
+		case "Symbol":
+			return SymbolAnimations;
+		case "Techno":
+			return TechnoAnimations;
 		case "Face":
 		//this should never happen
 			return null;

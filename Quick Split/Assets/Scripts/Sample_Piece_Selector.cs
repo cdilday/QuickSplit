@@ -26,6 +26,24 @@ public class Sample_Piece_Selector : MonoBehaviour {
 		case "Programmer":
 			index = 3;
 			break;
+		case "Blob":
+			index = 4;
+			break;
+		case "Domino":
+			index = 5;
+			break;
+		case "Present":
+			index = 6;
+			break;
+		case "Pumpkin":
+			index = 7;
+			break;
+		case "Symbol":
+			index = 8;
+			break;
+		case "Techno":
+			index = 9;
+			break;
 		default:
 			index = 0;
 			break;

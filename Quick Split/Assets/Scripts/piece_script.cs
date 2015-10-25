@@ -183,9 +183,10 @@ public class piece_script : MonoBehaviour {
 				hasPlayedAnim = true;
 				animStartTime = Time.time;
 			}
-			else if(hasPlayedAnim && ((int)Time.time) % 8 == colornum)
+			else if(hasPlayedAnim && (((int)Time.time) % 8 == colornum || gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time))
 			{
-				if(gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time)
+				float animPlayLength = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * (1/gameObject.GetComponent<Animator>().speed);
+				if(animPlayLength + animStartTime < Time.time)
 				{
 					gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
 					hasPlayedAnim = false;
