@@ -12,8 +12,8 @@ public class High_Score_Displayer : MonoBehaviour {
 		gameObject.GetComponent<Text> ().text = gameType + " High Score: " + score;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	public void update_scores(){
+		score = PlayerPrefs.GetInt (gameType, 0);
+		gameObject.GetComponent<Text> ().text = gameType + " High Score: " + score;
 	}
 }

@@ -9,6 +9,8 @@ public class TitleController : MonoBehaviour {
 	public GameObject creditsLayer;
 	public GameObject optionsLayer;
 	public Shutter_Handler shutter;
+
+	public High_Score_Displayer[] hsds = new High_Score_Displayer[4]; 
 	int resetPresses = 0;
 
 	// Use this for initialization
@@ -88,6 +90,10 @@ public class TitleController : MonoBehaviour {
 			PlayerPrefs.SetInt ("Wiz", 0);
 			PlayerPrefs.SetInt ("Holy", 0);
 			Text rhst = GameObject.Find ("Reset High Scores Text").GetComponent<Text>();
+			foreach (High_Score_Displayer hsd in hsds)
+			{
+				hsd.update_scores();
+			}
 			rhst.text = "High Scores Reset!";
 		}
 	}
