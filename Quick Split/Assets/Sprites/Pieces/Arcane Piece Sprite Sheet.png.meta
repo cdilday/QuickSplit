@@ -1,73 +1,73 @@
 fileFormatVersion: 2
 guid: 7a53613782d01ee49ac298ce7a5dc90e
-timeCreated: 1445631017
+timeCreated: 1445799459
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: King Green 0
-    21300002: King Green 1
-    21300004: King Green 2
-    21300006: King Green 3
-    21300008: King Green 4
-    21300010: King Green 5
-    21300012: King Green 6
-    21300014: King Green 7
-    21300016: King Grey 0
-    21300018: King Grey 1
-    21300020: King Grey 2
-    21300022: King Grey 3
-    21300024: King Grey 4
-    21300026: King Grey 5
-    21300028: King Grey 6
-    21300030: King Grey 7
-    21300032: King Blue 0
-    21300034: King Blue 1
-    21300036: King Blue 2
-    21300038: King Blue 3
-    21300040: King Blue 4
-    21300042: King Blue 5
-    21300044: King Blue 6
-    21300046: King Blue 7
-    21300048: King Orange 0
-    21300050: King Orange 1
-    21300052: King Orange 2
-    21300054: King Orange 3
-    21300056: King Orange 4
-    21300058: King Orange 5
-    21300060: King Orange 6
-    21300062: King Orange 7
-    21300064: King Purple 0
-    21300066: King Purple 1
-    21300068: King Purple 2
-    21300070: King Purple 3
-    21300072: King Purple 4
-    21300074: King Purple 5
-    21300076: King Purple 6
-    21300078: King Purple 7
-    21300080: King Red 0
-    21300082: King Red 1
-    21300084: King Red 2
-    21300086: King Red 3
-    21300088: King Red 4
-    21300090: King Red 5
-    21300092: King Red 6
-    21300094: King Red 7
-    21300096: King White 0
-    21300098: King White 1
-    21300100: King White 2
-    21300102: King White 3
-    21300104: King White 4
-    21300106: King White 5
-    21300108: King White 6
-    21300110: King White 7
-    21300112: King Yellow 0
-    21300114: King Yellow 1
-    21300116: King Yellow 2
-    21300118: King Yellow 3
-    21300120: King Yellow 4
-    21300122: King Yellow 5
-    21300124: King Yellow 6
-    21300126: King Yellow 7
+    21300000: Arcane Green 0
+    21300002: Arcane Green 1
+    21300004: Arcane Green 2
+    21300006: Arcane Green 3
+    21300008: Arcane Green 4
+    21300010: Arcane Green 5
+    21300012: Arcane Green 6
+    21300014: Arcane Green 7
+    21300016: Arcane Grey 0
+    21300018: Arcane Grey 1
+    21300020: Arcane Grey 2
+    21300022: Arcane Grey 3
+    21300024: Arcane Grey 4
+    21300026: Arcane Grey 5
+    21300028: Arcane Grey 6
+    21300030: Arcane Grey 7
+    21300032: Arcane Blue 0
+    21300034: Arcane Blue 1
+    21300036: Arcane Blue 2
+    21300038: Arcane Blue 3
+    21300040: Arcane Blue 4
+    21300042: Arcane Blue 5
+    21300044: Arcane Blue 6
+    21300046: Arcane Blue 7
+    21300048: Arcane Orange 0
+    21300050: Arcane Orange 1
+    21300052: Arcane Orange 2
+    21300054: Arcane Orange 3
+    21300056: Arcane Orange 4
+    21300058: Arcane Orange 5
+    21300060: Arcane Orange 6
+    21300062: Arcane Orange 7
+    21300064: Arcane Purple 0
+    21300066: Arcane Purple 1
+    21300068: Arcane Purple 2
+    21300070: Arcane Purple 3
+    21300072: Arcane Purple 4
+    21300074: Arcane Purple 5
+    21300076: Arcane Purple 6
+    21300078: Arcane Purple 7
+    21300080: Arcane Red 0
+    21300082: Arcane Red 1
+    21300084: Arcane Red 2
+    21300086: Arcane Red 3
+    21300088: Arcane Red 4
+    21300090: Arcane Red 5
+    21300092: Arcane Red 6
+    21300094: Arcane Red 7
+    21300096: Arcane White 0
+    21300098: Arcane White 1
+    21300100: Arcane White 2
+    21300102: Arcane White 3
+    21300104: Arcane White 4
+    21300106: Arcane White 5
+    21300108: Arcane White 6
+    21300110: Arcane White 7
+    21300112: Arcane Yellow 0
+    21300114: Arcane Yellow 1
+    21300116: Arcane Yellow 2
+    21300118: Arcane Yellow 3
+    21300120: Arcane Yellow 4
+    21300122: Arcane Yellow 5
+    21300124: Arcane Yellow 6
+    21300126: Arcane Yellow 7
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -113,7 +113,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: King Green 0
+    - name: Arcane Green 0
       rect:
         serializedVersion: 2
         x: 0
@@ -123,7 +123,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Green 1
+    - name: Arcane Green 1
       rect:
         serializedVersion: 2
         x: 32
@@ -133,7 +133,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Green 2
+    - name: Arcane Green 2
       rect:
         serializedVersion: 2
         x: 64
@@ -143,7 +143,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Green 3
+    - name: Arcane Green 3
       rect:
         serializedVersion: 2
         x: 96
@@ -153,7 +153,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Green 4
+    - name: Arcane Green 4
       rect:
         serializedVersion: 2
         x: 128
@@ -163,7 +163,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Green 5
+    - name: Arcane Green 5
       rect:
         serializedVersion: 2
         x: 160
@@ -173,7 +173,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Green 6
+    - name: Arcane Green 6
       rect:
         serializedVersion: 2
         x: 192
@@ -183,7 +183,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Green 7
+    - name: Arcane Green 7
       rect:
         serializedVersion: 2
         x: 224
@@ -193,7 +193,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 0
+    - name: Arcane Grey 0
       rect:
         serializedVersion: 2
         x: 0
@@ -203,7 +203,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 1
+    - name: Arcane Grey 1
       rect:
         serializedVersion: 2
         x: 32
@@ -213,7 +213,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 2
+    - name: Arcane Grey 2
       rect:
         serializedVersion: 2
         x: 64
@@ -223,7 +223,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 3
+    - name: Arcane Grey 3
       rect:
         serializedVersion: 2
         x: 96
@@ -233,7 +233,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 4
+    - name: Arcane Grey 4
       rect:
         serializedVersion: 2
         x: 128
@@ -243,7 +243,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 5
+    - name: Arcane Grey 5
       rect:
         serializedVersion: 2
         x: 160
@@ -253,7 +253,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 6
+    - name: Arcane Grey 6
       rect:
         serializedVersion: 2
         x: 192
@@ -263,7 +263,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Grey 7
+    - name: Arcane Grey 7
       rect:
         serializedVersion: 2
         x: 224
@@ -273,7 +273,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 0
+    - name: Arcane Blue 0
       rect:
         serializedVersion: 2
         x: 0
@@ -283,7 +283,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 1
+    - name: Arcane Blue 1
       rect:
         serializedVersion: 2
         x: 32
@@ -293,7 +293,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 2
+    - name: Arcane Blue 2
       rect:
         serializedVersion: 2
         x: 64
@@ -303,7 +303,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 3
+    - name: Arcane Blue 3
       rect:
         serializedVersion: 2
         x: 96
@@ -313,7 +313,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 4
+    - name: Arcane Blue 4
       rect:
         serializedVersion: 2
         x: 128
@@ -323,7 +323,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 5
+    - name: Arcane Blue 5
       rect:
         serializedVersion: 2
         x: 160
@@ -333,7 +333,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 6
+    - name: Arcane Blue 6
       rect:
         serializedVersion: 2
         x: 192
@@ -343,7 +343,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Blue 7
+    - name: Arcane Blue 7
       rect:
         serializedVersion: 2
         x: 224
@@ -353,7 +353,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 0
+    - name: Arcane Orange 0
       rect:
         serializedVersion: 2
         x: 0
@@ -363,7 +363,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 1
+    - name: Arcane Orange 1
       rect:
         serializedVersion: 2
         x: 32
@@ -373,7 +373,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 2
+    - name: Arcane Orange 2
       rect:
         serializedVersion: 2
         x: 64
@@ -383,7 +383,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 3
+    - name: Arcane Orange 3
       rect:
         serializedVersion: 2
         x: 96
@@ -393,7 +393,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 4
+    - name: Arcane Orange 4
       rect:
         serializedVersion: 2
         x: 128
@@ -403,7 +403,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 5
+    - name: Arcane Orange 5
       rect:
         serializedVersion: 2
         x: 160
@@ -413,7 +413,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 6
+    - name: Arcane Orange 6
       rect:
         serializedVersion: 2
         x: 192
@@ -423,7 +423,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Orange 7
+    - name: Arcane Orange 7
       rect:
         serializedVersion: 2
         x: 224
@@ -433,7 +433,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 0
+    - name: Arcane Purple 0
       rect:
         serializedVersion: 2
         x: 0
@@ -443,7 +443,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 1
+    - name: Arcane Purple 1
       rect:
         serializedVersion: 2
         x: 32
@@ -453,7 +453,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 2
+    - name: Arcane Purple 2
       rect:
         serializedVersion: 2
         x: 64
@@ -463,7 +463,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 3
+    - name: Arcane Purple 3
       rect:
         serializedVersion: 2
         x: 96
@@ -473,7 +473,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 4
+    - name: Arcane Purple 4
       rect:
         serializedVersion: 2
         x: 128
@@ -483,7 +483,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 5
+    - name: Arcane Purple 5
       rect:
         serializedVersion: 2
         x: 160
@@ -493,7 +493,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 6
+    - name: Arcane Purple 6
       rect:
         serializedVersion: 2
         x: 192
@@ -503,7 +503,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Purple 7
+    - name: Arcane Purple 7
       rect:
         serializedVersion: 2
         x: 224
@@ -513,7 +513,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 0
+    - name: Arcane Red 0
       rect:
         serializedVersion: 2
         x: 0
@@ -523,7 +523,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 1
+    - name: Arcane Red 1
       rect:
         serializedVersion: 2
         x: 32
@@ -533,7 +533,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 2
+    - name: Arcane Red 2
       rect:
         serializedVersion: 2
         x: 64
@@ -543,7 +543,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 3
+    - name: Arcane Red 3
       rect:
         serializedVersion: 2
         x: 96
@@ -553,7 +553,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 4
+    - name: Arcane Red 4
       rect:
         serializedVersion: 2
         x: 128
@@ -563,7 +563,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 5
+    - name: Arcane Red 5
       rect:
         serializedVersion: 2
         x: 160
@@ -573,7 +573,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 6
+    - name: Arcane Red 6
       rect:
         serializedVersion: 2
         x: 192
@@ -583,7 +583,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Red 7
+    - name: Arcane Red 7
       rect:
         serializedVersion: 2
         x: 224
@@ -593,7 +593,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 0
+    - name: Arcane White 0
       rect:
         serializedVersion: 2
         x: 0
@@ -603,7 +603,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 1
+    - name: Arcane White 1
       rect:
         serializedVersion: 2
         x: 32
@@ -613,7 +613,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 2
+    - name: Arcane White 2
       rect:
         serializedVersion: 2
         x: 64
@@ -623,7 +623,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 3
+    - name: Arcane White 3
       rect:
         serializedVersion: 2
         x: 96
@@ -633,7 +633,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 4
+    - name: Arcane White 4
       rect:
         serializedVersion: 2
         x: 128
@@ -643,7 +643,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 5
+    - name: Arcane White 5
       rect:
         serializedVersion: 2
         x: 160
@@ -653,7 +653,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 6
+    - name: Arcane White 6
       rect:
         serializedVersion: 2
         x: 192
@@ -663,7 +663,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King White 7
+    - name: Arcane White 7
       rect:
         serializedVersion: 2
         x: 224
@@ -673,7 +673,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 0
+    - name: Arcane Yellow 0
       rect:
         serializedVersion: 2
         x: 0
@@ -683,7 +683,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 1
+    - name: Arcane Yellow 1
       rect:
         serializedVersion: 2
         x: 32
@@ -693,7 +693,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 2
+    - name: Arcane Yellow 2
       rect:
         serializedVersion: 2
         x: 64
@@ -703,7 +703,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 3
+    - name: Arcane Yellow 3
       rect:
         serializedVersion: 2
         x: 96
@@ -713,7 +713,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 4
+    - name: Arcane Yellow 4
       rect:
         serializedVersion: 2
         x: 128
@@ -723,7 +723,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 5
+    - name: Arcane Yellow 5
       rect:
         serializedVersion: 2
         x: 160
@@ -733,7 +733,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 6
+    - name: Arcane Yellow 6
       rect:
         serializedVersion: 2
         x: 192
@@ -743,7 +743,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: King Yellow 7
+    - name: Arcane Yellow 7
       rect:
         serializedVersion: 2
         x: 224

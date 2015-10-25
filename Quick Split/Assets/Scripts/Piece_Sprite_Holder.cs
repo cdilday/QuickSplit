@@ -5,7 +5,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 
 	public Sprite[] RetroSprites = new Sprite[8];
 	public Sprite[] ProgrammerSprites = new Sprite[8];
-	public Sprite[] KingSprites = new Sprite[8];
+	public Sprite[] ArcaneSprites = new Sprite[8];
 	public Sprite[] DefaultSprites = new Sprite[8];
 	//don't ever use these this is a joke
 	public Sprite[] FaceSprites = new Sprite[8];
@@ -18,7 +18,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	public string SplitterType;
 
 	public RuntimeAnimatorController[] DefaultAnimations = new RuntimeAnimatorController[8];
-	public RuntimeAnimatorController[] KingAnimations = new RuntimeAnimatorController[8];
+	public RuntimeAnimatorController[] ArcaneAnimations = new RuntimeAnimatorController[8];
 	public RuntimeAnimatorController[] RetroAnimations = new RuntimeAnimatorController[8];
 
 	// Use this for initialization
@@ -33,8 +33,8 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	{
 		PieceSet = PlayerPrefs.GetString ("Piece Set", "Default");
 		switch (PieceSet) {
-		case "King":
-			return KingSprites;
+		case "Arcane":
+			return ArcaneSprites;
 		case "Retro":
 			return RetroSprites;
 		case "Programmer":
@@ -84,8 +84,8 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 		switch (PieceSet) {
 		case "Default":
 			return DefaultAnimations;
-		case "King":
-			return KingAnimations;
+		case "Arcane":
+			return ArcaneAnimations;
 		case "Retro":
 			return RetroAnimations;
 		case "Programmer":
