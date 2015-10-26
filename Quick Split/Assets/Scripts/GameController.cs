@@ -28,6 +28,10 @@ public class GameController : MonoBehaviour {
 
 	//text that pops up during a game over
 	public Text gameOverText;
+	//text that gives a tip at gameover
+	public Text tipText;
+	//tiptext to randomly pick from in editor
+	public string[] tips;
 
 	//numbers and text for statistics the player should know
 	public int movesMade;
@@ -229,6 +233,7 @@ public class GameController : MonoBehaviour {
 		//high score stuff
 		newHighScore = false;
 		HighScoreText.text = "";
+		tipText.text = "";
 	}
 	
 	// Update is called once per frame
@@ -257,6 +262,7 @@ public class GameController : MonoBehaviour {
 					if(colorGrid[r,c] != null && grid[r,c] != null){
 						gameOverText.text = "Game Over";
 						gameOver = true;
+						tipText.text = tips[Random.Range(0, tips.Count())];
 						GameOverLayer.SetActive(true);
 						GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
 						mc.Stop_Music();
