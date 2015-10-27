@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour {
 	public Text scoreText;
 	bool newHighScore;
 	public Text HighScoreText;
-
+	public GameObject Score_Text_Canvas;
 
 	//pieces places is used to ensure both pieces have landed before checking the grid in Update()
 	int piecesPlaced;
@@ -234,6 +234,7 @@ public class GameController : MonoBehaviour {
 		newHighScore = false;
 		HighScoreText.text = "";
 		tipText.text = "";
+		Score_Text_Canvas = GameObject.Find ("Score Text Canvas");
 	}
 	
 	// Update is called once per frame

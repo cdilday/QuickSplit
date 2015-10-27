@@ -335,18 +335,17 @@ public class piece_script : MonoBehaviour {
 		//this means that the game just ended, don't spawn stuff
 		if (gameController.isQuitting || gameController.gameOver)
 			return;
-		//spawn a GUI text prefab that shows what number the square was worth
+		//tell the score canvas to create a score text at this given location
 		Vector2 spawnPoint = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>().WorldToViewportPoint (transform.position);
-		GameObject scoreText = Instantiate (scoreTextPrefab) as GameObject;
-		scoreText.transform.position = spawnPoint;
-		PieceScoreText thistext = scoreText.GetComponent<PieceScoreText> ();
-		thistext.pieceColor = pieceColor;
+		int scoreValue;
 		if (multiplier != 0)
-			thistext.scoreValue = groupValue * multiplier;
+			scoreValue = groupValue * multiplier;
 		else
-			thistext.scoreValue = groupValue;
+			scoreValue = groupValue;
 
-		BitPool.spawn_bits (thistext.scoreValue, transform.position, pieceColor);
+		gameController.Score_Text_Canvas.GetComponent<Score_Text_Layer> ().Spawn_Score_Text (spawnPoint, pieceColor, scoreValue);
+
+		BitPool.spawn_bits (scoreValue, transform.position, pieceColor);
 		
 		if (isBomb) {
 			for(int r = 0; r < 3; r++)

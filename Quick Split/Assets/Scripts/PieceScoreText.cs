@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PieceScoreText : MonoBehaviour {
 
 	public string pieceColor;
 	public Color textColor;
 	public int scoreValue = 1;
-	GUIText text;
+	Text text;
 
 	int liveCount = 180;
 
 	// Use this for initialization
 	void Start () {
-		text = GetComponent<GUIText>();
+		text = GetComponent<Text>();
 		switch (pieceColor) {
 		case "Red":
 			textColor = Color.red;
@@ -47,7 +48,7 @@ public class PieceScoreText : MonoBehaviour {
 		text.text = "" + scoreValue;
 		text.color = textColor;
 		liveCount--;
-		transform.position = new Vector2 (transform.position.x, transform.position.y + 0.0002f);
+		transform.position = new Vector2 (transform.position.x, transform.position.y + 0.001f);
 		if (liveCount % 20 == 0 && liveCount >= 60) {
 			if(textColor.a == 1f)
 			{

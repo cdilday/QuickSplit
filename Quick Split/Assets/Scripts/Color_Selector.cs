@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Color_Selector : MonoBehaviour {
 
-	public GUIText selectionText;
+	public Text selectionText;
 	Splitter_script splitter;
 	SpellHandler spellHandler;
 
 	// Use this for initialization
-	void Start () {
-		selectionText.pixelOffset = new Vector2 (Screen.width / 2f, Screen.height / 2f);
+	void Awake () {
+		selectionText = GameObject.Find ("Color Selector Text").GetComponent<Text> ();
+		//selectionText.pixelOffset = new Vector2 (Screen.width / 2f, Screen.height / 2f);
 		splitter = GameObject.FindGameObjectWithTag ("Splitter").GetComponent<Splitter_script> ();
 		splitter.setState ("isActive", false);
 		spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
@@ -24,6 +26,7 @@ public class Color_Selector : MonoBehaviour {
 	{
 		spellHandler.colorSelected (color);
 		splitter.setState ("inTransition", true);
+		selectionText.text = "";
 		Destroy (gameObject);
 	}
 
@@ -31,5 +34,6 @@ public class Color_Selector : MonoBehaviour {
 	{
 		//broadcast to spell handler the color selected
 		// make the splitter active again
+		selectionText.text = "";
 	}
 }
