@@ -34,8 +34,8 @@ public class TitleController : MonoBehaviour {
 	Vector2 Active_Score_Position = new Vector2(-220f, -90f);
 	Vector2[] Orig_Score_Positions = new Vector2[4];
 
-	Vector2 Active_Back_Position = new Vector2(275f, -150f);
-	Vector2 Active_Play_Position = new Vector2(125f, -150f);
+	Vector2 Active_Play_Position = new Vector2(275f, -150f);
+	Vector2 Active_Back_Position = new Vector2(125f, -150f);
 
 	Vector2 Inactive_Back_Position;
 	Vector2 Inactive_Play_Position;
@@ -98,8 +98,8 @@ public class TitleController : MonoBehaviour {
 						}
 					}
 					//Play & Back buttons
-					BackButton.GetComponent<RectTransform> ().localPosition = Active_Play_Position;
-					PlayButton.GetComponent<RectTransform> ().localPosition = Active_Back_Position;
+					BackButton.GetComponent<RectTransform> ().localPosition = Active_Back_Position;
+					PlayButton.GetComponent<RectTransform> ().localPosition = Active_Play_Position;
 					// set button/score positions to their proper playscreen positions
 					// makes sure descriptions are properly faded in
 					isTransitioning = false;
@@ -107,9 +107,44 @@ public class TitleController : MonoBehaviour {
 				// if it should still be transitioning
 				else
 				{
-					// lerp positions for buttons and scores, checking the active score to make sure that's moving onto the play screen
-					// fade in the right description
+					float t_point = (Time.time - TransitionStartTime) / TransitionLength;
+					Color textColor;
+					// lerp positions for the game-specific buttons, descriptions, and scores
+					for (int i = 0; i < 4; i++)
+					{
+						//check if it's the active button
+						if( i == activeMode)
+						{
+							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Button_Positions[i].x, Active_Button_Position.x, t_point),
+							                                                                          Mathf.SmoothStep(Orig_Button_Positions[i].y, Active_Button_Position.y, t_point));
+							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Score_Positions[i].x, Active_Score_Position.x, t_point),
+							                                                                     Mathf.SmoothStep(Orig_Score_Positions[i].y, Active_Score_Position.y, t_point));
+							// fade in the right description
+							textColor = Descriptions[i].GetComponent<Text>().color;
+							Descriptions[i].GetComponent<Text>().color = new Color(textColor.r, textColor.g, textColor.g, Mathf.SmoothStep(0, 1, t_point));
+						}
+						//even index means it goes left
+						else if (i % 2 == 0)
+						{
+							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Button_Positions[i].x, Inactive_Button_Left_Position.x, t_point),
+							                                                                          Mathf.SmoothStep(Orig_Button_Positions[i].y, Inactive_Button_Left_Position.y, t_point));
+							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Score_Positions[i].x, Inactive_Button_Left_Position.x, t_point),
+							                                                                     Mathf.SmoothStep(Orig_Score_Positions[i].y, Inactive_Button_Left_Position.y, t_point));
+						}
+						//odd index means it goes right
+						else
+						{
+							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Button_Positions[i].x, Inactive_Button_Right_Position.x, t_point),
+							                                                                          Mathf.SmoothStep(Orig_Button_Positions[i].y, Inactive_Button_Right_Position.y, t_point));;
+							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Score_Positions[i].x, Inactive_Button_Right_Position.x, t_point),
+							                                                                     Mathf.SmoothStep(Orig_Score_Positions[i].y, Inactive_Button_Right_Position.y, t_point));
+						}
+					}
 					// move in the play and back buttons
+					BackButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Back_Position.x, Active_Back_Position.x, t_point),
+					                                                                     Mathf.SmoothStep(Inactive_Back_Position.y, Active_Back_Position.y, t_point));
+					PlayButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Play_Position.x, Active_Play_Position.x, t_point),
+					                                                                      Mathf.SmoothStep(Inactive_Play_Position.y, Active_Play_Position.y, t_point));
 				}
 			}
 			// transitioning back to the game mode screen
@@ -138,9 +173,44 @@ public class TitleController : MonoBehaviour {
 				}
 				else
 				{
-					// lerp positions for buttons and scores onto the screen
-					// fade out the active mode description
-					// move the play and back buttons offscreen
+					float t_point = (Time.time - TransitionStartTime) / TransitionLength;
+					Color textColor;
+					// lerp positions for the game-specific buttons, descriptions, and scores
+					for (int i = 0; i < 4; i++)
+					{
+						//check if it's the active button
+						if( i == activeMode)
+						{
+							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Button_Position.x, Orig_Button_Positions[i].x, t_point),
+							                                                                          Mathf.SmoothStep(Active_Button_Position.y, Orig_Button_Positions[i].y, t_point));
+							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Score_Position.x, Orig_Score_Positions[i].x, t_point),
+							                                                                     Mathf.SmoothStep(Active_Score_Position.y, Orig_Score_Positions[i].y, t_point));
+							// fade in the right description
+							textColor = Descriptions[i].GetComponent<Text>().color;
+							Descriptions[i].GetComponent<Text>().color = new Color(textColor.r, textColor.g, textColor.g, Mathf.SmoothStep(1, 0, t_point));
+						}
+						//even index means it goes left
+						else if (i % 2 == 0)
+						{
+							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Left_Position.x, Orig_Button_Positions[i].x, t_point),
+							                                                                          Mathf.SmoothStep(Inactive_Button_Left_Position.y, Orig_Button_Positions[i].y, t_point));
+							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Left_Position.x, Orig_Score_Positions[i].x, t_point),
+							                                                                     Mathf.SmoothStep(Inactive_Button_Left_Position.y, Orig_Score_Positions[i].y, t_point));
+						}
+						//odd index means it goes right
+						else
+						{
+							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Right_Position.x, Orig_Button_Positions[i].x, t_point),
+							                                                                          Mathf.SmoothStep(Inactive_Button_Right_Position.y, Orig_Button_Positions[i].y, t_point));;
+							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Right_Position.x, Orig_Score_Positions[i].x, t_point),
+							                                                                     Mathf.SmoothStep(Inactive_Button_Right_Position.y, Orig_Score_Positions[i].y, t_point));
+						}
+					}
+					// move in the play and back buttons
+					BackButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Back_Position.x, Inactive_Back_Position.x, t_point),
+					                                                                      Mathf.SmoothStep(Active_Back_Position.y, Inactive_Back_Position.y, t_point));
+					PlayButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Play_Position.x, Inactive_Play_Position.x,t_point),
+					                                                                      Mathf.SmoothStep(Active_Play_Position.y, Inactive_Play_Position.y, t_point));
 				}
 			}
 
