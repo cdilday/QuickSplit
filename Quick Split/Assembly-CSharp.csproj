@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Score_Text_Layer.cs" />
      <Compile Include="Assets\Scripts\Bit_Pool.cs" />
      <Compile Include="Assets\Scripts\Color_Selector.cs" />
      <Compile Include="Assets\Scripts\Fader.cs" />
@@ -67,6 +66,7 @@
      <Compile Include="Assets\Scripts\Sample_Splitter_Selector.cs" />
      <Compile Include="Assets\Scripts\SceneLoader.cs" />
      <Compile Include="Assets\Scripts\ScoreBit.cs" />
+     <Compile Include="Assets\Scripts\Score_Text_Layer.cs" />
      <Compile Include="Assets\Scripts\Selectable_Color.cs" />
      <Compile Include="Assets\Scripts\Shutter_Handler.cs" />
      <Compile Include="Assets\Scripts\SideColumn.cs" />
