@@ -19,6 +19,9 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	public Sprite DefaultSplitter;
 	public Sprite GreenSplitter;
 	public Sprite ProgrammerSplitter;
+	public Sprite CandyCaneSplitter;
+	public Sprite CautionSplitter;
+	public Sprite DarkSplitter;
 
 	public string PieceSet;
 	public string SplitterType;
@@ -83,6 +86,12 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 			return GreenSplitter;
 		case "Programmer":
 			return ProgrammerSplitter;
+		case "Candy Cane":
+			return CandyCaneSplitter;
+		case "Caution":
+			return CautionSplitter;
+		case "Dark":
+			return DarkSplitter;
 		default:
 			return DefaultSplitter;
 		}
@@ -98,6 +107,12 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 			return GreenSplitter;
 		case "Programmer":
 			return ProgrammerSplitter;
+		case "Candy Cane":
+			return CandyCaneSplitter;
+		case "Caution":
+			return CautionSplitter;
+		case "Dark":
+			return DarkSplitter;
 		default:
 			return DefaultSplitter;
 		}

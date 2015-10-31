@@ -27,6 +27,15 @@ public class Sample_Splitter_Selector : MonoBehaviour {
 		case "Programmer":
 			index = 2;
 			break;
+		case "Candy Cane":
+			index = 3;
+			break;
+		case "Caution":
+			index = 4;
+			break;
+		case "Dark":
+			index = 5;
+			break;
 		default:
 			index = 0;
 			break;
