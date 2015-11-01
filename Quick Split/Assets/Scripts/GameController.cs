@@ -730,7 +730,7 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (1f);
 		gameOverText.text = "1";
 		yield return new WaitForSeconds (1f);
-		gameOverText.text = "GO!";
+		gameOverText.text = "SPLIT-IT!";
 		splitter.setState("canShoot", true);
 		isCountingDown = false;
 		mc.Play_Music(gameType);
