@@ -18,6 +18,8 @@ public class Spell_Tab : MonoBehaviour {
 
 	bool isReady;
 
+	bool wasTouching;
+
 	Piece_Sprite_Holder spriteHolder;
 	public Sprite[] sprites = new Sprite[8];
 
@@ -59,6 +61,78 @@ public class Spell_Tab : MonoBehaviour {
 		case "White":
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
 			break;
+		}
+		wasTouching = false;
+	}
+
+	void Update()
+	{
+		//mobile controls. Touch screens are too different to use fake mouse controls
+		if (Application.isMobilePlatform) {
+		
+			bool isNotTouching = true;
+			foreach (Touch poke in Input.touches) {
+
+				//first check if it's on the boxcollider 2D
+				Vector3 wp = Camera.main.ScreenToWorldPoint(poke.position);
+				Vector2 touchPos = new Vector2(wp.x, wp.y);
+				//TODO: Update this to work better when you get a new spell tab
+				if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(touchPos))
+				{
+					isNotTouching = false;
+					//now check stage of the touch. If it's just happened, display the explination popup
+					if( poke.phase == TouchPhase.Began)
+					{
+						//popup the explination
+						splitter.setState ("canShoot", false);
+						DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
+					}
+					else if (poke.phase == TouchPhase.Ended)
+					{
+						//activate the spell
+						if(isReady)
+						{
+							switch (spellColor) {
+							case "Red":
+								spellHandler.Redspell();
+								break;
+							case "Orange":
+								spellHandler.Orangespell();
+								break;
+							case "Yellow":
+								spellHandler.Yellowspell();
+								break;
+							case "Green":
+								spellHandler.Greenspell();
+								break;
+							case "Blue":
+								spellHandler.Bluespell();
+								break;
+							case "Purple":
+								spellHandler.Purplespell();
+								break;
+							case "Grey":
+								spellHandler.Greyspell();
+								break;
+							case "White":
+								spellHandler.Whitespell();
+								break;
+							}
+							transform.position = new Vector3 (transform.position.x, transform.position.y - 3f, transform.position.z);
+							isReady = false;
+						}
+					}
+				}
+		
+			}
+			if(wasTouching && isNotTouching)
+			{
+				//hide popup
+				splitter.setState ("canShoot", true);
+				DescCanvas.GetComponent<Spell_Descriptions> ().hide ();
+			}
+
+			wasTouching = !isNotTouching;
 		}
 	}
 
@@ -107,14 +181,18 @@ public class Spell_Tab : MonoBehaviour {
 	void OnMouseOver()
 	{
 		//prevent mouse controls from firing when you click on the tab
-		splitter.setState ("canShoot", false);
-		DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
+		if(!Application.isMobilePlatform){
+			splitter.setState ("canShoot", false);
+			DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
+		}
 	}
 	
 	void OnMouseExit()
 	{
-		splitter.setState ("canShoot", true);
-		DescCanvas.GetComponent<Spell_Descriptions> ().hide ();
+		if(!Application.isMobilePlatform){
+			splitter.setState ("canShoot", true);
+			DescCanvas.GetComponent<Spell_Descriptions> ().hide ();
+		}
 	}
 
 	void OnMouseDown()
