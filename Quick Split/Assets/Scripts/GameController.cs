@@ -604,7 +604,7 @@ public class GameController : MonoBehaviour {
 	public void updateScore()
 	{
 		if(!gameOver && !isQuitting){
-			scoreText.text = "Score: " + score;
+			scoreText.text = "Score:\n" + score;
 		}
 		//save current score
 		if(PlayerPrefs.GetInt(gameType, 0) < score){

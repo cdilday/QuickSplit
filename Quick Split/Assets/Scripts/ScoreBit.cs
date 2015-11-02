@@ -19,6 +19,8 @@ public class ScoreBit : MonoBehaviour {
 	bool spellActive = false;
 	SpellHandler spellHandler;
 
+	public Sprite[] sprites = new Sprite[8];
+
 	// Use this for initialization
 	void Start () {
 		GameObject BitPoolObject = GameObject.Find ("Bit Pool");
@@ -30,6 +32,8 @@ public class ScoreBit : MonoBehaviour {
 			BitPool = BitPoolObject.GetComponent<Bit_Pool>();
 		}
 		transform.position = BitPoolObject.transform.position;
+		Piece_Sprite_Holder spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
+		sprites = spriteHolder.Get_Sprites ();
 		gameObject.SetActive (false);
 	}
 	
@@ -73,30 +77,39 @@ public class ScoreBit : MonoBehaviour {
 	public void changeColor(string newColor)
 	{
 		bitColor = newColor;
+		SpriteRenderer myRenderer = GetComponent<SpriteRenderer> ();
 		switch (newColor) {
 		case "Red":
 			thisColor = Color.red;
+			myRenderer.sprite = sprites[1];
 			break;
 		case "Orange":
 			thisColor = new Color(1f, 0.5f, 0f);
+			myRenderer.sprite = sprites[2];
 			break;
 		case "Yellow":
 			thisColor = Color.yellow;
+			myRenderer.sprite = sprites[3];
 			break;
 		case "Green":
 			thisColor = Color.green;
+			myRenderer.sprite = sprites[3];
 			break;
 		case "Blue":
 			thisColor = Color.blue;
+			myRenderer.sprite = sprites[4];
 			break;
 		case "Purple":
 			thisColor = new Color(0.6f, 0, 0.6f);
+			myRenderer.sprite = sprites[5];
 			break;
 		case "Grey":
-			thisColor = Color.grey;
+			thisColor = Color.cyan;
+			myRenderer.sprite = sprites[6];
 			break;
 		case "White":
 			thisColor = Color.white;
+			myRenderer.sprite = sprites[7];
 			break;
 		}
 		gameObject.GetComponentInChildren<SpriteRenderer> ().color = thisColor;

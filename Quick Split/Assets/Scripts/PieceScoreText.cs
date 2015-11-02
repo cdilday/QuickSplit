@@ -34,7 +34,7 @@ public class PieceScoreText : MonoBehaviour {
 			textColor = new Color(0.6f, 0, 0.6f);
 			break;
 		case "Grey":
-			textColor = Color.grey;
+			textColor = Color.cyan;
 			break;
 		case "White":
 			textColor = Color.white;

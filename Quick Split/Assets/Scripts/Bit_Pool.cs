@@ -30,6 +30,8 @@ public class Bit_Pool : MonoBehaviour {
 		for (int i = 0; i < maxPossible; i++) {
 			GameObject newbit = Instantiate((GameObject) Resources.Load ("Score Bit"));
 			availableBits.Add(newbit);
+			newbit.transform.SetParent(transform);
+			newbit.name = ("Score Bit " + i);
 		}
 	}
 	

@@ -51,7 +51,7 @@ public class Spell_Descriptions : MonoBehaviour {
 			description.text = "The Purple spell deletes all pieces of a selected color on the board";
 			break;
 		case "Grey":
-			description.text = "The Grey spell turns the splitter's pieces into bombs that will blow up on impact";
+			description.text = "The Cyan spell turns the splitter's pieces into bombs that will blow up on impact";
 			break;
 		case "White":
 			description.text = "The White spell sorts the entire board in color order";
