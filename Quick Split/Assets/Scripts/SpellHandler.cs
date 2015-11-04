@@ -84,23 +84,23 @@ public class SpellHandler : MonoBehaviour {
 			holder = holderObject.GetComponent<Holder_Script>();
 		}
 
-		redReady = false;
+		/*redReady = false;
 		orangeReady = false;
 		yellowReady = false;
 		greenReady = false;
 		blueReady = false;
 		purpleReady = false;
 		greyReady = false;
-		whiteReady = false;
+		whiteReady = false;*/
 
-		redText.text = "0%";
-		orangeText.text = "0%";
-		yellowText.text = "0%";
-		greenText.text = "0%";
-		blueText.text = "0%";
-		purpleText.text = "0%";
-		greyText.text = "0%";
-		whiteText.text = "0%";
+		redText.text = "";
+		orangeText.text = "";
+		yellowText.text = "";
+		greenText.text = "";
+		blueText.text = "";
+		purpleText.text = "";
+		greyText.text = "";
+		whiteText.text = "";
 
 		selectedPiece = null;
 	}
@@ -568,10 +568,10 @@ public class SpellHandler : MonoBehaviour {
 		switch (colorOfBit) {
 		case "Red":
 			redProgress++;
-			if(redProgress >= redGoal){
+			if(redProgress >= redGoal || redReady){
 				redProgress = redGoal;
 				redReady = true;
-				redText.text = "";
+				redText.text = "100%";
 			}
 			else{
 				redText.text = ((int) (((float)redProgress/(float)redGoal) * 100f)) + "%";
@@ -579,10 +579,10 @@ public class SpellHandler : MonoBehaviour {
 			break;
 		case "Orange":
 			orangeProgress++;
-			if(orangeProgress >= orangeGoal){
+			if(orangeProgress >= orangeGoal || orangeReady){
 				orangeProgress = orangeGoal;
 				orangeReady = true;
-				orangeText.text = "";
+				orangeText.text = "100%";
 			}
 			else{
 				orangeText.text = ((int) (((float)orangeProgress/(float)orangeGoal) * 100f)) + "%";
@@ -590,10 +590,10 @@ public class SpellHandler : MonoBehaviour {
 			break;
 		case "Yellow":
 			yellowProgress++;
-			if(yellowProgress >= yellowGoal){
+			if(yellowProgress >= yellowGoal || yellowReady){
 				yellowProgress = yellowGoal;
 				yellowReady = true;
-				yellowText.text = "";
+				yellowText.text = "100%";
 			}
 			else{
 				yellowText.text = ((int) (((float)yellowProgress/(float)yellowGoal) * 100f)) + "%";
@@ -601,10 +601,10 @@ public class SpellHandler : MonoBehaviour {
 			break;
 		case "Green":
 			greenProgress++;
-			if(greenProgress >= greenGoal){
+			if(greenProgress >= greenGoal || greenReady){
 				greenProgress = greenGoal;
 				greenReady = true;
-				greenText.text = "";
+				greenText.text = "100%";
 			}
 			else{
 				greenText.text = ((int) (((float)greenProgress/(float)greenGoal)* 100f)) + "%";
@@ -612,10 +612,10 @@ public class SpellHandler : MonoBehaviour {
 			break;
 		case "Blue":
 			blueProgress++;
-			if(blueProgress >= blueGoal){
+			if(blueProgress >= blueGoal || blueReady){
 				blueProgress = blueGoal;
 				blueReady = true;
-				blueText.text = "";
+				blueText.text = "100%";
 			}
 			else{
 				blueText.text = ((int) (((float)blueProgress/(float)blueGoal) * 100f)) + "%";
@@ -623,10 +623,10 @@ public class SpellHandler : MonoBehaviour {
 			break;
 		case "Purple":
 			purpleProgress++;
-			if(purpleProgress >= purpleGoal){
+			if(purpleProgress >= purpleGoal || purpleReady){
 				purpleProgress = purpleGoal;
 				purpleReady = true;
-				purpleText.text = "";
+				purpleText.text = "100%";
 			}
 			else{
 				purpleText.text = ((int) (((float)purpleProgress/(float)purpleGoal) * 100f)) + "%";
@@ -634,10 +634,10 @@ public class SpellHandler : MonoBehaviour {
 			break;
 		case "Grey":
 			greyProgress++;
-			if(greyProgress >= greyGoal){
+			if(greyProgress >= greyGoal || greyReady){
 				greyProgress = greyGoal;
 				greyReady = true;
-				greyText.text = "";
+				greyText.text = "100%";
 			}
 			else{
 				greyText.text = ((int) (((float)greyProgress/(float)greyGoal) * 100f)) + "%";
@@ -645,10 +645,10 @@ public class SpellHandler : MonoBehaviour {
 			break;
 		case "White":
 			whiteProgress++;
-			if(whiteProgress >= whiteGoal){
+			if(whiteProgress >= whiteGoal || whiteReady){
 				whiteProgress = whiteGoal;
 				whiteReady = true;
-				whiteText.text = "";
+				whiteText.text = "100%";
 			}
 			else{
 				whiteText.text = ((int) (((float)whiteProgress/(float)whiteGoal)* 100f)) + "%";

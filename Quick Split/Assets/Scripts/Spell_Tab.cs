@@ -17,14 +17,23 @@ public class Spell_Tab : MonoBehaviour {
 	GameObject DescCanvas;
 
 	bool isReady;
+	bool isTransitioning;
 
 	bool wasTouching;
+
+	float startTime;
+	public float transitionLength;
 
 	Piece_Sprite_Holder spriteHolder;
 	public Sprite[] sprites = new Sprite[8];
 
+	Vector3 activePos;
+	Vector3 inActivePos;
+
 	void Start () {
-		transform.position = new Vector3 (transform.position.x, transform.position.y - 3f, transform.position.z);
+		activePos = transform.position;
+		inActivePos = new Vector3 (transform.position.x, transform.position.y - 1.5f, -3.5f);
+		transform.position = inActivePos;
 		GameObject shObject = transform.parent.gameObject;
 		if (shObject != null) {
 			spellHandler = shObject.GetComponent<SpellHandler>();
@@ -63,6 +72,7 @@ public class Spell_Tab : MonoBehaviour {
 			break;
 		}
 		wasTouching = false;
+		isTransitioning = false;
 	}
 
 	void Update()
@@ -118,8 +128,9 @@ public class Spell_Tab : MonoBehaviour {
 								spellHandler.Whitespell();
 								break;
 							}
-							transform.position = new Vector3 (transform.position.x, transform.position.y - 3f, transform.position.z);
 							isReady = false;
+							isTransitioning = true;
+							startTime = Time.time;
 						}
 					}
 				}
@@ -138,6 +149,42 @@ public class Spell_Tab : MonoBehaviour {
 
 	void FixedUpdate()
 	{
+
+		if (isTransitioning) {
+			//going to active position
+			if(isReady)
+			{
+				// if transition should have ended
+				if(Time.time > startTime + transitionLength)
+				{
+					transform.position =  activePos;
+					isTransitioning = false;
+				}
+				else
+				{
+					float t_point = (Time.time - startTime) / transitionLength;
+					transform.position = new Vector3(Mathf.SmoothStep(inActivePos.x, activePos.x, t_point),
+					                                 Mathf.SmoothStep(inActivePos.y, activePos.y, t_point), -3.5f);
+				}
+			}
+			// going to inactive position
+			else{
+				// if transition should have ended
+				if(Time.time > startTime + transitionLength)
+				{
+					transform.position = inActivePos;
+					isTransitioning = false;
+				}
+				else
+				{
+					float t_point = (Time.time - startTime) / transitionLength;
+					transform.position = new Vector3(Mathf.SmoothStep(activePos.x, inActivePos.x, t_point),
+					                                 Mathf.SmoothStep(activePos.y, inActivePos.y, t_point), -3.5f);
+				}
+			}
+			
+		}
+
 		if(!isReady)
 		{
 			bool checkColor;
@@ -172,9 +219,12 @@ public class Spell_Tab : MonoBehaviour {
 			}
 			if (checkColor) {
 				isReady = true;
-				transform.position = new Vector3 (transform.position.x, transform.position.y + 3f, transform.position.z);
+				isTransitioning = true;
+				startTime = Time.time;
 			}
 		}
+
+
 
 	}
 
@@ -225,8 +275,9 @@ public class Spell_Tab : MonoBehaviour {
 				spellHandler.Whitespell();
 				break;
 			}
-			transform.position = new Vector3 (transform.position.x, transform.position.y - 3f, transform.position.z);
 			isReady = false;
+			isTransitioning = true;
+			startTime = Time.time;
 		}
 	}
 

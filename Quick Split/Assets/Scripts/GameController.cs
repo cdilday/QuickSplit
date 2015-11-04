@@ -192,6 +192,15 @@ public class GameController : MonoBehaviour {
 					sideColumns[1] = scols[0].GetComponent<SideColumn>();
 				}
 			}
+			SpellHandler spellhandler = powerHolder.GetComponent<SpellHandler>();
+			spellhandler.redReady = true;
+			spellhandler.orangeReady = false;
+			spellhandler.yellowReady = true;
+			spellhandler.greenReady = true;
+			spellhandler.blueReady = true;
+			spellhandler.purpleReady = true;
+			spellhandler.greyReady = false;
+			spellhandler.whiteReady = false;
 			mc.Play_Music(gameType);
 		}
 		else if( gameType == "Holy")
@@ -210,6 +219,15 @@ public class GameController : MonoBehaviour {
 					sideColumns[1] = scols[0].GetComponent<SideColumn>();
 				}
 			}
+			SpellHandler spellhandler = powerHolder.GetComponent<SpellHandler>();
+			spellhandler.redReady = true;
+			spellhandler.orangeReady = true;
+			spellhandler.yellowReady = true;
+			spellhandler.greenReady = true;
+			spellhandler.blueReady = true;
+			spellhandler.purpleReady = true;
+			spellhandler.greyReady = true;
+			spellhandler.whiteReady = true;
 			mc.Play_Music(gameType);
 		}
 
@@ -597,6 +615,20 @@ public class GameController : MonoBehaviour {
 		if(movesMade % 77 == 0 && availableCount != 8 && movesMade != 0)
 		{
 			availableCount++;
+			if(gameType == "Wiz")
+			{
+				switch(availableCount){
+				case 6:
+					powerHolder.GetComponent<SpellHandler>().orangeReady = true;
+					break;
+				case 7:
+					powerHolder.GetComponent<SpellHandler>().greyReady = true;
+					break;
+				case 8:
+					powerHolder.GetComponent<SpellHandler>().whiteReady = true;
+					break;
+				}
+			}
 		}
 	
 	}
