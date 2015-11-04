@@ -213,6 +213,7 @@ public class Splitter_script : MonoBehaviour {
 				moveDirection = 0;
 				splitState.isMoving = false;
 				transform.position = new Vector3(transform.position.x, moveTarget,-0.5f);
+				gameObject.BroadcastMessage ("Stopping", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else //visually move it
 			{
@@ -247,6 +248,8 @@ public class Splitter_script : MonoBehaviour {
 		if (splitState.isMoving || transform.position.y >= 6.9f) {
 			return;
 		}
+		//broadcast to the gears
+		gameObject.BroadcastMessage ("Going_Up", null, SendMessageOptions.DontRequireReceiver);
 		
 		int currentLoc = (int) transform.position.y;
 		moveTarget = currentLoc + 1;
@@ -262,6 +265,8 @@ public class Splitter_script : MonoBehaviour {
 		if (splitState.isMoving || transform.position.y <= 0.1f) {
 			return;
 		}
+		//broadcast to the gears
+		gameObject.BroadcastMessage ("Going_Down", null, SendMessageOptions.DontRequireReceiver);
 
 		int currentLoc = (int) transform.position.y;
 		moveTarget = currentLoc - 1;
@@ -285,6 +290,8 @@ public class Splitter_script : MonoBehaviour {
 	//shoots the pieces in the correct directions
 	public IEnumerator fire()
 	{
+		//tell the wedges that it has fired
+		gameObject.BroadcastMessage ("Has_Fired", null, SendMessageOptions.DontRequireReceiver);
 		leftSlot.GetComponent<piece_script> ().inSplitter = false;
 		rightSlot.GetComponent<piece_script> ().inSplitter = false;
 		Transform lefttemp = leftSlot;

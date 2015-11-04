@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Gears_Script.cs" />
      <Compile Include="Assets\Scripts\Bit_Pool.cs" />
      <Compile Include="Assets\Scripts\Color_Selector.cs" />
      <Compile Include="Assets\Scripts\Fader.cs" />
@@ -78,6 +79,7 @@
      <Compile Include="Assets\Scripts\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\TitleController.cs" />
      <Compile Include="Assets\Scripts\piece_script.cs" />
+     <Compile Include="Assets\Wedges_Script.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />
