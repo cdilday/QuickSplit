@@ -81,15 +81,15 @@ public class ScoreBit : MonoBehaviour {
 		switch (newColor) {
 		case "Red":
 			thisColor = Color.red;
-			myRenderer.sprite = sprites[1];
+			myRenderer.sprite = sprites[0];
 			break;
 		case "Orange":
 			thisColor = new Color(1f, 0.5f, 0f);
-			myRenderer.sprite = sprites[2];
+			myRenderer.sprite = sprites[1];
 			break;
 		case "Yellow":
 			thisColor = Color.yellow;
-			myRenderer.sprite = sprites[3];
+			myRenderer.sprite = sprites[2];
 			break;
 		case "Green":
 			thisColor = Color.green;

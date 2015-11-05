@@ -310,38 +310,64 @@ public class GameController : MonoBehaviour {
 			else if (!isCountingDown){
 				splitter.setState("canShoot", true);
 			}
-
+			GameObject[] sidebars = GameObject.FindGameObjectsWithTag ("Sidebar");
 			//here's where we do side-entering management
 			if((gameType == "Wiz" || gameType == "Holy") && !sidesChecked){
 				if( movesMade % sideMovesLimit == 0){
 					addSideColumns();
 					sideColumns[0].shakeStage = 0;
 					sideColumns[1].shakeStage =	0;
+					sidebars [0].BroadcastMessage ("Reset");
+					sidebars [1].BroadcastMessage ("Reset");
 				}
-				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 4)
+				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 8)
 				{
 					switch (sideMovesLimit - (movesMade % sideMovesLimit)){
 					case 1:
 						sideColumns[0].isShaking = false;
-						sideColumns [1].isShaking = false;
+						sideColumns[1].isShaking = false;
 						sideColumns[0].ready = true;
 						sideColumns[1].ready = true;
 						sideColumns[0].shakeStage = 0;
 						sideColumns[1].shakeStage = 0;
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
 						break;
 					case 2:
 						sideColumns[0].shakeStage = 3;
 						sideColumns[1].shakeStage = 3;
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
 						break;
 					case 3:
 						sideColumns[0].shakeStage = 2;
 						sideColumns[1].shakeStage = 2;
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
 						break;
 					case 4:
 						sideColumns[0].isShaking = true;
 						sideColumns[1].isShaking = true;
 						sideColumns[0].shakeStage = 1;
 						sideColumns[1].shakeStage = 1;
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
+						break;
+					case 5:
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
+						break;
+					case 6:
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
+						break;
+					case 7:
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
+						break;
+					case 8:
+						sidebars [0].BroadcastMessage ("Increment_Lights");
+						sidebars [1].BroadcastMessage ("Increment_Lights");
 						break;
 					}
 				}
@@ -773,25 +799,47 @@ public class GameController : MonoBehaviour {
 
 	public IEnumerator QuickSideTimer()
 	{
+		GameObject[] sidebars = GameObject.FindGameObjectsWithTag ("Sidebar");
+		sidebars [0].BroadcastMessage ("Reset");
+		sidebars [1].BroadcastMessage ("Reset");
 		yield return new WaitForSeconds (11f);
 		sideColumns[0].isShaking = true;
 		sideColumns[1].isShaking = true;
+		yield return new WaitForSeconds (2f);
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
+		yield return new WaitForSeconds (1f);
 		sideColumns[0].shakeStage = 1;
 		sideColumns[1].shakeStage = 1;
-		yield return new WaitForSeconds (3f);
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
+		yield return new WaitForSeconds (1f);
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
+		yield return new WaitForSeconds (1f);
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
+		yield return new WaitForSeconds (1f);
 		sideColumns[0].shakeStage = 2;
 		sideColumns[1].shakeStage = 2;
-		yield return new WaitForSeconds (3f);
-		sideColumns[0].shakeStage = 3;
-		sideColumns[1].shakeStage = 3;
-		yield return new WaitForSeconds (3f);
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
+		yield return new WaitForSeconds (1f);
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
+		yield return new WaitForSeconds (1f);
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
+		yield return new WaitForSeconds (1f);
 		sideColumns[0].isShaking = false;
-		sideColumns [1].isShaking = false;
+		sideColumns[1].isShaking = false;
 		sideColumns[0].ready = true;
 		sideColumns[1].ready = true;
 		sideColumns[0].shakeStage = 0;
 		sideColumns[1].shakeStage = 0;
 		quickMoveSides = true;
+		sidebars [0].BroadcastMessage ("Increment_Lights");
+		sidebars [1].BroadcastMessage ("Increment_Lights");
 	}
 
 	//use this to double check to make sure the arrays are accurate;

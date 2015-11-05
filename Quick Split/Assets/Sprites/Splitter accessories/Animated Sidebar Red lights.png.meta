@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 5fb83ab23d22cc64c9fc3616817975da
-timeCreated: 1446598938
+timeCreated: 1446673956
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -9,7 +9,7 @@ TextureImporter:
     21300004: Sidebar lit 2
     21300006: Sidebar lit 3
     21300008: Sidebar lit 4
-    21300010: Animated Sidebar Red lights_5
+    21300010: Sidebar lit 5
     21300012: Sidebar lit 6
     21300014: Sidebar lit 7
     21300016: Sidebar Flash 0
@@ -110,7 +110,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Animated Sidebar Red lights_5
+    - name: Sidebar lit 5
       rect:
         serializedVersion: 2
         x: 65
