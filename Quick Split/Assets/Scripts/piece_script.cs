@@ -272,6 +272,10 @@ public class piece_script : MonoBehaviour {
 		if (newColor == pieceColor){
 			return;
 		}
+		//make sure to change the color of the pulser as well
+		Piece_Pulser temp = null;
+		if(GetComponentInChildren<Piece_Pulser>())
+			temp = GetComponentInChildren<Piece_Pulser>();
 
 		pieceColor = newColor;
 		if(!inHolder && !inSplitter){
@@ -284,48 +288,64 @@ public class piece_script : MonoBehaviour {
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Orange":
 			colornum = 1;
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Yellow":
 			colornum = 2;
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Green":
 			colornum = 3;
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Blue":
 			colornum = 4;
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Purple":
 			colornum = 5;
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Grey":
 			colornum = 6;
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "White":
 			colornum = 7;
 			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
 			if (animations != null)
 				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+			if(temp != null)
+				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		}
 	}

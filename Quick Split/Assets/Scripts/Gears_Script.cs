@@ -12,6 +12,8 @@ public class Gears_Script : MonoBehaviour {
 
 	int index;
 
+	bool movingUp;
+
 	// Use this for initialization
 	void Start () {
 		if(transform.position.x < 0)
@@ -45,6 +47,7 @@ public class Gears_Script : MonoBehaviour {
 		{
 			spriteRenderer.sprite = prev_sprite ();
 		}
+		movingUp = true;
 	}
 
 	public void Going_Down()
@@ -56,11 +59,30 @@ public class Gears_Script : MonoBehaviour {
 		{
 			spriteRenderer.sprite = next_sprite ();
 		}
+		movingUp = true;
 	}
 
 	public void Stopping()
 	{
-		spriteRenderer.sprite = next_sprite ();
+		if(movingUp){
+			if (isRight) {
+				spriteRenderer.sprite = next_sprite ();
+			}
+			else
+			{
+				spriteRenderer.sprite = prev_sprite ();
+			}
+		}
+		else
+		{
+			if (isRight) {
+				spriteRenderer.sprite = prev_sprite ();
+			}
+			else
+			{
+				spriteRenderer.sprite = next_sprite ();
+			}
+		}
 		/*animator.SetBool ("isMoving", false);*/
 	}
 

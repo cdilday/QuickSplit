@@ -320,6 +320,10 @@ public class SpellHandler : MonoBehaviour {
 	//Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
 	public void Greenspell()
 	{
+		greenReady = false;
+		greenProgress = 0;
+		greenGoal = (int) (greenGoal * 1.1);
+		greenText.text = "0%";
 		spellColor = "Green";
 		spellLimit = 3;
 		splitter.leftSlot.GetComponent<piece_script> ().selectable = true;
@@ -334,10 +338,6 @@ public class SpellHandler : MonoBehaviour {
 	}
 	public void GreenHelper()
 	{
-		greenReady = false;
-		greenProgress = 0;
-		greenGoal = (int) (greenGoal * 1.1);
-		greenText.text = "0%";
 		spellLimit--;
 
 		if (spellLimit <= 0) {

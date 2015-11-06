@@ -212,12 +212,12 @@ public class Splitter_script : MonoBehaviour {
 			{
 				moveDirection = 0;
 				splitState.isMoving = false;
-				transform.position = new Vector3(transform.position.x, moveTarget,-0.5f);
+				transform.position = new Vector3(transform.position.x, moveTarget,0);
 				gameObject.BroadcastMessage ("Stopping", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else //visually move it
 			{
-				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * 0.25f) ,-0.5f);
+				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * 0.25f) ,0);
 			}
 		}
 
