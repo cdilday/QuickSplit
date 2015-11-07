@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Guide_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Gears_Script.cs" />
