@@ -8,6 +8,7 @@ public class Piece_Pulser : MonoBehaviour {
 
 	Color activeColor;
 	Color inActiveColor;
+	Color dangerColor;
 
 	bool isPulsing;
 	// Use this for initialization
@@ -15,6 +16,7 @@ public class Piece_Pulser : MonoBehaviour {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		parentPiece = transform.GetComponentInParent<piece_script> ();
 		spriteRenderer.sprite = parentPiece.GetComponent<SpriteRenderer> ().sprite;
+		dangerColor = new Color (0, 0, 0, 0.25f);
 		activeColor = new Color (spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);
 		inActiveColor = new Color (spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
 		spriteRenderer.color = inActiveColor;
@@ -38,10 +40,19 @@ public class Piece_Pulser : MonoBehaviour {
 		//set to Active color if it was previously inactive
 		if (!isPulsing) {
 			isPulsing = true;
-			spriteRenderer.color = activeColor;
+			if(parentPiece.selectable)
+				spriteRenderer.color = activeColor;
+			else
+				spriteRenderer.color = dangerColor;
 		}
+
 		Vector3 newScale = transform.localScale;
-		newScale = new Vector3 ((Mathf.Sin (Time.time * 4 ) *0.25f) + 1.25f, (Mathf.Sin (Time.time * 4 ) *0.25f) + 1.25f, newScale.z);
+		if (parentPiece.selectable) {
+			newScale = new Vector3 ((Mathf.Sin (Time.time * 4 ) *0.25f) + 1.25f, (Mathf.Sin (Time.time * 4 ) *0.25f) + 1.25f, newScale.z);
+		}
+		else {
+			newScale = new Vector3 ((Mathf.Sin (Time.time * 8 ) *0.1f) + 1.1f, (Mathf.Sin (Time.time * 8 ) *0.1f) + 1.1f, newScale.z);
+		}
 		transform.localScale = newScale;
 
 	}
