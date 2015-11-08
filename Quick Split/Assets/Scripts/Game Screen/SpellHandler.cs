@@ -56,6 +56,10 @@ public class SpellHandler : MonoBehaviour {
 	string pickedColor1;
 	string pickedColor2;
 	int spellLimit = 0;
+
+	public float wizMultiplier;
+	public float holyMultiplier;
+	float chargeMultiplier;
 	// Use this for initialization
 	void Start () {
 		pickedColor1 = null;
@@ -103,6 +107,10 @@ public class SpellHandler : MonoBehaviour {
 		whiteText.text = "";
 
 		selectedPiece = null;
+		if (gameController.gameType == "Wiz")
+			chargeMultiplier = wizMultiplier;
+		else
+			chargeMultiplier = holyMultiplier;
 	}
 	
 	// Update is called once per frame
@@ -149,7 +157,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		redReady = false;
 		redProgress = 0;
-		redGoal = (int) (redGoal * 1.1);
+		redGoal = (int) (redGoal * chargeMultiplier);
 		redText.text = "0%";
 		/*Deletion loops work by going to the splitter's columns outwards and deleting the first piece it comes across before moving on
 		 * likely the player would only use this ability when on the brink of losing, so this is better than going from outwards in.
@@ -189,7 +197,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		orangeReady = false;
 		orangeProgress = 0;
-		orangeGoal = (int) (orangeGoal * 1.1);
+		orangeGoal = (int) (orangeGoal * chargeMultiplier);
 		orangeText.text = "0%";
 		spellColor = "Orange";
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
@@ -289,7 +297,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		yellowReady = false;
 		yellowProgress = 0;
-		yellowGoal = (int) (yellowGoal * 1.1);
+		yellowGoal = (int) (yellowGoal * chargeMultiplier);
 		yellowText.text = "0%";
 		splitter.setState ("yellowReady", true);
 		//recolor splitter to show it's ready to fire
@@ -322,7 +330,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		greenReady = false;
 		greenProgress = 0;
-		greenGoal = (int) (greenGoal * 1.1);
+		greenGoal = (int) (greenGoal * chargeMultiplier);
 		greenText.text = "0%";
 		spellColor = "Green";
 		spellLimit = 3;
@@ -364,7 +372,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		blueReady = false;
 		blueProgress = 0;
-		blueGoal = (int) (blueGoal * 1.1);
+		blueGoal = (int) (blueGoal * chargeMultiplier);
 		blueText.text = "0%";
 
 		spellColor = "Blue";
@@ -413,7 +421,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		purpleReady = false;
 		purpleProgress = 0;
-		purpleGoal = (int) (purpleGoal * 1.1);
+		purpleGoal = (int) (purpleGoal * chargeMultiplier);
 		purpleText.text = "0%";
 		spellColor = "Purple";
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
@@ -443,7 +451,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		greyReady = false;
 		greyProgress = 0;
-		greyGoal = (int) (greyGoal * 1.1);
+		greyGoal = (int) (greyGoal * chargeMultiplier);
 		greyText.text = "0%";
 		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
 		Vector3 hsv = RGBandHSVconverter.RGBtoHSV (splitter.rightSlot.GetComponent<SpriteRenderer> ().color);
@@ -459,7 +467,7 @@ public class SpellHandler : MonoBehaviour {
 	{
 		whiteReady = false;
 		whiteProgress = 0;
-		whiteGoal = (int) (whiteGoal * 1.1);
+		whiteGoal = (int) (whiteGoal * chargeMultiplier);
 		whiteText.text = "0%";
 		//get all pieces on left side
 		List<GameObject> leftPieces = new List<GameObject>();
