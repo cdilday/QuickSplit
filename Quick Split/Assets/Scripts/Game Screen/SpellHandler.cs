@@ -159,6 +159,7 @@ public class SpellHandler : MonoBehaviour {
 		redProgress = 0;
 		redGoal = (int) (redGoal * chargeMultiplier);
 		redText.text = "0%";
+		redText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 		/*Deletion loops work by going to the splitter's columns outwards and deleting the first piece it comes across before moving on
 		 * likely the player would only use this ability when on the brink of losing, so this is better than going from outwards in.
 		 * Once the loop deletes the first thing it comes accross, it exits the inner loop to move onto the next row.*/
@@ -199,6 +200,7 @@ public class SpellHandler : MonoBehaviour {
 		orangeProgress = 0;
 		orangeGoal = (int) (orangeGoal * chargeMultiplier);
 		orangeText.text = "0%";
+		orangeText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 		spellColor = "Orange";
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the left side");
@@ -299,6 +301,7 @@ public class SpellHandler : MonoBehaviour {
 		yellowProgress = 0;
 		yellowGoal = (int) (yellowGoal * chargeMultiplier);
 		yellowText.text = "0%";
+		yellowText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 		splitter.setState ("yellowReady", true);
 		//recolor splitter to show it's ready to fire
 		splitter.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1, 1, 0, 1);
@@ -332,6 +335,7 @@ public class SpellHandler : MonoBehaviour {
 		greenProgress = 0;
 		greenGoal = (int) (greenGoal * chargeMultiplier);
 		greenText.text = "0%";
+		greenText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 		spellColor = "Green";
 		spellLimit = 3;
 		splitter.leftSlot.GetComponent<piece_script> ().selectable = true;
@@ -374,6 +378,7 @@ public class SpellHandler : MonoBehaviour {
 		blueProgress = 0;
 		blueGoal = (int) (blueGoal * chargeMultiplier);
 		blueText.text = "0%";
+		blueText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 
 		spellColor = "Blue";
 		spellLimit = 3;
@@ -423,6 +428,7 @@ public class SpellHandler : MonoBehaviour {
 		purpleProgress = 0;
 		purpleGoal = (int) (purpleGoal * chargeMultiplier);
 		purpleText.text = "0%";
+		purpleText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 		spellColor = "Purple";
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to eliminate from the board");
@@ -453,6 +459,7 @@ public class SpellHandler : MonoBehaviour {
 		greyProgress = 0;
 		greyGoal = (int) (greyGoal * chargeMultiplier);
 		greyText.text = "0%";
+		greyText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
 		Vector3 hsv = RGBandHSVconverter.RGBtoHSV (splitter.rightSlot.GetComponent<SpriteRenderer> ().color);
 		hsv = new Vector3(hsv.x, hsv.y, hsv.z - 0.5f);
@@ -469,6 +476,7 @@ public class SpellHandler : MonoBehaviour {
 		whiteProgress = 0;
 		whiteGoal = (int) (whiteGoal * chargeMultiplier);
 		whiteText.text = "0%";
+		whiteText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 		//get all pieces on left side
 		List<GameObject> leftPieces = new List<GameObject>();
 		for (int r = 0; r < 8; r++) {
@@ -580,6 +588,7 @@ public class SpellHandler : MonoBehaviour {
 				redProgress = redGoal;
 				redReady = true;
 				redText.text = "100%";
+				redText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				redText.text = ((int) (((float)redProgress/(float)redGoal) * 100f)) + "%";
@@ -591,6 +600,7 @@ public class SpellHandler : MonoBehaviour {
 				orangeProgress = orangeGoal;
 				orangeReady = true;
 				orangeText.text = "100%";
+				orangeText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				orangeText.text = ((int) (((float)orangeProgress/(float)orangeGoal) * 100f)) + "%";
@@ -602,6 +612,7 @@ public class SpellHandler : MonoBehaviour {
 				yellowProgress = yellowGoal;
 				yellowReady = true;
 				yellowText.text = "100%";
+				yellowText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				yellowText.text = ((int) (((float)yellowProgress/(float)yellowGoal) * 100f)) + "%";
@@ -613,6 +624,7 @@ public class SpellHandler : MonoBehaviour {
 				greenProgress = greenGoal;
 				greenReady = true;
 				greenText.text = "100%";
+				greenText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				greenText.text = ((int) (((float)greenProgress/(float)greenGoal)* 100f)) + "%";
@@ -624,6 +636,7 @@ public class SpellHandler : MonoBehaviour {
 				blueProgress = blueGoal;
 				blueReady = true;
 				blueText.text = "100%";
+				blueText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				blueText.text = ((int) (((float)blueProgress/(float)blueGoal) * 100f)) + "%";
@@ -635,6 +648,7 @@ public class SpellHandler : MonoBehaviour {
 				purpleProgress = purpleGoal;
 				purpleReady = true;
 				purpleText.text = "100%";
+				purpleText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				purpleText.text = ((int) (((float)purpleProgress/(float)purpleGoal) * 100f)) + "%";
@@ -646,6 +660,7 @@ public class SpellHandler : MonoBehaviour {
 				greyProgress = greyGoal;
 				greyReady = true;
 				greyText.text = "100%";
+				greyText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				greyText.text = ((int) (((float)greyProgress/(float)greyGoal) * 100f)) + "%";
@@ -657,6 +672,7 @@ public class SpellHandler : MonoBehaviour {
 				whiteProgress = whiteGoal;
 				whiteReady = true;
 				whiteText.text = "100%";
+				whiteText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
 				whiteText.text = ((int) (((float)whiteProgress/(float)whiteGoal)* 100f)) + "%";

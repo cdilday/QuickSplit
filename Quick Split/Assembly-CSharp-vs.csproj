@@ -84,6 +84,7 @@
      <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\SceneLoader.cs" />
+     <Compile Include="Assets\Text_Fader.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />
