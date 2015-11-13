@@ -8,10 +8,13 @@ public class Sample_Piece_Selector : MonoBehaviour {
 	public Piece_Colorer[] samplePieces;
 	public int index = 0;
 	public Text headerText;
+
+	Achievement_Script achievementHandler;
 	
 	
 	// Use this for initialization
 	void Start () {
+		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
 		headerText.text = PlayerPrefs.GetString("Piece Set", "Default");
 		switch (headerText.text) {
 		case "Default":
@@ -52,10 +55,12 @@ public class Sample_Piece_Selector : MonoBehaviour {
 
 	public void Left_Button()
 	{
-		if (index == 0)
-			index = tileSets.Length- 1;
-		else
-			index--;
+		do{
+			if (index == 0)
+				index = tileSets.Length- 1;
+			else
+				index--;
+		} while(!achievementHandler.Pieceset_Unlocked(tileSets[index]));
 		
 		PlayerPrefs.SetString ("Piece Set", tileSets[index]);
 		headerText.text = tileSets [index];
@@ -66,10 +71,12 @@ public class Sample_Piece_Selector : MonoBehaviour {
 	
 	public void Right_Button()
 	{
-		if (index == tileSets.Length - 1)
-			index = 0;
-		else
-			index++;
+		do{
+			if (index == tileSets.Length - 1)
+				index = 0;
+			else
+				index++;
+		} while(!achievementHandler.Pieceset_Unlocked(tileSets[index]));
 		
 		PlayerPrefs.SetString ("Piece Set", tileSets[index]);
 		headerText.text = tileSets [index];

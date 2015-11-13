@@ -15,6 +15,8 @@ public class TitleController : MonoBehaviour {
 
 	int activeMode;
 
+	Achievement_Script achievementHandler;
+
 	//gameobjects needed for transitions b/w game mode select and description scenes
 	public GameObject[] GameButtons = new GameObject[4];
 
@@ -48,6 +50,8 @@ public class TitleController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		achievementHandler = GameObject.Find ("Achievement Handler").GetComponent<Achievement_Script> ();
+
 		for(int i= 0; i<4; i++){
 			Orig_Button_Positions [i] = GameButtons[i].GetComponent<RectTransform> ().localPosition;
 			Orig_Score_Positions [i] = Scores[i].GetComponent<RectTransform> ().localPosition;
@@ -60,6 +64,33 @@ public class TitleController : MonoBehaviour {
 		shutter.Begin_Vertical_Open ();
 		isInPlayScreen = false;
 		isTransitioning = false;
+
+		//just in case this is the first time playing, set Wiz to be for sure unlocked
+		PlayerPrefs.SetInt ("Wiz unlocked", 1);
+		//tell achievmement handler to check gamemodes that are supposed to be active
+		achievementHandler.Check_Gamemode_Unlocked ();
+
+		//position locked modes offscreen
+		for (int i = 0; i < 4; i++)
+		{
+			//check if this gamemode number is unlocked
+			if(!gameNum_unlock_checker(i))
+			{
+				//even index means it goes left
+				if (i % 2 == 0)
+				{
+					GameButtons[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Left_Position;
+					Scores[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Left_Position;
+				}
+				//odd index means it goes right
+				else
+				{
+					GameButtons[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Right_Position;
+					Scores[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Right_Position;
+				}
+			}
+		}
+
 	}
 
 	void FixedUpdate()
@@ -76,6 +107,8 @@ public class TitleController : MonoBehaviour {
 					//all the game-specific UI elements
 					for (int i = 0; i < 4; i++)
 					{
+						if(!gameNum_unlock_checker(i))
+							continue;
 						//check if it's the active button
 						if( i == activeMode)
 						{
@@ -112,6 +145,8 @@ public class TitleController : MonoBehaviour {
 					// lerp positions for the game-specific buttons, descriptions, and scores
 					for (int i = 0; i < 4; i++)
 					{
+						if(!gameNum_unlock_checker(i))
+							continue;
 						//check if it's the active button
 						if( i == activeMode)
 						{
@@ -156,6 +191,8 @@ public class TitleController : MonoBehaviour {
 					Color textColor = Descriptions[0].GetComponent<Text>().color;
 					for (int i = 0; i < 4; i++)
 					{
+						if(!gameNum_unlock_checker(i))
+							continue;
 						//buttons
 						GameButtons[i].GetComponent<RectTransform> ().localPosition = Orig_Button_Positions [i];
 						//scores
@@ -178,6 +215,8 @@ public class TitleController : MonoBehaviour {
 					// lerp positions for the game-specific buttons, descriptions, and scores
 					for (int i = 0; i < 4; i++)
 					{
+						if(!gameNum_unlock_checker(i))
+							continue;
 						//check if it's the active button
 						if( i == activeMode)
 						{
@@ -323,5 +362,20 @@ public class TitleController : MonoBehaviour {
 		isTransitioning = true;
 
 		TransitionStartTime = Time.time;
+	}
+
+	bool gameNum_unlock_checker(int gameNum)
+	{
+		switch (gameNum) {
+		case 0:
+			return achievementHandler.Gamemode_Unlocked ("Wit");
+		case 1:
+			return achievementHandler.Gamemode_Unlocked ("Quick");
+		case 2:
+			return achievementHandler.Gamemode_Unlocked ("Wiz");
+		case 3:
+			return achievementHandler.Gamemode_Unlocked ("Holy");
+		}
+		return false;
 	}
 }
