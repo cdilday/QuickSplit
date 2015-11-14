@@ -19,6 +19,8 @@ public class ScoreBit : MonoBehaviour {
 	bool spellActive = false;
 	SpellHandler spellHandler;
 
+	public bool charges;
+
 	public Sprite[] sprites = new Sprite[8];
 
 	// Use this for initialization
@@ -130,6 +132,11 @@ public class ScoreBit : MonoBehaviour {
 			{
 				spellActive = true;
 				spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler>();
+				if (spellHandler.spellActive){
+					charges = false;
+				}
+				else
+					charges = true;
 			}
 			else
 			{

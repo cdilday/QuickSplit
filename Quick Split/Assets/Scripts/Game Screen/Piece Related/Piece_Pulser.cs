@@ -10,6 +10,8 @@ public class Piece_Pulser : MonoBehaviour {
 	Color inActiveColor;
 	Color dangerColor;
 
+	//GameController gameController;
+
 	bool isPulsing;
 	// Use this for initialization
 	void Start () {
@@ -23,6 +25,7 @@ public class Piece_Pulser : MonoBehaviour {
 		isPulsing = false;
 		//move slightly in front of the so as to make it obvious when it's active
 		transform.Translate (new Vector3 (0, 0, -0.1f));
+		//gameController = parentPiece.gameController;
 	}
 
 	void FixedUpdate () {

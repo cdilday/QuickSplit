@@ -82,6 +82,11 @@ public class GameController : MonoBehaviour {
 
 	Music_Controller mc;
 
+	//becomes true when the pieces that are in danger of ending the game hits a specific number. for Achievements
+	bool hitDangerLimit = false;
+	bool cautionSplitterUnlocked;
+	bool blobPiecesetUnlocked;
+
 	void Awake () {
 		//begin with the assumption that you're not in quick mode and there's not countdown
 		isCountingDown = false;
@@ -253,6 +258,16 @@ public class GameController : MonoBehaviour {
 		HighScoreText.text = "";
 		tipText.text = "";
 		Score_Text_Canvas = GameObject.Find ("Score Text Canvas");
+
+		if(PlayerPrefs.GetInt("Blob Pieceset unlocked", 0) == 0)
+			blobPiecesetUnlocked = false;
+		else
+			blobPiecesetUnlocked = true;
+
+		if(PlayerPrefs.GetInt("Caution Splitter unlocked", 0) == 0)
+			cautionSplitterUnlocked = false;
+		else
+			cautionSplitterUnlocked = true;
 	}
 	
 	// Update is called once per frame
@@ -293,6 +308,30 @@ public class GameController : MonoBehaviour {
 				}
 			}
 			checkGameOver = false;
+		}
+
+		if(!cautionSplitterUnlocked || !blobPiecesetUnlocked){
+			int dangerPieces = 0;
+			for (int r = 0; r < 8; r++) {
+				if(grid[r,6] != null)
+					dangerPieces++;
+				if(grid[r,9] != null)
+					dangerPieces++;
+			}
+			if (dangerPieces >= 5)
+				hitDangerLimit = true;
+			if(gameType != "Holy" && gameType != "Wiz" && hitDangerLimit && !cautionSplitterUnlocked && dangerPieces == 0)
+			{
+				//TODO: Caution splitter Alert
+				PlayerPrefs.SetInt ("Caution Splitter unlocked", 1);
+				cautionSplitterUnlocked = true;
+			}
+			if(gameType == "Holy" && !blobPiecesetUnlocked && dangerPieces == 16)
+			{
+				//TODO: Blob Pieceset Alert
+				PlayerPrefs.SetInt ("Blob Pieceset unlocked", 1);
+				blobPiecesetUnlocked = true;
+			}
 		}
 
 		//if both pieces have been placed, set the checkGrid to false and check the board
@@ -655,8 +694,17 @@ public class GameController : MonoBehaviour {
 					break;
 				}
 			}
+			else if (gameType == "Quick" && availableCount == 5)
+			{
+				PlayerPrefs.SetInt("Techno Pieceset unlocked", 1);
+			}
 		}
 	
+		if (gameType == "Wit" && movesMade == 200) {
+			//TODO: Retro Pieceset Alert
+			PlayerPrefs.SetInt("Retro Pieceset unlocked", 1);
+		}
+
 	}
 	//call this when the score counter needs to be updated
 	public void updateScore()

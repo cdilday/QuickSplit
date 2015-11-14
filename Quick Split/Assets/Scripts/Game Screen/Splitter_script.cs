@@ -292,6 +292,9 @@ public class Splitter_script : MonoBehaviour {
 	{
 		//tell the wedges that it has fired
 		gameObject.BroadcastMessage ("Has_Fired", null, SendMessageOptions.DontRequireReceiver);
+		GameObject tempSH = GameObject.Find ("Spell Handler");
+		if (tempSH != null)
+			tempSH.BroadcastMessage ("split", null, SendMessageOptions.DontRequireReceiver);
 		leftSlot.GetComponent<piece_script> ().inSplitter = false;
 		rightSlot.GetComponent<piece_script> ().inSplitter = false;
 		Transform lefttemp = leftSlot;
