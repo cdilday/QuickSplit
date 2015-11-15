@@ -46,8 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Achievement_Script.cs" />
-     <Compile Include="Assets\Guide_Script.cs" />
+     <Compile Include="Assets\Scripts\Achievement_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Gears_Script.cs" />
@@ -73,19 +72,20 @@
      <Compile Include="Assets\Scripts\Game Screen\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\TitleController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Wedges_Script.cs" />
+     <Compile Include="Assets\Scripts\Guide_Script.cs" />
      <Compile Include="Assets\Scripts\Music_Controller.cs" />
      <Compile Include="Assets\Scripts\Music_Slider.cs" />
      <Compile Include="Assets\Scripts\RGBandHSVconverter.cs" />
      <Compile Include="Assets\Scripts\SFX_Slider.cs" />
      <Compile Include="Assets\Scripts\Selectable_Color.cs" />
      <Compile Include="Assets\Scripts\Shutter_Handler.cs" />
+     <Compile Include="Assets\Scripts\Text_Fader.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Guide_Toggler.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Layer_Resizer.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Mode_Clicker.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\SceneLoader.cs" />
-     <Compile Include="Assets\Text_Fader.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />

@@ -20,7 +20,7 @@ public class Achievement_Script : MonoBehaviour {
 		PlayerPrefs.SetInt ("Default Pieceset unlocked", 1);
 		PlayerPrefs.SetInt ("Symbol Pieceset unlocked", 1);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		//debug reset all achievements button
@@ -118,5 +118,29 @@ public class Achievement_Script : MonoBehaviour {
 			PlayerPrefs.SetInt ("Holy unlocked", 1);
 		if(PlayerPrefs.GetInt("Holy", 0) > 0)
 			PlayerPrefs.SetInt ("Present Pieceset unlocked", 1);
+	}
+
+	void OnLevelWasLoaded(int level){
+		if (PlayerPrefs.GetInt ("Programmer Splitter unlocked", 0) == 0) {
+			if(PlayerPrefs.GetInt ("Green Splitter unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Caution Splitter unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Candy Cane Splitter unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Dark Splitter unlocked", 0) == 1){
+				//TODO: Progammer Splitter Unlock alert
+				PlayerPrefs.SetInt ("Programmer Splitter unlocked", 1);
+			}
+		}
+		if (PlayerPrefs.GetInt ("Programmer Pieceset unlocked", 0) == 0) {
+			if(PlayerPrefs.GetInt ("Arcane Pieceset unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Retro Pieceset unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Blob Pieceset unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Domino Pieceset unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Present Pieceset unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Pumpkin Pieceset unlocked", 0) == 1 &&
+			   PlayerPrefs.GetInt ("Techno Pieceset unlocked", 0) == 1){
+				//TODO: Progammer Splitter Unlock alert
+				PlayerPrefs.SetInt ("Programmer Pieceset unlocked", 1);
+			}
+		}
 	}
 }

@@ -23,10 +23,10 @@ public class GameController : MonoBehaviour {
 	//columns that contain pieces to be pushed in at some point
 	SideColumn[] sideColumns = new SideColumn[2];
 
-	//Game Object for powers
-	GameObject powerHolder;
+	//Script for Spells
+	SpellHandler spellHandler;
 
-	//text that pops up during a game over
+	//text that pops up during a game over. also used for the pause screen and other alerts
 	public Text gameOverText;
 	//text that gives a tip at gameover
 	public Text tipText;
@@ -146,13 +146,14 @@ public class GameController : MonoBehaviour {
 		sideColumns [0] = null;
 		sideColumns [1] = null;
 		GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
-		powerHolder = GameObject.Find ("Spell Handler");
+		GameObject spellHandlerObject = GameObject.Find ("Spell Handler");
+		spellHandler = spellHandlerObject.GetComponent<SpellHandler> ();
 		if(gameType == "Wit"){
 
 			availableCount = 8;
 
 			//no powers in Wit
-			Destroy (powerHolder);
+			Destroy (spellHandlerObject);
 
 			//Wit does not use the sidecolumns, get rid of them
 			Destroy(scols[1]);
@@ -179,7 +180,7 @@ public class GameController : MonoBehaviour {
 			splitter.setState("canShoot", false);
 
 			// no powers in Quick, only Holy and Wiz
-			Destroy (powerHolder);
+			Destroy (spellHandlerObject);
 		}
 		else if(gameType == "Wiz")
 		{
@@ -197,15 +198,14 @@ public class GameController : MonoBehaviour {
 					sideColumns[1] = scols[0].GetComponent<SideColumn>();
 				}
 			}
-			SpellHandler spellhandler = powerHolder.GetComponent<SpellHandler>();
-			spellhandler.redReady = true;
-			spellhandler.orangeReady = false;
-			spellhandler.yellowReady = true;
-			spellhandler.greenReady = true;
-			spellhandler.blueReady = true;
-			spellhandler.purpleReady = true;
-			spellhandler.greyReady = false;
-			spellhandler.whiteReady = false;
+			spellHandler.redReady = true;
+			spellHandler.orangeReady = false;
+			spellHandler.yellowReady = true;
+			spellHandler.greenReady = true;
+			spellHandler.blueReady = true;
+			spellHandler.purpleReady = true;
+			spellHandler.greyReady = false;
+			spellHandler.whiteReady = false;
 			mc.Play_Music(gameType);
 		}
 		else if( gameType == "Holy")
@@ -224,15 +224,14 @@ public class GameController : MonoBehaviour {
 					sideColumns[1] = scols[0].GetComponent<SideColumn>();
 				}
 			}
-			SpellHandler spellhandler = powerHolder.GetComponent<SpellHandler>();
-			spellhandler.redReady = true;
-			spellhandler.orangeReady = true;
-			spellhandler.yellowReady = true;
-			spellhandler.greenReady = true;
-			spellhandler.blueReady = true;
-			spellhandler.purpleReady = true;
-			spellhandler.greyReady = true;
-			spellhandler.whiteReady = true;
+			spellHandler.redReady = true;
+			spellHandler.orangeReady = true;
+			spellHandler.yellowReady = true;
+			spellHandler.greenReady = true;
+			spellHandler.blueReady = true;
+			spellHandler.purpleReady = true;
+			spellHandler.greyReady = true;
+			spellHandler.whiteReady = true;
 			mc.Play_Music(gameType);
 		}
 
@@ -303,6 +302,20 @@ public class GameController : MonoBehaviour {
 						splitter.setState("canShoot", false);
 						if(PlayerPrefs.GetInt(gameType, 0) < score){
 							PlayerPrefs.SetInt (gameType, score);
+						}
+						//unlocking candy cane splitter
+						if(score > 0 && score < 200)
+						{
+							//TODO: Candy Cane Splitter unlock alert
+							PlayerPrefs.SetInt("Candy Cane Splitter unlocked", 1);
+						}
+						else if(gameType == "Wiz" || gameType == "Holy")
+						{
+							if(!spellHandler.Used_Spells() && score > 1000)
+							{
+								//TODO: Dark Splitter unlock alert
+								PlayerPrefs.SetInt ("Dark Splitter unlocked", 1);
+							}
 						}
 					}
 				}
@@ -684,13 +697,13 @@ public class GameController : MonoBehaviour {
 			{
 				switch(availableCount){
 				case 6:
-					powerHolder.GetComponent<SpellHandler>().orangeReady = true;
+					spellHandler.orangeReady = true;
 					break;
 				case 7:
-					powerHolder.GetComponent<SpellHandler>().greyReady = true;
+					spellHandler.greyReady = true;
 					break;
 				case 8:
-					powerHolder.GetComponent<SpellHandler>().whiteReady = true;
+					spellHandler.whiteReady = true;
 					break;
 				}
 			}

@@ -675,6 +675,9 @@ public class SpellHandler : MonoBehaviour {
 			}
 		}
 
+		spellActive = true;
+		splitsNeeded = 1;
+
 		switch (spellNum) {
 		case 0:
 			redReady = false;
@@ -682,8 +685,6 @@ public class SpellHandler : MonoBehaviour {
 			redGoal = (int) (redGoal * chargeMultiplier);
 			redText.text = "0%";
 			redText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
-			splitsNeeded = 1;
 			break;
 		case 1:
 			orangeReady = false;
@@ -691,8 +692,6 @@ public class SpellHandler : MonoBehaviour {
 			orangeGoal = (int) (orangeGoal * chargeMultiplier);
 			orangeText.text = "0%";
 			orangeText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
-			splitsNeeded = 1;
 			break;
 		case 2:
 			yellowReady = false;
@@ -700,8 +699,6 @@ public class SpellHandler : MonoBehaviour {
 			yellowGoal = (int) (yellowGoal * chargeMultiplier);
 			yellowText.text = "0%";
 			yellowText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
-			splitsNeeded = 1;
 			break;
 		case 3:
 			greenReady = false;
@@ -709,8 +706,6 @@ public class SpellHandler : MonoBehaviour {
 			greenGoal = (int) (greenGoal * chargeMultiplier);
 			greenText.text = "0%";
 			greenText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
-			splitsNeeded = 1;
 			break;
 		case 4:
 			blueReady = false;
@@ -718,8 +713,6 @@ public class SpellHandler : MonoBehaviour {
 			blueGoal = (int) (blueGoal * chargeMultiplier);
 			blueText.text = "0%";
 			blueText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
-			splitsNeeded = 1;
 			break;
 		case 5:
 			purpleReady = false;
@@ -727,8 +720,6 @@ public class SpellHandler : MonoBehaviour {
 			purpleGoal = (int) (purpleGoal * chargeMultiplier);
 			purpleText.text = "0%";
 			purpleText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
-			splitsNeeded = 1;
 			break;
 		case 6:
 			greyReady = false;
@@ -736,7 +727,6 @@ public class SpellHandler : MonoBehaviour {
 			greyGoal = (int) (greyGoal * chargeMultiplier);
 			greyText.text = "0%";
 			greyText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
 			splitsNeeded = 2;
 			break;
 		case 7:
@@ -745,8 +735,6 @@ public class SpellHandler : MonoBehaviour {
 			whiteGoal = (int) (whiteGoal * chargeMultiplier);
 			whiteText.text = "0%";
 			whiteText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			spellActive = true;
-			splitsNeeded = 1;
 			break;
 		}
 	}
@@ -760,5 +748,14 @@ public class SpellHandler : MonoBehaviour {
 				spellActive = false;
 		}
 
+	}
+
+	public bool Used_Spells()
+	{
+		foreach (bool spell in spellsUsed) {
+			if(spell)
+				return true;
+		}
+		return false;
 	}
 }
