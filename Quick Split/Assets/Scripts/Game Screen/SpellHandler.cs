@@ -66,11 +66,19 @@ public class SpellHandler : MonoBehaviour {
 	public float wizMultiplier;
 	public float holyMultiplier;
 	float chargeMultiplier;
+
+	GameObject[] RedSpellEffects;
+
 	// Use this for initialization
 	void Start () {
 		pickedColor1 = null;
 		pickedColor2 = null;
 		GameObject gameControllerobject = GameObject.FindGameObjectWithTag ("GameController");
+		RedSpellEffects = GameObject.FindGameObjectsWithTag ("Red Spell Effect");
+		foreach (GameObject rse in RedSpellEffects) {
+			rse.SetActive(false);
+		}
+
 		if (gameControllerobject == null) {
 			Debug.LogError("spell Handler Error: cannot find game controller");
 		}
@@ -117,6 +125,7 @@ public class SpellHandler : MonoBehaviour {
 			chargeMultiplier = wizMultiplier;
 		else
 			chargeMultiplier = holyMultiplier;
+
 
 		spellActive = false;
 	}
@@ -168,7 +177,7 @@ public class SpellHandler : MonoBehaviour {
 		/*Deletion loops work by going to the splitter's columns outwards and deleting the first piece it comes across before moving on
 		 * likely the player would only use this ability when on the brink of losing, so this is better than going from outwards in.
 		 * Once the loop deletes the first thing it comes accross, it exits the inner loop to move onto the next row.*/
-		//left grid loop
+		/*//left grid loop
 		for (int r = 0; r < 8; r++) {
 			for (int c = 7; c >=0; c--){
 				//Debug.Log ("Checking position R: " + r + " C: " + c);
@@ -195,8 +204,26 @@ public class SpellHandler : MonoBehaviour {
 			}
 		}
 		//check the board to update group values
-		gameController.checkBoard ();
+		gameController.checkBoard ();*/
+		
+		foreach(GameObject rse in RedSpellEffects)
+		{
+			rse.SetActive(true);
+			rse.BroadcastMessage("Activate", null, SendMessageOptions.DontRequireReceiver);
+		}
+		spellLimit = 16;
+		splitter.setState ("isActive", false);
 	}
+
+	public void Red_Spell_Helper()
+	{
+		spellLimit--;
+		if (spellLimit == 0) {
+			gameController.checkBoard ();
+			splitter.setState ("isActive", true);
+		}
+	}
+
 	//Orange attack: switches all the pieces of a single color on one side with all the pieces of a different single color on the other side
 	//deletes leftover pieces if the switch is uneven.
 	public void Orangespell()

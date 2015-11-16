@@ -87,53 +87,32 @@ public class piece_script : MonoBehaviour {
 		switch (pieceColor) {
 		case "Red":
 			colornum = 0;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Orange":
 			colornum = 1;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Yellow":
 			colornum = 2;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Green":
 			colornum = 3;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Blue":
 			colornum = 4;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Purple":
 			colornum = 5;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "Grey":
 			colornum = 6;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		case "White":
 			colornum = 7;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 			break;
 		}
+		gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+		if (animations != null)
+			gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
 		prevColorNum = ((int)Time.time) % 8;
 		//multiplier = 1;
 		hasPlayedAnim = false;
@@ -285,71 +264,36 @@ public class piece_script : MonoBehaviour {
 		{
 		case "Red":
 			colornum = 0;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Orange":
 			colornum = 1;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Yellow":
 			colornum = 2;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Green":
 			colornum = 3;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Blue":
 			colornum = 4;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Purple":
 			colornum = 5;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "Grey":
 			colornum = 6;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		case "White":
 			colornum = 7;
-			gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
-			if (animations != null)
-				gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
-			if(temp != null)
-				temp.spriteRenderer.sprite = sprites [colornum];
 			break;
 		}
+		gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [colornum];
+		if (animations != null)
+			gameObject.GetComponent<Animator> ().runtimeAnimatorController = animations[colornum];
+		if(temp != null)
+			temp.spriteRenderer.sprite = sprites [colornum];
 	}
-
+	
 	void OnDestroy()
 	{
 		//this means that the game just ended, don't spawn stuff

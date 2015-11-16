@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\Game Screen\Piece Related\ScoreBit.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Piece Related\piece_script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Pulser.cs" />
+     <Compile Include="Assets\Scripts\Game Screen\Red_Spell_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Score_Text_Layer.cs" />
      <Compile Include="Assets\Scripts\Game Screen\SideColumn.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Sidebar_Script.cs" />
