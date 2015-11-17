@@ -68,6 +68,7 @@ public class SpellHandler : MonoBehaviour {
 	float chargeMultiplier;
 
 	GameObject[] RedSpellEffects;
+	GameObject YellowSpellEffect;
 
 	// Use this for initialization
 	void Start () {
@@ -75,6 +76,7 @@ public class SpellHandler : MonoBehaviour {
 		pickedColor2 = null;
 		GameObject gameControllerobject = GameObject.FindGameObjectWithTag ("GameController");
 		RedSpellEffects = GameObject.FindGameObjectsWithTag ("Red Spell Effect");
+		YellowSpellEffect = GameObject.Find ("Yellow Spell Handler");
 		foreach (GameObject rse in RedSpellEffects) {
 			rse.SetActive(false);
 		}
@@ -335,8 +337,11 @@ public class SpellHandler : MonoBehaviour {
 	{
 		//set splitter to default color
 		splitter.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1, 1, 1, 1);
+		splitter.setState ("isActive", false);
+		YellowSpellEffect.BroadcastMessage ("Activate", null, SendMessageOptions.DontRequireReceiver);
+		splitter.setState ("yellowReady", false);
 		//get the row the splitter is in
-		int row = (int) gameController.splitter.transform.position.y;
+		/*int row = (int) gameController.splitter.transform.position.y;
 		//loop that deletes everything in the row
 		for (int c = 0; c < 16; c++) {
 			
@@ -350,7 +355,7 @@ public class SpellHandler : MonoBehaviour {
 		//make it so the splitter can't continually fire yellow spells
 		splitter.setState ("yellowReady", false);
 		//check the board to update group values
-		gameController.checkBoard ();
+		gameController.checkBoard ();*/
 	}
 	//Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
 	public void Greenspell()

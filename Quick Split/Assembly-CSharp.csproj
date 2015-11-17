@@ -73,6 +73,7 @@
      <Compile Include="Assets\Scripts\Game Screen\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\TitleController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Wedges_Script.cs" />
+     <Compile Include="Assets\Scripts\Game Screen\Yellow_Spell_Effect.cs" />
      <Compile Include="Assets\Scripts\Guide_Script.cs" />
      <Compile Include="Assets\Scripts\Music_Controller.cs" />
      <Compile Include="Assets\Scripts\Music_Slider.cs" />
