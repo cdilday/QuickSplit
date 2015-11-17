@@ -27,7 +27,7 @@ public class Red_Spell_Script : MonoBehaviour {
 	SpellHandler spellHandler;
 	GameController gameController;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
 		startPosition = transform.position;
