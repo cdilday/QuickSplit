@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Piece_Spell_Effect.cs" />
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />

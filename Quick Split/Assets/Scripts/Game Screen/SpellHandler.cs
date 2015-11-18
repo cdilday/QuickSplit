@@ -482,9 +482,24 @@ public class SpellHandler : MonoBehaviour {
 		splitter.leftSlot.GetComponent<SpriteRenderer> ().color = RGBandHSVconverter.HSVtoRGB(hsv);
 	}
 	//White spell: Sorts the board from rainbow down
-	public void Whitespell() //consider renaming to ability, in hindsight I probably should've looked at that first
+	public void Whitespell()
 	{
 		Spell_Used (7);
+		for (int r = 0; r < 8; r++) {
+			for (int c = 0; c < 16; c++){
+				if( gameController.grid[r,c] != null)
+				{
+					gameController.grid[r,c].BroadcastMessage("Activate_White", null, SendMessageOptions.DontRequireReceiver);
+				}
+			}
+		}
+		splitter.setState ("isActive", false);
+		StartCoroutine (WhiteHelper ());
+	}
+
+	IEnumerator WhiteHelper()
+	{
+		yield return new WaitForSeconds (1f);
 		//get all pieces on left side
 		List<GameObject> leftPieces = new List<GameObject>();
 		for (int r = 0; r < 8; r++) {
@@ -517,7 +532,7 @@ public class SpellHandler : MonoBehaviour {
 				}
 			}
 		}
-
+		
 		//now for the right
 		//get all pieces on left side
 		List<GameObject> rightPieces = new List<GameObject>();
@@ -550,10 +565,12 @@ public class SpellHandler : MonoBehaviour {
 				}
 			}
 		}
-
+		
 		//check the board
 		gameController.recalculateBoard ();
 		StartCoroutine (gameController.boardWaiter ());
+		splitter.setState ("isActive", true);
+
 	}
 
 	public void colorSelected(string color)
