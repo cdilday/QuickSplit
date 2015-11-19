@@ -10,7 +10,16 @@ public class Piece_Spell_Effect : MonoBehaviour {
 
 	bool whiteActive;
 	bool greyActive;
+	bool purpleActive;
+	bool purpleEnd;
 	int greyStage = 0;
+
+	bool check = false;
+	public bool lastPiece = false;
+
+	string spellColor;
+
+	Vector2 gridPos;
 
 	float startTime;
 
@@ -28,6 +37,9 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			Destroy (gameObject);
 
 		whiteActive = false;
+		greyActive = false;
+		purpleActive = false;
+		purpleEnd = false;
 
 		spriteRenderer.sprite = null;
 	}
@@ -50,30 +62,76 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				animator.SetBool ("Grey Active", false);
 				greyStage = 3;
 			}
-			else if(greyStage == 3 && ((animator.GetCurrentAnimatorStateInfo(0).length / 1.75f) + startTime < Time.time))
+			else if(greyStage == 3)
 			{
-				for(int r = 0; r < 3; r++)
-				{
-					for (int c = 0; c < 3; c++)
+				//this takes care of the case when the bomb is in the process of exploding but the piece moves because of the sidebars
+				if(piece != null){
+					transform.position = new Vector3(piece.transform.position.x, piece.transform.position.y, transform.position.z);
+					gridPos = piece.gridPos;
+				}
+
+				if ((animator.GetCurrentAnimatorStateInfo(0).length / 1.75f) + startTime < Time.time){
+					for(int r = 0; r < 3; r++)
 					{
-						//check to make sure it's a valid move
-						if((int)(piece.gridPos.x-1+r) >= 0 && (int)(piece.gridPos.x-1+r) <= 7 && (int)piece.gridPos.y-1+c >= 0 && (int)piece.gridPos.y-1+c <= 15 &&
-						   gameController.grid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c] != null)
+						for (int c = 0; c < 3; c++)
 						{
-							Destroy(gameController.grid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c]);
-							gameController.grid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c] = null;
-							gameController.colorGrid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c] = null;
+							//check to make sure it's a valid move
+							if((int)(gridPos.x-1+r) >= 0 && (int)(gridPos.x-1+r) <= 7 && (int)gridPos.y-1+c >= 0 && (int)gridPos.y-1+c <= 15 &&
+							   gameController.grid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c] != null)
+							{
+								Destroy(gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c]);
+								gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
+								gameController.colorGrid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
+							}
 						}
 					}
+					if(piece != null)
+						Destroy (piece.gameObject);
+					gameController.collapse ();
+					greyStage = 4;
 				}
-				transform.SetParent(null);
-				Destroy (piece.gameObject);
-				gameController.collapse ();
-				greyStage = 4;
 			}
 			else if (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time)
 			{
 				Destroy(gameObject);
+			}
+		}
+		else if(purpleActive)
+		{
+
+			if (!check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time))
+			{
+				check = true;
+				startTime = Time.time;
+				if(piece.pieceColor == spellColor)
+				{
+					transform.SetParent(null);
+					Destroy (piece.gameObject);
+					animator.SetBool ("inActive", false);
+					animator.SetBool ("Purple Fade", true);
+					purpleEnd = true;
+				}
+				else{
+					animator.SetBool ("Purple Active", false);
+				}
+			}
+			else if (check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time))
+			{
+				check = false;
+				purpleActive = false;
+				animator.SetBool ("inActive", true);
+				animator.SetBool ("Purple Fade", false);
+				animator.SetBool ("Purple Active", false);
+				spellColor = null;
+				if(lastPiece){
+					gameController.collapse ();
+					StartCoroutine (gameController.boardWaiter ());
+					gameController.splitter.setState ("isActive", true);
+				}
+				if(purpleEnd)
+				{
+					Destroy(gameObject);
+				}
 			}
 		}
  	}
@@ -102,6 +160,16 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			greyStage = 2;
 			animator.SetBool ("inActive", false);
 			animator.SetBool ("Grey Active", true);
+			gridPos = piece.gridPos;
 		}
+	}
+
+	public void Activate_Purple(string color)
+	{
+		purpleActive = true;
+		spellColor = color;
+		startTime = Time.time;
+		animator.SetBool ("inActive", false);
+		animator.SetBool ("Purple Active", true);
 	}
 }

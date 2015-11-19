@@ -452,21 +452,132 @@ public class SpellHandler : MonoBehaviour {
 	}
 	void PurpleHelper()
 	{
-		GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
-		foreach (GameObject piece in allPieces) {
-			piece_script temp = piece.GetComponent<piece_script>();
-			if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter && temp.pieceColor == pickedColor1)
+		StartCoroutine (Purple_Activator());
+	}
+
+	IEnumerator Purple_Activator(){
+		int rowLeft = 7, rowRight = 7;
+		int colLeft = 0, colRight = 15;
+		int tempr, tempc;
+		bool leftDone = false, rightDone = false;
+		bool empty = true;
+
+		//TODO: Comment out this code because it is overly convulted and covers to many edge cases to be self-documenting
+		while (!leftDone || !rightDone) {
+
+			//we'll traverse the Left first. This will be one long if else chain
+			if (!leftDone)
 			{
-				gameController.grid[(int)temp.gridPos.x, (int)temp.gridPos.y] = null;
-				gameController.colorGrid[(int)temp.gridPos.x, (int)temp.gridPos.y] = null;
-				Destroy (piece);
+				if(gameController.grid[rowLeft,colLeft] != null){
+					empty = false;
+					gameController.grid[rowLeft,colLeft].BroadcastMessage("Activate_Purple", pickedColor1, SendMessageOptions.DontRequireReceiver);
+					tempr = rowLeft;
+					tempc = colLeft;
+				}
+				else
+				{
+					tempr = -1;
+					tempc = -1;
+				}
+				do
+				{
+					if(rowLeft % 2 == 1)
+					{
+						if(colLeft < 6)
+						{
+							colLeft++;
+						}
+						else
+						{
+							rowLeft--;
+						}
+					}
+					else
+					{
+						if(colLeft > 0)
+						{
+							colLeft--;
+						}
+						else
+						{
+							if(rowLeft == 0)
+							{
+								//we've hit the bottom left corner, should mark left as completed
+								leftDone = true;
+							}
+							else
+							{
+								rowLeft--;
+							}
+						}
+					}
+				} while(!leftDone && gameController.grid[rowLeft,colLeft] == null);
+				if(tempr != -1 && leftDone && rightDone)
+				{
+					gameController.grid[tempr, tempc].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+				}
 			}
+
+			//now Right
+			if (!rightDone)
+			{
+				if(gameController.grid[rowRight,colRight] != null){
+					empty = false;
+					gameController.grid[rowRight,colRight].BroadcastMessage("Activate_Purple", pickedColor1, SendMessageOptions.DontRequireReceiver);
+					tempr = rowRight;
+					tempc = colRight;
+				}
+				else
+				{
+					tempr = -1;
+					tempc = -1;
+				}
+				do
+				{
+					if(rowRight % 2 == 1)
+					{
+						if(colRight > 9)
+						{
+							colRight--;
+						}
+						else
+						{
+							rowRight--;
+						}
+					}
+					else
+					{
+						if(colRight < 15 )
+						{
+							colRight++;
+						}
+						else
+						{
+							if(rowRight == 0)
+							{
+								//we've hit the bottom right corner, should mark right as completed
+								rightDone = true;
+							}
+							else
+							{
+								rowRight--;
+							}
+						}
+					}
+				}while (!rightDone && gameController.grid[rowRight,colRight] == null);
+				if(tempr != -1 && leftDone && rightDone)
+				{
+					gameController.grid[tempr, tempc].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+				}
+			}
+
+			yield return new WaitForSeconds(0.03f);
 		}
-		gameController.collapse ();
-		StartCoroutine (gameController.boardWaiter ());
+
 		pickedColor1 = null;
 		spellColor = null;
-		splitter.setState ("isActive", true);
+		if(empty)
+			splitter.setState("isActive", true);
 	}
 	//Grey spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
 	public void Greyspell()
