@@ -222,8 +222,9 @@ public class piece_script : MonoBehaviour {
 				gameController.placePiece(gameObject);
 				clacker.BroadcastMessage("PlaySound");
 			}
-			if(isBomb)
-				Destroy (gameObject);
+			if (isBomb) {
+				gameObject.BroadcastMessage ("Activate_Grey", null, SendMessageOptions.DontRequireReceiver);
+			}
 		}
 	}
 
@@ -310,24 +311,7 @@ public class piece_script : MonoBehaviour {
 		gameController.Score_Text_Canvas.GetComponent<Score_Text_Layer> ().Spawn_Score_Text (spawnPoint, pieceColor, scoreValue);
 
 		BitPool.spawn_bits (scoreValue, transform.position, pieceColor);
-		
-		if (isBomb) {
-			for(int r = 0; r < 3; r++)
-			{
-				for (int c = 0; c < 3; c++)
-				{
-					//check to make sure it's a valid move
-					if((int)(gridPos.x-1+r) >= 0 && (int)(gridPos.x-1+r) <= 7 && (int)gridPos.y-1+c >= 0 && (int)gridPos.y-1+c <= 15 &&
-					   gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] != null)
-					{
-						Destroy(gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c]);
-						gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
-						gameController.colorGrid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
-					}
-				}
-			}
-			gameController.collapse ();
-		}
+
 	}
 
 	void OnMouseOver(){

@@ -473,13 +473,9 @@ public class SpellHandler : MonoBehaviour {
 	{
 		Spell_Used (6);
 		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
-		Vector3 hsv = RGBandHSVconverter.RGBtoHSV (splitter.rightSlot.GetComponent<SpriteRenderer> ().color);
-		hsv = new Vector3(hsv.x, hsv.y, hsv.z - 0.5f);
-  		splitter.rightSlot.GetComponent<SpriteRenderer> ().color = RGBandHSVconverter.HSVtoRGB(hsv);
+		splitter.rightSlot.BroadcastMessage ("Activate_Grey", null, SendMessageOptions.DontRequireReceiver);
 		splitter.leftSlot.GetComponent<piece_script> ().isBomb = true;
-		hsv = RGBandHSVconverter.RGBtoHSV (splitter.leftSlot.GetComponent<SpriteRenderer> ().color);
-		hsv = new Vector3(hsv.x, hsv.y, hsv.z - 0.5f);
-		splitter.leftSlot.GetComponent<SpriteRenderer> ().color = RGBandHSVconverter.HSVtoRGB(hsv);
+		splitter.leftSlot.BroadcastMessage ("Activate_Grey", null, SendMessageOptions.DontRequireReceiver);
 	}
 	//White spell: Sorts the board from rainbow down
 	public void Whitespell()
