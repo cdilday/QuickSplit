@@ -392,13 +392,26 @@ public class SpellHandler : MonoBehaviour {
 			selectedPiece = null;
 			spellLimit = 0;
 			gameController.gameOverText.text = "";
-			splitter.setState ("isActive", true);
 		}
 	}
 
 	//Blue attack: recolor any 3 pieces on the board
 	public void Bluespell()
 	{
+		int boardPieceCount = 0;
+		foreach (GameObject piece in gameController.grid)
+		{
+			if(piece != null)
+			{
+				boardPieceCount++;
+				if(boardPieceCount == 3)
+					break;
+			}
+		}
+		//TODO: Make a message that tells the player there aren't enough pieces on the board to change
+		if (boardPieceCount < 3)
+			return;
+
 		Spell_Used (4);
 		spellColor = "Blue";
 		spellLimit = 3;
@@ -434,9 +447,7 @@ public class SpellHandler : MonoBehaviour {
 			spellColor = null;
 			selectedPiece = null;
 			spellLimit = 0;
-			splitter.setState ("isActive", true);
 			gameController.gameOverText.text =  "";
-			gameController.checkBoard();
 		}
 	}
 
@@ -697,11 +708,15 @@ public class SpellHandler : MonoBehaviour {
 			}
 			break;
 		case "Green":
-			selectedPiece.ConvertColor(color);
+			selectedPiece.BroadcastMessage("Activate_Green", color, SendMessageOptions.DontRequireReceiver);
+			if (spellLimit == 1)
+				selectedPiece.GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
 			GreenHelper();
 			break;
 		case "Blue":
-			selectedPiece.ConvertColor(color);
+			selectedPiece.BroadcastMessage("Activate_Blue", color, SendMessageOptions.DontRequireReceiver);
+			if (spellLimit == 1)
+				selectedPiece.GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
 			BlueHelper();
 			break;
 		case "Purple":

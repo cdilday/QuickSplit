@@ -32,8 +32,6 @@ public class Color_Selector : MonoBehaviour {
 
 	void onDestroy()
 	{
-		//broadcast to spell handler the color selected
-		// make the splitter active again
 		selectionText.text = "";
 	}
 }

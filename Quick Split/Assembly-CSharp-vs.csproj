@@ -71,6 +71,7 @@
      <Compile Include="Assets\Scripts\Game Screen\Spell_Descriptions.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Spell_Tab.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Spell_Text.cs" />
+     <Compile Include="Assets\Scripts\Game Screen\Splitter_Charged_Effect.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\TitleController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Wedges_Script.cs" />

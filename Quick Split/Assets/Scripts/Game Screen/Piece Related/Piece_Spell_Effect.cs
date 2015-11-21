@@ -11,6 +11,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 	bool whiteActive;
 	bool greyActive;
 	bool purpleActive;
+	bool greenBlueActive;
 	bool purpleEnd;
 	int greyStage = 0;
 
@@ -42,6 +43,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		purpleEnd = false;
 
 		spriteRenderer.sprite = null;
+		greenBlueActive = false;
 	}
 
 	void FixedUpdate()
@@ -134,6 +136,29 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				}
 			}
 		}
+		else if (greenBlueActive)
+		{
+			if(!check && ((animator.GetCurrentAnimatorStateInfo(0).length/2) + startTime < Time.time))
+			{
+				check = true;
+				piece.ConvertColor(spellColor);
+				//change color here
+			}
+			else if( check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time))
+			{
+				greenBlueActive = false;
+				animator.SetBool("Green Active", false);
+				animator.SetBool("Blue Active", false);
+				animator.SetBool("inActive", true);
+				check = false;
+				spriteRenderer.sprite = null;
+				if(lastPiece){
+					gameController.checkBoard();
+					gameController.splitter.setState ("isActive", true);
+					lastPiece = false;
+				}
+			}
+		}
  	}
 	
 	public void Activate_White()
@@ -171,5 +196,23 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		startTime = Time.time;
 		animator.SetBool ("inActive", false);
 		animator.SetBool ("Purple Active", true);
+	}
+
+	public void Activate_Green(string color)
+	{
+		greenBlueActive = true;
+		spellColor = color;
+		startTime = Time.time;
+		animator.SetBool ("inActive", false);
+		animator.SetBool ("Green Active", true);
+	}
+
+	public void Activate_Blue(string color)
+	{
+		greenBlueActive = true;
+		spellColor = color;
+		startTime = Time.time;
+		animator.SetBool ("inActive", false);
+		animator.SetBool ("Blue Active", true);
 	}
 }
