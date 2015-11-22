@@ -237,12 +237,6 @@ public class SpellHandler : MonoBehaviour {
 	}
 	void OrangeHelper ()
 	{
-		if (pickedColor2 == null) {
-			spellColor = "Orange";
-			GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
-			picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the right side");
-			return;
-		}
 
 		List<GameObject> leftPieces = new List<GameObject>();
 		List<GameObject> rightPieces = new List<GameObject>();
@@ -287,10 +281,7 @@ public class SpellHandler : MonoBehaviour {
 				int r =(int) leftPieces[randPiece].GetComponent<piece_script>().gridPos.x;
 				int c =(int) leftPieces[randPiece].GetComponent<piece_script>().gridPos.y;
 				leftPieces.RemoveAt(randPiece);
-				Destroy(gameController.grid[r,c]);
-				gameController.grid[r,c] = null;
-				gameController.colorGrid[r,c] = null;
-				deleted = true;
+				gameController.grid[r,c].BroadcastMessage("Activate_Orange", "dead", SendMessageOptions.DontRequireReceiver);
 			}
 		}
 		else {
@@ -300,28 +291,27 @@ public class SpellHandler : MonoBehaviour {
 				int r = (int) rightPieces[randPiece].GetComponent<piece_script>().gridPos.x;
 				int c = (int) rightPieces[randPiece].GetComponent<piece_script>().gridPos.y;
 				rightPieces.RemoveAt(randPiece);
-				Destroy(gameController.grid[r,c]);
-				gameController.grid[r,c] = null;
-				gameController.colorGrid[r,c] = null;
-				deleted = true;
+				gameController.grid[r,c].BroadcastMessage("Activate_Orange", "dead", SendMessageOptions.DontRequireReceiver);
 			}
-		}
-		if (deleted){
-			gameController.collapse();
 		}
 		//swap colors in each array
 		for (int i = 0; i < leftPieces.Count; i++) {
-			leftPieces[i].GetComponent<piece_script>().ConvertColor(pickedColor2);
+			leftPieces[i].BroadcastMessage("Activate_Orange", pickedColor2, SendMessageOptions.DontRequireReceiver);
+			if((i == leftPieces.Count - 1) && (rightPieces.Count == 0))
+			{
+				leftPieces[i].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+			}
 		}
 		for (int i = 0; i < rightPieces.Count; i++) {
-			rightPieces[i].GetComponent<piece_script>().ConvertColor(pickedColor1);
+			if(i == rightPieces.Count - 1)
+			{
+				rightPieces[i].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+			}
 		}
 		//check the board
-		StartCoroutine (gameController.boardWaiter ());
 		pickedColor1 = null;
 		pickedColor2 = null;
 		spellColor = null;
-		splitter.setState ("isActive", true);
 	}
 	//Yellow attack: launches a single lightning bolt to each side that removes any blocks in the splitter's row
 	//this method loads the splitter with the power to activate it on the next fire
@@ -700,10 +690,34 @@ public class SpellHandler : MonoBehaviour {
 				pickedColor1 = color;
 				GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 				picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the right side");
+				//go through left side, activate
+				for (int r = 0; r < 8; r++) {
+					for (int c = 7; c >=0; c--){
+						if(gameController.grid[r,c] != null)
+						{
+							if(gameController.colorGrid[r,c] == pickedColor1)
+							{
+								gameController.grid[r,c].BroadcastMessage("Activate_Orange", "left", SendMessageOptions.DontRequireReceiver);
+							}
+						}
+					}
+				}
 			}
 			else if(pickedColor2 == null)
 			{
 				pickedColor2 = color;
+				for (int r = 0; r < 8; r++) {
+					for (int c = 8; c < 16; c++){
+						//Debug.Log ("Checking position R: " + r + " C: " + c);
+						if(gameController.grid[r,c] != null)
+						{
+							if(gameController.colorGrid[r,c] == pickedColor2)
+							{
+								gameController.grid[r,c].BroadcastMessage("Activate_Orange", pickedColor1, SendMessageOptions.DontRequireReceiver);
+							}
+						}
+					}
+				}
 				OrangeHelper();
 			}
 			break;
