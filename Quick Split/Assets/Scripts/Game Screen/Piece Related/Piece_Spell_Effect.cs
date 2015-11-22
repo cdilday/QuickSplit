@@ -38,6 +38,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		piece = gameObject.GetComponentInParent<piece_script> ();
 
+		//no need for these if there are no spells
 		if (gameController.gameType == "Wit" || gameController.gameType == "Quick")
 			Destroy (gameObject);
 
@@ -57,8 +58,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		//white spell
 		if (whiteActive) {
 			//this one just plays the animation, the spellhandler does the actual work.
-			if(animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time)
-			{
+			if(animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time){
 				whiteActive = false;
 				animator.SetBool ("inActive", true);
 				animator.SetBool ("White Active", false);
@@ -66,18 +66,15 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			}
 		}
 		//grey spell
-		else if (greyActive && greyStage > 1)
-		{
+		else if (greyActive && greyStage > 1){
 			//the grey spell requires stages due to its complex nature
 			//stage 2 means that the piece has collided with the next piece
-			if (greyStage == 2)
-			{
+			if (greyStage == 2){
 				animator.SetBool ("Grey Active", false);
 				greyStage = 3;
 			}
 			//stage 3 means the bomb is in the process of exploding and pieces need to be taken crae of
-			else if(greyStage == 3)
-			{
+			else if(greyStage == 3){
 				//this takes care of the case when the bomb is in the process of exploding but the piece moves because of the sidebars
 				if(piece != null){
 					transform.position = new Vector3(piece.transform.position.x, piece.transform.position.y, transform.position.z);
@@ -85,10 +82,8 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				}
 				//the frame where the pieces are properly deleted behind the animation
 				if ((animator.GetCurrentAnimatorStateInfo(0).length / 1.75f) + startTime < Time.time){
-					for(int r = 0; r < 3; r++)
-					{
-						for (int c = 0; c < 3; c++)
-						{
+					for(int r = 0; r < 3; r++){
+						for (int c = 0; c < 3; c++){
 							//check to make sure it's a valid move
 							if((int)(gridPos.x-1+r) >= 0 && (int)(gridPos.x-1+r) <= 7 && (int)gridPos.y-1+c >= 0 && (int)gridPos.y-1+c <= 15 &&
 							   gameController.grid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c] != null)
@@ -106,23 +101,19 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				}
 			}
 			//the end of the animation, the spell effect is at this point a standalone object that is useless
-			else if (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time)
-			{
+			else if (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time){
 				Destroy(gameObject);
 			}
 		}
 		//purple spell
-		else if(purpleActive)
-		{
+		else if(purpleActive){
 			//also relatively complicated, thought the traversal is handled in the spell handler
 			//this checks when the first animation (scan) ends, and is when the animation changes
-			if (!check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time))
-			{
+			if (!check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time)){
 				check = true;
 				startTime = Time.time;
 				//delete and do the deletion animation
-				if(piece.pieceColor == spellColor)
-				{
+				if(piece.pieceColor == spellColor){
 					transform.SetParent(null);
 					Destroy (piece.gameObject);
 					animator.SetBool ("inActive", false);
@@ -135,8 +126,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				}
 			}
 			//this simply plays out the animation chosen at the end of the last animation
-			else if (check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time))
-			{
+			else if (check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time)){
 				check = false;
 				purpleActive = false;
 				animator.SetBool ("inActive", true);
@@ -150,24 +140,20 @@ public class Piece_Spell_Effect : MonoBehaviour {
 					gameController.splitter.setState ("isActive", true);
 				}
 				//if the piece was deleted, this effect is standalone and therefore uselees
-				if(purpleEnd)
-				{
+				if(purpleEnd){
 					Destroy(gameObject);
 				}
 			}
 		}
 		// Green and Blue spells are similar, and can therefore be combined in most aspects
-		else if (greenBlueActive)
-		{
+		else if (greenBlueActive){
 			//this changes the color on the frame that the piece is behind the animation. check ensures it happens once
-			if(!check && ((animator.GetCurrentAnimatorStateInfo(0).length/2) + startTime < Time.time))
-			{
+			if(!check && ((animator.GetCurrentAnimatorStateInfo(0).length/2) + startTime < Time.time)){
 				check = true;
 				piece.ConvertColor(spellColor);
 			}
 			//this handles the resetting the piece back to its original state after the animation is finished
-			else if( check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time))
-			{
+			else if( check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time)){
 				greenBlueActive = false;
 				animator.SetBool("Green Active", false);
 				animator.SetBool("Blue Active", false);
@@ -183,59 +169,57 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			}
 		}
 		//orange spell
-		else if(orangeActive)
-		{
+		else if(orangeActive) {
 			//these calculations need to happen the first frame after orange is activated
-			if(orangeStage == 0)
-			{
+			if(orangeStage == 0){
 				animator.Play("Orange Selected", -1, Time.time % animator.GetCurrentAnimatorStateInfo(0).length);
 				orangeStage = 1;
-				if(spellColor != "left")
-				{
+				//left pieces need to be activated twice; once to trigger the first animation, and again to load with the right choice
+				if(spellColor != "left"){
+					//if the collor is selected skip to the next stage
 					orangeStage = 2;
 				}
 			}
-			else if (orangeStage == 2)
-			{
-				if(spriteRenderer.sprite == orangeMiddleSprite)
-				{
+			//stage 2 marks the point where the animation should change 
+			else if (orangeStage == 2) {
+				if (spriteRenderer.sprite == orangeMiddleSprite) {
 					orangeStage = 3;
 					animator.SetBool("Orange Active", false);
 					startTime = Time.time;
 				}
 			}
+			//stage 3 plays out the remainder of the animation, changes color, then cleans up
 			else if (orangeStage == 3)
 			{
-				if(!check && ((animator.GetCurrentAnimatorStateInfo(0).length/2) + startTime < Time.time))
-				{
+				//the color change
+				if(!check && ((animator.GetCurrentAnimatorStateInfo(0).length/2) + startTime < Time.time)) {
 					check = true;
-					if(spellColor== "dead")
-					{
+					//delete pieces that were marked as uneven remainders
+					if(spellColor== "dead"){
 						Destroy(piece.gameObject);
 					}
 					else{
 						piece.ConvertColor(spellColor);
 					}
 				}
-				else if (check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time))
-				{
+				//the remainder of the animation
+				else if (check && (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time)){
 					orangeActive = false;
 					orangeStage = 0;
 					animator.SetBool ("inActive", true);
 					spriteRenderer.sprite = null;
 					check = false;
-					if(lastPiece)
-					{
+					//final piece tells the gameController to run its board checks
+					if(lastPiece){
 						gameController.collapse();
 						StartCoroutine(gameController.boardWaiter());
 						gameController.splitter.setState ("isActive", true);
 					}
 				}
 			}
-
 		}
  	}
-	
+	//called to start the White spell
 	public void Activate_White()
 	{
 		whiteActive = true;
@@ -243,18 +227,18 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		animator.SetBool ("White Active", true);
 		startTime = Time.time;
 	}
-
+	//called to start the Grey/cyan spell
 	public void Activate_Grey()
 	{
-		if(greyStage == 0)
-		{
+		//first stage is when the piece is stilll in splitter
+		if(greyStage == 0){
 			animator.SetBool ("inActive", false);
 			animator.SetBool ("Grey Active", true);
 			greyActive = true;
 			greyStage = 1;
 		}
-		else
-		{
+		//second call tells it to explode
+		else {
 			transform.SetParent(null);
 			startTime = Time.time;
 			greyStage = 2;
@@ -263,7 +247,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			gridPos = piece.gridPos;
 		}
 	}
-
+	//called to start the purple spell
 	public void Activate_Purple(string color)
 	{
 		purpleActive = true;
@@ -272,7 +256,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		animator.SetBool ("inActive", false);
 		animator.SetBool ("Purple Active", true);
 	}
-
+	//called to start the green spell
 	public void Activate_Green(string color)
 	{
 		greenBlueActive = true;
@@ -281,7 +265,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		animator.SetBool ("inActive", false);
 		animator.SetBool ("Green Active", true);
 	}
-
+	//called to start the blue spell
 	public void Activate_Blue(string color)
 	{
 		greenBlueActive = true;
@@ -290,18 +274,17 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		animator.SetBool ("inActive", false);
 		animator.SetBool ("Blue Active", true);
 	}
-
+	//called to start the orange spell
 	public void Activate_Orange(string color)
 	{
 		orangeActive = true;
 		animator.SetBool ("inActive", false);
 		spellColor = color;
-		if(orangeStage == 0)
-		{
+		//This requires multiple stages depending on whether these pieces are on the left or right side
+		if(orangeStage == 0) {
 			animator.SetBool ("Orange Active", true);
 		}
-		if(orangeStage == 1)
-		{
+		if(orangeStage == 1) {
 			orangeStage = 2;
 		}
 	}

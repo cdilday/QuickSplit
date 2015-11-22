@@ -176,49 +176,19 @@ public class SpellHandler : MonoBehaviour {
 	{
 		Spell_Used (0);
 
-		/*Deletion loops work by going to the splitter's columns outwards and deleting the first piece it comes across before moving on
-		 * likely the player would only use this ability when on the brink of losing, so this is better than going from outwards in.
-		 * Once the loop deletes the first thing it comes accross, it exits the inner loop to move onto the next row.*/
-		/*//left grid loop
-		for (int r = 0; r < 8; r++) {
-			for (int c = 7; c >=0; c--){
-				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(gameController.grid[r,c] != null)
-				{
-					Destroy (gameController.grid[r,c]);
-					gameController.colorGrid[r,c] = null;
-					gameController.grid[r,c] = null;
-					c = -1;
-				}
-			}
-		}
-		//right grid loop
-		for (int r = 0; r < 8; r++) {
-			for (int c = 8; c < 16; c++){
-				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(gameController.grid[r,c] != null)
-				{
-					Destroy (gameController.grid[r,c]);
-					gameController.colorGrid[r,c] = null;
-					gameController.grid[r,c] = null;
-					c = 16;
-				}
-			}
-		}
-		//check the board to update group values
-		gameController.checkBoard ();*/
-		
-		foreach(GameObject rse in RedSpellEffects)
-		{
+		//THuis spell uses the Red Spell Effect Gameobjects to do all the dirty work
+		foreach(GameObject rse in RedSpellEffects){
 			rse.SetActive(true);
 			rse.BroadcastMessage("Activate", null, SendMessageOptions.DontRequireReceiver);
 		}
+		//there are 16 RSE objects
 		spellLimit = 16;
 		splitter.setState ("isActive", false);
 	}
 
 	public void Red_Spell_Helper()
 	{
+		//once all 16 RSE's have chimed in, then the red spell is over
 		spellLimit--;
 		if (spellLimit == 0) {
 			gameController.checkBoard ();
@@ -235,6 +205,7 @@ public class SpellHandler : MonoBehaviour {
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the left side");
 	}
+	//called after bth selections are made
 	void OrangeHelper ()
 	{
 
@@ -245,10 +216,8 @@ public class SpellHandler : MonoBehaviour {
 		for (int r = 0; r < 8; r++) {
 			for (int c = 7; c >=0; c--){
 				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(gameController.grid[r,c] != null)
-				{
-					if(gameController.colorGrid[r,c] == pickedColor1)
-					{
+				if(gameController.grid[r,c] != null){
+					if(gameController.colorGrid[r,c] == pickedColor1){
 						leftPieces.Add (gameController.grid[r,c]);
 					}
 				}
@@ -258,10 +227,8 @@ public class SpellHandler : MonoBehaviour {
 		for (int r = 0; r < 8; r++) {
 			for (int c = 8; c < 16; c++){
 				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(gameController.grid[r,c] != null)
-				{
-					if(gameController.colorGrid[r,c] == pickedColor2)
-					{
+				if(gameController.grid[r,c] != null){
+					if(gameController.colorGrid[r,c] == pickedColor2){
 						rightPieces.Add (gameController.grid[r,c]);
 					}
 				}
@@ -275,18 +242,17 @@ public class SpellHandler : MonoBehaviour {
 		//delete the remainder on the bigger side randomly
 		bool deleted = false;
 		if(leftLarger){
-			for (; difference > 0; difference--)
-			{
+			for (; difference > 0; difference--){
 				int randPiece = (int) Random.Range(0, leftPieces.Count);
 				int r =(int) leftPieces[randPiece].GetComponent<piece_script>().gridPos.x;
 				int c =(int) leftPieces[randPiece].GetComponent<piece_script>().gridPos.y;
 				leftPieces.RemoveAt(randPiece);
+				//marking the object as dead so that the orangeActive state knows to delete it
 				gameController.grid[r,c].BroadcastMessage("Activate_Orange", "dead", SendMessageOptions.DontRequireReceiver);
 			}
 		}
 		else {
-			for (; difference > 0; difference--)
-			{
+			for (; difference > 0; difference--){
 				int randPiece = (int) Random.Range(0, rightPieces.Count);
 				int r = (int) rightPieces[randPiece].GetComponent<piece_script>().gridPos.x;
 				int c = (int) rightPieces[randPiece].GetComponent<piece_script>().gridPos.y;
@@ -296,19 +262,19 @@ public class SpellHandler : MonoBehaviour {
 		}
 		//swap colors in each array
 		for (int i = 0; i < leftPieces.Count; i++) {
+			//recall Activate orange on the left side to update with the second picked color and get the animations going
 			leftPieces[i].BroadcastMessage("Activate_Orange", pickedColor2, SendMessageOptions.DontRequireReceiver);
-			if((i == leftPieces.Count - 1) && (rightPieces.Count == 0))
-			{
+			if((i == leftPieces.Count - 1) && (rightPieces.Count == 0)){
+				// if it's the final piece, mark it so it knows to tell the GC to check the board
 				leftPieces[i].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
 			}
 		}
 		for (int i = 0; i < rightPieces.Count; i++) {
-			if(i == rightPieces.Count - 1)
-			{
+			if(i == rightPieces.Count - 1){
+				// if it's the final piece, mark it so it knows to tell the GC to check the board
 				rightPieces[i].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
 			}
 		}
-		//check the board
 		pickedColor1 = null;
 		pickedColor2 = null;
 		spellColor = null;
@@ -328,28 +294,14 @@ public class SpellHandler : MonoBehaviour {
 		//set splitter to default color
 		splitter.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1, 1, 1, 1);
 		splitter.setState ("isActive", false);
+		//this spell is also entirely handled by a seperate gameobject
 		YellowSpellEffect.BroadcastMessage ("Activate", null, SendMessageOptions.DontRequireReceiver);
 		splitter.setState ("yellowReady", false);
-		//get the row the splitter is in
-		/*int row = (int) gameController.splitter.transform.position.y;
-		//loop that deletes everything in the row
-		for (int c = 0; c < 16; c++) {
-			
-			if (gameController.colorGrid[row,c] != null)
-			{
-				gameController.colorGrid[row,c] = null;
-				Destroy(gameController.grid[row,c]);
-				gameController.grid[row,c] = null;
-			}
-		}
-		//make it so the splitter can't continually fire yellow spells
-		splitter.setState ("yellowReady", false);
-		//check the board to update group values
-		gameController.checkBoard ();*/
 	}
 	//Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
 	public void Greenspell()
 	{
+		//green spell and helper tell other objects when to activate
 		Spell_Used (3);
 		spellColor = "Green";
 		spellLimit = 3;
@@ -366,7 +318,7 @@ public class SpellHandler : MonoBehaviour {
 	public void GreenHelper()
 	{
 		spellLimit--;
-
+		//if all 3 tries have been exhausted, then the spell is over
 		if (spellLimit <= 0) {
 			splitter.leftSlot.GetComponent<piece_script> ().selectable = false;
 			splitter.rightSlot.GetComponent<piece_script> ().selectable = false;
@@ -388,11 +340,11 @@ public class SpellHandler : MonoBehaviour {
 	//Blue attack: recolor any 3 pieces on the board
 	public void Bluespell()
 	{
+		//blue spell is almost identical to green spell, just over a different space
+		// but first we need to cover a case that makes it impossible to use the blue spell
 		int boardPieceCount = 0;
-		foreach (GameObject piece in gameController.grid)
-		{
-			if(piece != null)
-			{
+		foreach (GameObject piece in gameController.grid){
+			if(piece != null){
 				boardPieceCount++;
 				if(boardPieceCount == 3)
 					break;
@@ -409,8 +361,7 @@ public class SpellHandler : MonoBehaviour {
 		GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
 		foreach (GameObject piece in allPieces) {
 			piece_script temp = piece.GetComponent<piece_script>();
-			if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter)
-			{
+			if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter){
 				temp.selectable = true;
 			}
 		}
@@ -419,7 +370,7 @@ public class SpellHandler : MonoBehaviour {
 	}
 	void BlueHelper(){
 		spellLimit--;
-		
+		//again, like the green spell it only has 3 uses
 		if (spellLimit <= 0) {
 			splitter.leftSlot.GetComponent<piece_script> ().selectable = false;
 			splitter.rightSlot.GetComponent<piece_script> ().selectable = false;
@@ -427,8 +378,7 @@ public class SpellHandler : MonoBehaviour {
 			GameObject[] allPieces = GameObject.FindGameObjectsWithTag ("Piece");
 			foreach (GameObject piece in allPieces) {
 				piece_script temp = piece.GetComponent<piece_script>();
-				if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter)
-				{
+				if(!temp.inSideHolder && !temp.inHolder && !temp.inSplitter){
 					temp.selectable = false;
 				}
 			}
@@ -451,11 +401,12 @@ public class SpellHandler : MonoBehaviour {
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to eliminate from the board");
 		splitter.setState ("isActive", false);
 	}
+
 	void PurpleHelper()
 	{
+		//this needed to be a coroutine so it could wait and give a proper effect
 		StartCoroutine (Purple_Activator());
 	}
-
 	IEnumerator Purple_Activator(){
 		int rowLeft = 7, rowRight = 7;
 		int colLeft = 0, colRight = 15;
@@ -463,111 +414,99 @@ public class SpellHandler : MonoBehaviour {
 		bool leftDone = false, rightDone = false;
 		bool empty = true;
 
-		//TODO: Comment out this code because it is overly convulted and covers to many edge cases to be self-documenting
+		//This is probably the most ridiculous looking traversal but both sides go opposite and alternate directions
 		while (!leftDone || !rightDone) {
-
 			//we'll traverse the Left first. This will be one long if else chain
-			if (!leftDone)
-			{
+			if (!leftDone){
+				//first, check to see if the last iteration of the loop found anything, or if there was anything to start
 				if(gameController.grid[rowLeft,colLeft] != null){
 					empty = false;
 					gameController.grid[rowLeft,colLeft].BroadcastMessage("Activate_Purple", pickedColor1, SendMessageOptions.DontRequireReceiver);
 					tempr = rowLeft;
 					tempc = colLeft;
 				}
-				else
-				{
+				else{
+					//if there wasn't, mark it
 					tempr = -1;
 					tempc = -1;
 				}
-				do
-				{
-					if(rowLeft % 2 == 1)
-					{
-						if(colLeft < 6)
-						{
+				//this needs to happen at least once, therefore a do while loop is handy
+				do{
+					//this will alternate direction based off row, starting with the upper left
+					if(rowLeft % 2 == 1) {
+						//if it hasn't hit the end of the row, iterate
+						if(colLeft < 6) {
 							colLeft++;
 						}
-						else
-						{
+						else {
+							//move to next row
 							rowLeft--;
 						}
 					}
-					else
-					{
-						if(colLeft > 0)
-						{
+					else {
+						//if it hasn't hit the end of the row, iterate
+						if(colLeft > 0){
 							colLeft--;
 						}
-						else
-						{
-							if(rowLeft == 0)
-							{
+						else{
+							//special case
+							if(rowLeft == 0){
 								//we've hit the bottom left corner, should mark left as completed
 								leftDone = true;
 							}
-							else
-							{
+							else{
+								//move to next row
 								rowLeft--;
 							}
 						}
 					}
 				} while(!leftDone && gameController.grid[rowLeft,colLeft] == null);
-				if(tempr != -1 && leftDone && rightDone)
-				{
+				//if this was marked and the previous checks marked it done, mark the lastpiece so it know to run a check
+				if(tempr != -1 && leftDone && rightDone){
 					gameController.grid[tempr, tempc].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
 				}
 			}
 
-			//now Right
-			if (!rightDone)
-			{
+			//now Right, works similarly to left but in opposite directions
+			if (!rightDone) {
+				//need to check if the current one is valid
 				if(gameController.grid[rowRight,colRight] != null){
 					empty = false;
 					gameController.grid[rowRight,colRight].BroadcastMessage("Activate_Purple", pickedColor1, SendMessageOptions.DontRequireReceiver);
 					tempr = rowRight;
 					tempc = colRight;
 				}
-				else
-				{
+				else{
+					//mark if it isn't
 					tempr = -1;
 					tempc = -1;
 				}
-				do
-				{
-					if(rowRight % 2 == 1)
-					{
-						if(colRight > 9)
-						{
+				do{
+					//every other row has a different direction of traversal
+					if(rowRight % 2 == 1) {
+						if(colRight > 9){
 							colRight--;
 						}
-						else
-						{
+						else {
 							rowRight--;
 						}
 					}
-					else
-					{
-						if(colRight < 15 )
-						{
+					else {
+						if(colRight < 15 ) {
 							colRight++;
 						}
-						else
-						{
-							if(rowRight == 0)
-							{
+						else {
+							if(rowRight == 0){
 								//we've hit the bottom right corner, should mark right as completed
 								rightDone = true;
 							}
-							else
-							{
+							else {
 								rowRight--;
 							}
 						}
 					}
 				}while (!rightDone && gameController.grid[rowRight,colRight] == null);
-				if(tempr != -1 && leftDone && rightDone)
-				{
+				if(tempr != -1 && leftDone && rightDone) {
 					gameController.grid[tempr, tempc].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
 				}
 			}
@@ -583,6 +522,7 @@ public class SpellHandler : MonoBehaviour {
 	//Grey spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
 	public void Greyspell()
 	{
+		//again most of the hard work is done by the piece spell effect script, this just tells it when to activate
 		Spell_Used (6);
 		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
 		splitter.rightSlot.BroadcastMessage ("Activate_Grey", null, SendMessageOptions.DontRequireReceiver);
@@ -592,11 +532,11 @@ public class SpellHandler : MonoBehaviour {
 	//White spell: Sorts the board from rainbow down
 	public void Whitespell()
 	{
-		Spell_Used (7);
+				Spell_Used (7);
+		//WhiteHelper does all of the technical stuff; this just tell the pieces to play an aesthetic animation
 		for (int r = 0; r < 8; r++) {
-			for (int c = 0; c < 16; c++){
-				if( gameController.grid[r,c] != null)
-				{
+			for (int c = 0;		 c < 16; c++){
+				if( gameController.grid[r,c] != null){
 					gameController.grid[r,c].BroadcastMessage("Activate_White", null, SendMessageOptions.DontRequireReceiver);
 				}
 			}
@@ -613,8 +553,7 @@ public class SpellHandler : MonoBehaviour {
 		for (int r = 0; r < 8; r++) {
 			for (int c = 7; c >=0; c--){
 				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(gameController.grid[r,c] != null)
-				{
+				if(gameController.grid[r,c] != null){
 					leftPieces.Add (gameController.grid[r,c]);
 				}
 			}
@@ -647,8 +586,7 @@ public class SpellHandler : MonoBehaviour {
 		for (int r = 0; r < 8; r++) {
 			for (int c = 8; c < 16; c++){
 				//Debug.Log ("Checking position R: " + r + " C: " + c);
-				if(gameController.grid[r,c] != null)
-				{
+				if(gameController.grid[r,c] != null){
 					rightPieces.Add (gameController.grid[r,c]);
 				}
 			}
@@ -681,22 +619,20 @@ public class SpellHandler : MonoBehaviour {
 
 	}
 
+	//this is what the color selectors spawned from certain colors calls when one is selected
 	public void colorSelected(string color)
 	{
 		switch (spellColor) {
 		case "Orange":
-			if(pickedColor1 == null)
-			{
+			if(pickedColor1 == null){
 				pickedColor1 = color;
 				GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 				picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the right side");
 				//go through left side, activate
 				for (int r = 0; r < 8; r++) {
 					for (int c = 7; c >=0; c--){
-						if(gameController.grid[r,c] != null)
-						{
-							if(gameController.colorGrid[r,c] == pickedColor1)
-							{
+						if(gameController.grid[r,c] != null){
+							if(gameController.colorGrid[r,c] == pickedColor1){
 								gameController.grid[r,c].BroadcastMessage("Activate_Orange", "left", SendMessageOptions.DontRequireReceiver);
 							}
 						}
@@ -709,10 +645,8 @@ public class SpellHandler : MonoBehaviour {
 				for (int r = 0; r < 8; r++) {
 					for (int c = 8; c < 16; c++){
 						//Debug.Log ("Checking position R: " + r + " C: " + c);
-						if(gameController.grid[r,c] != null)
-						{
-							if(gameController.colorGrid[r,c] == pickedColor2)
-							{
+						if(gameController.grid[r,c] != null){
+							if(gameController.colorGrid[r,c] == pickedColor2){
 								gameController.grid[r,c].BroadcastMessage("Activate_Orange", pickedColor1, SendMessageOptions.DontRequireReceiver);
 							}
 						}
@@ -740,6 +674,7 @@ public class SpellHandler : MonoBehaviour {
 		}
 	}
 
+	//this is for score bits adding to the spells
 	public void addBit(string colorOfBit)
 	{
 		if (spellActive)
@@ -849,12 +784,10 @@ public class SpellHandler : MonoBehaviour {
 	{
 		spellsUsed [spellNum] = true;
 		for (int i = 0; i < 8; i++) {
-			if(!spellsUsed[i])
-			{
+			if(!spellsUsed[i]){
 				break;
 			}
-			else if (i == 7 && gameController.gameType == "Wiz")
-			{
+			else if (i == 7 && gameController.gameType == "Wiz"){
 				//TODO: Achievement Notifications for ArcanePieceset
 				PlayerPrefs.SetInt ("Arcane Pieceset unlocked", 1);
 			}
@@ -934,7 +867,7 @@ public class SpellHandler : MonoBehaviour {
 		}
 
 	}
-
+	//this is solely for achievements to track which spells have been used in this game
 	public bool Used_Spells()
 	{
 		foreach (bool spell in spellsUsed) {
