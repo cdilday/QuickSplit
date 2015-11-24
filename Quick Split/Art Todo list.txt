@@ -1,0 +1,19 @@
+ART STUFF I NEED:
+
+An aesthetic. Given what we have currently going, we seem to have a sciencey construction theme, but I'm open to changes
+
+- The back grid currently is 1 solid color with lines. It's also 512x256, so if you want more resolution and it not to be stretched keep it the same dimensions, but it can go up to a size of 1600x800. also, make
+
+- The blue in the background on the title screen needs to be completely replaced with a background. I was thinking moving blocks that looked blurry and therefore well in the background, but that may be a bit too busy with all the flowing menus. Either way it needs to stand out from the foreground, and I can change foreground elements so don't worry too hard
+
+- Better Buttons. Buttons (and text boxes) use a 9-grid style, where a square image is broken into 9 parts. The corners aren't stretched, but the sides can be stretched either horizontally or vertically depending on what way they face. the middle has to look good stretched any which way, and is typically a solid color. The button would either need a sprite for normal state, being hovered over, and clicked, OR it would have to be relatively light in color so I could recolor it on those action
+
+- Text boxes for notifications (achievments and stuff). These also do a 9-grid thing
+
+- Icons that convey what the differences between the modes are (like a clock for quick split an similar stuff). I don't have many ideas so do whatever you think will work
+
+- Maybe a more dynamic logo
+
+- The game scene's whole layout needs to have a background. Currently it's just back lines, but really the holder should be it's own new thing, the spell section should be clearly defined but look nice if they aren't playing in a game with spells, the text up above should have a specific area, etc. Again we don't have an aesthetic so do what you think is best
+
+- How to play pictures for mobile, though this one I would need to go into detail for so put it on the backburner for now.

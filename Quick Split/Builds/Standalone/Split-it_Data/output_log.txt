@@ -2,9 +2,9 @@ Mono path[0] = 'C:/Users/Chris/Documents/GitHub/QuickSplit/Quick Split/Builds/St
 Mono path[1] = 'C:/Users/Chris/Documents/GitHub/QuickSplit/Quick Split/Builds/Standalone/Split-it_Data/Mono'
 Mono config path = 'C:/Users/Chris/Documents/GitHub/QuickSplit/Quick Split/Builds/Standalone/Split-it_Data/Mono/etc'
 PlayerConnection initialized from C:/Users/Chris/Documents/GitHub/QuickSplit/Quick Split/Builds/Standalone/Split-it_Data (debug = 0)
-PlayerConnection initialized network socket : 0.0.0.0 55083
-Multi-casting "[IP] 192.168.1.16 [Port] 55083 [Flags] 2 [Guid] 3492835841 [EditorId] 2308137533 [Version] 1048832 [Id] WindowsPlayer(C7) [Debug] 0" to [225.0.0.222:54997]...
-PlayerConnection already initialized - listening to [192.168.1.16:55083]
+PlayerConnection initialized network socket : 0.0.0.0 55503
+Multi-casting "[IP] 192.168.1.16 [Port] 55503 [Flags] 2 [Guid] 2388892701 [EditorId] 3705036129 [Version] 1048832 [Id] WindowsPlayer(C7) [Debug] 0" to [225.0.0.222:54997]...
+PlayerConnection already initialized - listening to [192.168.1.16:55503]
 Initialize engine version: 5.1.1f1 (2046fc06d4d8)
 GfxDevice: creating device client; threaded=1
 Direct3D:
@@ -26,7 +26,7 @@ Platform assembly: C:\Users\Chris\Documents\GitHub\QuickSplit\Quick Split\Builds
 Loading C:\Users\Chris\Documents\GitHub\QuickSplit\Quick Split\Builds\Standalone\Split-it_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\Chris\Documents\GitHub\QuickSplit\Quick Split\Builds\Standalone\Split-it_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\Chris\Documents\GitHub\QuickSplit\Quick Split\Builds\Standalone\Split-it_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.143 seconds
+- Completed reload, in  0.092 seconds
 desktop: 1920x1080 60Hz; virtual: 3280x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
@@ -34,34 +34,18 @@ desktop: 1920x1080 60Hz; virtual: 3280x1080 at 0,0
 Platform assembly: C:\Users\Chris\Documents\GitHub\QuickSplit\Quick Split\Builds\Standalone\Split-it_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Chris\Documents\GitHub\QuickSplit\Quick Split\Builds\Standalone\Split-it_Data\Managed\System.dll (this message is harmless)
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 3.493105 ms
-System memory in use before: 68.9 MB.
-System memory in use after: 68.7 MB.
+UnloadTime: 9.419014 ms
+System memory in use before: 69.6 MB.
+System memory in use after: 69.4 MB.
 
-Unloading 11 unused Assets to reduce memory usage. Loaded Objects now: 1290.
-Total: 0.574170 ms (FindLiveObjects: 0.058316 ms CreateObjectMapping: 0.066691 ms MarkObjects: 0.432721 ms  DeleteObjects: 0.015819 ms)
-
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 7.245533 ms
-System memory in use before: 70.0 MB.
-System memory in use after: 69.0 MB.
-
-Unloading 81 unused Assets to reduce memory usage. Loaded Objects now: 1615.
-Total: 1.395877 ms (FindLiveObjects: 0.119114 ms CreateObjectMapping: 0.111049 ms MarkObjects: 1.106465 ms  DeleteObjects: 0.058006 ms)
+Unloading 15 unused Assets to reduce memory usage. Loaded Objects now: 1964.
+Total: 0.676531 ms (FindLiveObjects: 0.064209 ms CreateObjectMapping: 0.094608 ms MarkObjects: 0.497859 ms  DeleteObjects: 0.019231 ms)
 
 Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 2.201143 ms
-System memory in use before: 69.0 MB.
-System memory in use after: 68.9 MB.
+UnloadTime: 8.448421 ms
+System memory in use before: 69.6 MB.
+System memory in use after: 69.4 MB.
 
-Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 1290.
-Total: 0.861721 ms (FindLiveObjects: 0.079720 ms CreateObjectMapping: 0.099262 ms MarkObjects: 0.660715 ms  DeleteObjects: 0.020783 ms)
-
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 5.621663 ms
-System memory in use before: 68.9 MB.
-System memory in use after: 69.0 MB.
-
-Unloading 81 unused Assets to reduce memory usage. Loaded Objects now: 1615.
-Total: 0.832563 ms (FindLiveObjects: 0.086234 ms CreateObjectMapping: 0.060177 ms MarkObjects: 0.643654 ms  DeleteObjects: 0.041566 ms)
+Unloading 498 unused Assets to reduce memory usage. Loaded Objects now: 1656.
+Total: 1.531423 ms (FindLiveObjects: 0.091506 ms CreateObjectMapping: 0.069793 ms MarkObjects: 0.693591 ms  DeleteObjects: 0.675910 ms)
 
