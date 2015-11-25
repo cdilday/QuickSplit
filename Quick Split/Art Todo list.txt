@@ -12,8 +12,12 @@ An aesthetic. Given what we have currently going, we seem to have a sciencey con
 
 - Icons that convey what the differences between the modes are (like a clock for quick split an similar stuff). I don't have many ideas so do whatever you think will work
 
-- Maybe a more dynamic logo
+- Maybe a more dynamic logo, I've gotten feedback that says it looks like it says "Split Sit"
 
 - The game scene's whole layout needs to have a background. Currently it's just back lines, but really the holder should be it's own new thing, the spell section should be clearly defined but look nice if they aren't playing in a game with spells, the text up above should have a specific area, etc. Again we don't have an aesthetic so do what you think is best
 
 - How to play pictures for mobile, though this one I would need to go into detail for so put it on the backburner for now.
+
+- If you want to make more piecesets/splitters go ahead; the only requirement is that the splitter stays the same proportions and shape, and pieces need be squares with animations and sprite sheets in the same format as the others. It would also help if you suggest how to unlock them as well
+
+- Splitters could also use an idle animation (maybe something with the notches most of them have, but I'm not picky) so if you're down for it give it a go

@@ -82,6 +82,8 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				}
 				//the frame where the pieces are properly deleted behind the animation
 				if ((animator.GetCurrentAnimatorStateInfo(0).length / 1.75f) + startTime < Time.time){
+					//cyan splitter cheevo
+					int numDeleted = 0;
 					for(int r = 0; r < 3; r++){
 						for (int c = 0; c < 3; c++){
 							//check to make sure it's a valid move
@@ -91,13 +93,18 @@ public class Piece_Spell_Effect : MonoBehaviour {
 								Destroy(gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c]);
 								gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
 								gameController.colorGrid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
+								numDeleted++;
 							}
 						}
 					}
-					if(piece != null)
+					if(piece != null){
+						numDeleted++;
 						Destroy (piece.gameObject);
+					}
 					gameController.collapse ();
 					greyStage = 4;
+
+					GameObject.FindGameObjectWithTag("Achievement Handler").BroadcastMessage("Cyan_Splitter_Checker", null, SendMessageOptions.DontRequireReceiver);
 				}
 			}
 			//the end of the animation, the spell effect is at this point a standalone object that is useless

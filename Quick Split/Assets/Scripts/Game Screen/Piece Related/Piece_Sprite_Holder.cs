@@ -16,12 +16,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	//don't ever use these this is a joke
 	public Sprite[] FaceSprites = new Sprite[8];
 
-	public Sprite DefaultSplitter;
-	public Sprite GreenSplitter;
-	public Sprite ProgrammerSplitter;
-	public Sprite CandyCaneSplitter;
-	public Sprite CautionSplitter;
-	public Sprite DarkSplitter;
+	public Sprite[] Splitters; 
 
 	public string PieceSet;
 	public string SplitterType;
@@ -36,8 +31,11 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	public RuntimeAnimatorController[] SymbolAnimations = new RuntimeAnimatorController[8];
 	public RuntimeAnimatorController[] TechnoAnimations = new RuntimeAnimatorController[8];
 
+	Achievement_Script achievementHandler;
+
 	// Use this for initialization
 	void Start () {
+		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
 		if (PieceSet == "")
 			PieceSet = PlayerPrefs.GetString ("Piece Set", "Default");
 		if (SplitterType == "")
@@ -75,49 +73,18 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 			return DefaultSprites;
 		}
 	}
-
+	//returns sprite for currently active splitter
 	public Sprite Get_Splitter()
 	{
-		SplitterType = PlayerPrefs.GetString ("Splitter Type", "Default");
-		switch (SplitterType) {
-		case "Default":
-			return DefaultSplitter;
-		case "Green":
-			return GreenSplitter;
-		case "Programmer":
-			return ProgrammerSplitter;
-		case "Candy Cane":
-			return CandyCaneSplitter;
-		case "Caution":
-			return CautionSplitter;
-		case "Dark":
-			return DarkSplitter;
-		default:
-			return DefaultSplitter;
-		}
+		int index = achievementHandler.Splitter_Lookup_Index_by_Name (PlayerPrefs.GetString ("Splitter Type", "Default"));
+		return Splitters [index];
 	}
-
-	public Sprite Get_Splitter(string newSplitter)
+	//returns sprite for the splitter with the given integer index
+	public Sprite Get_Splitter(int newSplitterIndex)
 	{
-		SplitterType = newSplitter;
-		switch (SplitterType) {
-		case "Default":
-			return DefaultSplitter;
-		case "Green":
-			return GreenSplitter;
-		case "Programmer":
-			return ProgrammerSplitter;
-		case "Candy Cane":
-			return CandyCaneSplitter;
-		case "Caution":
-			return CautionSplitter;
-		case "Dark":
-			return DarkSplitter;
-		default:
-			return DefaultSplitter;
-		}
+		return Splitters [newSplitterIndex];
 	}
-
+	//returns the array of animation controllers for the current pieceset
 	public RuntimeAnimatorController[] Get_Animations()
 	{
 		switch (PieceSet) {

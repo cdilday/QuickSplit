@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Sample_Piece_Selector : MonoBehaviour {
 
+	//TODO: Find all instances of the Arcane pieceset named King and rename them for consistancy
+
 	public string[] tileSets;
 	public Piece_Colorer[] samplePieces;
 	public int index = 0;
@@ -60,7 +62,7 @@ public class Sample_Piece_Selector : MonoBehaviour {
 				index = tileSets.Length- 1;
 			else
 				index--;
-		} while(!achievementHandler.Pieceset_Unlocked(tileSets[index]));
+		} while(!achievementHandler.is_Pieceset_Unlocked(tileSets[index]));
 		
 		PlayerPrefs.SetString ("Piece Set", tileSets[index]);
 		headerText.text = tileSets [index];
@@ -76,7 +78,7 @@ public class Sample_Piece_Selector : MonoBehaviour {
 				index = 0;
 			else
 				index++;
-		} while(!achievementHandler.Pieceset_Unlocked(tileSets[index]));
+		} while(!achievementHandler.is_Pieceset_Unlocked(tileSets[index]));
 		
 		PlayerPrefs.SetString ("Piece Set", tileSets[index]);
 		headerText.text = tileSets [index];

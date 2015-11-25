@@ -9,6 +9,7 @@ public class SpellHandler : MonoBehaviour {
 	GameController gameController;
 	Splitter_script splitter;
 	Holder_Script holder;
+	Achievement_Script achievementHandler;
 
 	#region
 	public bool redReady;
@@ -130,6 +131,7 @@ public class SpellHandler : MonoBehaviour {
 
 
 		spellActive = false;
+		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script>();
 	}
 	
 	// Update is called once per frame
@@ -240,7 +242,6 @@ public class SpellHandler : MonoBehaviour {
 		int difference = largestSize - smallestSize;
 		bool leftLarger = (leftPieces.Count >= rightPieces.Count);
 		//delete the remainder on the bigger side randomly
-		bool deleted = false;
 		if(leftLarger){
 			for (; difference > 0; difference--){
 				int randPiece = (int) Random.Range(0, leftPieces.Count);
@@ -783,13 +784,12 @@ public class SpellHandler : MonoBehaviour {
 	void Spell_Used(int spellNum)
 	{
 		spellsUsed [spellNum] = true;
-		for (int i = 0; i < 8; i++) {
-			if(!spellsUsed[i]){
-				break;
-			}
-			else if (i == 7 && gameController.gameType == "Wiz"){
-				//TODO: Achievement Notifications for ArcanePieceset
-				PlayerPrefs.SetInt ("Arcane Pieceset unlocked", 1);
+		if(!achievementHandler.is_Pieceset_Unlocked("Arcane")){
+			for (int i = 0; i < 8; i++) {
+				if(!spellsUsed[i])
+					break;
+				else if (i == 7 && gameController.gameType == "Wiz")
+					achievementHandler.Unlock_Pieceset("Arcane");
 			}
 		}
 

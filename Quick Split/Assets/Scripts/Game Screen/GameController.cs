@@ -82,12 +82,15 @@ public class GameController : MonoBehaviour {
 
 	Music_Controller mc;
 
+	Achievement_Script achievementHandler;
+
 	//becomes true when the pieces that are in danger of ending the game hits a specific number. for Achievements
 	bool hitDangerLimit = false;
-	bool cautionSplitterUnlocked;
-	bool blobPiecesetUnlocked;
 
 	void Awake () {
+
+		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
+
 		//begin with the assumption that you're not in quick mode and there's not countdown
 		isCountingDown = false;
 
@@ -257,16 +260,6 @@ public class GameController : MonoBehaviour {
 		HighScoreText.text = "";
 		tipText.text = "";
 		Score_Text_Canvas = GameObject.Find ("Score Text Canvas");
-
-		if(PlayerPrefs.GetInt("Blob Pieceset unlocked", 0) == 0)
-			blobPiecesetUnlocked = false;
-		else
-			blobPiecesetUnlocked = true;
-
-		if(PlayerPrefs.GetInt("Caution Splitter unlocked", 0) == 0)
-			cautionSplitterUnlocked = false;
-		else
-			cautionSplitterUnlocked = true;
 	}
 	
 	// Update is called once per frame
@@ -304,18 +297,13 @@ public class GameController : MonoBehaviour {
 							PlayerPrefs.SetInt (gameType, score);
 						}
 						//unlocking candy cane splitter
-						if(score > 0 && score < 200)
-						{
-							//TODO: Candy Cane Splitter unlock alert
-							PlayerPrefs.SetInt("Candy Cane Splitter unlocked", 1);
-						}
-						else if(gameType == "Wiz" || gameType == "Holy")
+						if(!achievementHandler.is_Splitter_Unlocked("Candy Cane") && score > 0 && score < 200)
+							achievementHandler.Unlock_Splitter("Candy Cane");
+
+						if(!achievementHandler.is_Splitter_Unlocked("Dark") && (gameType == "Wiz" || gameType == "Holy"))
 						{
 							if(!spellHandler.Used_Spells() && score > 1000)
-							{
-								//TODO: Dark Splitter unlock alert
-								PlayerPrefs.SetInt ("Dark Splitter unlocked", 1);
-							}
+								achievementHandler.Unlock_Splitter("Dark");
 						}
 					}
 				}
@@ -323,7 +311,7 @@ public class GameController : MonoBehaviour {
 			checkGameOver = false;
 		}
 
-		if(!cautionSplitterUnlocked || !blobPiecesetUnlocked){
+		if(!achievementHandler.is_Splitter_Unlocked("Caution") || !achievementHandler.is_Pieceset_Unlocked("Blob")){
 			int dangerPieces = 0;
 			for (int r = 0; r < 8; r++) {
 				if(grid[r,6] != null)
@@ -333,17 +321,13 @@ public class GameController : MonoBehaviour {
 			}
 			if (dangerPieces >= 5)
 				hitDangerLimit = true;
-			if(gameType != "Holy" && gameType != "Wiz" && hitDangerLimit && !cautionSplitterUnlocked && dangerPieces == 0)
+			if(gameType != "Holy" && gameType != "Wiz" && hitDangerLimit && !achievementHandler.is_Splitter_Unlocked("Caution") && dangerPieces == 0)
 			{
-				//TODO: Caution splitter Alert
-				PlayerPrefs.SetInt ("Caution Splitter unlocked", 1);
-				cautionSplitterUnlocked = true;
+				achievementHandler.Unlock_Splitter("Caution");
 			}
-			if(gameType == "Holy" && !blobPiecesetUnlocked && dangerPieces == 16)
+			if(gameType == "Holy" && !achievementHandler.is_Pieceset_Unlocked("Blob") && dangerPieces == 16)
 			{
-				//TODO: Blob Pieceset Alert
-				PlayerPrefs.SetInt ("Blob Pieceset unlocked", 1);
-				blobPiecesetUnlocked = true;
+				achievementHandler.Unlock_Pieceset("Blob");
 			}
 		}
 
@@ -670,7 +654,7 @@ public class GameController : MonoBehaviour {
 			if(grid [x, y-1 ].GetComponent<piece_script>().locked){
 				adj++;
 				//add to group cluster
-				//TODO: Possible bug here; using the white power on a full board in Wiz cause a game-breaking index out of range error. Cannot easily replicate
+				//FIXME: using the white Spell on a full board in Wiz cause a game-breaking index out of range error. Cannot easily replicate
 				cluster[adj-1] = grid[x,y-1];
 				adj = scanner (x, y-1, color, adj);
 			}
@@ -707,15 +691,14 @@ public class GameController : MonoBehaviour {
 					break;
 				}
 			}
-			else if (gameType == "Quick" && availableCount == 5)
+			else if (!achievementHandler.is_Pieceset_Unlocked("Techno") && gameType == "Quick" && availableCount == 5)
 			{
-				PlayerPrefs.SetInt("Techno Pieceset unlocked", 1);
+				achievementHandler.Unlock_Pieceset("Techno");
 			}
 		}
 	
-		if (gameType == "Wit" && movesMade == 200) {
-			//TODO: Retro Pieceset Alert
-			PlayerPrefs.SetInt("Retro Pieceset unlocked", 1);
+		if (!achievementHandler.is_Pieceset_Unlocked("Retro") && gameType == "Wit" && movesMade == 200) {
+			achievementHandler.Unlock_Pieceset("Retro");
 		}
 
 	}
