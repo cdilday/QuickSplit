@@ -216,12 +216,6 @@ public class Piece_Spell_Effect : MonoBehaviour {
 					animator.SetBool ("inActive", true);
 					spriteRenderer.sprite = null;
 					check = false;
-					//final piece tells the gameController to run its board checks
-					if(lastPiece){
-						gameController.collapse();
-						StartCoroutine(gameController.boardWaiter());
-						gameController.splitter.setState ("isActive", true);
-					}
 				}
 			}
 		}

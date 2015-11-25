@@ -265,20 +265,11 @@ public class SpellHandler : MonoBehaviour {
 		for (int i = 0; i < leftPieces.Count; i++) {
 			//recall Activate orange on the left side to update with the second picked color and get the animations going
 			leftPieces[i].BroadcastMessage("Activate_Orange", pickedColor2, SendMessageOptions.DontRequireReceiver);
-			if((i == leftPieces.Count - 1) && (rightPieces.Count == 0)){
-				// if it's the final piece, mark it so it knows to tell the GC to check the board
-				leftPieces[i].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
-			}
-		}
-		for (int i = 0; i < rightPieces.Count; i++) {
-			if(i == rightPieces.Count - 1){
-				// if it's the final piece, mark it so it knows to tell the GC to check the board
-				rightPieces[i].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
-			}
 		}
 		pickedColor1 = null;
 		pickedColor2 = null;
 		spellColor = null;
+		StartCoroutine (Orange_Waiter ());
 	}
 	//Yellow attack: launches a single lightning bolt to each side that removes any blocks in the splitter's row
 	//this method loads the splitter with the power to activate it on the next fire
@@ -401,6 +392,14 @@ public class SpellHandler : MonoBehaviour {
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to eliminate from the board");
 		splitter.setState ("isActive", false);
+	}
+
+	IEnumerator Orange_Waiter()
+	{
+		yield return new WaitForSeconds (1.5f);
+		gameController.collapse();
+		StartCoroutine(gameController.boardWaiter());
+		gameController.splitter.setState ("isActive", true);
 	}
 
 	void PurpleHelper()
