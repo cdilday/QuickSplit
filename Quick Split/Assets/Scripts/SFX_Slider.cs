@@ -7,14 +7,14 @@ using UnityEngine.EventSystems;
 public class SFX_Slider : MonoBehaviour, IPointerUpHandler {
 
 	GameObject MC;
-	AudioSource MCsource;
+	//AudioSource MCsource;
 	Slider mySlider;
 	AudioSource sampleSource;
 	// Use this for initialization
 	void Awake () {
 		MC = GameObject.Find ("Music Controller");
 		mySlider = gameObject.GetComponent<Slider> ();
-		MCsource = MC.GetComponent<AudioSource> ();
+		//MCsource = MC.GetComponent<AudioSource> ();
 		mySlider.value = PlayerPrefs.GetFloat ("SFX Volume", 1);
 		mySlider.onValueChanged.AddListener (delegate{onValueChanged ();});
 

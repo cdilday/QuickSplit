@@ -9,17 +9,23 @@ public class Sample_Splitter_Selector : MonoBehaviour {
 	public int index = 0;
 	public Text headerText;
 
+	Image image;
+
 	Achievement_Script achievementHandler;
+	Piece_Sprite_Holder pieceSpriteHolder;
 
 	// Use this for initialization
 	void Start () {
 		gameObject.GetComponent<Image> ().sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter ();
-		htpSplitter.sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter ();
+		pieceSpriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
+		htpSplitter.sprite = pieceSpriteHolder.Get_Splitter ();
 
 		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
 
 		headerText.text = PlayerPrefs.GetString("Splitter Type", "Default");
 		index = achievementHandler.Splitter_Lookup_Index_by_Name (headerText.text);
+
+		image = gameObject.GetComponent<Image> ();
 	}
 
 	public void Left_Button()
@@ -33,9 +39,8 @@ public class Sample_Splitter_Selector : MonoBehaviour {
 
 		PlayerPrefs.SetString ("Splitter Type", achievementHandler.Splitters[index]);
 		headerText.text = achievementHandler.Splitters [index];
-		//TODO: Too many look ups, make a global variable and load it once rather than every time
-		gameObject.GetComponent<Image> ().sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter (index);
-		htpSplitter.sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter (index);
+		image.sprite = pieceSpriteHolder.Get_Splitter (index);
+		htpSplitter.sprite = pieceSpriteHolder.Get_Splitter (index);
 	}
 
 	public void Right_Button()
@@ -49,8 +54,8 @@ public class Sample_Splitter_Selector : MonoBehaviour {
 		
 		PlayerPrefs.SetString ("Splitter Type", achievementHandler.Splitters[index]);
 		headerText.text = achievementHandler.Splitters [index];
-		gameObject.GetComponent<Image> ().sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter (index);
-		htpSplitter.sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter (index);
+		image.sprite = pieceSpriteHolder.Get_Splitter (index);
+		htpSplitter.sprite = pieceSpriteHolder.Get_Splitter (index);
 	}
 
 }

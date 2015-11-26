@@ -44,8 +44,7 @@ public class Spell_Tab : MonoBehaviour {
 
 		spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
 		sprites = spriteHolder.Get_Sprites ();
-		switch (spellColor)
-		{
+		switch (spellColor){
 		case "Red":
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
 			break;
@@ -87,21 +86,17 @@ public class Spell_Tab : MonoBehaviour {
 				Vector3 wp = Camera.main.ScreenToWorldPoint(poke.position);
 				Vector2 touchPos = new Vector2(wp.x, wp.y);
 				//TODO: Update this to work better when you get a new spell tab
-				if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(touchPos))
-				{
+				if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(touchPos)){
 					isNotTouching = false;
 					//now check stage of the touch. If it's just happened, display the explination popup
-					if( poke.phase == TouchPhase.Began)
-					{
+					if( poke.phase == TouchPhase.Began){
 						//popup the explination
 						splitter.setState ("canShoot", false);
 						DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
 					}
-					else if (poke.phase == TouchPhase.Ended)
-					{
+					else if (poke.phase == TouchPhase.Ended){
 						//activate the spell
-						if(isReady)
-						{
+						if(isReady){
 							switch (spellColor) {
 							case "Red":
 								spellHandler.Redspell();
@@ -136,8 +131,7 @@ public class Spell_Tab : MonoBehaviour {
 				}
 		
 			}
-			if(wasTouching && isNotTouching)
-			{
+			if(wasTouching && isNotTouching){
 				//hide popup
 				splitter.setState ("canShoot", true);
 				DescCanvas.GetComponent<Spell_Descriptions> ().hide ();
@@ -152,16 +146,13 @@ public class Spell_Tab : MonoBehaviour {
 
 		if (isTransitioning) {
 			//going to active position
-			if(isReady)
-			{
+			if(isReady){
 				// if transition should have ended
-				if(Time.time > startTime + transitionLength)
-				{
+				if(Time.time > startTime + transitionLength){
 					transform.position =  activePos;
 					isTransitioning = false;
 				}
-				else
-				{
+				else{
 					float t_point = (Time.time - startTime) / transitionLength;
 					transform.position = new Vector3(Mathf.SmoothStep(inActivePos.x, activePos.x, t_point),
 					                                 Mathf.SmoothStep(inActivePos.y, activePos.y, t_point), -3.5f);
@@ -170,13 +161,11 @@ public class Spell_Tab : MonoBehaviour {
 			// going to inactive position
 			else{
 				// if transition should have ended
-				if(Time.time > startTime + transitionLength)
-				{
+				if(Time.time > startTime + transitionLength){
 					transform.position = inActivePos;
 					isTransitioning = false;
 				}
-				else
-				{
+				else{
 					float t_point = (Time.time - startTime) / transitionLength;
 					transform.position = new Vector3(Mathf.SmoothStep(activePos.x, inActivePos.x, t_point),
 					                                 Mathf.SmoothStep(activePos.y, inActivePos.y, t_point), -3.5f);
@@ -247,8 +236,7 @@ public class Spell_Tab : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		if(isReady)
-		{
+		if(isReady){
 			switch (spellColor) {
 			case "Red":
 				spellHandler.Redspell();

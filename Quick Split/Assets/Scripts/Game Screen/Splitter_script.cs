@@ -130,7 +130,7 @@ public class Splitter_script : MonoBehaviour {
 					}
 				}		
 
-				Vector2 pokeLocation = Camera.main.ScreenToWorldPoint (poke.position);
+				//Vector2 pokeLocation = Camera.main.ScreenToWorldPoint (poke.position);
 				if(!hasFireTouch && poke.phase == TouchPhase.Began)
 				{
 					//check to make sure they touched an area of the screen devoted to actions
@@ -311,12 +311,12 @@ public class Splitter_script : MonoBehaviour {
 	public void refill()
 	{
 		holder.getNextPiece ();
-		leftSlot.GetComponent<piece_script> ().locked = false;
-		rightSlot.GetComponent<piece_script> ().locked = false;
-		leftSlot.GetComponent<piece_script> ().inHolder = false;
-		rightSlot.GetComponent<piece_script> ().inHolder = false;
-		leftSlot.GetComponent<piece_script> ().inSplitter = true;
-		rightSlot.GetComponent<piece_script> ().inSplitter = true;
+		piece_script[] slots = new piece_script[2] {leftSlot.GetComponent<piece_script> (),rightSlot.GetComponent<piece_script> ()};
+		for (int i = 0; i < 2; i++) {
+			slots[i].locked = false;
+			slots[i].inHolder = false;
+			slots[i].inSplitter = true;
+		}
 	}
 
 	public State getState()

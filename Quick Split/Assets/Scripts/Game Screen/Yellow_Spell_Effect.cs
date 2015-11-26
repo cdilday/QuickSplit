@@ -27,8 +27,7 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
-		if(gameController.gameType != "Wiz" && gameController.gameType != "Holy")
-		{
+		if(gameController.gameType != "Wiz" && gameController.gameType != "Holy"){
 			Destroy(gameObject);
 			return;
 		}
@@ -44,8 +43,7 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		if (activated) {
-			if(!isChaining && initialCatalystIncrement + startTime < Time.time)
-			{
+			if(!isChaining && initialCatalystIncrement + startTime < Time.time){
 				isChaining = true;
 				ChainStage = 2;
 				yellowSpellEffects [1].GetComponent<Animator> ().SetBool ("inActive", false);
@@ -55,10 +53,8 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 				increment = ((yellowSpellEffects [1].GetComponent<Animator> ().GetCurrentAnimatorStateInfo(0).length * (1/yellowSpellEffects [1].GetComponent<Animator> ().speed)) / 6f);
 				startTime = Time.time;
 			}
-			else if(isChaining)
-			{
-				if( !finishedGrowing && ChainStage < 8 && increment + startTime <Time.time)
-				{
+			else if(isChaining){
+				if( !finishedGrowing && ChainStage < 8 && increment + startTime <Time.time){
 					yellowSpellEffects [ChainStage].GetComponent<Animator> ().SetBool ("inActive", false);
 					yellowSpellEffects [ChainStage].GetComponent<Animator> ().SetBool ("isGrowing", true);
 					yellowSpellEffects [8 + ChainStage].GetComponent<Animator> ().SetBool ("inActive", false);
@@ -67,17 +63,14 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 					startTime = Time.time;
 					dynamicStartTime = Time.time;
 				}
-				else if( !finishedGrowing && ChainStage == 8)
-				{
+				else if( !finishedGrowing && ChainStage == 8){
 					finishedGrowing = true;
 					int deletedNum = 0;
 					//delete pieces in row
 					row = (int) gameController.splitter.transform.position.y;
 					//loop that deletes everything in the row
-					for (int c = 0; c < 16; c++) {
-						
-						if (gameController.colorGrid[row,c] != null)
-						{
+					for (int c = 0; c < 16; c++) {	
+						if (gameController.colorGrid[row,c] != null){
 							gameController.colorGrid[row,c] = null;
 							Destroy(gameController.grid[row,c]);
 							gameController.grid[row,c] = null;
@@ -97,28 +90,22 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 					startTime = Time.time;
 					ChainStage--;
 				}
-				else if (finishedGrowing)
-				{
-					if(ChainStage > 0 && increment + dynamicStartTime <Time.time)
-					{
+				else if (finishedGrowing){
+					if(ChainStage > 0 && increment + dynamicStartTime <Time.time){
 						yellowSpellEffects [8 - ChainStage].GetComponent<Animator> ().SetBool ("isGrowing", false);
 						yellowSpellEffects [(8 - ChainStage) + 8].GetComponent<Animator> ().SetBool ("isGrowing", false);
 						ChainStage--;
 						dynamicStartTime = Time.time;
 					}
-					for(int i = 0; i < 16; i++)
-					{
+					for(int i = 0; i < 16; i++){
 						float animPlayLength = yellowSpellEffects[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * (1/yellowSpellEffects[i].GetComponent<Animator>().speed);
-						if(animPlayLength + startTime + ((increment*1.1f) * (i%8)) < Time.time)
-						{
+						if(animPlayLength + startTime + ((increment*1.1f) * (i%8)) < Time.time){
 							yellowSpellEffects[i].GetComponent<Animator>().SetBool("inActive", true);
-							if(i == 0 || i == 8)
-							{
+							if(i == 0 || i == 8){
 								yellowSpellEffects[i].GetComponent<Animator>().SetInteger("RightStage", 0);
 								yellowSpellEffects[i].GetComponent<Animator>().SetInteger("LeftStage", 0);
 							}
-							if( i == 15)
-							{
+							if( i == 15){
 								reset();
 							}
 						}
