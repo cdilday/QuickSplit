@@ -22,6 +22,8 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 	// 8 is the right origin, 9-15 are the other effects going left to right
 	public GameObject[] yellowSpellEffects = new GameObject[16];
 
+	Achievement_Script achievementHandler;
+
 	// Use this for initialization
 	void Start () {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
@@ -35,7 +37,7 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 			yse.GetComponent<SpriteRenderer>().sprite = null;
 		}
 
-
+		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
 
 	}
 	
@@ -68,6 +70,7 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 				else if( !finishedGrowing && ChainStage == 8)
 				{
 					finishedGrowing = true;
+					int deletedNum = 0;
 					//delete pieces in row
 					row = (int) gameController.splitter.transform.position.y;
 					//loop that deletes everything in the row
@@ -78,8 +81,13 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 							gameController.colorGrid[row,c] = null;
 							Destroy(gameController.grid[row,c]);
 							gameController.grid[row,c] = null;
+							deletedNum++;
 						}
 					}
+
+					if(!achievementHandler.is_Splitter_Unlocked("Yellow") && deletedNum == 14)
+						achievementHandler.Unlock_Splitter("Yellow");
+
 					//make it so the splitter can't continually fire yellow spells
 					gameController.splitter.setState ("yellowReady", false);
 					//check the board to update group values

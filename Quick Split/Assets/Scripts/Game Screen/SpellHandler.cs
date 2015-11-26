@@ -178,7 +178,11 @@ public class SpellHandler : MonoBehaviour {
 	{
 		Spell_Used (0);
 
-		//THuis spell uses the Red Spell Effect Gameobjects to do all the dirty work
+		//Red Splitter Achievement
+		if(!achievementHandler.is_Splitter_Unlocked("Red") && gameController.Get_Danger_Pieces() >= 8)
+			achievementHandler.Unlock_Splitter("Red");
+
+		//This spell uses the Red Spell Effect Gameobjects to do all the dirty work
 		foreach(GameObject rse in RedSpellEffects){
 			rse.SetActive(true);
 			rse.BroadcastMessage("Activate", null, SendMessageOptions.DontRequireReceiver);
@@ -207,12 +211,17 @@ public class SpellHandler : MonoBehaviour {
 		GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
 		picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to switch with on the left side");
 	}
-	//called after bth selections are made
+	//called after both selections are made
 	void OrangeHelper ()
 	{
-
 		List<GameObject> leftPieces = new List<GameObject>();
 		List<GameObject> rightPieces = new List<GameObject>();
+
+		//Orange Splitter unlock code
+		if (!achievementHandler.is_Splitter_Unlocked ("Orange")) {
+			if((leftPieces.Count == 0 && rightPieces.Count > 0) || (leftPieces.Count >0 && rightPieces.Count > 0))
+				achievementHandler.Unlock_Splitter("Orange");
+		}
 
 		//go through left side, store all pieces of color 1 in an array
 		for (int r = 0; r < 8; r++) {
@@ -562,6 +571,7 @@ public class SpellHandler : MonoBehaviour {
 		IEnumerable<GameObject> sorter = leftPieces;
 		sorter = sorter.OrderBy(colorName => colorName.GetComponent<piece_script>().pieceColor);
 		leftPieces = sorter.ToList ();
+		bool empty = leftPieces.Count < 1;
 		//make sure not to game over
 		int rowHeight;
 		if (leftPieces.Count % 8 == 0)
@@ -595,6 +605,7 @@ public class SpellHandler : MonoBehaviour {
 		sorter = rightPieces;
 		sorter = sorter.OrderBy(colorName => colorName.GetComponent<piece_script>().pieceColor);
 		rightPieces = sorter.ToList ();
+		empty = empty && rightPieces.Count < 1;
 		//make sure not to game over
 		if (rightPieces.Count % 8 == 0)
 			rowHeight = rightPieces.Count / 8;
@@ -617,6 +628,15 @@ public class SpellHandler : MonoBehaviour {
 		StartCoroutine (gameController.boardWaiter ());
 		splitter.setState ("isActive", true);
 
+		if (!achievementHandler.is_Splitter_Unlocked ("White") && !empty) {
+			yield return new WaitForSeconds(1.25f);
+			for(int r = 0; r < 8; r++)
+			{
+				if(gameController.grid[r,0] != null || gameController.grid[r,15] != null)
+					return true;
+			}
+			achievementHandler.Unlock_Splitter("White");
+		}
 	}
 
 	//this is what the color selectors spawned from certain colors calls when one is selected

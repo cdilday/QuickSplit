@@ -84,9 +84,6 @@ public class GameController : MonoBehaviour {
 
 	Achievement_Script achievementHandler;
 
-	//becomes true when the pieces that are in danger of ending the game hits a specific number. for Achievements
-	bool hitDangerLimit = false;
-
 	void Awake () {
 
 		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
@@ -312,20 +309,12 @@ public class GameController : MonoBehaviour {
 		}
 
 		if(!achievementHandler.is_Splitter_Unlocked("Caution") || !achievementHandler.is_Pieceset_Unlocked("Blob")){
-			int dangerPieces = 0;
-			for (int r = 0; r < 8; r++) {
-				if(grid[r,6] != null)
-					dangerPieces++;
-				if(grid[r,9] != null)
-					dangerPieces++;
-			}
-			if (dangerPieces >= 5)
-				hitDangerLimit = true;
-			if(gameType != "Holy" && gameType != "Wiz" && hitDangerLimit && !achievementHandler.is_Splitter_Unlocked("Caution") && dangerPieces == 0)
+			int dangerPieces = Get_Danger_Pieces();
+			if(!achievementHandler.is_Splitter_Unlocked("Caution") && gameType != "Holy" && gameType != "Wiz" && dangerPieces >= 5 && dangerPieces == 0)
 			{
 				achievementHandler.Unlock_Splitter("Caution");
 			}
-			if(gameType == "Holy" && !achievementHandler.is_Pieceset_Unlocked("Blob") && dangerPieces == 16)
+			if(!achievementHandler.is_Pieceset_Unlocked("Blob") && gameType == "Holy" && dangerPieces == 16)
 			{
 				achievementHandler.Unlock_Pieceset("Blob");
 			}
@@ -697,7 +686,7 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	
-		if (!achievementHandler.is_Pieceset_Unlocked("Retro") && gameType == "Wit" && movesMade == 200) {
+		if (!achievementHandler.is_Pieceset_Unlocked("Retro") && gameType == "Wit" && movesMade == 255) {
 			achievementHandler.Unlock_Pieceset("Retro");
 		}
 
@@ -987,6 +976,19 @@ public class GameController : MonoBehaviour {
 	void OnApplicationQuit()
 	{
 		isQuitting = true;
+	}
+
+	//returns the number of pieces in danger (the columns next to the splitter)
+	public int Get_Danger_Pieces()
+	{
+		int dangerPieces = 0;
+		for (int r = 0; r < 8; r++) {
+			if(grid[r,6] != null)
+				dangerPieces++;
+			if(grid[r,9] != null)
+				dangerPieces++;
+		}
+		return dangerPieces;
 	}
 
 }
