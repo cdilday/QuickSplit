@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class Sample_Piece_Selector : MonoBehaviour {
 
-	//TODO: Find all instances of the Arcane pieceset named King and rename them for consistancy
-
 	public string[] tileSets;
 	public Piece_Colorer[] samplePieces;
 	public int index = 0;
@@ -22,7 +20,7 @@ public class Sample_Piece_Selector : MonoBehaviour {
 		case "Default":
 			index = 0;
 			break;
-		case "King":
+		case "Arcane":
 			index = 1;
 			break;
 		case "Retro":

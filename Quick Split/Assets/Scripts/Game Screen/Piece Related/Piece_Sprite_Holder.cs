@@ -76,6 +76,8 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	//returns sprite for currently active splitter
 	public Sprite Get_Splitter()
 	{
+		if(achievementHandler == null)
+			achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
 		int index = achievementHandler.Splitter_Lookup_Index_by_Name (PlayerPrefs.GetString ("Splitter Type", "Default"));
 		return Splitters [index];
 	}

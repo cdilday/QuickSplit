@@ -58,7 +58,7 @@ public class Guide_Script : MonoBehaviour {
 				case "Purple":
 					spriteRenderer.color = new Color(0.6f, 0, 0.6f);
 					break;
-				case "Grey":
+				case "Cyan":
 					spriteRenderer.color = Color.cyan;
 					break;
 				case "White":
@@ -114,7 +114,7 @@ public class Guide_Script : MonoBehaviour {
 				case "Purple":
 					spriteRenderer.color = new Color(0.6f, 0, 0.6f);
 					break;
-				case "Grey":
+				case "Cyan":
 					spriteRenderer.color = Color.cyan;
 					break;
 				case "White":

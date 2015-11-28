@@ -184,7 +184,7 @@ public class Achievement_Script : MonoBehaviour {
 		piecesetsUnlocked [Pieceset_Lookup_Index_by_Name (name)] = true;
 		PlayerPrefs.SetInt (name + " Pieceset unlocked", 1);
 		//TODO: This is the method that would contain all the unlock text and achievement notification spawning for pieces
-		//TODO: Progammer Pieceset Unlock alert "There's some grey areas" (Unlock all other piecesets)
+		//TODO: Progammer Pieceset Unlock alert "There's some cyan areas" (Unlock all other piecesets)
 		//TODO: Blob Pieceset Alert "What a mess..." (have 16 danger pieces in Holy mode)
 		//TODO: Retro Pieceset Alert "8-bits of Motion" (Make 255 splits in Wit mode)
 		//TODO: Techno Pieceset Alert "" (make enough splits in Quick to unlock another piece color)

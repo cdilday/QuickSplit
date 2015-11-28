@@ -105,7 +105,7 @@ public class ScoreBit : MonoBehaviour {
 			thisColor = new Color(0.6f, 0, 0.6f);
 			myRenderer.sprite = sprites[5];
 			break;
-		case "Grey":
+		case "Cyan":
 			thisColor = Color.cyan;
 			myRenderer.sprite = sprites[6];
 			break;

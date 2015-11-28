@@ -103,7 +103,7 @@ public class piece_script : MonoBehaviour {
 		case "Purple":
 			colornum = 5;
 			break;
-		case "Grey":
+		case "Cyan":
 			colornum = 6;
 			break;
 		case "White":
@@ -223,7 +223,7 @@ public class piece_script : MonoBehaviour {
 				clacker.BroadcastMessage("PlaySound");
 			}
 			if (isBomb) {
-				gameObject.BroadcastMessage ("Activate_Grey", null, SendMessageOptions.DontRequireReceiver);
+				gameObject.BroadcastMessage ("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
 			}
 		}
 	}
@@ -281,7 +281,7 @@ public class piece_script : MonoBehaviour {
 		case "Purple":
 			colornum = 5;
 			break;
-		case "Grey":
+		case "Cyan":
 			colornum = 6;
 			break;
 		case "White":

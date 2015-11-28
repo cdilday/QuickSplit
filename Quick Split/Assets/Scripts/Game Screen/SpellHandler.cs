@@ -18,7 +18,7 @@ public class SpellHandler : MonoBehaviour {
 	public bool greenReady;
 	public bool blueReady;
 	public bool purpleReady;
-	public bool greyReady;
+	public bool cyanReady;
 	public bool whiteReady;
 	#endregion
 
@@ -35,8 +35,8 @@ public class SpellHandler : MonoBehaviour {
 	public int blueGoal = 100;
 	public int purpleProgress;
 	public int purpleGoal = 100;
-	public int greyProgress;
-	public int greyGoal = 100;
+	public int cyanProgress;
+	public int cyanGoal = 100;
 	public int whiteProgress;
 	public int whiteGoal = 100;
 	#endregion
@@ -48,7 +48,7 @@ public class SpellHandler : MonoBehaviour {
 	public Text greenText;
 	public Text blueText;
 	public Text purpleText;
-	public Text greyText;
+	public Text cyanText;
 	public Text whiteText;
 	#endregion
 
@@ -61,6 +61,9 @@ public class SpellHandler : MonoBehaviour {
 	//this is to tell scorebits that are created as a result of spells not to charge them
 	public bool spellActive;
 	int splitsNeeded = 0;
+
+	//this is to make it so you can't activate multiple spells at once
+	public bool spellWorking = false;
 
 	bool[] spellsUsed = new bool[8] {false, false, false, false, false, false, false, false};
 
@@ -111,7 +114,7 @@ public class SpellHandler : MonoBehaviour {
 		greenReady = false;
 		blueReady = false;
 		purpleReady = false;
-		greyReady = false;
+		cyanReady = false;
 		whiteReady = false;*/
 
 		redText.text = "";
@@ -120,7 +123,7 @@ public class SpellHandler : MonoBehaviour {
 		greenText.text = "";
 		blueText.text = "";
 		purpleText.text = "";
-		greyText.text = "";
+		cyanText.text = "";
 		whiteText.text = "";
 
 		selectedPiece = null;
@@ -162,9 +165,9 @@ public class SpellHandler : MonoBehaviour {
 			if (Input.GetKeyDown ("6") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && purpleReady) {
 				Purplespell ();
 			}
-			//grey
-			if (Input.GetKeyDown ("7") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && greyReady) {
-				Greyspell ();
+			//cyan
+			if (Input.GetKeyDown ("7") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && cyanReady) {
+				Cyanspell ();
 			}
 			//white
 			if (Input.GetKeyDown ("8") && splitter.getState ("canShoot") && !splitter.getState ("isMoving") && whiteReady) {
@@ -199,6 +202,7 @@ public class SpellHandler : MonoBehaviour {
 		if (spellLimit == 0) {
 			gameController.checkBoard ();
 			splitter.setState ("isActive", true);
+			spellWorking = false;
 		}
 	}
 
@@ -335,6 +339,7 @@ public class SpellHandler : MonoBehaviour {
 			selectedPiece = null;
 			spellLimit = 0;
 			gameController.gameOverText.text = "";
+			spellWorking = false;
 		}
 	}
 
@@ -389,6 +394,7 @@ public class SpellHandler : MonoBehaviour {
 			selectedPiece = null;
 			spellLimit = 0;
 			gameController.gameOverText.text =  "";
+			spellWorking = false;
 		}
 	}
 
@@ -409,6 +415,7 @@ public class SpellHandler : MonoBehaviour {
 		gameController.collapse();
 		StartCoroutine(gameController.boardWaiter());
 		gameController.splitter.setState ("isActive", true);
+		spellWorking = false;
 	}
 
 	void PurpleHelper()
@@ -528,15 +535,15 @@ public class SpellHandler : MonoBehaviour {
 		if(empty)
 			splitter.setState("isActive", true);
 	}
-	//Grey spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
-	public void Greyspell()
+	//cyan spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
+	public void Cyanspell()
 	{
 		//again most of the hard work is done by the piece spell effect script, this just tells it when to activate
 		Spell_Used (6);
 		splitter.rightSlot.GetComponent<piece_script> ().isBomb = true;
-		splitter.rightSlot.BroadcastMessage ("Activate_Grey", null, SendMessageOptions.DontRequireReceiver);
+		splitter.rightSlot.BroadcastMessage ("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
 		splitter.leftSlot.GetComponent<piece_script> ().isBomb = true;
-		splitter.leftSlot.BroadcastMessage ("Activate_Grey", null, SendMessageOptions.DontRequireReceiver);
+		splitter.leftSlot.BroadcastMessage ("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
 	}
 	//White spell: Sorts the board from rainbow down
 	public void Whitespell()
@@ -627,6 +634,7 @@ public class SpellHandler : MonoBehaviour {
 		gameController.recalculateBoard ();
 		StartCoroutine (gameController.boardWaiter ());
 		splitter.setState ("isActive", true);
+		spellWorking = false;
 
 		if (!achievementHandler.is_Splitter_Unlocked ("White") && !empty) {
 			yield return new WaitForSeconds(1.25f);
@@ -772,16 +780,16 @@ public class SpellHandler : MonoBehaviour {
 				purpleText.text = ((int) (((float)purpleProgress/(float)purpleGoal) * 100f)) + "%";
 			}
 			break;
-		case "Grey":
-			greyProgress++;
-			if(greyProgress >= greyGoal || greyReady){
-				greyProgress = greyGoal;
-				greyReady = true;
-				greyText.text = "100%";
-				greyText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+		case "Cyan":
+			cyanProgress++;
+			if(cyanProgress >= cyanGoal || cyanReady){
+				cyanProgress = cyanGoal;
+				cyanReady = true;
+				cyanText.text = "100%";
+				cyanText.gameObject.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
 			else{
-				greyText.text = ((int) (((float)greyProgress/(float)greyGoal) * 100f)) + "%";
+				cyanText.text = ((int) (((float)cyanProgress/(float)cyanGoal) * 100f)) + "%";
 			}
 			break;
 		case "White":
@@ -814,6 +822,8 @@ public class SpellHandler : MonoBehaviour {
 
 		spellActive = true;
 		splitsNeeded = 1;
+
+		spellWorking = true;
 
 		switch (spellNum) {
 		case 0:
@@ -859,11 +869,11 @@ public class SpellHandler : MonoBehaviour {
 			purpleText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 			break;
 		case 6:
-			greyReady = false;
-			greyProgress = 0;
-			greyGoal = (int) (greyGoal * chargeMultiplier);
-			greyText.text = "0%";
-			greyText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
+			cyanReady = false;
+			cyanProgress = 0;
+			cyanGoal = (int) (cyanGoal * chargeMultiplier);
+			cyanText.text = "0%";
+			cyanText.gameObject.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 			splitsNeeded = 2;
 			break;
 		case 7:

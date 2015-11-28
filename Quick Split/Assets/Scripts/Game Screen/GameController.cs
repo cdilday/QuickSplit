@@ -204,7 +204,7 @@ public class GameController : MonoBehaviour {
 			spellHandler.greenReady = true;
 			spellHandler.blueReady = true;
 			spellHandler.purpleReady = true;
-			spellHandler.greyReady = false;
+			spellHandler.cyanReady = false;
 			spellHandler.whiteReady = false;
 			mc.Play_Music(gameType);
 		}
@@ -230,7 +230,7 @@ public class GameController : MonoBehaviour {
 			spellHandler.greenReady = true;
 			spellHandler.blueReady = true;
 			spellHandler.purpleReady = true;
-			spellHandler.greyReady = true;
+			spellHandler.cyanReady = true;
 			spellHandler.whiteReady = true;
 			mc.Play_Music(gameType);
 		}
@@ -673,7 +673,7 @@ public class GameController : MonoBehaviour {
 					spellHandler.orangeReady = true;
 					break;
 				case 7:
-					spellHandler.greyReady = true;
+					spellHandler.cyanReady = true;
 					break;
 				case 8:
 					spellHandler.whiteReady = true;

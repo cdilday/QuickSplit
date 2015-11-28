@@ -38,6 +38,8 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 
 		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
 
+		spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
+
 	}
 	
 	// Update is called once per frame
@@ -146,5 +148,6 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 		isChaining = false;
 		finishedGrowing = false;
 		ChainStage = 0;
+		spellHandler.spellWorking = false;
 	}
 }

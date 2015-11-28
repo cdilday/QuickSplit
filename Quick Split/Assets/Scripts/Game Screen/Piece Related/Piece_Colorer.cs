@@ -55,7 +55,7 @@ public class Piece_Colorer : MonoBehaviour {
 			else
 				gameObject.GetComponent<Image>().sprite = sprites[5];
 			break;
-		case "Grey":
+		case "Cyan":
 			if(gameObject.GetComponent<SpriteRenderer>())
 				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
 			else

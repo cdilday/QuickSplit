@@ -50,7 +50,7 @@ public class Spell_Descriptions : MonoBehaviour {
 		case "Purple":
 			description.text = "The Purple spell deletes all pieces of a selected color on the board";
 			break;
-		case "Grey":
+		case "Cyan":
 			description.text = "The Cyan spell turns the splitter's pieces into bombs that will blow up on impact";
 			break;
 		case "White":

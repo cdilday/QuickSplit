@@ -63,7 +63,7 @@ public class Spell_Tab : MonoBehaviour {
 		case "Purple":
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
 			break;
-		case "Grey":
+		case "Cyan":
 			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
 			break;
 		case "White":
@@ -116,8 +116,8 @@ public class Spell_Tab : MonoBehaviour {
 							case "Purple":
 								spellHandler.Purplespell();
 								break;
-							case "Grey":
-								spellHandler.Greyspell();
+							case "Cyan":
+								spellHandler.Cyanspell();
 								break;
 							case "White":
 								spellHandler.Whitespell();
@@ -196,8 +196,8 @@ public class Spell_Tab : MonoBehaviour {
 			case "Purple":
 				checkColor = spellHandler.purpleReady;
 				break;
-			case "Grey":
-				checkColor = spellHandler.greyReady;
+			case "Cyan":
+				checkColor = spellHandler.cyanReady;
 				break;
 			case "White":
 				checkColor = spellHandler.whiteReady;
@@ -236,7 +236,7 @@ public class Spell_Tab : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		if(isReady){
+		if(isReady && !spellHandler.spellWorking){
 			switch (spellColor) {
 			case "Red":
 				spellHandler.Redspell();
@@ -256,8 +256,8 @@ public class Spell_Tab : MonoBehaviour {
 			case "Purple":
 				spellHandler.Purplespell();
 				break;
-			case "Grey":
-				spellHandler.Greyspell();
+			case "Cyan":
+				spellHandler.Cyanspell();
 				break;
 			case "White":
 				spellHandler.Whitespell();

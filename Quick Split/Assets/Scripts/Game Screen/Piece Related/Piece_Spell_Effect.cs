@@ -9,11 +9,11 @@ public class Piece_Spell_Effect : MonoBehaviour {
 	Animator animator;
 
 	bool whiteActive;
-	bool greyActive;
+	bool cyanActive;
 	bool purpleActive;
 	bool greenBlueActive;
 	bool purpleEnd;
-	int greyStage = 0;
+	int cyanStage = 0;
 
 	bool orangeActive;
 	int orangeStage = 0;
@@ -30,6 +30,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 
 	GameController gameController;
 	piece_script piece;
+	SpellHandler spellHandler;
 
 	// Use this for initialization
 	void Start () {
@@ -37,13 +38,14 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		piece = gameObject.GetComponentInParent<piece_script> ();
+		spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
 
 		//no need for these if there are no spells
 		if (gameController.gameType == "Wit" || gameController.gameType == "Quick")
 			Destroy (gameObject);
 
 		whiteActive = false;
-		greyActive = false;
+		cyanActive = false;
 		purpleActive = false;
 		purpleEnd = false;
 
@@ -65,16 +67,16 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				spriteRenderer.sprite = null;
 			}
 		}
-		//grey spell
-		else if (greyActive && greyStage > 1){
-			//the grey spell requires stages due to its complex nature
+		//cyan spell
+		else if (cyanActive && cyanStage > 1){
+			//the cyan spell requires stages due to its complex nature
 			//stage 2 means that the piece has collided with the next piece
-			if (greyStage == 2){
-				animator.SetBool ("Grey Active", false);
-				greyStage = 3;
+			if (cyanStage == 2){
+				animator.SetBool ("Cyan Active", false);
+				cyanStage = 3;
 			}
 			//stage 3 means the bomb is in the process of exploding and pieces need to be taken crae of
-			else if(greyStage == 3){
+			else if(cyanStage == 3){
 				//this takes care of the case when the bomb is in the process of exploding but the piece moves because of the sidebars
 				if(piece != null){
 					transform.position = new Vector3(piece.transform.position.x, piece.transform.position.y, transform.position.z);
@@ -102,13 +104,14 @@ public class Piece_Spell_Effect : MonoBehaviour {
 						Destroy (piece.gameObject);
 					}
 					gameController.collapse ();
-					greyStage = 4;
+					cyanStage = 4;
 
 					GameObject.FindGameObjectWithTag("Achievement Handler").BroadcastMessage("Cyan_Splitter_Checker", null, SendMessageOptions.DontRequireReceiver);
 				}
 			}
 			//the end of the animation, the spell effect is at this point a standalone object that is useless
 			else if (animator.GetCurrentAnimatorStateInfo(0).length + startTime < Time.time){
+				spellHandler.spellWorking = false;
 				Destroy(gameObject);
 			}
 		}
@@ -145,6 +148,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 					gameController.collapse ();
 					StartCoroutine (gameController.boardWaiter ());
 					gameController.splitter.setState ("isActive", true);
+					spellHandler.spellWorking = false;
 				}
 				//if the piece was deleted, this effect is standalone and therefore uselees
 				if(purpleEnd){
@@ -228,23 +232,23 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		animator.SetBool ("White Active", true);
 		startTime = Time.time;
 	}
-	//called to start the Grey/cyan spell
-	public void Activate_Grey()
+	//called to start the cyan/cyan spell
+	public void Activate_Cyan()
 	{
 		//first stage is when the piece is stilll in splitter
-		if(greyStage == 0){
+		if(cyanStage == 0){
 			animator.SetBool ("inActive", false);
-			animator.SetBool ("Grey Active", true);
-			greyActive = true;
-			greyStage = 1;
+			animator.SetBool ("Cyan Active", true);
+			cyanActive = true;
+			cyanStage = 1;
 		}
 		//second call tells it to explode
 		else {
 			transform.SetParent(null);
 			startTime = Time.time;
-			greyStage = 2;
+			cyanStage = 2;
 			animator.SetBool ("inActive", false);
-			animator.SetBool ("Grey Active", true);
+			animator.SetBool ("Cyan Active", true);
 			gridPos = piece.gridPos;
 		}
 	}
