@@ -16,7 +16,8 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	//don't ever use these this is a joke
 	public Sprite[] FaceSprites = new Sprite[8];
 
-	public Sprite[] Splitters; 
+	public Sprite[] Splitters;
+	public RuntimeAnimatorController[] SplitterAnimations;
 
 	public string PieceSet;
 	public string SplitterType;
@@ -116,5 +117,13 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 		default:
 			return DefaultAnimations;
 		}
+	}
+	
+	public RuntimeAnimatorController Get_Splitter_Animation()
+	{
+		if(achievementHandler == null)
+			achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
+		int index = achievementHandler.Splitter_Lookup_Index_by_Name (PlayerPrefs.GetString ("Splitter Type", "Default"));
+		return SplitterAnimations [index];
 	}
 }

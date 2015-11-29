@@ -38,11 +38,11 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		piece = gameObject.GetComponentInParent<piece_script> ();
-		spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
-
 		//no need for these if there are no spells
 		if (gameController.gameType == "Wit" || gameController.gameType == "Quick")
 			Destroy (gameObject);
+		else
+			spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
 
 		whiteActive = false;
 		cyanActive = false;
