@@ -55,8 +55,10 @@ public class GameController : MonoBehaviour {
 	public GameObject GameOverLayer;
 
 	//keeps track of the current score multiplier during checks
-	int multiplier;
+	public float multiplier;
 	bool multiRun;
+	bool piecesDeletedThisSplit;
+	bool clearedLastTurn;
 
 	//set to true to check for game over in the update loop
 	bool checkGameOver;
@@ -327,7 +329,8 @@ public class GameController : MonoBehaviour {
 			checkGameOver = true;
 			if(checkFlag)
 			{
-				multiplier = 1;
+				clearedLastTurn = piecesDeletedThisSplit;
+				piecesDeletedThisSplit = false;
 				checkBoard ();
 				checkFlag = false;
 				//check to see if it's time to move the sides in
@@ -529,12 +532,17 @@ public class GameController : MonoBehaviour {
 		if (deleted) {
 			collapse ();
 			multiRun = true;
+			piecesDeletedThisSplit = true;
+			if(clearedLastTurn)
+				multiplier++;
 			StartCoroutine(boardWaiter());
 		}
 		else {
 			multiRun = false;
 			checkGameOver = true;
 			if(!gameOver){
+				if(!piecesDeletedThisSplit)
+					multiplier = 1;
 				splitter.setState("canShoot", true);
 			}
 		}
@@ -810,6 +818,12 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (0.25f);
 		checkBoard ();
 	}
+
+	public void Has_Split()
+	{
+
+	}
+
 
 	public IEnumerator StartingCountDown()
 	{

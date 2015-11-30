@@ -29,7 +29,7 @@ public class piece_script : MonoBehaviour {
 	public int groupValue;
 
 	//stores multiplier to reflect accurate score;
-	public int multiplier;
+	public float multiplier;
 
 	public GameController gameController;
 
@@ -304,7 +304,7 @@ public class piece_script : MonoBehaviour {
 		Vector2 spawnPoint = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>().WorldToViewportPoint (transform.position);
 		int scoreValue;
 		if (multiplier != 0)
-			scoreValue = groupValue * multiplier;
+			scoreValue = (int)(groupValue * multiplier);
 		else
 			scoreValue = groupValue;
 
