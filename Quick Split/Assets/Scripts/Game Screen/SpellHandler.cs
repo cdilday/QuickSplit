@@ -395,6 +395,8 @@ public class SpellHandler : MonoBehaviour {
 			spellLimit = 0;
 			gameController.gameOverText.text =  "";
 			spellWorking = false;
+			if(!achievementHandler.is_Splitter_Unlocked("Blue"))
+				StartCoroutine(achievementHandler.Blue_Splitter_Checker());
 		}
 	}
 
@@ -721,6 +723,8 @@ public class SpellHandler : MonoBehaviour {
 			}
 			break;
 		case "Orange":
+			if(!achievementHandler.is_Splitter_Unlocked("Green") && spellsUsed[3] && gameController.availableCount < 6)
+				achievementHandler.Unlock_Splitter("Green");
 			orangeProgress++;
 			if(orangeProgress >= orangeGoal || orangeReady){
 				orangeProgress = orangeGoal;
@@ -781,6 +785,8 @@ public class SpellHandler : MonoBehaviour {
 			}
 			break;
 		case "Cyan":
+			if(!achievementHandler.is_Splitter_Unlocked("Green") && spellsUsed[3] && gameController.availableCount < 7)
+				achievementHandler.Unlock_Splitter("Green");
 			cyanProgress++;
 			if(cyanProgress >= cyanGoal || cyanReady){
 				cyanProgress = cyanGoal;
@@ -793,6 +799,8 @@ public class SpellHandler : MonoBehaviour {
 			}
 			break;
 		case "White":
+			if(!achievementHandler.is_Splitter_Unlocked("Green") && spellsUsed[3] && gameController.availableCount < 8)
+				achievementHandler.Unlock_Splitter("Green");
 			whiteProgress++;
 			if(whiteProgress >= whiteGoal || whiteReady){
 				whiteProgress = whiteGoal;

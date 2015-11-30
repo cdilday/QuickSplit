@@ -145,6 +145,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 				spellColor = null;
 				//if it's the final piece, do the board checks
 				if(lastPiece){
+					StartCoroutine(GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>().Purple_Splitter_Checker(gameController.Get_Danger_Pieces()));
 					gameController.collapse ();
 					StartCoroutine (gameController.boardWaiter ());
 					gameController.splitter.setState ("isActive", true);

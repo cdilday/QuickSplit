@@ -496,6 +496,9 @@ public class GameController : MonoBehaviour {
 						groupCount++;
 						groupIncreased = true;
 					}
+					//if the previous turn had a clear, add to the multiplier
+					if(groupIncreased && groupCount == 1 && clearedLastTurn && !multiRun)
+					   multiplier++;
 					if((groupCount >= 2 || multiRun) && groupIncreased)
 					{
 						multiplier++;
@@ -533,8 +536,6 @@ public class GameController : MonoBehaviour {
 			collapse ();
 			multiRun = true;
 			piecesDeletedThisSplit = true;
-			if(clearedLastTurn)
-				multiplier++;
 			StartCoroutine(boardWaiter());
 		}
 		else {
@@ -545,7 +546,10 @@ public class GameController : MonoBehaviour {
 					multiplier = 1;
 				splitter.setState("canShoot", true);
 			}
+			clearedLastTurn = piecesDeletedThisSplit;
 		}
+		if (gameType != "Holy" && gameType != "Wiz" && !achievementHandler.is_Pieceset_Unlocked ("Domino") && multiplier >= 9)
+			achievementHandler.Unlock_Pieceset ("Domino");
 	}
 
 	//collapses the pieces where they belong

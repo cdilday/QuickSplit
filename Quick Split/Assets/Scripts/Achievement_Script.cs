@@ -168,9 +168,9 @@ public class Achievement_Script : MonoBehaviour {
 		//TODO: Red Splitter Alert "Not Reddy to die" (Use the red spell to delete 8 danger pieces)
 		//TODO: Orange Splitter Alert "Well Orange you clever?" (Use the Orange spell to remove all pieces of a single color from one side)
 		//TODO: Yellow Splitter Alert "Nothing to Yellow-ver" (Use the yellow spell to delete 2 danger pieces)
-		//TODO: Green Splitter Alert
-		//TODO: Blue Splitter Alert
-		//TODO: Purple Splitter Alert
+		//TODO: Green Splitter Alert "Looking for Greener Pastures" (Use the green spell to clear pieces of a color that hasn't been unlocked yet
+		//TODO: Blue Splitter Alert "Out with the old, int with the Blue" (use the Blue spell to clear 12 pieces at once
+		//TODO: Purple Splitter Alert "Dismantling Hostile Environments Through Non-Violet Solutions (Use the purple spell to reduce the number of danger pieces from >3 to 0)
 		//TODO: Cyan Splitter Alert "I'll be Cyan you later" (delete 18 pieces with bombs)
 		//TODO: White Splitter Alert "Cleaned up White away" (clear the whole board with a white spell)
 	}
@@ -190,6 +190,8 @@ public class Achievement_Script : MonoBehaviour {
 		//TODO: Techno Pieceset Alert "" (make enough splits in Quick to unlock another piece color)
 		//TODO: Arcane Pieceset Alert "You're a Wazard" (Use all 8 spells in 1 game of Wiz split)
 		//TODO: Present Pieceset Alert "Not exactly Regifting" (Get a score in all 4 game modes)
+		//TODO: Domino Pieceset Alert "It all falls into place" (get a multiplier of 9 or more in the Quick or Wit gamemodes"
+		//TODO: Pumpkin Pieceset Alert
 	}
 
 	public bool is_Pieceset_Unlocked(string pieceSet)
@@ -301,4 +303,37 @@ public class Achievement_Script : MonoBehaviour {
 			cyanCheck = true;
 		}
 	}
+
+	public IEnumerator Purple_Splitter_Checker(int oldDangerPieces)
+	{
+		if (!is_Splitter_Unlocked("Purple") && oldDangerPieces < 3){
+			yield return new WaitForSeconds(3);
+			if(GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().Get_Danger_Pieces() == 0)
+				Unlock_Splitter("Purple");
+		}
+	}
+
+	public IEnumerator Blue_Splitter_Checker(){
+		GameController gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+		int oldCount = 0;
+		for(int r = 0; r < 8; r++){
+			for(int c = 0; c < 16; c++){
+				if(gameController.grid[r,c] != null){
+					oldCount++;
+				}
+			}
+		}
+		yield return new WaitForSeconds (2f);
+		int newCount = 0;
+		for(int r = 0; r < 8; r++){
+			for(int c = 0; c < 16; c++){
+				if(gameController.grid[r,c] != null){
+					newCount++;
+				}
+			}
+		}
+
+		if (oldCount - newCount >= 16)
+				Unlock_Splitter ("Blue");
+	} 
 }
