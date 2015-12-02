@@ -9,13 +9,19 @@ public class Fader : MonoBehaviour {
 	Image blackScreen;
 	public float duration;
 	float startTime;
+	Color defaultColor;
 
 	// Use this for initialization
 	void Awake () {
 		isFadingIn = false;
 		isFadingOut = false;
 		blackScreen = gameObject.GetComponent<Image> ();
-		blackScreen.color = new Color (0, 0, 0, 0);
+		if (blackScreen.color.a != 0) {
+			defaultColor = blackScreen.color;
+		}else{
+			defaultColor = new Color(0,0,0,1f);
+			blackScreen.color = new Color (0, 0, 0, 0);
+		}
 	}
 	
 	void FixedUpdate()
@@ -23,24 +29,24 @@ public class Fader : MonoBehaviour {
 		if (isFadingIn) {
 			if (Time.time > startTime + duration)
 			{
-				blackScreen.color = new Color(0,0,0,1f);
+				blackScreen.color = new Color(defaultColor.r,defaultColor.g,defaultColor.b,1f);
 				isFadingIn = false;
 			}
 			else
 			{
-				blackScreen.color = new Color(0,0,0, (Time.time - startTime) / duration);
+				blackScreen.color = new Color(defaultColor.r,defaultColor.g,defaultColor.b, (Time.time - startTime) / duration);
 			}
 		}
 		else if (isFadingOut)
 		{
 			if (Time.time > startTime + duration)
 			{
-				blackScreen.color = new Color(0,0,0,0);
+				blackScreen.color = new Color(defaultColor.r,defaultColor.g,defaultColor.b,0);
 				isFadingOut = false;
 			}
 			else
 			{
-				blackScreen.color = new Color(0,0,0, 1f - ((Time.time - startTime) / duration));
+				blackScreen.color = new Color(defaultColor.r,defaultColor.g,defaultColor.b, 1f - ((Time.time - startTime) / duration));
 			}
 		}
 	}

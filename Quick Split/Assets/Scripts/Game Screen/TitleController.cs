@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 public class TitleController : MonoBehaviour {
 
@@ -9,11 +10,13 @@ public class TitleController : MonoBehaviour {
 	public GameObject creditsLayer;
 	public GameObject optionsLayer;
 	public Shutter_Handler shutter;
+	public VerticalScrollSnap gameModeScroller;
+
+	public GameObject ScrollUp;
+	public GameObject ScrollDown;
 
 	public High_Score_Displayer[] hsds = new High_Score_Displayer[4]; 
 	int resetPresses = 0;
-
-	int activeMode;
 
 	Achievement_Script achievementHandler;
 
@@ -27,241 +30,59 @@ public class TitleController : MonoBehaviour {
 	public GameObject PlayButton;
 	public GameObject BackButton;
 
-	Vector2 Active_Button_Position = new Vector2(-220f, 10f);
-	Vector2 Inactive_Button_Left_Position = new Vector2(-560f, 0f);
-	Vector2 Inactive_Button_Right_Position = new Vector2(560f, 0f);
-
-	Vector2[] Orig_Button_Positions = new Vector2[4];
-
-	Vector2 Active_Score_Position = new Vector2(-220f, -90f);
-	Vector2[] Orig_Score_Positions = new Vector2[4];
-
-	Vector2 Active_Play_Position = new Vector2(275f, -150f);
-	Vector2 Active_Back_Position = new Vector2(125f, -150f);
-
-	Vector2 Inactive_Back_Position;
-	Vector2 Inactive_Play_Position;
-
 	bool isInPlayScreen;
-	bool isTransitioning;
 
-	float TransitionStartTime;
-	public float TransitionLength;
+	int activeMode;
+	int prevMode;
 
 	// Use this for initialization
 	void Start () {
 		achievementHandler = GameObject.Find ("Achievement Handler").GetComponent<Achievement_Script> ();
 
-		for(int i= 0; i<4; i++){
-			Orig_Button_Positions [i] = GameButtons[i].GetComponent<RectTransform> ().localPosition;
-			Orig_Score_Positions [i] = Scores[i].GetComponent<RectTransform> ().localPosition;
-		}
-
-		Inactive_Back_Position = BackButton.GetComponent<RectTransform> ().localPosition;
-		Inactive_Play_Position = PlayButton.GetComponent<RectTransform> ().localPosition;
-
 		Goto_Game_Mode_Layer ();
 		shutter.Begin_Vertical_Open ();
-		isInPlayScreen = false;
-		isTransitioning = false;
 
 		//just in case this is the first time playing, set Wiz to be for sure unlocked
 		PlayerPrefs.SetInt ("Wiz unlocked", 1);
 		//tell achievmement handler to check gamemodes that are supposed to be active
 		achievementHandler.Check_Gamemode_Unlocked ();
 
-		//position locked modes offscreen
-		for (int i = 0; i < 4; i++)
-		{
-			//check if this gamemode number is unlocked
-			if(!gameNum_unlock_checker(i))
-			{
-				//even index means it goes left
-				if (i % 2 == 0)
-				{
-					GameButtons[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Left_Position;
-					Scores[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Left_Position;
-				}
-				//odd index means it goes right
-				else
-				{
-					GameButtons[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Right_Position;
-					Scores[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Right_Position;
-				}
-			}
-		}
-
+		activeMode = 0;
+		prevMode = 0;
+		ScrollDown.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 	}
 
 	void FixedUpdate()
 	{
-		//transitioning handler
-		if (isTransitioning) {
-			//transitioning to play screen
-			if(isInPlayScreen)
-			{
-				// if transition should have ended
-				if(Time.time > TransitionStartTime + TransitionLength)
-				{
-					Color textColor;
-					//all the game-specific UI elements
-					for (int i = 0; i < 4; i++)
-					{
-						if(!gameNum_unlock_checker(i))
-							continue;
-						//check if it's the active button
-						if( i == activeMode)
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = Active_Button_Position;
-							Scores[i].GetComponent<RectTransform> ().localPosition = Active_Score_Position;
-							textColor = Descriptions[i].GetComponent<Text>().color;
-							Descriptions[i].GetComponent<Text>().color = new Color(textColor.r, textColor.g, textColor.g, 1);
-						}
-						//even index means it goes left
-						else if (i % 2 == 0)
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Left_Position;
-							Scores[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Left_Position;
-						}
-						//odd index means it goes right
-						else
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Right_Position;
-							Scores[i].GetComponent<RectTransform> ().localPosition = Inactive_Button_Right_Position;
-						}
-					}
-					//Play & Back buttons
-					BackButton.GetComponent<RectTransform> ().localPosition = Active_Back_Position;
-					PlayButton.GetComponent<RectTransform> ().localPosition = Active_Play_Position;
-					// set button/score positions to their proper playscreen positions
-					// makes sure descriptions are properly faded in
-					isTransitioning = false;
-				}
-				// if it should still be transitioning
-				else
-				{
-					float t_point = (Time.time - TransitionStartTime) / TransitionLength;
-					Color textColor;
-					// lerp positions for the game-specific buttons, descriptions, and scores
-					for (int i = 0; i < 4; i++)
-					{
-						if(!gameNum_unlock_checker(i))
-							continue;
-						//check if it's the active button
-						if( i == activeMode)
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Button_Positions[i].x, Active_Button_Position.x, t_point),
-							                                                                          Mathf.SmoothStep(Orig_Button_Positions[i].y, Active_Button_Position.y, t_point));
-							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Score_Positions[i].x, Active_Score_Position.x, t_point),
-							                                                                     Mathf.SmoothStep(Orig_Score_Positions[i].y, Active_Score_Position.y, t_point));
-							// fade in the right description
-							textColor = Descriptions[i].GetComponent<Text>().color;
-							Descriptions[i].GetComponent<Text>().color = new Color(textColor.r, textColor.g, textColor.g, Mathf.SmoothStep(0, 1, t_point));
-						}
-						//even index means it goes left
-						else if (i % 2 == 0)
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Button_Positions[i].x, Inactive_Button_Left_Position.x, t_point),
-							                                                                          Mathf.SmoothStep(Orig_Button_Positions[i].y, Inactive_Button_Left_Position.y, t_point));
-							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Score_Positions[i].x, Inactive_Button_Left_Position.x, t_point),
-							                                                                     Mathf.SmoothStep(Orig_Score_Positions[i].y, Inactive_Button_Left_Position.y, t_point));
-						}
-						//odd index means it goes right
-						else
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Button_Positions[i].x, Inactive_Button_Right_Position.x, t_point),
-							                                                                          Mathf.SmoothStep(Orig_Button_Positions[i].y, Inactive_Button_Right_Position.y, t_point));;
-							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Orig_Score_Positions[i].x, Inactive_Button_Right_Position.x, t_point),
-							                                                                     Mathf.SmoothStep(Orig_Score_Positions[i].y, Inactive_Button_Right_Position.y, t_point));
-						}
-					}
-					// move in the play and back buttons
-					BackButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Back_Position.x, Active_Back_Position.x, t_point),
-					                                                                     Mathf.SmoothStep(Inactive_Back_Position.y, Active_Back_Position.y, t_point));
-					PlayButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Play_Position.x, Active_Play_Position.x, t_point),
-					                                                                      Mathf.SmoothStep(Inactive_Play_Position.y, Active_Play_Position.y, t_point));
-				}
+		activeMode = gameModeScroller.CurrentScreen ();
+		if (activeMode != prevMode) {
+			if(activeMode == 0){
+				ScrollDown.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 			}
-			// transitioning back to the game mode screen
-			else
-			{
-				// if transition should have ended
-				if(Time.time > TransitionStartTime + TransitionLength)
-				{
-					Color textColor = Descriptions[0].GetComponent<Text>().color;
-					for (int i = 0; i < 4; i++)
-					{
-						if(!gameNum_unlock_checker(i))
-							continue;
-						//buttons
-						GameButtons[i].GetComponent<RectTransform> ().localPosition = Orig_Button_Positions [i];
-						//scores
-						Scores[i].GetComponent<RectTransform> ().localPosition = Orig_Score_Positions [i];
-						//descriptions
-						Descriptions[i].GetComponent<Text>().color = new Color(textColor.r, textColor.g, textColor.g, 0);
-					}
-
-					//Play & Back buttons
-					BackButton.GetComponent<RectTransform> ().localPosition = Inactive_Back_Position;
-					PlayButton.GetComponent<RectTransform> ().localPosition = Inactive_Play_Position;;
-
-					// makes sure descriptions are properly faded out
-					isTransitioning = false;
-				}
-				else
-				{
-					float t_point = (Time.time - TransitionStartTime) / TransitionLength;
-					Color textColor;
-					// lerp positions for the game-specific buttons, descriptions, and scores
-					for (int i = 0; i < 4; i++)
-					{
-						if(!gameNum_unlock_checker(i))
-							continue;
-						//check if it's the active button
-						if( i == activeMode)
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Button_Position.x, Orig_Button_Positions[i].x, t_point),
-							                                                                          Mathf.SmoothStep(Active_Button_Position.y, Orig_Button_Positions[i].y, t_point));
-							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Score_Position.x, Orig_Score_Positions[i].x, t_point),
-							                                                                     Mathf.SmoothStep(Active_Score_Position.y, Orig_Score_Positions[i].y, t_point));
-							// fade in the right description
-							textColor = Descriptions[i].GetComponent<Text>().color;
-							Descriptions[i].GetComponent<Text>().color = new Color(textColor.r, textColor.g, textColor.g, Mathf.SmoothStep(1, 0, t_point));
-						}
-						//even index means it goes left
-						else if (i % 2 == 0)
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Left_Position.x, Orig_Button_Positions[i].x, t_point),
-							                                                                          Mathf.SmoothStep(Inactive_Button_Left_Position.y, Orig_Button_Positions[i].y, t_point));
-							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Left_Position.x, Orig_Score_Positions[i].x, t_point),
-							                                                                     Mathf.SmoothStep(Inactive_Button_Left_Position.y, Orig_Score_Positions[i].y, t_point));
-						}
-						//odd index means it goes right
-						else
-						{
-							GameButtons[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Right_Position.x, Orig_Button_Positions[i].x, t_point),
-							                                                                          Mathf.SmoothStep(Inactive_Button_Right_Position.y, Orig_Button_Positions[i].y, t_point));;
-							Scores[i].GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Inactive_Button_Right_Position.x, Orig_Score_Positions[i].x, t_point),
-							                                                                     Mathf.SmoothStep(Inactive_Button_Right_Position.y, Orig_Score_Positions[i].y, t_point));
-						}
-					}
-					// move in the play and back buttons
-					BackButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Back_Position.x, Inactive_Back_Position.x, t_point),
-					                                                                      Mathf.SmoothStep(Active_Back_Position.y, Inactive_Back_Position.y, t_point));
-					PlayButton.GetComponent<RectTransform> ().localPosition = new Vector2(Mathf.SmoothStep(Active_Play_Position.x, Inactive_Play_Position.x,t_point),
-					                                                                      Mathf.SmoothStep(Active_Play_Position.y, Inactive_Play_Position.y, t_point));
-				}
+			else if(prevMode == 0){
+				ScrollDown.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
 			}
-
+			else if(activeMode == 4){
+				ScrollUp.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+			}
+			else if(prevMode == 4){
+				ScrollUp.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
+			}
 		}
+		prevMode = activeMode;
 	}
 
 	//loads the proper game mode into the playerprefs for the game scene to read, then loads the game scene
 	//This is where the UI for the transition would go
 	public void Load_Game()
 	{
-		PlayerPrefs.SetInt("Mode", activeMode);
-		StartCoroutine ("GameTransition");
+		activeMode = gameModeScroller.CurrentScreen ();
+		if(activeMode == 4){
+			Goto_Credits_Layer();
+		} else{
+			PlayerPrefs.SetInt("Mode", activeMode);
+			StartCoroutine ("GameTransition");
+		}
 	}
 
 	//loads the game mode layer and unloads the other layers
@@ -344,24 +165,13 @@ public class TitleController : MonoBehaviour {
 
 	public void Click_Game_Button(int gameType)
 	{
-		if (isInPlayScreen || isTransitioning) {
+		if (isInPlayScreen) {
 			return;
 		}
 		isInPlayScreen = true;
-		isTransitioning = true;
-		activeMode = gameType;
-
-		TransitionStartTime = Time.time;
 	}
 
 	public void Click_Back_Button(){
-		if (!isInPlayScreen || isTransitioning) {
-			return;
-		}
-		isInPlayScreen = false;
-		isTransitioning = true;
-
-		TransitionStartTime = Time.time;
 	}
 
 	bool gameNum_unlock_checker(int gameNum)

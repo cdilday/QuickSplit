@@ -93,15 +93,15 @@ public class GameController : MonoBehaviour {
 		//begin with the assumption that you're not in quick mode and there's not countdown
 		isCountingDown = false;
 
-		switch (PlayerPrefs.GetInt ("Mode")) {
+		switch (PlayerPrefs.GetInt ("Mode", 0)) {
 		case 0:
-			gameType = "Wit";
+			gameType = "Wiz";
 			break;
 		case 1: 
 			gameType = "Quick";
 			break;
 		case 2:
-			gameType = "Wiz";
+			gameType = "Wit";
 			break;
 		case 3:
 			gameType = "Holy";
