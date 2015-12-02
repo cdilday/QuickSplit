@@ -8,8 +8,8 @@ public class High_Score_Displayer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		score = PlayerPrefs.GetInt (gameType, 0);
-		gameObject.GetComponent<Text> ().text = gameType + " High Score: " + score;
+		/*score = PlayerPrefs.GetInt (gameType, 0);
+		gameObject.GetComponent<Text> ().text = gameType + " High Score: " + score;*/
 	}
 	
 	public void update_scores(){

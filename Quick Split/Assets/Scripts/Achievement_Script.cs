@@ -148,7 +148,7 @@ public class Achievement_Script : MonoBehaviour {
 		}
 	}
 
-	public bool Gamemode_Unlocked(string gameType)
+	public bool is_Gamemode_Unlocked(string gameType)
 	{
 		if (PlayerPrefs.GetInt (gameType + " unlocked", 0) == 0) {
 			return false;

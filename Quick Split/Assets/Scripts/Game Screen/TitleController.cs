@@ -6,7 +6,7 @@ using UnityEngine.UI.Extensions;
 public class TitleController : MonoBehaviour {
 
 	public GameObject gameModeLayer;
-	public GameObject[] howToPlayLayers;
+	public GameObject howToPlayLayer;
 	public GameObject creditsLayer;
 	public GameObject optionsLayer;
 	public Shutter_Handler shutter;
@@ -22,9 +22,9 @@ public class TitleController : MonoBehaviour {
 
 	//gameobjects needed for transitions b/w game mode select and description scenes
 	public GameObject[] GameButtons = new GameObject[4];
-
+	string[] OrigButtonText = new string[4];
 	public GameObject[] Descriptions = new GameObject[4];
-
+	string[] OrigDescText = new string[4];
 	public GameObject[] Scores = new GameObject[4];
 
 	public GameObject PlayButton;
@@ -32,7 +32,7 @@ public class TitleController : MonoBehaviour {
 
 	bool isInPlayScreen;
 
-	int activeMode;
+	public int activeMode;
 	int prevMode;
 
 	// Use this for initialization
@@ -50,26 +50,33 @@ public class TitleController : MonoBehaviour {
 		activeMode = 0;
 		prevMode = 0;
 		ScrollDown.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+		for (int i = 0; i < 4; i++) {
+			OrigButtonText[i] = GameButtons[i].GetComponentInChildren<Text>().text;
+			OrigDescText[i] = Descriptions[i].GetComponent<Text>().text;
+		}
+		GameMode_Unlocker ();
 	}
 
 	void FixedUpdate()
 	{
-		activeMode = gameModeScroller.CurrentScreen ();
-		if (activeMode != prevMode) {
-			if(activeMode == 0){
-				ScrollDown.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+		if(gameModeLayer.activeSelf){
+			activeMode = gameModeScroller.CurrentScreen ();
+			if (activeMode != prevMode) {
+				if(activeMode == 0){
+					ScrollDown.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+				}
+				else if(prevMode == 0){
+					ScrollDown.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
+				}
+				else if(activeMode == 4){
+					ScrollUp.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+				}
+				else if(prevMode == 4){
+					ScrollUp.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
+				}
 			}
-			else if(prevMode == 0){
-				ScrollDown.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			}
-			else if(activeMode == 4){
-				ScrollUp.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-			}
-			else if(prevMode == 4){
-				ScrollUp.BroadcastMessage ("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-			}
+			prevMode = activeMode;
 		}
-		prevMode = activeMode;
 	}
 
 	//loads the proper game mode into the playerprefs for the game scene to read, then loads the game scene
@@ -79,7 +86,7 @@ public class TitleController : MonoBehaviour {
 		activeMode = gameModeScroller.CurrentScreen ();
 		if(activeMode == 4){
 			Goto_Credits_Layer();
-		} else{
+		} else if(gameNum_unlock_checker(activeMode)){
 			PlayerPrefs.SetInt("Mode", activeMode);
 			StartCoroutine ("GameTransition");
 		}
@@ -89,8 +96,7 @@ public class TitleController : MonoBehaviour {
 	public void Goto_Game_Mode_Layer()
 	{
 		gameModeLayer.SetActive (true);
-		howToPlayLayers[0].SetActive (false);
-		howToPlayLayers[1].SetActive (false);
+		howToPlayLayer.SetActive (false);
 		creditsLayer.SetActive (false);
 		optionsLayer.SetActive (false);
 	}
@@ -98,17 +104,7 @@ public class TitleController : MonoBehaviour {
 	//loads the How to Play Layer and unloads the other layers
 	public void Goto_How_To_Play_Layer()
 	{
-		howToPlayLayers[0].SetActive (true);
-		howToPlayLayers[1].SetActive (false);
-		gameModeLayer.SetActive (false);
-		creditsLayer.SetActive (false);
-		optionsLayer.SetActive (false);
-	}
-
-	public void Goto_Controls_Layer()
-	{
-		howToPlayLayers[0].SetActive (false);
-		howToPlayLayers[1].SetActive (true);
+		howToPlayLayer.SetActive (true);
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
 		optionsLayer.SetActive (false);
@@ -119,16 +115,14 @@ public class TitleController : MonoBehaviour {
 	{
 		creditsLayer.SetActive (true);
 		gameModeLayer.SetActive (false);
-		howToPlayLayers[0].SetActive (false);
-		howToPlayLayers[1].SetActive (false);
+		howToPlayLayer.SetActive (false);
 		optionsLayer.SetActive (false);
 	}
 
 	public void Goto_Options_Layer()
 	{
 		optionsLayer.SetActive (true);
-		howToPlayLayers[0].SetActive (false);
-		howToPlayLayers[1].SetActive (false);
+		howToPlayLayer.SetActive (false);
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
 	}
@@ -143,9 +137,9 @@ public class TitleController : MonoBehaviour {
 		}
 		else
 		{
-			PlayerPrefs.SetInt ("Wit", 0);
-			PlayerPrefs.SetInt ("Quick", 0);
 			PlayerPrefs.SetInt ("Wiz", 0);
+			PlayerPrefs.SetInt ("Quick", 0);
+			PlayerPrefs.SetInt ("Wit", 0);
 			PlayerPrefs.SetInt ("Holy", 0);
 			Text rhst = GameObject.Find ("Reset High Scores Text").GetComponent<Text>();
 			foreach (High_Score_Displayer hsd in hsds)
@@ -165,27 +159,40 @@ public class TitleController : MonoBehaviour {
 
 	public void Click_Game_Button(int gameType)
 	{
-		if (isInPlayScreen) {
-			return;
-		}
-		isInPlayScreen = true;
+		//this is a remnant of older UI's, may need to be replaced with a static image or given a better function
 	}
 
-	public void Click_Back_Button(){
+	public void Click_Scores_Button(){
+		//go to that page's high score page
 	}
 
 	bool gameNum_unlock_checker(int gameNum)
 	{
 		switch (gameNum) {
 		case 0:
-			return achievementHandler.Gamemode_Unlocked ("Wit");
+			return achievementHandler.is_Gamemode_Unlocked ("Wiz");
 		case 1:
-			return achievementHandler.Gamemode_Unlocked ("Quick");
+			return achievementHandler.is_Gamemode_Unlocked ("Quick");
 		case 2:
-			return achievementHandler.Gamemode_Unlocked ("Wiz");
+			return achievementHandler.is_Gamemode_Unlocked ("Wit");
 		case 3:
-			return achievementHandler.Gamemode_Unlocked ("Holy");
+			return achievementHandler.is_Gamemode_Unlocked ("Holy");
 		}
 		return false;
+	}
+
+	void GameMode_Unlocker(){
+		for(int i = 0; i < 4; i++){
+			if(!gameNum_unlock_checker(i)){
+				GameButtons[i].GetComponentInChildren<Text>().text = "LOCKED";
+				Descriptions[i].GetComponent<Text>().text = "Score in the last Game Mode to unlock this one!";
+				Scores[i].GetComponent<Text>().text = "";
+			}
+			else{
+				GameButtons[i].GetComponentInChildren<Text>().text = OrigButtonText[i];
+				Descriptions[i].GetComponent<Text>().text = OrigDescText[i];
+				Scores[i].BroadcastMessage("update_scores", null, SendMessageOptions.DontRequireReceiver);
+			}
+		}
 	}
 }

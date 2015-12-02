@@ -46,13 +46,13 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Multiplier_Displayer.cs" />
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Gears_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\High_Score_Displayer.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Holder_Script.cs" />
+     <Compile Include="Assets\Scripts\Game Screen\Multiplier_Displayer.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Piece Related\Bit_Pool.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Piece Related\Color_Selector.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceScoreText.cs" />
@@ -72,6 +72,7 @@
      <Compile Include="Assets\Scripts\Game Screen\Spell_Descriptions.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Spell_Tab.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Spell_Text.cs" />
+     <Compile Include="Assets\Scripts\Game Screen\Splitter_Animator_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Splitter_Charged_Effect.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Splitter_script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\TitleController.cs" />
@@ -91,7 +92,6 @@
      <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\SceneLoader.cs" />
-     <Compile Include="Assets\Splitter_Animator_Script.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\Accordion.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\AccordionElement.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\Tweening\FloatTween.cs" />
