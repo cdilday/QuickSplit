@@ -1,9 +1,10 @@
 fileFormatVersion: 2
 guid: 88255dbb2ef6d9f489482bc66bf7ea49
-timeCreated: 1449002859
+timeCreated: 1449105338
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: White Tile_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -37,18 +38,28 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 16, y: 16, z: 16, w: 16}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 100
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: White Tile_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 16, y: 16, z: 16, w: 16}
   spritePackingTag: 
   userData: 
   assetBundleName: 
