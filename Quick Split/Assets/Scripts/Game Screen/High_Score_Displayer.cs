@@ -13,7 +13,7 @@ public class High_Score_Displayer : MonoBehaviour {
 	}
 	
 	public void update_scores(){
-		score = PlayerPrefs.GetInt (gameType, 0);
+		score = PlayerPrefs.GetInt (gameType + " score 0", 0);
 		gameObject.GetComponent<Text> ().text = gameType + " High Score: " + score;
 	}
 }

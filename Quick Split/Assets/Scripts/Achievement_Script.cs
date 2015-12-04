@@ -140,6 +140,28 @@ public class Achievement_Script : MonoBehaviour {
 		}
 	}
 
+	//use this to add new high scores
+	public void Add_Score(string gameMode, int score)
+	{
+		//you need to actually score to save a high score
+		if (score == 0)
+			return;
+		int tempScore = score;
+		for (int i = 0; i < 15; i++) {
+			int currScore = PlayerPrefs.GetInt (gameMode + " score " + i, 0);
+			if(currScore == 0)
+			{
+				PlayerPrefs.SetInt (gameMode + " score " + i, tempScore);
+				break;
+			}
+			else if(currScore <= tempScore)
+			{
+				PlayerPrefs.SetInt(gameMode + " score " + i, tempScore);
+				tempScore = currScore;
+			}
+		}
+	}
+
 	void FixedUpdate()
 	{
 		if (cyanCheck && startTime + 3f < Time.time)

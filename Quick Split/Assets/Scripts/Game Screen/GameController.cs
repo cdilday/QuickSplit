@@ -52,6 +52,7 @@ public class GameController : MonoBehaviour {
 
 	//true if the player's lost
 	public bool gameOver;
+	bool ffGameOver = true;
 	public GameObject GameOverLayer;
 
 	//keeps track of the current score multiplier during checks
@@ -287,14 +288,9 @@ public class GameController : MonoBehaviour {
 					if(colorGrid[r,c] != null && grid[r,c] != null){
 						gameOverText.text = "Game Over";
 						gameOver = true;
-						tipText.text = tips[Random.Range(0, tips.Count())];
 						GameOverLayer.SetActive(true);
-						GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
 						mc.Stop_Music();
 						splitter.setState("canShoot", false);
-						if(PlayerPrefs.GetInt(gameType, 0) < score){
-							PlayerPrefs.SetInt (gameType, score);
-						}
 						//unlocking candy cane splitter
 						if(!achievementHandler.is_Splitter_Unlocked("Candy Cane") && score > 0 && score < 200)
 							achievementHandler.Unlock_Splitter("Candy Cane");
@@ -308,6 +304,15 @@ public class GameController : MonoBehaviour {
 				}
 			}
 			checkGameOver = false;
+		}
+
+		//things that should only happen once at gameover
+		if (gameOver && ffGameOver) {
+			ffGameOver = false;
+			achievementHandler.Add_Score(gameType, score);
+			GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
+			tipText.text = tips[Random.Range(0, tips.Count())];
+			Debug.Log ("adding score");
 		}
 
 		if(!achievementHandler.is_Splitter_Unlocked("Caution") || !achievementHandler.is_Pieceset_Unlocked("Blob")){
@@ -710,8 +715,7 @@ public class GameController : MonoBehaviour {
 			scoreText.text = "Score:\n" + score;
 		}
 		//save current score
-		if(PlayerPrefs.GetInt(gameType, 0) < score){
-			PlayerPrefs.SetInt (gameType, score);
+		if(PlayerPrefs.GetInt(gameType + " score 0", 0) < score){
 			if(!newHighScore)
 			{
 				//TODO: SFX for high score

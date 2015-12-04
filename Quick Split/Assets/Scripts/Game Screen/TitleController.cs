@@ -23,6 +23,8 @@ public class TitleController : MonoBehaviour {
 
 	Achievement_Script achievementHandler;
 
+	High_Score_Calculator highScoreCalculator;
+
 	//gameobjects needed for transitions b/w game mode select and description scenes
 	public GameObject[] GameButtons = new GameObject[4];
 	string[] OrigButtonText = new string[4];
@@ -40,13 +42,10 @@ public class TitleController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		highScoreCalculator = GameObject.Find ("High Score Calculator").GetComponent<High_Score_Calculator> ();
 		//first check if they're using the most recent version of the game
 		if (PlayerPrefs.GetInt ("Version", 0) != versionNumber) {
-			PlayerPrefs.SetInt ("Wiz", 0);
-			PlayerPrefs.SetInt ("Quick", 0);
-			PlayerPrefs.SetInt ("Wit", 0);
-			PlayerPrefs.SetInt ("Holy", 0);
+			highScoreCalculator.Reset_All_Scores();
 			foreach (High_Score_Displayer hsd in hsds)
 			{
 				hsd.update_scores();
@@ -149,6 +148,7 @@ public class TitleController : MonoBehaviour {
 
 	public void Goto_High_Score_Layer (){
 		highScoreLayer.SetActive(true);
+		//highScoreCalculator.Populate_Scores_List ();
 		optionsLayer.SetActive (false);
 		howToPlayLayer.SetActive (false);
 		gameModeLayer.SetActive (false);
@@ -165,10 +165,7 @@ public class TitleController : MonoBehaviour {
 		}
 		else
 		{
-			PlayerPrefs.SetInt ("Wiz", 0);
-			PlayerPrefs.SetInt ("Quick", 0);
-			PlayerPrefs.SetInt ("Wit", 0);
-			PlayerPrefs.SetInt ("Holy", 0);
+			highScoreCalculator.Reset_All_Scores();
 			Text rhst = GameObject.Find ("Reset High Scores Text").GetComponent<Text>();
 			foreach (High_Score_Displayer hsd in hsds)
 			{
