@@ -5,10 +5,13 @@ using UnityEngine.UI.Extensions;
 
 public class TitleController : MonoBehaviour {
 
+	public int versionNumber;
+
 	public GameObject gameModeLayer;
 	public GameObject howToPlayLayer;
 	public GameObject creditsLayer;
 	public GameObject optionsLayer;
+	public GameObject highScoreLayer;
 	public Shutter_Handler shutter;
 	public VerticalScrollSnap gameModeScroller;
 
@@ -37,6 +40,19 @@ public class TitleController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		//first check if they're using the most recent version of the game
+		if (PlayerPrefs.GetInt ("Version", 0) != versionNumber) {
+			PlayerPrefs.SetInt ("Wiz", 0);
+			PlayerPrefs.SetInt ("Quick", 0);
+			PlayerPrefs.SetInt ("Wit", 0);
+			PlayerPrefs.SetInt ("Holy", 0);
+			foreach (High_Score_Displayer hsd in hsds)
+			{
+				hsd.update_scores();
+			}
+			PlayerPrefs.SetInt ("Version", versionNumber);
+		}
 		achievementHandler = GameObject.Find ("Achievement Handler").GetComponent<Achievement_Script> ();
 
 		Goto_Game_Mode_Layer ();
@@ -99,6 +115,7 @@ public class TitleController : MonoBehaviour {
 		howToPlayLayer.SetActive (false);
 		creditsLayer.SetActive (false);
 		optionsLayer.SetActive (false);
+		highScoreLayer.SetActive(false);
 	}
 
 	//loads the How to Play Layer and unloads the other layers
@@ -108,6 +125,7 @@ public class TitleController : MonoBehaviour {
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
 		optionsLayer.SetActive (false);
+		highScoreLayer.SetActive(false);
 	}
 
 	//loads the Credits layer and unloads the other layers
@@ -117,11 +135,21 @@ public class TitleController : MonoBehaviour {
 		gameModeLayer.SetActive (false);
 		howToPlayLayer.SetActive (false);
 		optionsLayer.SetActive (false);
+		highScoreLayer.SetActive(false);
 	}
 
 	public void Goto_Options_Layer()
 	{
 		optionsLayer.SetActive (true);
+		howToPlayLayer.SetActive (false);
+		gameModeLayer.SetActive (false);
+		creditsLayer.SetActive (false);
+		highScoreLayer.SetActive(false);
+	}
+
+	public void Goto_High_Score_Layer (){
+		highScoreLayer.SetActive(true);
+		optionsLayer.SetActive (false);
 		howToPlayLayer.SetActive (false);
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
