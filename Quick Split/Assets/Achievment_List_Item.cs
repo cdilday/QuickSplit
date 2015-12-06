@@ -48,9 +48,4 @@ public class Achievment_List_Item : MonoBehaviour {
 			UnlockableImage.color = new Color(0,0,0,1);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

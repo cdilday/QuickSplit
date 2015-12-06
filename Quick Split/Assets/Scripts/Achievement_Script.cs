@@ -14,6 +14,8 @@ public class Achievement_Script : MonoBehaviour {
 	public string[] Piecesets;
 	public bool[] piecesetsUnlocked;
 
+	public Achievement_Notification notification;
+
 	// Use this for initialization
 	void Awake () {
 		DontDestroyOnLoad (transform.gameObject);
@@ -135,6 +137,10 @@ public class Achievement_Script : MonoBehaviour {
 				}
 				Debug.Log("All Piecesets Unlocked!");
 			}
+			else if (Input.GetKey (KeyCode.Keypad6))
+			{
+				Unlock_Pieceset("Pumpkin");
+			}
 		
 		}
 	}
@@ -181,19 +187,9 @@ public class Achievement_Script : MonoBehaviour {
 	{
 		splittersUnlocked [Splitter_Lookup_Index_by_Name (name)] = true;
 		PlayerPrefs.SetInt (name + " Splitter unlocked", 1);
-		//TODO: This is the method that would contain all the unlock text and achievement notification spawning for splitters
-		//TODO: Progammer Splitter Unlock alert "How was this even functional?" (Unlock all other splitters)
-		//TODO: Candy Cane Splitter Alert "Some Candy for the pain" (Score more than 0, but less than 200 in any mode)
-		//TODO: Dark Splitter Alert "No Light; only darkness" (Score >2000 in Wiz or Holy without using any spells)
-		//TODO: Caution splitter Alert "Get behind the line" (Go from 5 to 0 danger pieces in game modes without spells)
-		//TODO: Red Splitter Alert "Not Reddy to die" (Use the red spell to delete 8 danger pieces)
-		//TODO: Orange Splitter Alert "Well Orange you clever?" (Use the Orange spell to remove all pieces of a single color from one side)
-		//TODO: Yellow Splitter Alert "Nothing to Yellow-ver" (Use the yellow spell to delete 2 danger pieces)
-		//TODO: Green Splitter Alert "Looking for Greener Pastures" (Use the green spell to clear pieces of a color that hasn't been unlocked yet
-		//TODO: Blue Splitter Alert "Out with the old, in with the Blue" (use the Blue spell to clear 12 pieces at once
-		//TODO: Purple Splitter Alert "Dismantling Hostile Environments Through Non-Violet Solutions (Use the purple spell to reduce the number of danger pieces from >3 to 0)
-		//TODO: Cyan Splitter Alert "I'll be Cyan you later" (delete 18 pieces with bombs)
-		//TODO: White Splitter Alert "Cleaned up White away" (clear the whole board with a white spell)
+		if (notification != null) {
+			notification.Achievement_Unlocked(name, "Splitter");
+		}
 	}
 
 	public bool is_Splitter_Unlocked(string splitter){
@@ -204,15 +200,8 @@ public class Achievement_Script : MonoBehaviour {
 	{
 		piecesetsUnlocked [Pieceset_Lookup_Index_by_Name (name)] = true;
 		PlayerPrefs.SetInt (name + " Pieceset unlocked", 1);
-		//TODO: This is the method that would contain all the unlock text and achievement notification spawning for pieces
-		//TODO: Progammer Pieceset Unlock alert "There's some grey areas" (Unlock all other piecesets)
-		//TODO: Blob Pieceset Alert "What a mess..." (have 16 danger pieces in Holy mode)
-		//TODO: Retro Pieceset Alert "8-bits of Motion" (Make 255 splits in Wit mode)
-		//TODO: Techno Pieceset Alert "" (make enough splits in Quick to unlock another piece color)
-		//TODO: Arcane Pieceset Alert "You're a Wazard" (Use all 8 spells in 1 game of Wiz split)
-		//TODO: Present Pieceset Alert "Not exactly Regifting" (Get a score in all 4 game modes)
-		//TODO: Domino Pieceset Alert "It all falls into place" (get a multiplier of 9 or more in the Quick or Wit gamemodes"
-		//TODO: Pumpkin Pieceset Alert
+		if (notification != null)
+			notification.Achievement_Unlocked (name, "Pieceset");
 	}
 
 	public bool is_Pieceset_Unlocked(string pieceSet)

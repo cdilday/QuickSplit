@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Achievement_Notification.cs" />
      <Compile Include="Assets\Achievement_Tally.cs" />
      <Compile Include="Assets\Achievment_List_Item.cs" />
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
