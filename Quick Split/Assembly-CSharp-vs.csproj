@@ -46,7 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\High_Score_Calculator.cs" />
+     <Compile Include="Assets\Achievement_Tally.cs" />
+     <Compile Include="Assets\Achievment_List_Item.cs" />
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
@@ -80,6 +81,7 @@
      <Compile Include="Assets\Scripts\Game Screen\Wedges_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Yellow_Spell_Effect.cs" />
      <Compile Include="Assets\Scripts\Guide_Script.cs" />
+     <Compile Include="Assets\Scripts\High_Score_Calculator.cs" />
      <Compile Include="Assets\Scripts\Music_Controller.cs" />
      <Compile Include="Assets\Scripts\Music_Slider.cs" />
      <Compile Include="Assets\Scripts\RGBandHSVconverter.cs" />

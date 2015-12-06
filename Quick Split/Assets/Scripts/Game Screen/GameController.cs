@@ -312,7 +312,6 @@ public class GameController : MonoBehaviour {
 			achievementHandler.Add_Score(gameType, score);
 			GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
 			tipText.text = tips[Random.Range(0, tips.Count())];
-			Debug.Log ("adding score");
 		}
 
 		if(!achievementHandler.is_Splitter_Unlocked("Caution") || !achievementHandler.is_Pieceset_Unlocked("Blob")){

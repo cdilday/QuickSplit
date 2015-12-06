@@ -12,6 +12,7 @@ public class TitleController : MonoBehaviour {
 	public GameObject creditsLayer;
 	public GameObject optionsLayer;
 	public GameObject highScoreLayer;
+	public GameObject achievementLayer;
 	public Shutter_Handler shutter;
 	public VerticalScrollSnap gameModeScroller;
 
@@ -115,6 +116,7 @@ public class TitleController : MonoBehaviour {
 		creditsLayer.SetActive (false);
 		optionsLayer.SetActive (false);
 		highScoreLayer.SetActive(false);
+		achievementLayer.SetActive (false);
 	}
 
 	//loads the How to Play Layer and unloads the other layers
@@ -125,6 +127,7 @@ public class TitleController : MonoBehaviour {
 		creditsLayer.SetActive (false);
 		optionsLayer.SetActive (false);
 		highScoreLayer.SetActive(false);
+		achievementLayer.SetActive (false);
 	}
 
 	//loads the Credits layer and unloads the other layers
@@ -135,6 +138,7 @@ public class TitleController : MonoBehaviour {
 		howToPlayLayer.SetActive (false);
 		optionsLayer.SetActive (false);
 		highScoreLayer.SetActive(false);
+		achievementLayer.SetActive (false);
 	}
 
 	public void Goto_Options_Layer()
@@ -144,15 +148,25 @@ public class TitleController : MonoBehaviour {
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
 		highScoreLayer.SetActive(false);
+		achievementLayer.SetActive (false);
 	}
 
 	public void Goto_High_Score_Layer (){
 		highScoreLayer.SetActive(true);
-		//highScoreCalculator.Populate_Scores_List ();
 		optionsLayer.SetActive (false);
 		howToPlayLayer.SetActive (false);
 		gameModeLayer.SetActive (false);
 		creditsLayer.SetActive (false);
+		achievementLayer.SetActive (false);
+	}
+
+	public void Goto_Achievement_Layer(){
+		gameModeLayer.SetActive (false);
+		howToPlayLayer.SetActive (false);
+		creditsLayer.SetActive (false);
+		optionsLayer.SetActive (false);
+		highScoreLayer.SetActive(false);
+		achievementLayer.SetActive (true);
 	}
 
 	public void Reset_High_Scores()

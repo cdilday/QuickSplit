@@ -111,8 +111,7 @@ public class Achievement_Script : MonoBehaviour {
 					PlayerPrefs.SetInt (Pieceset_Lookup_Name_by_Index(i) + " Pieceset unlocked", 0);
 				}
 				PlayerPrefs.SetInt ("Default Pieceset unlocked", 1);
-				PlayerPrefs.SetInt ("Symbol Pieceset unlocked", 1);
-				piecesetsUnlocked[Splitter_Lookup_Index_by_Name("Symbol")] = true;
+				Unlock_Pieceset("Symbol");
 				Debug.Log("Unlocked Piecesets Reset!");
 
 			}
@@ -191,7 +190,7 @@ public class Achievement_Script : MonoBehaviour {
 		//TODO: Orange Splitter Alert "Well Orange you clever?" (Use the Orange spell to remove all pieces of a single color from one side)
 		//TODO: Yellow Splitter Alert "Nothing to Yellow-ver" (Use the yellow spell to delete 2 danger pieces)
 		//TODO: Green Splitter Alert "Looking for Greener Pastures" (Use the green spell to clear pieces of a color that hasn't been unlocked yet
-		//TODO: Blue Splitter Alert "Out with the old, int with the Blue" (use the Blue spell to clear 12 pieces at once
+		//TODO: Blue Splitter Alert "Out with the old, in with the Blue" (use the Blue spell to clear 12 pieces at once
 		//TODO: Purple Splitter Alert "Dismantling Hostile Environments Through Non-Violet Solutions (Use the purple spell to reduce the number of danger pieces from >3 to 0)
 		//TODO: Cyan Splitter Alert "I'll be Cyan you later" (delete 18 pieces with bombs)
 		//TODO: White Splitter Alert "Cleaned up White away" (clear the whole board with a white spell)
