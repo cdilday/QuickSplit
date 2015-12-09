@@ -47,6 +47,13 @@ public class Shutter_Handler : MonoBehaviour {
 	//move duration is how long the animation takes.
 	float MoveDuration = 1f;
 
+	void Start(){
+		ULShutter.color = new Color (1, 1, 1, 1);
+		URShutter.color = new Color (1, 1, 1, 1);
+		DLShutter.color = new Color (1, 1, 1, 1);
+		DRShutter.color = new Color (1, 1, 1, 1);
+	}
+
 	// Update is called once per frame
 	void FixedUpdate () {
 		if (isOpeningH || isOpeningV || isClosingH || isClosingV) {
