@@ -248,8 +248,6 @@ public class Splitter_script : MonoBehaviour {
 		if (splitState.isMoving || transform.position.y >= 6.9f) {
 			return;
 		}
-		//broadcast to the gears
-		gameObject.BroadcastMessage ("Going_Up", null, SendMessageOptions.DontRequireReceiver);
 		
 		int currentLoc = (int) transform.position.y;
 		moveTarget = currentLoc + 1;
@@ -265,8 +263,6 @@ public class Splitter_script : MonoBehaviour {
 		if (splitState.isMoving || transform.position.y <= 0.1f) {
 			return;
 		}
-		//broadcast to the gears
-		gameObject.BroadcastMessage ("Going_Down", null, SendMessageOptions.DontRequireReceiver);
 
 		int currentLoc = (int) transform.position.y;
 		moveTarget = currentLoc - 1;
