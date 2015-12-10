@@ -46,10 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Achievement_Notification.cs" />
-     <Compile Include="Assets\Achievement_Tally.cs" />
-     <Compile Include="Assets\Achievment_List_Item.cs" />
+     <Compile Include="Assets\Platform_Exchanger.cs" />
+     <Compile Include="Assets\Scripts\Achievement_Notification.cs" />
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
+     <Compile Include="Assets\Scripts\Achievement_Tally.cs" />
+     <Compile Include="Assets\Scripts\Achievment_List_Item.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Gears_Script.cs" />

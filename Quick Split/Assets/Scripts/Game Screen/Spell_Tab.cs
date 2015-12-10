@@ -30,6 +30,8 @@ public class Spell_Tab : MonoBehaviour {
 	Vector3 activePos;
 	Vector3 inActivePos;
 
+	int trackingID = -1;
+
 	void Start () {
 		activePos = transform.position;
 		inActivePos = new Vector3 (transform.position.x, transform.position.y - 1.5f, -3.5f);
@@ -77,7 +79,7 @@ public class Spell_Tab : MonoBehaviour {
 	void Update()
 	{
 		//mobile controls. Touch screens are too different to use fake mouse controls
-		if (Application.isMobilePlatform) {
+		if (Application.isMobilePlatform || splitter.mobileDebugging) {
 		
 			bool isNotTouching = true;
 			foreach (Touch poke in Input.touches) {
@@ -85,17 +87,9 @@ public class Spell_Tab : MonoBehaviour {
 				//first check if it's on the boxcollider 2D
 				Vector3 wp = Camera.main.ScreenToWorldPoint(poke.position);
 				Vector2 touchPos = new Vector2(wp.x, wp.y);
-				//TODO: Update this to work better when you get a new spell tab
-				if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(touchPos)){
-					isNotTouching = false;
-					//now check stage of the touch. If it's just happened, display the explination popup
-					if( poke.phase == TouchPhase.Began){
-						//popup the explination
-						splitter.setState ("canShoot", false);
-						DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
-					}
-					else if (poke.phase == TouchPhase.Ended){
-						//activate the spell
+				if(poke.fingerId == trackingID){
+					//activate if the y position is too high
+					if(touchPos.y > 0.1f){
 						if(isReady){
 							switch (spellColor) {
 							case "Red":
@@ -127,9 +121,30 @@ public class Spell_Tab : MonoBehaviour {
 							isTransitioning = true;
 							startTime = Time.time;
 						}
+						trackingID = -1;
+					}
+					else{
+						//if the touchphase has ended, reset position
+						if(poke.phase == TouchPhase.Ended){
+							trackingID = -1;
+							transform.position = activePos;
+							isNotTouching = true;
+						}
+						else{
+							transform.position = new Vector3(transform.position.x, touchPos.y, transform.position.z);
+						}
 					}
 				}
-		
+				if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(touchPos)){
+					isNotTouching = false;
+					//now check stage of the touch. If it's just happened, display the explination popup
+					if( poke.phase == TouchPhase.Began ){
+						//popup the explination
+						splitter.setState ("canShoot", false);
+						DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
+						trackingID = poke.fingerId;
+					}
+				}
 			}
 			if(wasTouching && isNotTouching){
 				//hide popup
@@ -220,7 +235,7 @@ public class Spell_Tab : MonoBehaviour {
 	void OnMouseOver()
 	{
 		//prevent mouse controls from firing when you click on the tab
-		if(!Application.isMobilePlatform){
+		if(!Application.isMobilePlatform && !splitter.mobileDebugging){
 			splitter.setState ("canShoot", false);
 			DescCanvas.GetComponent<Spell_Descriptions> ().display (spellColor);
 		}
@@ -228,7 +243,7 @@ public class Spell_Tab : MonoBehaviour {
 	
 	void OnMouseExit()
 	{
-		if(!Application.isMobilePlatform){
+		if(!Application.isMobilePlatform && !splitter.mobileDebugging){
 			splitter.setState ("canShoot", true);
 			DescCanvas.GetComponent<Spell_Descriptions> ().hide ();
 		}
@@ -236,7 +251,7 @@ public class Spell_Tab : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		if(isReady && !spellHandler.spellWorking){
+		if(isReady && !spellHandler.spellWorking && !Application.isMobilePlatform && !splitter.mobileDebugging){
 			switch (spellColor) {
 			case "Red":
 				spellHandler.Redspell();
