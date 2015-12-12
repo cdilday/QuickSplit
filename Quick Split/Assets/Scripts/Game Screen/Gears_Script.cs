@@ -32,7 +32,7 @@ public class Gears_Script : MonoBehaviour {
 					transform.Rotate(new Vector3(0,0,-20f));
 				}
 				else {
-					transform.Rotate(new Vector3(0,0,-20f));
+					transform.Rotate(new Vector3(0,0,20f));
 				}
 			}
 			else{

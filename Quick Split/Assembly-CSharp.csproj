@@ -89,8 +89,11 @@
      <Compile Include="Assets\Scripts\Selectable_Color.cs" />
      <Compile Include="Assets\Scripts\Shutter_Handler.cs" />
      <Compile Include="Assets\Scripts\Text_Fader.cs" />
+     <Compile Include="Assets\Scripts\Title Screen\Circle_Rotater.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Guide_Toggler.cs" />
      <Compile Include="Assets\Scripts\Title Screen\High_Score_Displayer.cs" />
+     <Compile Include="Assets\Scripts\Title Screen\Horizontal_Bar_Mover.cs" />
+     <Compile Include="Assets\Scripts\Title Screen\Image_Spriter.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Layer_Resizer.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />

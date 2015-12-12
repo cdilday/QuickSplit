@@ -307,12 +307,20 @@ public class piece_script : MonoBehaviour {
 
 	void OnMouseOver(){
 		if (selectable && Input.GetMouseButtonDown (0)) {
-			if(spellHandler.spellColor == "Green" || spellHandler.spellColor == "Blue")
-			{
-				GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
-				picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to change this piece to");
-				spellHandler.selectedPiece = this;
-				selectable = false;
+			if((spellHandler.spellColor == "Green" || spellHandler.spellColor == "Blue")){
+				//check to see if they've already tapped a piece
+				if( GameObject.Find("Color Selector(Clone)") == null){
+					GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
+					picker.GetComponent<Color_Selector> ().givePurpose ("Select a color to change this piece to");
+					spellHandler.selectedPiece = this;
+					selectable = false;
+				}
+				else{
+					//allow them to switch if they have
+					spellHandler.selectedPiece.selectable = true;
+					spellHandler.selectedPiece = this;
+					selectable = false;
+				}
 			}
 		}
 	}
