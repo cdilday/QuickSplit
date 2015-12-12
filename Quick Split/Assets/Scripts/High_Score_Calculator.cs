@@ -5,6 +5,7 @@ using UnityEngine.UI.Extensions;
 
 public class High_Score_Calculator : MonoBehaviour {
 
+	//This script handles the High score list on the high score menu in the Main Menu
 	//High scores are stored using the lookup "<Gamemode> score <#>" where <Gamemode> is the short name for the mode and <#> is the score's rank
 
 	public Text[] ScoreList;
@@ -26,6 +27,7 @@ public class High_Score_Calculator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		//check to make sure the scores for the proper scope and mode are on display, and if they aren't, change them
 		if(Scopes.gameObject.activeInHierarchy){
 			currScope = Scopes.CurrentScreen ();
 			currMode = Modes.CurrentScreen ();
@@ -37,6 +39,7 @@ public class High_Score_Calculator : MonoBehaviour {
 		}
 	}
 
+	//this actually fills the list in
 	public void Populate_Scores_List(){
 		if (Lookup_Scope (Scopes.CurrentScreen()) == "Local") {
 			string gameMode = Lookup_Game_Type(Modes.CurrentScreen());
@@ -58,6 +61,7 @@ public class High_Score_Calculator : MonoBehaviour {
 		}
 	}
 
+	//this resets all scores locally
 	public void Reset_All_Scores(){
 		for (int g = 0; g < 4; g++) {
 			for (int i = 0; i < 15; i++){
@@ -67,6 +71,7 @@ public class High_Score_Calculator : MonoBehaviour {
 		//TODO: either make this affect server stored scores or make a different way to reset those
 	}
 
+	//this returns the game type name at the given index
 	string Lookup_Game_Type(int index){
 		switch (index) {
 		case 0:
@@ -82,6 +87,7 @@ public class High_Score_Calculator : MonoBehaviour {
 		}
 	}
 
+	//This reutrns the name of the scope at the given index
 	string Lookup_Scope(int index){
 		switch (index) {
 		case 0:
@@ -94,6 +100,5 @@ public class High_Score_Calculator : MonoBehaviour {
 			return "Local";
 		}
 	}
-
 
 }

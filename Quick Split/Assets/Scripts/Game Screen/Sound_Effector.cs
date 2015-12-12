@@ -36,8 +36,7 @@ public class Sound_Effector : MonoBehaviour {
 	void Update () {
 		// upkeep for available sources
 		for (int i = 0; i < aSources.Count(); i++) {
-			if(!availableSource.ElementAt (i))
-			{
+			if(!availableSource.ElementAt (i)){
 				if(!aSources.ElementAt(i).isPlaying){
 					availableSource[i] = true;
 				}
@@ -45,8 +44,8 @@ public class Sound_Effector : MonoBehaviour {
 		}
 	}
 
+	//Plays the sound with the proper pitch and volume
 	void PlaySound(){
-
 		for (int i = 0; i < aSources.Count(); i++){
 			//find first available audiosource
 			if (availableSource.ElementAt (i)) {
@@ -55,8 +54,7 @@ public class Sound_Effector : MonoBehaviour {
 				aSources[i].volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
 
 				//add variation if needed
-				if(variation)
-				{
+				if(variation){
 					aSources[i].pitch = 1f + Random.Range (-1f * variationAmount, variationAmount);
 				}
 				aSources.ElementAt(i).Play ();
@@ -64,4 +62,5 @@ public class Sound_Effector : MonoBehaviour {
 			}
 		}
 	}
+
 }

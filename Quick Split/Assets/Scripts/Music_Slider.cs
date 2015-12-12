@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Music_Slider : MonoBehaviour {
 
+	//This script is attatched to and is used for the volume sliders which control what volume the music is played at
+
 	GameObject MC;
 	AudioSource MCsource;
 	Slider mySlider;
@@ -16,9 +18,11 @@ public class Music_Slider : MonoBehaviour {
 		mySlider.onValueChanged.AddListener (delegate{onValueChanged ();});
 	}
 
+	//update the volume while the value is being changed
 	void onValueChanged()
 	{
 		MCsource.volume = mySlider.value;
 		PlayerPrefs.SetFloat ("Music Volume", mySlider.value);
 	}
+
 }

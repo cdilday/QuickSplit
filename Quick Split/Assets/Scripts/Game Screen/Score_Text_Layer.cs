@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Score_Text_Layer : MonoBehaviour {
 
+	//This script handles spawning the score text that pops up when a piece is destroyed
+
 	public GameObject ScoreTextPrefab;
 	RectTransform rectTransform;
 
@@ -11,7 +13,8 @@ public class Score_Text_Layer : MonoBehaviour {
 	void Start () {
 		rectTransform = GetComponent<RectTransform> ();
 	}
-	
+
+	//this spawns the score text with the given properties on the score text layer
 	public void Spawn_Score_Text(Vector2 location, string color, int value)
 	{
 		GameObject scoreText = Instantiate (ScoreTextPrefab) as GameObject;
@@ -24,4 +27,5 @@ public class Score_Text_Layer : MonoBehaviour {
 		scoreText.GetComponent<RectTransform> ().localPosition = location;
 		thisText.scoreValue = value;
 	}
+
 }

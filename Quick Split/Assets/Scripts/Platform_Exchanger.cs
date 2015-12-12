@@ -8,10 +8,21 @@ public class Platform_Exchanger : MonoBehaviour {
 
 	public GameObject[] computerObjects;
 	public GameObject[] mobileObjects;
+
+	//debugging while in editor
+	public bool isMobile;
 	
 	// Use this for initialization
 	void OnEnable() {
-		Debug.Log (Application.platform);
+		if (isMobile) {
+			foreach(GameObject ob in computerObjects){
+				ob.SetActive(false);
+			}
+			foreach(GameObject ob in mobileObjects){
+				ob.SetActive(true);
+			}
+			return;
+		}
 
 		switch (Application.platform) {
 		case RuntimePlatform.WindowsPlayer:

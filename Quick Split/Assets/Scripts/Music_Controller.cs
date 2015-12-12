@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Music_Controller : MonoBehaviour {
 
-	//this is for adjusting in the options menu that we'll definitely have
+	//This script is attatched to the Music controller and handles the current song and volume that is being played
+
 	public float musicVolume;
 	public float SFXVolume;
 
@@ -15,7 +16,7 @@ public class Music_Controller : MonoBehaviour {
 	AudioSource MusicSource;
 
 	void Awake(){
-		//get rid of redundant music controllers
+		//get rid of redundant music controllers, there should always be one but only one
 		GameObject[] mcs = GameObject.FindGameObjectsWithTag ("Music Controller");
 		if (mcs.Length > 1) {
 			Destroy(gameObject);
@@ -28,11 +29,11 @@ public class Music_Controller : MonoBehaviour {
 		MusicSource.loop = true;
 
 		if (Application.loadedLevel == 0) {
-			//play title main menu music
-		} else {
+			//TODO:play title main menu music
+		} 
+		else {
 			//we're in the game scene, need to look up game type
-			switch (GameObject.Find("Gamecontroller").GetComponent<GameController>().gameType)
-			{
+			switch (GameObject.Find("Gamecontroller").GetComponent<GameController>().gameType){
 			case "Wit":
 				MusicSource.clip = WitMusic;
 				break;
@@ -54,25 +55,28 @@ public class Music_Controller : MonoBehaviour {
 		SFXVolume = PlayerPrefs.GetFloat ("SFX Volume", 1);
 	}
 
+	//stops the music
 	public void Stop_Music()
 	{
 		MusicSource.Stop ();
 	}
 
+	//pauses the music
 	public void Pause_Music()
 	{
 		MusicSource.Pause ();
 	}
 
+	//unpauses the music
 	public void Resume_Music()
 	{
 		MusicSource.UnPause ();
 	}
 
+	//plays the musc for the given game type
 	public void Play_Music(string gameType)
 	{
-		switch (gameType)
-		{
+		switch (gameType){
 		case "Wit":
 			MusicSource.clip = WitMusic;
 			break;
@@ -96,8 +100,7 @@ public class Music_Controller : MonoBehaviour {
 	//for if you just wanted to read in the track number
 	public void Play_Music(int trackNum)
 	{
-		switch (trackNum)
-		{
+		switch (trackNum){
 		case 1:
 			MusicSource.clip = WitMusic;
 			break;
@@ -117,9 +120,11 @@ public class Music_Controller : MonoBehaviour {
 		MusicSource.Play ();
 	}
 
+	//Changes the volume of the music
 	public void Change_Music_Volume(float value)
 	{
 		musicVolume = value;
 		MusicSource.volume = musicVolume;
 	}
+
 }

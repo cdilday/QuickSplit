@@ -3,6 +3,8 @@ using System.Collections;
 
 public class piece_script : MonoBehaviour {
 
+	//this script is attatched to every piece and handles their movement, state, and functions
+
 	public string pieceColor;
 	public bool inSplitter;
 	public bool inHolder;
@@ -71,8 +73,7 @@ public class piece_script : MonoBehaviour {
 		if (BitPoolObject == null) {
 			Debug.LogError("Piece Error: Cannot find the Bit Pool");
 		}
-		else
-		{
+		else{
 			BitPool = BitPoolObject.GetComponent<Bit_Pool>();
 		}
 
@@ -132,23 +133,19 @@ public class piece_script : MonoBehaviour {
 			}
 		}
 
-		if(isMoving && moveProgress < 10)
-		{
+		if(isMoving && moveProgress < 10){
 			transform.position = new Vector2(transform.position.x + (moveStepx), transform.position.y + (moveStepy));
 			moveProgress++;
 		}
-		else if(isMoving)
-		{
+		else if(isMoving){
 			transform.position = moveToPos;
 			isMoving = false;
 		}
 
-		if(changedPos)
-		{
+		if(changedPos){
 			if(!inSplitter && !inHolder)
 				this.name = pieceColor + " piece (" + gridPos.x + ", " + gridPos.y + ")";
-			else if (inHolder)
-			{
+			else if (inHolder){
 				this.name = pieceColor + " in Holder";
 			}
 			else if (inSplitter)
@@ -162,11 +159,9 @@ public class piece_script : MonoBehaviour {
 				hasPlayedAnim = true;
 				animStartTime = Time.time;
 			}
-			else if(hasPlayedAnim && (((int)Time.time) % 8 == colornum || gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time))
-			{
+			else if(hasPlayedAnim && (((int)Time.time) % 8 == colornum || gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time)){
 				float animPlayLength = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * (1/gameObject.GetComponent<Animator>().speed);
-				if(animPlayLength + animStartTime < Time.time)
-				{
+				if(animPlayLength + animStartTime < Time.time){
 					gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
 					hasPlayedAnim = false;
 				}
@@ -196,11 +191,9 @@ public class piece_script : MonoBehaviour {
 				clacker.BroadcastMessage("PlaySound");
 			}
 			//if it collided with another piece, determine where that piece is and place it relative to that piece
-			else if(colPiece.locked == true && !colPiece.inSplitter)
-			{
+			else if(colPiece.locked == true && !colPiece.inSplitter){
 				//check if it was fired left
-				if(transform.GetComponent<Rigidbody2D>().velocity.x < 0 && !colPiece.inSplitter && !inSplitter)
-				{
+				if(transform.GetComponent<Rigidbody2D>().velocity.x < 0 && !colPiece.inSplitter && !inSplitter){
 					transform.GetComponent<Rigidbody2D>().velocity = new Vector2 (0,0);
 					GetComponent<Rigidbody2D>().isKinematic = false;
 					locked = true;
@@ -209,8 +202,7 @@ public class piece_script : MonoBehaviour {
 					gridPos = new Vector2((int)lockPos.y, (int)lockPos.x + 8);
 				}
 				//check if it was fired right
-				else if(transform.GetComponent<Rigidbody2D>().velocity.x > 0 && !colPiece.inSplitter && !inSplitter)
-				{
+				else if(transform.GetComponent<Rigidbody2D>().velocity.x > 0 && !colPiece.inSplitter && !inSplitter){
 					transform.GetComponent<Rigidbody2D>().velocity = new Vector2 (0,0);
 					GetComponent<Rigidbody2D>().isKinematic = false;
 					locked = true;
@@ -261,8 +253,7 @@ public class piece_script : MonoBehaviour {
 		if(!inHolder && !inSplitter){
 			gameController.colorGrid [(int)gridPos.x, (int)gridPos.y] = newColor;
 		}
-		switch (newColor)
-		{
+		switch (newColor){
 		case "Red":
 			colornum = 0;
 			break;
@@ -323,10 +314,7 @@ public class piece_script : MonoBehaviour {
 				spellHandler.selectedPiece = this;
 				selectable = false;
 			}
-			//gameObject.GetComponentInParent<Color_Selector>().colorSelected(pieceColor);
 		}
 	}
 
-
-	
 }

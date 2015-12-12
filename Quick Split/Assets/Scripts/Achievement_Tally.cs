@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Achievement_Tally : MonoBehaviour {
 
+	//tis script updates the tally on the achivement screen in the main menu
+
 	public Text UnlockedText;
 	public Text OutOfText;
 
@@ -26,6 +28,6 @@ public class Achievement_Tally : MonoBehaviour {
 		}
 		UnlockedText.text = unlockedTally.ToString();
 		OutOfText.text = totalTally.ToString();
-
 	}
+
 }

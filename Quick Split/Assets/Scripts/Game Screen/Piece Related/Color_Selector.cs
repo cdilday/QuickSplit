@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Color_Selector : MonoBehaviour {
 
+	//This script handles the color selecor object as a whole as used by certain spells
+
 	public Text selectionText;
 	Splitter_script splitter;
 	SpellHandler spellHandler;
@@ -34,4 +36,5 @@ public class Color_Selector : MonoBehaviour {
 	{
 		selectionText.text = "";
 	}
+
 }

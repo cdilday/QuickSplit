@@ -3,6 +3,8 @@ using System.Collections;
 
 public class SideColumn : MonoBehaviour {
 
+	//This Script handles the sidecolumns that contain the pieces to be moved in on the sides of the grid
+
 	//List of piece prefabs to randomize from
 	public GameObject[] pieces;
 
@@ -42,15 +44,13 @@ public class SideColumn : MonoBehaviour {
 			sideXValue = -9f;
 			sideInt = 0;
 		}
-		else if (side == "Right" || side == "right" || side == "R" || side == "R")
-		{
+		else if (side == "Right" || side == "right" || side == "R" || side == "R"){
 			Vector2 tempPos = new Vector2(8f, 0);
 			this.transform.position = tempPos;
 			sideXValue = 8f;
 			sideInt = 1;
 		}
-		else
-		{
+		else{
 			//stupid mistake was made
 			Debug.Log ("Side Column Error: side not assigned with a valid position string");
 			Destroy(this);
@@ -125,4 +125,5 @@ public class SideColumn : MonoBehaviour {
 			colorColumn[row] = column[row].GetComponent<piece_script>().pieceColor;
 		}
 	}
+
 }

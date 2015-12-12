@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Yellow_Spell_Effect : MonoBehaviour {
 
+	//This script handles the Yellow Spell's effect and animations
 
 	GameController gameController;
 	SpellHandler spellHandler;
@@ -126,6 +127,7 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 		//the rest start after the previous hits the 2/5th frame
 	}
 
+	//begins the effect & animations
 	public void Activate(){
 		yellowSpellEffects [0].GetComponent<Animator> ().SetBool ("inActive", false);
 		yellowSpellEffects [0].GetComponent<Animator> ().SetInteger ("LeftStage", 1);
@@ -141,6 +143,7 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 
 	}
 
+	//This resets it back to a state where it can be reused
 	void reset()
 	{
 		gameController.splitter.setState ("isActive", true);
@@ -150,4 +153,5 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 		ChainStage = 0;
 		spellHandler.spellWorking = false;
 	}
+
 }

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class PieceScoreText : MonoBehaviour {
 
+	//this script is attatched to piece score text objecs that pop up when pieces are cleared and handles all that
+
 	public string pieceColor;
 	public Color textColor;
 	public int scoreValue = 1;
@@ -50,8 +52,7 @@ public class PieceScoreText : MonoBehaviour {
 		liveCount--;
 		transform.position = new Vector2 (transform.position.x, transform.position.y + 0.001f);
 		if (liveCount % 20 == 0 && liveCount >= 60) {
-			if(textColor.a == 1f)
-			{
+			if(textColor.a == 1f){
 				textColor = new Color(textColor.r, textColor.g, textColor.b, 0.5f);
 			}
 			else
@@ -65,4 +66,5 @@ public class PieceScoreText : MonoBehaviour {
 		if (liveCount <= 0)
 			Destroy (transform.gameObject);
 	}
+
 }

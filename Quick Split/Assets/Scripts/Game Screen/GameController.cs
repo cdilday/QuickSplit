@@ -121,10 +121,8 @@ public class GameController : MonoBehaviour {
 
 		multiRun = false;
 		//instantiate the grids with their appropriate starting values
-		for(int r = 0; r <=7; r++ )
-		{
-			for(int c = 0; c<= 15; c++)
-			{
+		for(int r = 0; r <=7; r++ ){
+			for(int c = 0; c<= 15; c++){
 				grid[r,c] = null;
 				colorGrid[r,c] = null;
 				checkGrid[r,c] = false;
@@ -163,8 +161,7 @@ public class GameController : MonoBehaviour {
 			Destroy(scols[0]);
 			mc.Play_Music(gameType);
 		}
-		else if(gameType == "Quick")
-		{	
+		else if(gameType == "Quick"){	
 			availableCount = 4;
 			if (scols [0] != null && scols [1] != null) {
 				//make sure they're loaded properly, left is 0, right is 1
@@ -185,14 +182,12 @@ public class GameController : MonoBehaviour {
 			// no powers in Quick, only Holy and Wiz
 			Destroy (spellHandlerObject);
 		}
-		else if(gameType == "Wiz")
-		{
+		else if(gameType == "Wiz"){
 			//powers are in Wiz, start out with 5 kinds of blocks
 			availableCount = 5;
 			if (scols [0] != null && scols [1] != null) {
 				//make sure they're loaded properly, left is 0, right is 1
-				if(scols[0].GetComponent <SideColumn>().sideInt == 0)
-				{
+				if(scols[0].GetComponent <SideColumn>().sideInt == 0){
 					sideColumns[0] = scols[0].GetComponent<SideColumn>();
 					sideColumns[1] = scols[1].GetComponent<SideColumn>();
 				}
@@ -211,14 +206,12 @@ public class GameController : MonoBehaviour {
 			spellHandler.whiteReady = false;
 			mc.Play_Music(gameType);
 		}
-		else if( gameType == "Holy")
-		{
+		else if( gameType == "Holy"){
 			//Holy has everything at once. Essentially hard mode
 			availableCount = 8;
 			if (scols [0] != null && scols [1] != null) {
 				//make sure they're loaded properly, left is 0, right is 1
-				if(scols[0].GetComponent <SideColumn>().sideInt == 0)
-				{
+				if(scols[0].GetComponent <SideColumn>().sideInt == 0){
 					sideColumns[0] = scols[0].GetComponent<SideColumn>();
 					sideColumns[1] = scols[1].GetComponent<SideColumn>();
 				}
@@ -238,8 +231,7 @@ public class GameController : MonoBehaviour {
 			mc.Play_Music(gameType);
 		}
 
-		if(gameType != "Wit" && sideColumns != null && sideColumns[0].side == "Right")
-		{
+		if(gameType != "Wit" && sideColumns != null && sideColumns[0].side == "Right"){
 			SideColumn temp = sideColumns[0];
 			sideColumns[0] = sideColumns[1];
 			sideColumns[1] = temp;
@@ -269,8 +261,7 @@ public class GameController : MonoBehaviour {
 		if (gameOver && Input.GetKeyDown ("r")) {
 			Application.LoadLevel(Application.loadedLevel);
 		}
-		else if (gameOver && Input.GetKeyDown (KeyCode.Backspace))
-		{
+		else if (gameOver && Input.GetKeyDown (KeyCode.Backspace)){
 			Application.LoadLevel ("Split Title Scene");
 		}
 
@@ -295,8 +286,7 @@ public class GameController : MonoBehaviour {
 						if(!achievementHandler.is_Splitter_Unlocked("Candy Cane") && score > 0 && score < 200)
 							achievementHandler.Unlock_Splitter("Candy Cane");
 
-						if(!achievementHandler.is_Splitter_Unlocked("Dark") && (gameType == "Wiz" || gameType == "Holy"))
-						{
+						if(!achievementHandler.is_Splitter_Unlocked("Dark") && (gameType == "Wiz" || gameType == "Holy")){
 							if(!spellHandler.Used_Spells() && score > 1000)
 								achievementHandler.Unlock_Splitter("Dark");
 						}
@@ -327,12 +317,10 @@ public class GameController : MonoBehaviour {
 		}
 
 		//if both pieces have been placed, set the checkGrid to false and check the board
-		if(piecesPlaced >= 2)
-		{
+		if(piecesPlaced >= 2){
 			piecesPlaced = 0;
 			checkGameOver = true;
-			if(checkFlag)
-			{
+			if(checkFlag){
 				clearedLastTurn = piecesDeletedThisSplit;
 				piecesDeletedThisSplit = false;
 				checkBoard ();
@@ -352,8 +340,7 @@ public class GameController : MonoBehaviour {
 					sidebars [0].BroadcastMessage ("Reset");
 					sidebars [1].BroadcastMessage ("Reset");
 				}
-				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 8)
-				{
+				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 8){
 					switch (sideMovesLimit - (movesMade % sideMovesLimit)){
 					case 1:
 						sideColumns[0].isShaking = false;
@@ -407,8 +394,7 @@ public class GameController : MonoBehaviour {
 			}
 			else if((gameType == "Quick") && !sidesChecked){
 				//quick mode moves the sides in based off of time, not moves
-				if(quickMoveSides)
-				{
+				if(quickMoveSides){
 					addSideColumns();
 					sideColumns[0].ready = false;
 					sideColumns[1].ready = false;
@@ -418,7 +404,6 @@ public class GameController : MonoBehaviour {
 				sidesChecked = true;
 			}
 		}
-		
 	}
 	
 	//puts the pieces in the grid after they've settled into their place
@@ -428,8 +413,7 @@ public class GameController : MonoBehaviour {
 		int thisX = (int)pieceStats.gridPos.x;
 		int thisY = (int)pieceStats.gridPos.y;
 		//check to make sure the piece is in the grid
-		if(pieceStats.gridPos.x >= 0 && pieceStats.gridPos.x < 8 && pieceStats.gridPos.y >= 0 && pieceStats.gridPos.x < 16)
-		{
+		if(pieceStats.gridPos.x >= 0 && pieceStats.gridPos.x < 8 && pieceStats.gridPos.y >= 0 && pieceStats.gridPos.x < 16){
 			//uncomment this to show what the grid position of the newly placed piece is
 			//Debug.Log ("Grid Position is" +(int)pieceStats.gridPos.x +" " + (int)pieceStats.gridPos.y);
 			colorGrid [(int)pieceStats.gridPos.x, (int)pieceStats.gridPos.y] = pieceStats.pieceColor;
@@ -449,8 +433,7 @@ public class GameController : MonoBehaviour {
 			piecesPlaced++;
 		}
 		// if it isn't in the grid, throw an error up and delete the offending piece.
-		else
-		{
+		else{
 			Debug.LogError ("Error in placing piece with position" +(int)pieceStats.gridPos.x +" " + (int)pieceStats.gridPos.y);
 			Destroy(piece);
 		}
@@ -465,10 +448,8 @@ public class GameController : MonoBehaviour {
 	{
 		recalculateBoard();
 		//reset the bool board for the current run
-		for(int r = 0; r <=7; r++ )
-		{
-			for(int c = 0; c<= 15; c++)
-			{
+		for(int r = 0; r <=7; r++ ){
+			for(int c = 0; c <= 15; c++){
 				checkGrid[r,c] = false;
 			}
 		}
@@ -476,13 +457,10 @@ public class GameController : MonoBehaviour {
 		bool groupIncreased = false;
 
 		//nested for loops for checking the grid
-		for(int r = 0; r <= 7; r++ )
-		{
-			for(int c = 0; c <= 15; c++)
-			{
+		for(int r = 0; r <= 7; r++ ){
+			for(int c = 0; c <= 15; c++){
 				//check if current piece has already been checked
-				if(checkGrid[r,c] == false && grid [r,c] != null)
-				{
+				if(checkGrid[r,c] == false && grid [r,c] != null){
 					//uncomment this to see what pieces the function is checking as it checks them
 					//Debug.Log ("Checking piece in position " + r + " " + c);
 					checkGrid[r,c] = true;
@@ -490,21 +468,18 @@ public class GameController : MonoBehaviour {
 					//begin the recursion
 					int temp = scanner (r,c, grid[r,c].GetComponent<piece_script>().pieceColor, 1);
 					//loop that assigns each piece in the group the group value to be scanned afterwards
-					for(int i = 0; i < temp; i++)
-					{
+					for(int i = 0; i < temp; i++){
 						cluster[i].GetComponent<piece_script>().groupValue = temp;
 					}
 					//if a group has hit the deletion count, and it's not the first, add to the multiplier
-					if(temp >= 4)
-					{
+					if(temp >= 4){
 						groupCount++;
 						groupIncreased = true;
 					}
 					//if the previous turn had a clear, add to the multiplier
 					if(groupIncreased && groupCount == 1 && clearedLastTurn && !multiRun)
 					   multiplier++;
-					if((groupCount >= 2 || multiRun) && groupIncreased)
-					{
+					if((groupCount >= 2 || multiRun) && groupIncreased){
 						multiplier++;
 					}
 				}
@@ -517,13 +492,10 @@ public class GameController : MonoBehaviour {
 
 		//now check if groups need to be removed
 		bool deleted = false;
-		for(int r = 0; r <=7; r++ )
-		{
-			for(int c = 0; c <= 15; c++)
-			{
+		for(int r = 0; r <=7; r++ ){
+			for(int c = 0; c <= 15; c++){
 				//if the value is high enough it's in a group big enough to delete, so delete it
-				if(grid[r,c] != null && grid[r,c].GetComponent<piece_script>().groupValue >= 4)
-				{
+				if(grid[r,c] != null && grid[r,c].GetComponent<piece_script>().groupValue >= 4){
 					grid[r,c].GetComponent<piece_script>().multiplier = multiplier;
 					updateScore();
 					//delete piece, mark that something was deleted
@@ -562,19 +534,15 @@ public class GameController : MonoBehaviour {
 		int tempCol;
 		bool adjusted = false;
 		//check the left grid
-		for(int r = 0; r <8; r++)
-		{
+		for(int r = 0; r <8; r++){
 			tempCol = 0;
 			adjusted = false;
-			for (int c = 0; c < 8; c++)
-			{
-				if(grid[r,c] == null && !adjusted)
-				{
+			for (int c = 0; c < 8; c++){
+				if(grid[r,c] == null && !adjusted){
 					tempCol = c;
 					adjusted = true;
 				}
-				else if(adjusted && grid[r,c] != null)
-				{
+				else if(adjusted && grid[r,c] != null){
 					//change the piece's stats to reflect the new position
 					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2(tempCol - 8, r));
 					//re-assign all grids to fit the new position, add 1 to tempCol
@@ -590,19 +558,15 @@ public class GameController : MonoBehaviour {
 		}
 		
 		//check the right grid
-		for(int r = 0; r <8; r++)
-		{
+		for(int r = 0; r <8; r++){
 			tempCol = 0;
 			adjusted = false;
-			for (int c = 15; c > 8; c--)
-			{
-				if(grid[r,c] == null && !adjusted)
-				{
+			for (int c = 15; c > 8; c--){
+				if(grid[r,c] == null && !adjusted){
 					tempCol = c;
 					adjusted = true;
 				}
-				else if(adjusted && grid[r,c] != null)
-				{
+				else if(adjusted && grid[r,c] != null){
 					//change the piece's stats to reflect the new position
 					grid[r,c].GetComponent<piece_script>().movePiece(new Vector2(tempCol - 8, r));
 					//re-assign all grids to fit the new position, subtract to tempCol
@@ -679,11 +643,9 @@ public class GameController : MonoBehaviour {
 			sidesChecked = false;
 		}
 
-		if(movesMade % 77 == 0 && availableCount != 8 && movesMade != 0)
-		{
+		if(movesMade % 77 == 0 && availableCount != 8 && movesMade != 0){
 			availableCount++;
-			if(gameType == "Wiz")
-			{
+			if(gameType == "Wiz"){
 				switch(availableCount){
 				case 6:
 					spellHandler.orangeReady = true;
@@ -696,8 +658,7 @@ public class GameController : MonoBehaviour {
 					break;
 				}
 			}
-			else if (!achievementHandler.is_Pieceset_Unlocked("Techno") && gameType == "Quick" && availableCount == 5)
-			{
+			else if (!achievementHandler.is_Pieceset_Unlocked("Techno") && gameType == "Quick" && availableCount == 5){
 				achievementHandler.Unlock_Pieceset("Techno");
 			}
 		}
@@ -715,8 +676,7 @@ public class GameController : MonoBehaviour {
 		}
 		//save current score
 		if(PlayerPrefs.GetInt(gameType + " score 0", 0) < score){
-			if(!newHighScore)
-			{
+			if(!newHighScore){
 				//TODO: SFX for high score
 				newHighScore = true;
 				HighScoreText.text = "New High Score!";
@@ -826,12 +786,7 @@ public class GameController : MonoBehaviour {
 		checkBoard ();
 	}
 
-	public void Has_Split()
-	{
-
-	}
-
-
+	//this begins the countdown at the start of Quick mode
 	public IEnumerator StartingCountDown()
 	{
 		isCountingDown = true;
@@ -851,6 +806,7 @@ public class GameController : MonoBehaviour {
 		gameOverText.text = "";
 	}
 
+	//this is the timer for the side columns in quick mode
 	public IEnumerator QuickSideTimer()
 	{
 		GameObject[] sidebars = GameObject.FindGameObjectsWithTag ("Sidebar");
@@ -906,13 +862,10 @@ public class GameController : MonoBehaviour {
 		foreach (GameObject piece in allPieces) {
 			piece_script temp = piece.GetComponent<piece_script>();
 			//if it's on the grid, add it to the grid
-			if(temp != null && !temp.inHolder && !temp.inSplitter && !temp.inSideHolder)
-			{
+			if(temp != null && !temp.inHolder && !temp.inSplitter && !temp.inSideHolder){
 				//it's just been shot, ignore it for now
-				if(!(temp.gridPos.x < 0))
-				{
-					if( grid [(int)temp.gridPos.x, (int)temp.gridPos.y] == null)
-					{
+				if(!(temp.gridPos.x < 0)){
+					if( grid [(int)temp.gridPos.x, (int)temp.gridPos.y] == null){
 						grid [(int)temp.gridPos.x, (int)temp.gridPos.y] = piece;
 						colorGrid [(int)temp.gridPos.x, (int)temp.gridPos.y] = temp.pieceColor;
 					}
@@ -927,13 +880,13 @@ public class GameController : MonoBehaviour {
 		collapse ();
 	}
 
+	//this handles all pausing transitions
 	public void TogglePause()
 	{
 		if (gameOver)
 			return;
 
-		if(!isPaused)
-		{
+		if(!isPaused){
 			isPaused = true;
 			Time.timeScale = 0;
 			gameOverText.text = "PAUSED";
@@ -942,8 +895,7 @@ public class GameController : MonoBehaviour {
 			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Unpause";
 			mc.Pause_Music();
 		}
-		else
-		{
+		else{
 			isPaused = false;
 			Time.timeScale = 1;
 			gameOverText.text = "";
@@ -954,6 +906,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	//returns to the main menu
 	public void LoadMainMenu()
 	{
 		//save current score
@@ -969,11 +922,13 @@ public class GameController : MonoBehaviour {
 		StartCoroutine ("TitleTransition");
 	}
 
+	//restarts the game scene
 	public void Retry()
 	{
 		StartCoroutine ("ReloadScene");
 	}
 
+	//begins the reloading of the current scene
 	IEnumerator ReloadScene(){
 		if(PlayerPrefs.GetInt(gameType, 0) < score){
 			PlayerPrefs.SetInt (gameType, score);
@@ -986,7 +941,7 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (2f);
 		Application.LoadLevel (Application.loadedLevel);
 	}
-
+	//transitions to the title screen
 	IEnumerator TitleTransition(){
 		mc.Stop_Music ();
 		shutter.Begin_Horizontal_Close ();
@@ -994,6 +949,7 @@ public class GameController : MonoBehaviour {
 		Application.LoadLevel ("Split Title Scene");
 	}
 
+	//used for handling some gameobject that don't know when to stop
 	void OnApplicationQuit()
 	{
 		isQuitting = true;

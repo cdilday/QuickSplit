@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class SpellHandler : MonoBehaviour {
 
+	//This scripte handles all the spell stuff, including activating and tracking spells
+
 	GameController gameController;
 	Splitter_script splitter;
 	Holder_Script holder;
@@ -913,4 +915,5 @@ public class SpellHandler : MonoBehaviour {
 		}
 		return false;
 	}
+
 }

@@ -2,6 +2,10 @@
 using System.Collections;
 
 public class Splitter_script : MonoBehaviour {
+
+	//This script handles controlling the splitter and its states
+
+	//check this if trying to emulate mobile controls on computer
 	public bool mobileDebugging;
 
 	public class State{

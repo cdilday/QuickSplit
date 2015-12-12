@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Pulser : MonoBehaviour {
+
+	//This is attatched to the score on the Game Screen and is responsible for handling the pulse that happens on update
+
 	Text thisText;
 	public float defaultSize;
 
@@ -62,4 +65,5 @@ public class Pulser : MonoBehaviour {
 			}
 		}
 	}
+
 }

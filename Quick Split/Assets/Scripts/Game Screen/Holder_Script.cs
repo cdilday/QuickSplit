@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Holder_Script : MonoBehaviour {
 
+	//This handles the pieces in the holder above the game grid
+
 	public Transform[,] holder = new Transform[3,2];
 
 	public GameController gameController;
@@ -35,6 +37,7 @@ public class Holder_Script : MonoBehaviour {
 		}
 	}
 
+	//handles moving the pieces along and loading the next pieces into the splitter
 	public void getNextPiece()
 	{
 		splitScript.leftSlot = holder [0, 0];

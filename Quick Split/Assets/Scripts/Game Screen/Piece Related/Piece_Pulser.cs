@@ -3,14 +3,14 @@ using System.Collections;
 
 public class Piece_Pulser : MonoBehaviour {
 
+	//this script handles the pulsing effect that happens when pieces are selectable for spells or when they're in danger
+
 	public SpriteRenderer spriteRenderer;
 	piece_script parentPiece;
 
 	Color activeColor;
 	Color inActiveColor;
 	Color dangerColor;
-
-	//GameController gameController;
 
 	bool isPulsing;
 	// Use this for initialization
@@ -33,8 +33,7 @@ public class Piece_Pulser : MonoBehaviour {
 		if (!parentPiece.selectable && parentPiece.gridPos.y != 6 && parentPiece.gridPos.y != 9) {
 			transform.localScale = Vector3.one;
 			//set to inactivecolor only on the frame after it was active
-			if(isPulsing)
-			{
+			if(isPulsing){
 				isPulsing = false;
 				spriteRenderer.color = inActiveColor;
 			}
@@ -57,6 +56,6 @@ public class Piece_Pulser : MonoBehaviour {
 			newScale = new Vector3 ((Mathf.Sin (Time.time * 8 ) *0.1f) + 1.1f, (Mathf.Sin (Time.time * 8 ) *0.1f) + 1.1f, newScale.z);
 		}
 		transform.localScale = newScale;
-
 	}
+
 }

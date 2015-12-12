@@ -5,6 +5,8 @@ using System.Collections;
 
 public class Piece_Spell_Effect : MonoBehaviour {
 
+	//this contains and handles all the animations and spell efects that happen on individual pieces
+
 	SpriteRenderer spriteRenderer;
 	Animator animator;
 
@@ -90,8 +92,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 						for (int c = 0; c < 3; c++){
 							//check to make sure it's a valid move
 							if((int)(gridPos.x-1+r) >= 0 && (int)(gridPos.x-1+r) <= 7 && (int)gridPos.y-1+c >= 0 && (int)gridPos.y-1+c <= 15 &&
-							   gameController.grid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c] != null)
-							{
+							   gameController.grid[(int)piece.gridPos.x - 1 + r, (int) piece.gridPos.y - 1 + c] != null){
 								Destroy(gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c]);
 								gameController.grid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
 								gameController.colorGrid[(int)gridPos.x - 1 + r, (int) gridPos.y - 1 + c] = null;
@@ -294,4 +295,5 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			orangeStage = 2;
 		}
 	}
+
 }

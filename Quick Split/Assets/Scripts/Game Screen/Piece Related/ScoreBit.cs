@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class ScoreBit : MonoBehaviour {
+
+	//this handles the movement and function of each individual score bit
+
 	public string bitColor;
 	public Vector2 target;
 	Vector2 moveVector;
@@ -41,20 +44,19 @@ public class ScoreBit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if(gameObject.activeSelf)
-		{
+		if(gameObject.activeSelf){
 			if (gameController.gameOver) {
 				target = GameObject.FindGameObjectWithTag("Splitter").transform.position;
 			}
 			transform.Translate (new Vector3(moveVector.x *speed*Time.deltaTime, moveVector.y * speed * Time.deltaTime));
 			if (isReturning) {
 				speed += acceleration;
-				if(prevMagnitude < Vector2.Distance (transform.position, target))
-				{
+				if(prevMagnitude < Vector2.Distance (transform.position, target)){
 					GameObject.Find("Score Text").BroadcastMessage("beginPulse");
 					End_Journey();
 				}
-			} else {
+			} 
+			else {
 				speed -= acceleration;
 				if (speed <= 1.5){
 					isReturning = true;
@@ -65,7 +67,6 @@ public class ScoreBit : MonoBehaviour {
 			} 
 			prevMagnitude = Vector2.Distance (transform.position, target);
 		}
-	
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
@@ -128,8 +129,7 @@ public class ScoreBit : MonoBehaviour {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent <GameController>();
-			if(gameController.gameType == "Holy" || gameController.gameType == "Wiz")
-			{
+			if(gameController.gameType == "Holy" || gameController.gameType == "Wiz"){
 				spellActive = true;
 				spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler>();
 				if (spellHandler.spellActive){
@@ -138,14 +138,13 @@ public class ScoreBit : MonoBehaviour {
 				else
 					charges = true;
 			}
-			else
-			{
+			else{
 				spellActive = false;
 			}
 		}
-
 	}
 
+	//handles what should happen when the bit is finished
 	void End_Journey(){
 		if (value < 1)
 			value = 1;

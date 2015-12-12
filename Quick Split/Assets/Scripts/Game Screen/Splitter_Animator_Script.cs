@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Splitter_Animator_Script : MonoBehaviour {
 
+	//This script applies the proper animations to the splitters and activates them on start
+
 	SpriteRenderer spriteRenderer;
 	Animator animator;
 	Piece_Sprite_Holder pieceSpriteHolder;

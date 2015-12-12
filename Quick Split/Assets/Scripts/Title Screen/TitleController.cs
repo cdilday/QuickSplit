@@ -5,6 +5,8 @@ using UnityEngine.UI.Extensions;
 
 public class TitleController : MonoBehaviour {
 
+	//This script handles most of the important UI and movements on the main menu, and acts on other objects in the menu as well
+	
 	public int versionNumber;
 
 	public GameObject gameModeLayer;
@@ -47,8 +49,7 @@ public class TitleController : MonoBehaviour {
 		//first check if they're using the most recent version of the game
 		if (PlayerPrefs.GetInt ("Version", 0) != versionNumber) {
 			highScoreCalculator.Reset_All_Scores();
-			foreach (High_Score_Displayer hsd in hsds)
-			{
+			foreach (High_Score_Displayer hsd in hsds){
 				hsd.update_scores();
 			}
 			PlayerPrefs.SetInt ("Version", versionNumber);
@@ -234,4 +235,5 @@ public class TitleController : MonoBehaviour {
 			}
 		}
 	}
+
 }

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Sample_Piece_Selector : MonoBehaviour {
 
+	//this script puts the correct sprite on the given pieces on the various creens showing pieces, and also handles option menu selection
+
 	public string[] tileSets;
 	public Piece_Colorer[] samplePieces;
 	public int index = 0;

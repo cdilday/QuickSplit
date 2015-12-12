@@ -4,17 +4,23 @@ using UnityEngine.UI;
 
 public class Achievement_Notification : MonoBehaviour {
 
+	// Text that holds the achievement name
 	public Text NameText;
+	// Text that holds the achievement flavor text
 	public Text UnlockText;
+	//backdrop for the notifications
 	Image backGround;
 
 	Achievement_Script achievementHandler;
 
 	float startTime;
+	//there are 4 stages. 0 is not active, 1 is fading in, 2 is idle but active, and 3 is fading out
 	int stage = 0;
 	public bool isBusy;
 
+	//how long the fading takes
 	float fadeDuration = 1.5f;
+	//how long it stays onscreen between fadings
 	float waitDuration = 3f;
 
 	// Use this for initialization
@@ -26,8 +32,11 @@ public class Achievement_Notification : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		//if it's being used
 		if (isBusy) {
+			//fading in stage
 			if(stage == 1){
+				//check if it is fully faded in
 				if(Time.time - startTime > fadeDuration){
 					stage = 2;
 					backGround.color = new Color(1,1,1,1);
@@ -42,12 +51,18 @@ public class Achievement_Notification : MonoBehaviour {
 					NameText.color = new Color(NameText.color.r, NameText.color.g, NameText.color.b, progress);
 					UnlockText.color = new Color(UnlockText.color.r, UnlockText.color.g, UnlockText.color.b, progress);
 				}
-			}else if(stage == 2){
+			}
+			//idle stage
+			else if(stage == 2){
+				//check if the idle time has passed, then move on
 				if(Time.time - startTime > waitDuration){
 					stage = 3;
 					startTime = Time.time;
 				}
-			}else if(stage == 3){
+			}
+			//fading out stage
+			else if(stage == 3){
+				//check if it should be fully faded out, than reset it for reuse
 				if(Time.time - startTime > fadeDuration){
 					stage =  0;
 					isBusy = false;
@@ -68,6 +83,7 @@ public class Achievement_Notification : MonoBehaviour {
 	}
 
 	public void Achievement_Unlocked(string thingUnlocked, string unlockType){
+		//first check to make sure it's not n use. if it is, just play the sound so they know something happened
 		if (isBusy) {
 			//TODO: play the unlock sound delayed
 			return;
@@ -77,6 +93,7 @@ public class Achievement_Notification : MonoBehaviour {
 
 		isBusy = true;
 
+		//if it's a splitter, it needs to have the right description
 		if (unlockType == "Splitter") {
 			UnlockText.text = "New Splitter Unlocked!";
 			switch(thingUnlocked){
@@ -118,6 +135,7 @@ public class Achievement_Notification : MonoBehaviour {
 				break;
 			}
 		}
+		//if it's a pieceset, it also needs to have the right description
 		else if(unlockType == "Pieceset"){
 			UnlockText.text = "New Pieceset Unlocked!";
 			switch(unlockType = thingUnlocked){
@@ -147,7 +165,7 @@ public class Achievement_Notification : MonoBehaviour {
 				break;
 			}
 		}
-
+		//begin the fadin stage
 		stage = 1;
 		startTime = Time.time;
 

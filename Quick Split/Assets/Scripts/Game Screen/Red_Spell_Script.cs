@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Red_Spell_Script : MonoBehaviour {
 
+	//This Script specifically handles the red spell effects and is in on each of the 16 effects
+
 	Animator animator;
 	Animator creationAnimator;
 
@@ -105,6 +107,7 @@ public class Red_Spell_Script : MonoBehaviour {
 		}
 	}
 
+	//begin the effect
 	public void Activate()
 	{
 		activated = true;
@@ -112,6 +115,7 @@ public class Red_Spell_Script : MonoBehaviour {
 		creationStartTime = Time.time;
 	}
 
+	//collision
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.tag == "Piece" && isMoving) {
@@ -143,6 +147,7 @@ public class Red_Spell_Script : MonoBehaviour {
 
 	}
 
+	//puts it back in its original place, ready for the next time the red spell is activated
 	void reset()
 	{
 		animator.SetBool ("LeftCollided", false);
@@ -156,4 +161,5 @@ public class Red_Spell_Script : MonoBehaviour {
 		hasDestroyed = false;
 		gameObject.SetActive (false);
 	}
+
 }

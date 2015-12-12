@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Guide_Toggler : MonoBehaviour {
 
+	//this handles the guide toggle on the options menu
+
 	Toggle toggle;
 
 	// Use this for initialization
@@ -13,8 +15,7 @@ public class Guide_Toggler : MonoBehaviour {
 		if (guideOnInt == 1) {
 			toggle.isOn = true;
 		}
-		else
-		{
+		else{
 			toggle.isOn = false;
 		}
 	}
@@ -27,4 +28,5 @@ public class Guide_Toggler : MonoBehaviour {
 			PlayerPrefs.SetInt("Guide", 1);
 		}
 	}
+
 }

@@ -4,21 +4,14 @@ using System.Collections.Generic;
 
 public class Bit_Pool : MonoBehaviour {
 
+	//This script is for proper tracking and efficient handling of score bits
+
 	public int scoreBitMax;
 
 	public GameController gameController;
 
 	List<GameObject> availableBits;
-
-	/* Things this needs:*/
-	// - An Arraylist of score bits to pull from
-	// - A way of knowing how many bits it has
-	// - the ability to turn scorebits on and off in terms of whether or not they're active
-	// - To instantiate the maximum amount of bits possible on start, then immediately make them inactive 
-	// - a function that takes in a number, V3 position, and color, then moves that number of bits to the location and makes them active
-	//   - this will also remove the bits from the inactive arraylist
-	// - a function called by the bit on collision with the score that will return the bit to its original, inactive state and into the inactive arraylist
-	// Use this for initialization
+	
 	void Start () {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
@@ -34,12 +27,8 @@ public class Bit_Pool : MonoBehaviour {
 			newbit.name = ("Score Bit " + i);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
+	//this spawns the correct number of bits by repurposing bits not active in the pool
 	public void spawn_bits(int score, Vector3 spawnLoc, string color){
 		int indivalue = score / scoreBitMax;
 		int leftover = score % scoreBitMax;
@@ -54,8 +43,7 @@ public class Bit_Pool : MonoBehaviour {
 				newbit.transform.position = spawnLoc;
 				newbit.GetComponent<ScoreBit>().target = gameController.scoreText.transform.position;
 				newbit.GetComponent<ScoreBit>().value = indivalue;
-				if(leftover > 0)
-				{
+				if(leftover > 0){
 					leftover--;
 					newbit.GetComponent<ScoreBit>().value++;
 				}
@@ -70,4 +58,5 @@ public class Bit_Pool : MonoBehaviour {
 		availableBits.Add (scoreBit);
 		scoreBit.transform.position = transform.position;
 	}
+
 }

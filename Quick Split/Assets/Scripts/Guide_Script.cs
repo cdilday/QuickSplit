@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Guide_Script : MonoBehaviour {
 
+	//this script handles the guide circles on the splitter, and is attatched to each one individually
+
 	bool isRight;
 	Splitter_script splitter;
 	GameController gameController;
@@ -14,15 +16,16 @@ public class Guide_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//get rid of the guide piece if 
-		if(PlayerPrefs.GetInt("Guide", 1) == 0)
-		{
+		//get rid of the guide piece if the player has opted out on the option screen
+		if(PlayerPrefs.GetInt("Guide", 1) == 0){
 			Destroy (gameObject);
+			return;
 		}
 
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		splitter = GameObject.FindGameObjectWithTag ("Splitter").GetComponent<Splitter_script> ();
 
+		//assign which side it's on
 		if (transform.localPosition.x > 0) {
 			isRight = true;
 		}
@@ -67,31 +70,27 @@ public class Guide_Script : MonoBehaviour {
 
 				}
 			}
-
+			//check which row/column it should be in relative to the grid info in the gamecontroller
 			int row = (int) transform.position.y;
-			if(gameController.grid[row,9] != null)
-			{
+			if(gameController.grid[row,9] != null){
 				spriteRenderer.color = new Color(1f, 0.5f, 0f, 0);
 			}
 			else{
 				bool hitEnd = true;
-				for(int c = 10; c < 16; c++)
-				{
-					if(gameController.grid[row,c] != null)
-					{
+				for(int c = 10; c < 16; c++){
+					if(gameController.grid[row,c] != null){
 						transform.localPosition = new Vector2((float) c - 8.5f, transform.localPosition.y);
 						hitEnd = false;
 						break;
 					}
 				}
-				if(hitEnd)
-				{
+				//if it's hit the end, put it in the final columns
+				if(hitEnd){
 					transform.localPosition = new Vector2(7.5f, transform.localPosition.y);
 				}
 			}
-
-
 		}
+		//similar to right side, but just on the left
 		else
 		{
 			if(splitter.leftSlot){
@@ -124,26 +123,23 @@ public class Guide_Script : MonoBehaviour {
 			}
 
 			int row = (int) transform.position.y;
-			if(gameController.grid[row,6] != null)
-			{
+			if(gameController.grid[row,6] != null){
 				spriteRenderer.color = new Color(1f, 0.5f, 0f, 0);
 			}
 			else{
 				bool hitEnd = true;
-				for(int c = 5; c >= 0; c--)
-				{
-					if(gameController.grid[row,c] != null)
-					{
+				for(int c = 5; c >= 0; c--){
+					if(gameController.grid[row,c] != null){
 						transform.localPosition = new Vector2((float) c - 6.5f, transform.localPosition.y);
 						hitEnd = false;
 						break;
 					}
 				}
-				if(hitEnd)
-				{
+				if(hitEnd){
 					transform.localPosition = new Vector2(-7.5f, transform.localPosition.y);
 				}
 			}
 		}
 	}
+
 }

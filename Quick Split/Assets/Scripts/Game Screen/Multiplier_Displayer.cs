@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Multiplier_Displayer : MonoBehaviour {
 
+	//This displays the current multiplier on the Game Scene
+
 	GameController gameController;
 	Text text;
 
@@ -17,4 +19,5 @@ public class Multiplier_Displayer : MonoBehaviour {
 	void Update () {
 		text.text = "x" + gameController.multiplier;
 	}
+
 }

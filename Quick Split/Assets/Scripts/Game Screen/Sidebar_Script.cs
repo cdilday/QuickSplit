@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Sidebar_Script : MonoBehaviour {
 
+	//This Script handles the sidebars that seperate the game grid from the pieces in the side columns and lights up.
+
 	public Sprite[] Sequential_Lights;
 	public Sprite[] Colored_Lights;
 	public Sprite[] Flashing_Lights;
@@ -31,17 +33,16 @@ public class Sidebar_Script : MonoBehaviour {
 		if (isFlashing) {
 			int seconds = (int) Time.time;
 			float tempTime = Time.time - seconds;
-			if(tempTime <0.25f || (tempTime >= 0.5f && tempTime <0.75f))
-			{
+			if(tempTime <0.25f || (tempTime >= 0.5f && tempTime <0.75f)){
 				spriteRenderer.sprite = Flashing_Lights[0];
 			}
-			else
-			{
+			else{
 				spriteRenderer.sprite = Flashing_Lights[1];
 			}
 		}
 	}
-	
+
+	//lights up an additional light
 	public void Increment_Lights()
 	{
 		if (activeGameMode != "Wit") {
@@ -55,10 +56,12 @@ public class Sidebar_Script : MonoBehaviour {
 		}
 	}
 
+	//resets the sidebars back to their intial unlit state
 	public void Reset()
 	{
 		isFlashing = false;
 		lightStage = 0;
 		spriteRenderer.sprite = Sequential_Lights[lightStage];
 	}
+
 }

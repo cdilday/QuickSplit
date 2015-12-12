@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Platform_Exchanger.cs" />
      <Compile Include="Assets\Scripts\Achievement_Notification.cs" />
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
      <Compile Include="Assets\Scripts\Achievement_Tally.cs" />
@@ -54,7 +53,6 @@
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Gears_Script.cs" />
-     <Compile Include="Assets\Scripts\Game Screen\High_Score_Displayer.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Holder_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Multiplier_Displayer.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Piece Related\Bit_Pool.cs" />
@@ -79,24 +77,24 @@
      <Compile Include="Assets\Scripts\Game Screen\Splitter_Animator_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Splitter_Charged_Effect.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Splitter_script.cs" />
-     <Compile Include="Assets\Scripts\Game Screen\TitleController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Wedges_Script.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Yellow_Spell_Effect.cs" />
      <Compile Include="Assets\Scripts\Guide_Script.cs" />
      <Compile Include="Assets\Scripts\High_Score_Calculator.cs" />
      <Compile Include="Assets\Scripts\Music_Controller.cs" />
      <Compile Include="Assets\Scripts\Music_Slider.cs" />
+     <Compile Include="Assets\Scripts\Platform_Exchanger.cs" />
      <Compile Include="Assets\Scripts\RGBandHSVconverter.cs" />
      <Compile Include="Assets\Scripts\SFX_Slider.cs" />
      <Compile Include="Assets\Scripts\Selectable_Color.cs" />
      <Compile Include="Assets\Scripts\Shutter_Handler.cs" />
      <Compile Include="Assets\Scripts\Text_Fader.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Guide_Toggler.cs" />
+     <Compile Include="Assets\Scripts\Title Screen\High_Score_Displayer.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Layer_Resizer.cs" />
-     <Compile Include="Assets\Scripts\Title Screen\Mode_Clicker.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />
-     <Compile Include="Assets\Scripts\Title Screen\SceneLoader.cs" />
+     <Compile Include="Assets\Scripts\Title Screen\TitleController.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\Accordion.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\AccordionElement.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\Tweening\FloatTween.cs" />

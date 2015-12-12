@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Gears_Script : MonoBehaviour {
 
+	//this is true if the gear is on the right side of the splitter. The rotation changes depending on its location
 	bool isRight;
 	Animator animator;
 
@@ -25,8 +26,7 @@ public class Gears_Script : MonoBehaviour {
 	{
 		if (splitter.getState("isMoving")) {
 			//it's moving, find direction
-			if(splitter.moveDirection == 1)
-			{
+			if(splitter.moveDirection == 1){
 				//it's going up
 				if(isRight){
 					transform.Rotate(new Vector3(0,0,-20f));
@@ -45,7 +45,6 @@ public class Gears_Script : MonoBehaviour {
 				}
 			}
 		}
-
 	}
 	
 }

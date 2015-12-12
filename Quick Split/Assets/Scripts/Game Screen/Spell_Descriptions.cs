@@ -4,12 +4,11 @@ using UnityEngine.UI;
 
 public class Spell_Descriptions : MonoBehaviour {
 
-	//GameObject popupObject;
-	//Image popup;
+	//This script handles the spell desciptions that pop up during the game when the player begins to select a spell
+
 	GameObject descObject;
 	Text description;
-
-
+	
 	// Use this for initialization
 	void Start () {
 		/*popupObject = transform.GetChild (0).gameObject;
@@ -29,6 +28,7 @@ public class Spell_Descriptions : MonoBehaviour {
 		description.text = "";
 	}
 
+	//this displays the desc on screen
 	public void display(string color){
 		gameObject.GetComponent<Canvas> ().planeDistance = 7;
 		switch (color) {

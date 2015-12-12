@@ -251,6 +251,7 @@ public class Spell_Tab : MonoBehaviour {
 
 	void OnMouseDown()
 	{
+		//if everything's ready and it's not mobile controls, activate the spell
 		if(isReady && !spellHandler.spellWorking && !Application.isMobilePlatform && !splitter.mobileDebugging){
 			switch (spellColor) {
 			case "Red":
@@ -278,6 +279,7 @@ public class Spell_Tab : MonoBehaviour {
 				spellHandler.Whitespell();
 				break;
 			}
+			//tell it that it's just activated
 			isReady = false;
 			isTransitioning = true;
 			startTime = Time.time;

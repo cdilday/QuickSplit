@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Piece_Colorer : MonoBehaviour {
+
+	//This is used to recolor pieces as needed
+
 	public string pieceColor;
 
 	Sprite[] sprites = new Sprite[8];
@@ -14,6 +17,7 @@ public class Piece_Colorer : MonoBehaviour {
 		update_color ();
 	}
 
+	//updates the color based on what color it is
 	public void update_color()
 	{
 		sprites = spriteHolder.Get_Sprites ();
@@ -67,7 +71,7 @@ public class Piece_Colorer : MonoBehaviour {
 			else
 				gameObject.GetComponent<Image>().sprite = sprites[7];
 			break;
-		}
-
+		}	
 	}
+
 }

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Shutter_Handler : MonoBehaviour {
 
+	//This script is used for the shutter objects that overlap scene transitions
 	//unfortunately magic numbers seems to be the best way to do this
 	public Image ULShutter;
 	Vector3 ULClosePos = new Vector3(-278.3f, 171.4f, 0);
@@ -56,18 +57,18 @@ public class Shutter_Handler : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+		//check if it's currently doing something
 		if (isOpeningH || isOpeningV || isClosingH || isClosingV) {
 			inMotion = true;
 		}
-		else
-		{
+		else{
 			inMotion = false;
 		}
 
+		//if it is currently doing something
 		if(inMotion){
 			//let's start with the case that the time has passed
-			if(Time.time >= StartTime + MoveDuration)
-			{
+			if(Time.time >= StartTime + MoveDuration){
 				isOpeningV = false;
 				isOpeningH = false;
 				isClosingH = false;

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Piece_Sprite_Holder : MonoBehaviour {
 
+	//This script returns all the sprites and splitters that are currently active as they are called
+
 	public Sprite[] RetroSprites = new Sprite[8];
 	public Sprite[] ProgrammerSprites = new Sprite[8];
 	public Sprite[] ArcaneSprites = new Sprite[8];
@@ -126,4 +128,5 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 		int index = achievementHandler.Splitter_Lookup_Index_by_Name (PlayerPrefs.GetString ("Splitter Type", "Default"));
 		return SplitterAnimations [index];
 	}
+
 }

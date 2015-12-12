@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Spell_Text : MonoBehaviour {
 
+	//this script handles the spell progress text on the bottom of the game screen
+
 	public string spellColor;
 	GameObject description;
 	Vector3 startPos;
@@ -23,4 +25,5 @@ public class Spell_Text : MonoBehaviour {
 	{
 		description.transform.position = new Vector3 (startPos.x + 20, startPos.y, startPos.z);
 	}
+
 }
