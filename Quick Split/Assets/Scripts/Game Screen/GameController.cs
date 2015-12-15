@@ -694,7 +694,6 @@ public class GameController : MonoBehaviour {
 				   (colorGrid[r,9] != null && grid[r,9] != null)){
 					gameOverText.text = "Game Over";
 					GameOverLayer.SetActive(true);
-					GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
 					gameOver = true;
 					splitter.setState("canShoot", false);
 					mc.Stop_Music();

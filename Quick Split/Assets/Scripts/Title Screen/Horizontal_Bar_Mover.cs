@@ -12,7 +12,7 @@ public class Horizontal_Bar_Mover : MonoBehaviour {
 	RectTransform rectTransform;
 
 	public float speed;
-	public Vector2 ResetPosition;
+	public Vector3 ResetPosition;
 
 	// Use this for initialization
 	void Start () {
