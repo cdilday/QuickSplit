@@ -34,7 +34,7 @@ public class Spell_Tab : MonoBehaviour {
 
 	void Start () {
 		activePos = transform.position;
-		inActivePos = new Vector3 (transform.position.x, transform.position.y - 1.5f, -3.5f);
+		inActivePos = new Vector3 (transform.position.x, transform.position.y - 1.5f, transform.position.z);
 		transform.position = inActivePos;
 		GameObject shObject = transform.parent.gameObject;
 		if (shObject != null) {
@@ -170,7 +170,7 @@ public class Spell_Tab : MonoBehaviour {
 				else{
 					float t_point = (Time.time - startTime) / transitionLength;
 					transform.position = new Vector3(Mathf.SmoothStep(inActivePos.x, activePos.x, t_point),
-					                                 Mathf.SmoothStep(inActivePos.y, activePos.y, t_point), -3.5f);
+					                                 Mathf.SmoothStep(inActivePos.y, activePos.y, t_point), transform.position.z);
 				}
 			}
 			// going to inactive position
@@ -183,7 +183,7 @@ public class Spell_Tab : MonoBehaviour {
 				else{
 					float t_point = (Time.time - startTime) / transitionLength;
 					transform.position = new Vector3(Mathf.SmoothStep(activePos.x, inActivePos.x, t_point),
-					                                 Mathf.SmoothStep(activePos.y, inActivePos.y, t_point), -3.5f);
+					                                 Mathf.SmoothStep(activePos.y, inActivePos.y, t_point), transform.position.z);
 				}
 			}
 			
