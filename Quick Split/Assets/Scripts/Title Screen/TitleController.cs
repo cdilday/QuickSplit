@@ -43,6 +43,8 @@ public class TitleController : MonoBehaviour {
 	public int activeMode;
 	int prevMode;
 
+	int codeStage = 0;
+
 	// Use this for initialization
 	void Start () {
 		highScoreCalculator = GameObject.Find ("High Score Calculator").GetComponent<High_Score_Calculator> ();
@@ -236,4 +238,78 @@ public class TitleController : MonoBehaviour {
 		}
 	}
 
+	//for the pumpkin pieceset
+	public void code(string dir)
+	{
+		if(achievementHandler.is_Pieceset_Unlocked("Pumpkin")){
+			return;
+		}
+
+		switch (codeStage) {
+		case 0:
+			if(dir == "Up"){
+				codeStage++;
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		case 1:
+			if(dir == "Up"){
+				codeStage++;
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		case 2:
+			if(dir == "Down"){
+				codeStage++;
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		case 3:
+			if(dir == "Down"){
+				codeStage++;
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		case 4:
+			if(dir == "Left"){
+				codeStage++;
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		case 5:
+			if(dir == "Right"){
+				codeStage++;
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		case 6:
+			if(dir == "Left"){
+				codeStage++;
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		case 7:
+			if(dir == "Right"){
+				achievementHandler.Unlock_Pieceset("Pumpkin");
+			}
+			else{
+				codeStage = 0;
+			}
+			break;
+		}
+	}
 }
