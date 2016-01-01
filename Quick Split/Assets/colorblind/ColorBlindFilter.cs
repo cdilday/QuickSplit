@@ -40,6 +40,10 @@ public class ColorBlindFilter : MonoBehaviour
 
     void Awake()
     {
+		//this is used for debugging and should therefore be auto-removed in real builds
+		if (!Debug.isDebugBuild) {
+			Destroy(this);
+		}
         material = new Material(Shader.Find("Hidden/ChannelMixer"));
         material.SetColor("_R", RGB[0, 0]);
         material.SetColor("_G", RGB[0, 1]);
