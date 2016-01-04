@@ -230,16 +230,6 @@ public class TitleController : MonoBehaviour {
 		}
 	}
 
-	public void GPButton(){
-		//standby screen activation
-		GameObject gpghObject = GameObject.FindGameObjectWithTag ("Google Play");
-		if (gpghObject == null)
-			return;
-		//activate the standby screen
-		GPG_Handler gpgh = gpghObject.GetComponent<GPG_Handler> ();
-		gpgh.signIn ();
-	}
-
 	//for the pumpkin pieceset
 	public void code(string dir)
 	{

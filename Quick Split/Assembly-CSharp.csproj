@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GPG_Notification.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Achievement.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonStatusCodes.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonTypes.cs" />
@@ -264,6 +265,7 @@
      <Compile Include="Assets\Scripts\Shutter_Handler.cs" />
      <Compile Include="Assets\Scripts\Text_Fader.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Circle_Rotater.cs" />
+     <Compile Include="Assets\Scripts\Title Screen\GP_Icon_Handler.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Guide_Toggler.cs" />
      <Compile Include="Assets\Scripts\Title Screen\High_Score_Displayer.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Horizontal_Bar_Mover.cs" />
