@@ -30,7 +30,8 @@ public class TitleController : MonoBehaviour {
 
 	//gameobjects needed for transitions b/w game mode select and description scenes
 	public GameObject[] GameButtons = new GameObject[4];
-	string[] OrigButtonText = new string[4];
+	Sprite[] OrigButtonSprite = new Sprite[4];
+	public Sprite lockedSprite;
 	public GameObject[] Descriptions = new GameObject[4];
 	string[] OrigDescText = new string[4];
 	public GameObject[] Scores = new GameObject[4];
@@ -70,7 +71,7 @@ public class TitleController : MonoBehaviour {
 		prevMode = 0;
 		ScrollDown.BroadcastMessage ("FadeOut", null, SendMessageOptions.DontRequireReceiver);
 		for (int i = 0; i < 4; i++) {
-			OrigButtonText[i] = GameButtons[i].GetComponentInChildren<Text>().text;
+			OrigButtonSprite[i] = GameButtons[i].GetComponent<Image>().sprite;
 			OrigDescText[i] = Descriptions[i].GetComponent<Text>().text;
 		}
 		GameMode_Unlocker ();
@@ -199,15 +200,6 @@ public class TitleController : MonoBehaviour {
 		Application.LoadLevel("Game Scene");
 	}
 
-	public void Click_Game_Button(int gameType)
-	{
-		//this is a remnant of older UI's, may need to be replaced with a static image or given a better function
-	}
-
-	public void Click_Scores_Button(){
-		//go to that page's high score page
-	}
-
 	bool gameNum_unlock_checker(int gameNum)
 	{
 		switch (gameNum) {
@@ -226,16 +218,26 @@ public class TitleController : MonoBehaviour {
 	void GameMode_Unlocker(){
 		for(int i = 0; i < 4; i++){
 			if(!gameNum_unlock_checker(i)){
-				GameButtons[i].GetComponentInChildren<Text>().text = "LOCKED";
+				GameButtons[i].GetComponent<Image>().sprite = lockedSprite;
 				Descriptions[i].GetComponent<Text>().text = "Score in the last Game Mode to unlock this one!";
 				Scores[i].GetComponent<Text>().text = "";
 			}
 			else{
-				GameButtons[i].GetComponentInChildren<Text>().text = OrigButtonText[i];
+				GameButtons[i].GetComponent<Image>().sprite = OrigButtonSprite[i];
 				Descriptions[i].GetComponent<Text>().text = OrigDescText[i];
 				Scores[i].BroadcastMessage("update_scores", null, SendMessageOptions.DontRequireReceiver);
 			}
 		}
+	}
+
+	public void GPButton(){
+		//standby screen activation
+		GameObject gpghObject = GameObject.FindGameObjectWithTag ("Google Play");
+		if (gpghObject == null)
+			return;
+		//activate the standby screen
+		GPG_Handler gpgh = gpghObject.GetComponent<GPG_Handler> ();
+		gpgh.signIn ();
 	}
 
 	//for the pumpkin pieceset

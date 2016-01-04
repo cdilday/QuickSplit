@@ -131,6 +131,12 @@ public class Achievement_Script : MonoBehaviour {
 			else if (Input.GetKey (KeyCode.Keypad6)){
 				Unlock_Pieceset("Pumpkin");
 			}
+			else if (Input.GetKey (KeyCode.Keypad1)){
+				Debug.Log ("Wiz " + PlayerPrefs.GetInt("Wiz unlocked", 1));
+				Debug.Log ("Quick " + PlayerPrefs.GetInt("Quick unlocked", 0));
+				Debug.Log ("Wit " + PlayerPrefs.GetInt("Wit unlocked", 0));
+				Debug.Log ("Holy " + PlayerPrefs.GetInt("Holy unlocked", 0));
+			}
 		}
 	}
 
@@ -207,15 +213,13 @@ public class Achievement_Script : MonoBehaviour {
 	public void Check_Gamemode_Unlocked()
 	{
 		//the unlock order goes from Wiz -> Quick -> Wit -> Holy
-		if (PlayerPrefs.GetInt ("Wiz", 0) > 0)
+		if (PlayerPrefs.GetInt ("Wiz score 0", 0) > 0)
 			PlayerPrefs.SetInt ("Quick unlocked", 1);
-		if(PlayerPrefs.GetInt("Quick", 0) > 0)
-			PlayerPrefs.SetInt ("Quick unlocked", 1);
-		if (PlayerPrefs.GetInt ("Quick", 0) > 0)
+		if(PlayerPrefs.GetInt("Quick score 0", 0) > 0)
 			PlayerPrefs.SetInt ("Wit unlocked", 1);
-		if (PlayerPrefs.GetInt ("Wit", 0) > 0)
+		if (PlayerPrefs.GetInt ("Wit score 0", 0) > 0)
 			PlayerPrefs.SetInt ("Holy unlocked", 1);
-		if(PlayerPrefs.GetInt("Holy", 0) > 0)
+		if(PlayerPrefs.GetInt("Holy score 0", 0) > 0)
 			Unlock_Pieceset("Present");
 	}
 
