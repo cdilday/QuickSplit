@@ -20,6 +20,9 @@ public class GPG_Handler : MonoBehaviour {
 			Destroy(gameObject);
 			return;
 		}
+		//this is to stay alive at all times
+		DontDestroyOnLoad (transform.gameObject);
+
 		if( Application.platform == RuntimePlatform.Android || debugIsMobile){
 			PlayGamesPlatform.InitializeInstance(config);
 			// recommended for debugging:
@@ -84,8 +87,36 @@ public class GPG_Handler : MonoBehaviour {
 		PlayGamesPlatform.Instance.SignOut();
 	}
 
+	public void Post_Score(string gameMode, int score){
+		string LBID;
+		switch (gameMode) {
+		case "Wiz":
+			LBID = GPG_Ids.leaderboard_wiz_split_leaderboard;
+			break;
+		case "Quick":
+			LBID = GPG_Ids.leaderboard_quick_split_leaderboard;
+			break;
+		case "Wit":
+			LBID = GPG_Ids.leaderboard_wit_split_leaderboard;
+			break;
+		case "Holy":
+			LBID = GPG_Ids.leaderboard_holy_split_leaderboard;
+			break;
+		default:
+			LBID = null;
+			break;
+		}
+
+		if(LBID != null){
+			Social.ReportScore(score, LBID, (bool success) => {
+				// handle success or failure, should prolly mention this on screen somewhere
+			});
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
 }

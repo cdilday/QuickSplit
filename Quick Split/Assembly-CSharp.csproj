@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\GPG_Notification.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Achievement.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonStatusCodes.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonTypes.cs" />
@@ -225,6 +224,7 @@
      <Compile Include="Assets\Scripts\Achievment_List_Item.cs" />
      <Compile Include="Assets\Scripts\GPG_Handler.cs" />
      <Compile Include="Assets\Scripts\GPG_Ids.cs" />
+     <Compile Include="Assets\Scripts\GPG_Notification.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
      <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
      <Compile Include="Assets\Scripts\Game Screen\Gears_Script.cs" />

@@ -16,6 +16,8 @@ public class Achievement_Script : MonoBehaviour {
 
 	public Achievement_Notification notification;
 
+	GPG_Handler gpgh;
+
 	// Use this for initialization
 	void Awake () {
 		//there should only ever be 1 of these
@@ -25,6 +27,11 @@ public class Achievement_Script : MonoBehaviour {
 		if (mcs.Length > 1) {
 			Destroy(gameObject);
 			return;
+		}
+
+		GameObject temp = GameObject.FindGameObjectWithTag ("Google Play");
+		if (temp != null) {
+			gpgh = temp.GetComponent<GPG_Handler>();
 		}
 
 		//make sure default sets are always unlocked at start of game to prevent crashes
@@ -147,6 +154,11 @@ public class Achievement_Script : MonoBehaviour {
 		if (score == 0)
 			return;
 		int tempScore = score;
+
+		if (gpgh != null && gpgh.isSignedIn () && score > PlayerPrefs.GetInt (gameMode + " score 0", 0)) {
+			gpgh.Post_Score(gameMode, score);
+		}
+
 		for (int i = 0; i < 15; i++) {
 			int currScore = PlayerPrefs.GetInt (gameMode + " score " + i, 0);
 			if(currScore == 0){
@@ -187,6 +199,11 @@ public class Achievement_Script : MonoBehaviour {
 		if (notification != null) {
 			notification.Achievement_Unlocked(name, "Splitter");
 		}
+		if(gpgh != null && gpgh.isSignedIn()){
+			Social.ReportProgress(Name_to_ID(true, name), 100.0f, (bool success) => {
+				// handle success or failure, dunno if necessary here
+			});
+		}
 	}
 
 	//returns true if the given splitter name is unlocked
@@ -201,6 +218,11 @@ public class Achievement_Script : MonoBehaviour {
 		PlayerPrefs.SetInt (name + " Pieceset unlocked", 1);
 		if (notification != null)
 			notification.Achievement_Unlocked (name, "Pieceset");
+		if(gpgh != null && gpgh.isSignedIn()){
+			Social.ReportProgress(Name_to_ID(false, name), 100.0f, (bool success) => {
+				// handle success or failure, dunno if necessary here
+			});
+		}
 	}
 
 	//returns true if the given pieceset name is unlocked
@@ -299,6 +321,60 @@ public class Achievement_Script : MonoBehaviour {
 		}
 	}
 
+	//takes the type of achievement and name of unlock, and returns the GPG ID
+	string Name_to_ID(bool isSplitter, string name)
+	{
+		if (isSplitter) {
+			switch(name){
+			case "Programmer":
+				return GPG_Ids.achievement_how_was_this_functional;
+			case "Candy Cane":
+				return GPG_Ids.achievement_some_candy_for_the_pain;
+			case "Caution":
+				return GPG_Ids.achievement_get_behind_the_line;
+			case "Dark":
+				return GPG_Ids.achievement_no_light_only_darkness;
+			case "Red":
+				return GPG_Ids.achievement_not_reddy_to_die;
+			case "Orange":
+				return GPG_Ids.achievement_well_orange_you_clever;
+			case "Yellow":
+				return GPG_Ids.achievement_nothing_to_yellowver;
+			case "Green":
+				return GPG_Ids.achievement_looking_for_greener_pastures;
+			case "Blue":
+				return GPG_Ids.achievement_out_with_the_old_in_with_the_blue;
+			case "Purple":
+				return GPG_Ids.achievement_dismantling_hostile_environments_using_nonviolet_solution;
+			case "Cyan":
+				return GPG_Ids.achievement_ill_be_cyan_you_later;
+			case "White":
+				return GPG_Ids.achievement_cleaned_up_white_away;
+			}
+		}
+		else{
+			switch(name){
+			case "Arcane":
+				return GPG_Ids.achievement_youre_a_wiz_at_this;
+			case "Retro":
+				return GPG_Ids.achievement_8bits_of_splits;
+			case "Programmer":
+				return GPG_Ids.achievement_there_are_some_grey_areas;
+			case "Blob":
+				return GPG_Ids.achievement_what_a_mess;
+			case "Domino":
+				return GPG_Ids.achievement_its_a_chain_reaction;
+			case "Present":
+				return GPG_Ids.achievement_not_exactly_regifting;
+			case "Pumpkin":
+				return GPG_Ids.achievement_cheater_cheater_pumpkineater;
+			case "Techno":
+				return GPG_Ids.achievement_sleek_technology;
+			}
+		}
+
+		return null;
+	}
 	//this is for checking if the cyan splitter conditions for unlock have been met
 	public void Cyan_Splitter_Checker()
 	{
@@ -347,5 +423,26 @@ public class Achievement_Script : MonoBehaviour {
 		if (oldCount - newCount >= 16)
 				Unlock_Splitter ("Blue");
 	} 
+
+	//this syncs all locally unlocked achievements with Google play, unlocking all GP achievements that correspond with locally unlocked
+	public void Sync_With_Google_Play(){
+		if (gpgh == null || !gpgh.isSignedIn ())
+			return;
+		for (int i = 1; i < splittersUnlocked.Length; i++) {
+			if(splittersUnlocked[i]){
+				Social.ReportProgress(Name_to_ID(true, Splitter_Lookup_Name_by_Index(i)), 100.0f, (bool success) => {
+					// handle success or failure, dunno if necessary here
+				});
+			}
+		}
+
+		for (int i = 1; i < piecesetsUnlocked.Length; i++) {
+			if(i != Pieceset_Lookup_Index_by_Name("Symbol") && piecesetsUnlocked[i]){
+				Social.ReportProgress(Name_to_ID(false, Pieceset_Lookup_Name_by_Index(i)), 100.0f, (bool success) => {
+					// handle success or failure, dunno if necessary here
+				});
+			}
+		}
+	}
 
 }
