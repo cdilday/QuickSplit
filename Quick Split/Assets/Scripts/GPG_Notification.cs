@@ -20,6 +20,9 @@ public class GPG_Notification : MonoBehaviour {
 	float transitionLength = 0.3f;
 	float startTime;
 
+	float distance;
+	float speed;
+
 	public Image loadingIcon;
 
 	public string[] prompts;
@@ -46,6 +49,12 @@ public class GPG_Notification : MonoBehaviour {
 		gpgh.notification = this;
 		isActive = false;
 		isBusy = false;
+
+		distance = Vector3.Distance (inactivePos, activePos);
+
+		loadingIcon.color = new Color (1, 1, 1, 0);
+
+		speed = Mathf.Abs (distance / transitionLength);
 	}
 	
 	public void activate()
@@ -88,7 +97,9 @@ public class GPG_Notification : MonoBehaviour {
 					isBusy = false;
 				}
 				else{
-					//move into position
+					float distCovered = (Time.time - startTime) * speed;
+					float progress = distCovered / distance;
+					rectTransform.position = Vector3.Lerp(inactivePos, activePos, progress);
 				}
 			}
 			//moving offscreen
@@ -99,7 +110,9 @@ public class GPG_Notification : MonoBehaviour {
 					isBusy = false;
 				}
 				else{
-					//move out of active position
+					float distCovered = (Time.time - startTime) * speed;
+					float progress = distCovered / distance;
+					rectTransform.position = Vector3.Lerp(activePos, inactivePos, progress);
 				}
 			}
 		}
@@ -113,7 +126,7 @@ public class GPG_Notification : MonoBehaviour {
 			gpgh.signIn (false);
 			description.text = prompts[5];
 			stage = 5;
-			//make loading image visible
+			loadingIcon.color = new Color (1, 1, 1, 1);
 			break;
 		case 1:
 			gpgh.signOut();
@@ -127,7 +140,7 @@ public class GPG_Notification : MonoBehaviour {
 			gpgh.signIn (false);
 			description.text = prompts[5];
 			stage = 4;
-			//make loading image visible
+			loadingIcon.color = new Color (1, 1, 1, 1);
 			break;
 		case 4:
 			deactivate ();
@@ -145,6 +158,7 @@ public class GPG_Notification : MonoBehaviour {
 	}
 
 	public void GoogleSigninResponse(bool success){
+		loadingIcon.color = new Color (1, 1, 1, 0);
 		if (success) {
 			stage = 2;
 			description.text = prompts[2];
