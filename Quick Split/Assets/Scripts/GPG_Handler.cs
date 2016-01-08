@@ -3,6 +3,7 @@ using System.Collections;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 
 
 public class GPG_Handler : MonoBehaviour {
@@ -109,9 +110,21 @@ public class GPG_Handler : MonoBehaviour {
 
 		if(LBID != null){
 			Social.ReportScore(score, LBID, (bool success) => {
-				// handle success or failure, should prolly mention this on screen somewhere
+				GameObject temp = GameObject.Find ("Game Over Text");
+				if(temp != null){
+					if(success){
+						temp.GetComponent<Text>().text = "SCORE POSTED TO LEADERBOARDS";
+					}
+					else{
+						temp.GetComponent<Text>().text = "Failed to post to leaderboards";
+					}
+				}
 			});
 		}
+	}
+
+	public void Show_Leaderboards(){
+		Social.ShowLeaderboardUI();
 	}
 
 	// Update is called once per frame
