@@ -110,13 +110,13 @@ public class GPG_Handler : MonoBehaviour {
 
 		if(LBID != null){
 			Social.ReportScore(score, LBID, (bool success) => {
-				GameObject temp = GameObject.Find ("Game Over Text");
+				GameObject temp = GameObject.Find ("Google Play Text");
 				if(temp != null){
 					if(success){
-						temp.GetComponent<Text>().text = "SCORE POSTED TO LEADERBOARDS";
+						temp.GetComponent<Text>().text = "SSCORE SENT TO GOOGLE PLAY LEADERBOARDS";
 					}
 					else{
-						temp.GetComponent<Text>().text = "Failed to post to leaderboards";
+						temp.GetComponent<Text>().text = "FAILED TO SEND SCORE TO GOOGLEPLAY LEADERBOARDS";
 					}
 				}
 			});
@@ -125,6 +125,48 @@ public class GPG_Handler : MonoBehaviour {
 
 	public void Show_Leaderboards(){
 		Social.ShowLeaderboardUI();
+	}
+
+	public void Load_LeaderBoards(string gameType){
+		ILeaderboard lb = PlayGamesPlatform.Instance.CreateLeaderboard();
+		switch (gameType) {
+		case "Wiz":
+			lb.id = GPG_Ids.leaderboard_wiz_split_leaderboard;
+			break;
+		case "Quick":
+			lb.id = GPG_Ids.leaderboard_quick_split_leaderboard;
+			break;
+		case "Wit":
+			lb.id = GPG_Ids.leaderboard_wit_split_leaderboard;
+			break;
+		case "Holy":
+			lb.id = GPG_Ids.leaderboard_holy_split_leaderboard;
+			break;
+		default:
+			lb.id = GPG_Ids.leaderboard_wiz_split_leaderboard;
+			break;
+		}
+		lb.id = "MY_LEADERBOARD_ID";
+		lb.LoadScores(ok =>
+		              {
+			if (ok) {
+				GameObject temp = GameObject.Find ("High Score Calculator");
+				if(temp != null)
+				{
+					High_Score_Calculator hsc = temp.GetComponent<High_Score_Calculator>();
+					hsc.LoadUsersandScores(lb);
+				}
+			}
+			else {
+				Debug.Log("Error retrieving leaderboardi");
+				GameObject temp = GameObject.Find ("High Score Calculator");
+				if(temp != null)
+				{
+					High_Score_Calculator hsc = temp.GetComponent<High_Score_Calculator>();
+					hsc.LoadUsersandScores(null);
+				}
+			}
+		});
 	}
 
 	// Update is called once per frame

@@ -158,10 +158,9 @@ public class Achievement_Script : MonoBehaviour {
 		GameObject temp = GameObject.FindGameObjectWithTag ("Google Play");
 		if (temp != null) {
 			gpgh = temp.GetComponent<GPG_Handler>();
-		}
-
-		if (gpgh != null && gpgh.isSignedIn () && score > PlayerPrefs.GetInt (gameMode + " score 0", 0)) {
-			gpgh.Post_Score(gameMode, score);
+			if (gpgh.isSignedIn ()) {
+				gpgh.Post_Score(gameMode, score);
+			}
 		}
 
 		for (int i = 0; i < 15; i++) {

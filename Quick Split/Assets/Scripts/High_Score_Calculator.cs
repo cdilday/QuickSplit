@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
@@ -16,6 +19,8 @@ public class High_Score_Calculator : MonoBehaviour {
 	int prevScope;
 	int currMode;
 	int prevMode;
+
+	GPG_Handler gpgh;
 	
 	// Use this for initialization
 	void Start () {
@@ -23,8 +28,13 @@ public class High_Score_Calculator : MonoBehaviour {
 		prevScope = -1;
 		currMode = 0;
 		prevMode = 0;
+
+		GameObject temp = GameObject.FindGameObjectWithTag ("Google Play");
+		if (temp != null) {
+			gpgh = temp.GetComponent<GPG_Handler>();
+		}
 	}
-	
+
 	// Update is called once per frame
 	void FixedUpdate () {
 		//check to make sure the scores for the proper scope and mode are on display, and if they aren't, change them
@@ -56,10 +66,46 @@ public class High_Score_Calculator : MonoBehaviour {
 		}
 		else{
 			//TODO: Implement global and friends lists for real
-			for(int i = 0; i < 15; i++)
-				ScoreList[i].text = (i+1) + ". (not implemented)";
+			for(int i = 0; i < 14; i++)
+				ScoreList[i].text = (i+1) + " -------";
+			if(gpgh != null && gpgh.isSignedIn())
+			{
+				ScoreList[14].text = "Called this";
+				ILeaderboard lb = PlayGamesPlatform.Instance.CreateLeaderboard();
+				switch (Lookup_Game_Type(Modes.CurrentScreen())) {
+				case "Wiz":
+					lb.id = GPG_Ids.leaderboard_wiz_split_leaderboard;
+					break;
+				case "Quick":
+					lb.id = GPG_Ids.leaderboard_quick_split_leaderboard;
+					break;
+				case "Wit":
+					lb.id = GPG_Ids.leaderboard_wit_split_leaderboard;
+					break;
+				case "Holy":
+					lb.id = GPG_Ids.leaderboard_holy_split_leaderboard;
+					break;
+				default:
+					lb.id = GPG_Ids.leaderboard_wiz_split_leaderboard;
+					break;
+				}
+				ScoreList[3].text = Lookup_Game_Type(Modes.CurrentScreen());
+				lb.LoadScores(ok => {
+					if (ok) {
+						ScoreList[4].text = "Good";
+						LoadUsersandScores(lb);
+					}
+					else {
+						Debug.Log("Error retrieving leaderboardi");
+						ScoreList[4].text = "Error";
+						LoadUsersandScores(null);
+					}
+				});
+			}
 		}
 	}
+
+
 
 	//this resets all scores locally
 	public void Reset_All_Scores(){
@@ -68,7 +114,7 @@ public class High_Score_Calculator : MonoBehaviour {
 				PlayerPrefs.SetInt(Lookup_Game_Type(g) + " score " + i, 0);
 			}
 		}
-		//TODO: either make this affect server stored scores or make a different way to reset those
+		//This will not affect server scores
 	}
 
 	//this returns the game type name at the given index
@@ -98,6 +144,17 @@ public class High_Score_Calculator : MonoBehaviour {
 			return "Global";
 		default:
 			return "Local";
+		}
+	}
+
+	public void LoadUsersandScores(ILeaderboard lb)
+	{
+		ScoreList [0].text = "successfully called load";
+		if (lb == null) {
+			ScoreList [1].text = "but failed to get HS";
+		}
+		else{
+			ScoreList [1].text = lb.localUserScore.ToString ();
 		}
 	}
 
