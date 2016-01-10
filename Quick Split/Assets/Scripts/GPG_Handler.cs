@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class GPG_Handler : MonoBehaviour {
 
-	bool isLoggedIn = false;
+	public bool isLoggedIn = false;
 	public bool debugIsMobile;
 
 	PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder ().Build();
@@ -113,7 +113,7 @@ public class GPG_Handler : MonoBehaviour {
 				GameObject temp = GameObject.Find ("Google Play Text");
 				if(temp != null){
 					if(success){
-						temp.GetComponent<Text>().text = "SSCORE SENT TO GOOGLE PLAY LEADERBOARDS";
+						temp.GetComponent<Text>().text = "SCORE SENT TO GOOGLE PLAY LEADERBOARDS";
 					}
 					else{
 						temp.GetComponent<Text>().text = "FAILED TO SEND SCORE TO GOOGLEPLAY LEADERBOARDS";
@@ -123,8 +123,26 @@ public class GPG_Handler : MonoBehaviour {
 		}
 	}
 
+	public void Show_Notification(){
+		notification.activate ();
+	}
+
 	public void Show_Leaderboards(){
-		Social.ShowLeaderboardUI();
+		if (isSignedIn ()) {
+			Social.ShowLeaderboardUI ();
+		}
+		else{
+			notification.activate();
+		}
+	}
+
+	public void Show_Achievements(){
+		if (isSignedIn ()) {
+			Social.ShowAchievementsUI ();
+		}
+		else{
+			notification.activate();
+		}
 	}
 
 	public void Load_LeaderBoards(string gameType){
