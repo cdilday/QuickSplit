@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Button_Image_Swapper.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Achievement.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonStatusCodes.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonTypes.cs" />
@@ -223,6 +222,7 @@
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
      <Compile Include="Assets\Scripts\Achievement_Tally.cs" />
      <Compile Include="Assets\Scripts\Achievment_List_Item.cs" />
+     <Compile Include="Assets\Scripts\Button_Image_Swapper.cs" />
      <Compile Include="Assets\Scripts\GPG_Handler.cs" />
      <Compile Include="Assets\Scripts\GPG_Ids.cs" />
      <Compile Include="Assets\Scripts\GPG_Notification.cs" />

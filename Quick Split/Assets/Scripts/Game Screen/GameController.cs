@@ -87,6 +87,9 @@ public class GameController : MonoBehaviour {
 
 	Achievement_Script achievementHandler;
 
+	public AudioSource PauseSFX;
+	public AudioSource UnpauseSFX;
+
 	void Awake () {
 
 		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
@@ -893,6 +896,8 @@ public class GameController : MonoBehaviour {
 			splitter.setState("isActive", false);
 			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Unpause";
 			mc.Pause_Music();
+			PauseSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+			PauseSFX.Play ();
 		}
 		else{
 			isPaused = false;
@@ -902,6 +907,8 @@ public class GameController : MonoBehaviour {
 			pauseLayer.SetActive(false);
 			GameObject.Find ("Pause Button Text").GetComponent<Text>().text = "Pause";
 			mc.Resume_Music();
+			UnpauseSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+			UnpauseSFX.Play ();
 		}
 	}
 

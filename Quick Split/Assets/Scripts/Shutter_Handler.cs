@@ -46,7 +46,10 @@ public class Shutter_Handler : MonoBehaviour {
 
 	float StartTime;
 	//move duration is how long the animation takes.
-	float MoveDuration = 1f;
+	float MoveDuration = 1.5f;
+
+	public AudioSource OpeningSFX;
+	public AudioSource ClosingSFX;
 
 	void Start(){
 		ULShutter.color = new Color (1, 1, 1, 1);
@@ -136,6 +139,9 @@ public class Shutter_Handler : MonoBehaviour {
 
 		//begin the timer
 		StartTime = Time.time;
+
+		ClosingSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		ClosingSFX.Play ();
 	}
 
 	// opens by having the shutters go left and right
@@ -173,6 +179,9 @@ public class Shutter_Handler : MonoBehaviour {
 
 		//begin the timer
 		StartTime = Time.time;
+
+		ClosingSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		ClosingSFX.Play ();
 	}
 
 	// closes by having the shutters go to the up and down sides
@@ -210,6 +219,9 @@ public class Shutter_Handler : MonoBehaviour {
 
 		//begin the timer
 		StartTime = Time.time;
+		OpeningSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		OpeningSFX.Play ();
+
 	}
 	
 	// Closes by having the shutters go to the left and right sides
@@ -247,5 +259,8 @@ public class Shutter_Handler : MonoBehaviour {
 
 		//begin the timer
 		StartTime = Time.time;
+
+		OpeningSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		OpeningSFX.Play ();
 	}
 }
