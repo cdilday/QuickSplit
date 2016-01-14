@@ -76,6 +76,10 @@ public class SpellHandler : MonoBehaviour {
 	GameObject[] RedSpellEffects;
 	GameObject YellowSpellEffect;
 
+	public AudioSource RedChargeSFX;
+	public AudioSource PurpleEffectSFX;
+	public AudioSource WhiteEffectSFX;
+
 	// Use this for initialization
 	void Start () {
 		pickedColor1 = null;
@@ -186,6 +190,9 @@ public class SpellHandler : MonoBehaviour {
 		//Red Splitter Achievement
 		if(!achievementHandler.is_Splitter_Unlocked("Red") && gameController.Get_Danger_Pieces() >= 8)
 			achievementHandler.Unlock_Splitter("Red");
+
+		RedChargeSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1) * 0.5f;
+		RedChargeSFX.Play ();
 
 		//This spell uses the Red Spell Effect Gameobjects to do all the dirty work
 		foreach(GameObject rse in RedSpellEffects){
@@ -426,6 +433,8 @@ public class SpellHandler : MonoBehaviour {
 	{
 		//this needed to be a coroutine so it could wait and give a proper effect
 		StartCoroutine (Purple_Activator());
+		PurpleEffectSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		PurpleEffectSFX.Play ();
 	}
 	IEnumerator Purple_Activator(){
 		int rowLeft = 7, rowRight = 7;
@@ -567,6 +576,8 @@ public class SpellHandler : MonoBehaviour {
 
 	IEnumerator WhiteHelper()
 	{
+		WhiteEffectSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		WhiteEffectSFX.Play ();
 		yield return new WaitForSeconds (1f);
 		//get all pieces on left side
 		List<GameObject> leftPieces = new List<GameObject>();

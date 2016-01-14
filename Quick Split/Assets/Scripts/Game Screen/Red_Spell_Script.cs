@@ -28,6 +28,8 @@ public class Red_Spell_Script : MonoBehaviour {
 
 	SpellHandler spellHandler;
 	GameController gameController;
+
+	public AudioSource CollisionSFX;
 	// Use this for initialization
 	void Awake () {
 		spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();
@@ -125,6 +127,9 @@ public class Red_Spell_Script : MonoBehaviour {
 				reset ();
 				return;
 			}
+			CollisionSFX.pitch = 1f + Random.Range (-0.5f,0.5f);
+			CollisionSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+			CollisionSFX.Play ();
 			isMoving = false;
 			hasHit = true;
 			transform.position = other.transform.position;

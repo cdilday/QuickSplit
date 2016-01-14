@@ -34,6 +34,10 @@ public class Piece_Spell_Effect : MonoBehaviour {
 	piece_script piece;
 	SpellHandler spellHandler;
 
+	public AudioSource TransformationSFX;
+	public AudioSource CyanBombActiveSFX;
+	public AudioSource CyanBombExplodeSFX;
+
 	// Use this for initialization
 	void Start () {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
@@ -76,6 +80,8 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			if (cyanStage == 2){
 				animator.SetBool ("Cyan Active", false);
 				cyanStage = 3;
+				CyanBombExplodeSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1) * 0.75f;
+				CyanBombExplodeSFX.Play ();
 			}
 			//stage 3 means the bomb is in the process of exploding and pieces need to be taken crae of
 			else if(cyanStage == 3){
@@ -213,6 +219,9 @@ public class Piece_Spell_Effect : MonoBehaviour {
 					}
 					else{
 						piece.ConvertColor(spellColor);
+						TransformationSFX.pitch = 1f + Random.Range (-0.5f,0.5f);
+						TransformationSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+						TransformationSFX.Play ();
 					}
 				}
 				//the remainder of the animation
@@ -243,6 +252,8 @@ public class Piece_Spell_Effect : MonoBehaviour {
 			animator.SetBool ("Cyan Active", true);
 			cyanActive = true;
 			cyanStage = 1;
+			CyanBombActiveSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1) * 0.5f;
+			CyanBombActiveSFX.Play ();
 		}
 		//second call tells it to explode
 		else {
@@ -271,6 +282,9 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		startTime = Time.time;
 		animator.SetBool ("inActive", false);
 		animator.SetBool ("Green Active", true);
+		TransformationSFX.pitch = 1f + Random.Range (-0.5f,0.5f);
+		TransformationSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		TransformationSFX.Play ();
 	}
 	//called to start the blue spell
 	public void Activate_Blue(string color)
@@ -280,6 +294,9 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		startTime = Time.time;
 		animator.SetBool ("inActive", false);
 		animator.SetBool ("Blue Active", true);
+		TransformationSFX.pitch = 1f + Random.Range (-0.5f,0.5f);
+		TransformationSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		TransformationSFX.Play ();
 	}
 	//called to start the orange spell
 	public void Activate_Orange(string color)

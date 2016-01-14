@@ -32,7 +32,15 @@ public class Spell_Tab : MonoBehaviour {
 
 	int trackingID = -1;
 
+	GameController gameController;
+
 	void Start () {
+
+		GameObject temp = GameObject.FindGameObjectWithTag ("GameController");
+		if (temp != null) {
+			gameController = temp.GetComponent<GameController>();
+		}
+
 		activePos = transform.position;
 		inActivePos = new Vector3 (transform.position.x, transform.position.y - 1.5f, transform.position.z);
 		transform.position = inActivePos;

@@ -23,6 +23,9 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 	// 8 is the right origin, 9-15 are the other effects going left to right
 	public GameObject[] yellowSpellEffects = new GameObject[16];
 
+	public AudioSource YellowChargeSFX;
+	public AudioSource YellowFireSFX;
+
 	Achievement_Script achievementHandler;
 
 	// Use this for initialization
@@ -55,6 +58,8 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 				yellowSpellEffects [9].GetComponent<Animator> ().SetBool ("isGrowing", true);
 				increment = ((yellowSpellEffects [1].GetComponent<Animator> ().GetCurrentAnimatorStateInfo(0).length * (1/yellowSpellEffects [1].GetComponent<Animator> ().speed)) / 6f);
 				startTime = Time.time;
+				YellowFireSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+				YellowFireSFX.Play ();
 			}
 			else if(isChaining){
 				if( !finishedGrowing && ChainStage < 8 && increment + startTime <Time.time){
@@ -140,7 +145,8 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 		if(initialCatalystIncrement == 0)
 			initialCatalystIncrement = 11f *(((yellowSpellEffects [0].GetComponent<Animator> ().GetCurrentAnimatorStateInfo(0).length * (1/yellowSpellEffects [0].GetComponent<Animator> ().speed)) / 14f));
 		activated = true;
-
+		YellowChargeSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		YellowChargeSFX.Play ();
 	}
 
 	//This resets it back to a state where it can be reused
