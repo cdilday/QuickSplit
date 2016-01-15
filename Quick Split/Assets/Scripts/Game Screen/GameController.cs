@@ -680,7 +680,8 @@ public class GameController : MonoBehaviour {
 		//save current score
 		if(PlayerPrefs.GetInt(gameType + " score 0", 0) < score){
 			if(!newHighScore){
-				//TODO: SFX for high score
+				HighScoreText.gameObject.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+				HighScoreText.gameObject.GetComponent<AudioSource>().Play ();
 				newHighScore = true;
 				HighScoreText.text = "New High Score!";
 			}
@@ -792,14 +793,7 @@ public class GameController : MonoBehaviour {
 	public IEnumerator StartingCountDown()
 	{
 		isCountingDown = true;
-		yield return new WaitForSeconds (1f);
-		gameOverText.text = "3";
-		yield return new WaitForSeconds (1f);
-		gameOverText.text = "2";
-		yield return new WaitForSeconds (1f);
-		gameOverText.text = "1";
-		yield return new WaitForSeconds (1f);
-		gameOverText.text = "SPLIT-IT!";
+		yield return new WaitForSeconds (4f);
 		splitter.setState("canShoot", true);
 		isCountingDown = false;
 		mc.Play_Music(gameType);

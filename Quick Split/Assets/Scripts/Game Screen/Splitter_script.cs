@@ -39,7 +39,7 @@ public class Splitter_script : MonoBehaviour {
 	public GameController gameController;
 
 	Piece_Sprite_Holder spriteHolder;
-
+	AudioSource FireSFX;
 
 	// Use this for initialization
 	void Start () {
@@ -70,6 +70,7 @@ public class Splitter_script : MonoBehaviour {
 		splitState.yellowReady = false;
 
 		gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter ();
+		FireSFX = GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
@@ -290,6 +291,8 @@ public class Splitter_script : MonoBehaviour {
 	//shoots the pieces in the correct directions
 	public IEnumerator fire()
 	{
+		FireSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		FireSFX.Play ();
 		//tell the wedges that it has fired
 		gameObject.BroadcastMessage ("Has_Fired", null, SendMessageOptions.DontRequireReceiver);
 		GameObject tempSH = GameObject.Find ("Spell Handler");

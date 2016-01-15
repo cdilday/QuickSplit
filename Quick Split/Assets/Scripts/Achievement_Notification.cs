@@ -23,11 +23,14 @@ public class Achievement_Notification : MonoBehaviour {
 	//how long it stays onscreen between fadings
 	float waitDuration = 3f;
 
+	AudioSource AchievementSFX;
+
 	// Use this for initialization
 	void Start () {
 		achievementHandler = GameObject.Find ("Achievement Handler").GetComponent<Achievement_Script> ();
 		achievementHandler.notification = GetComponent<Achievement_Notification> ();
 		backGround = GetComponent<Image> ();
+		AchievementSFX = GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
@@ -85,11 +88,10 @@ public class Achievement_Notification : MonoBehaviour {
 	public void Achievement_Unlocked(string thingUnlocked, string unlockType){
 		//first check to make sure it's not n use. if it is, just play the sound so they know something happened
 		if (isBusy) {
-			//TODO: play the unlock sound delayed
 			return;
 		}
-
-		//TODO: play the unlock sound
+		AchievementSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		AchievementSFX.Play ();
 
 		isBusy = true;
 
