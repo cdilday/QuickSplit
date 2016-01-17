@@ -305,6 +305,7 @@ public class GameController : MonoBehaviour {
 			achievementHandler.Add_Score(gameType, score);
 			GameObject.Find ("GO Black Screen").GetComponent<Fader>().FadeIn();
 			tipText.text = tips[Random.Range(0, tips.Count())];
+			mc.Play_Music("Gameover");
 		}
 
 		if(!achievementHandler.is_Splitter_Unlocked("Caution") || !achievementHandler.is_Pieceset_Unlocked("Blob")){
@@ -319,6 +320,12 @@ public class GameController : MonoBehaviour {
 			}
 		}
 
+		if (Get_Danger_Pieces () > 0) {
+			mc.Start_Slow_Tick();
+		}
+		else{
+			mc.Stop_Slow_Tick();
+		}
 		//if both pieces have been placed, set the checkGrid to false and check the board
 		if(piecesPlaced >= 2){
 			piecesPlaced = 0;
@@ -342,6 +349,7 @@ public class GameController : MonoBehaviour {
 					sideColumns[1].shakeStage =	0;
 					sidebars [0].BroadcastMessage ("Reset");
 					sidebars [1].BroadcastMessage ("Reset");
+					mc.Stop_Fast_Tick();
 				}
 				else if(sideMovesLimit - (movesMade % sideMovesLimit) <= 8){
 					switch (sideMovesLimit - (movesMade % sideMovesLimit)){
@@ -372,6 +380,7 @@ public class GameController : MonoBehaviour {
 						sideColumns[1].isShaking = true;
 						sideColumns[0].shakeStage = 1;
 						sideColumns[1].shakeStage = 1;
+						mc.Start_Fast_Tick();
 						sidebars [0].BroadcastMessage ("Increment_Lights");
 						sidebars [1].BroadcastMessage ("Increment_Lights");
 						break;
@@ -403,6 +412,7 @@ public class GameController : MonoBehaviour {
 					sideColumns[1].ready = false;
 					quickMoveSides = false;
 					StartCoroutine("QuickSideTimer");
+					mc.Stop_Fast_Tick();
 				}
 				sidesChecked = true;
 			}
@@ -817,6 +827,7 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (1f);
 		sideColumns[0].shakeStage = 1;
 		sideColumns[1].shakeStage = 1;
+		mc.Start_Fast_Tick();
 		sidebars [0].BroadcastMessage ("Increment_Lights");
 		sidebars [1].BroadcastMessage ("Increment_Lights");
 		yield return new WaitForSeconds (1f);

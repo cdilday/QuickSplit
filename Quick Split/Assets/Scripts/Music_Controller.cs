@@ -12,6 +12,8 @@ public class Music_Controller : MonoBehaviour {
 	public AudioClip QuickMusic;
 	public AudioClip WitMusic;
 	public AudioClip HolyMusic;
+	public AudioClip MenuMusic;
+	public AudioClip GameOverMusic;
 
 	// 0 is the slow tick, 1 is the fast tick
 	public AudioClip[] WizTicks;
@@ -47,7 +49,7 @@ public class Music_Controller : MonoBehaviour {
 		MusicSource.loop = true;
 
 		if (Application.loadedLevel == 0) {
-			//TODO:play title main menu music
+			MusicSource.clip = MenuMusic;
 		} 
 		else {
 			//we're in the game scene, need to look up game type
@@ -154,6 +156,16 @@ public class Music_Controller : MonoBehaviour {
 			MusicSource.clip = HolyMusic;
 			SlowTickSource.clip = HolyTicks[0];
 			FastTickSource.clip = HolyTicks[1];
+			break;
+		case "Menu":
+			MusicSource.clip = MenuMusic;
+			SlowTickSource.Stop ();
+			FastTickSource.Stop ();
+			break;
+		case "Gameover":
+			MusicSource.clip = GameOverMusic;
+			SlowTickSource.Stop ();
+			FastTickSource.Stop ();
 			break;
 		default:
 			break;

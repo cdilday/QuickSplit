@@ -25,7 +25,7 @@ public class TitleController : MonoBehaviour {
 	int resetPresses = 0;
 
 	Achievement_Script achievementHandler;
-
+	Music_Controller mc;
 	High_Score_Calculator highScoreCalculator;
 
 	//gameobjects needed for transitions b/w game mode select and description scenes
@@ -61,6 +61,11 @@ public class TitleController : MonoBehaviour {
 
 		Goto_Game_Mode_Layer ();
 		shutter.Begin_Vertical_Open ();
+
+		GameObject MCobject = GameObject.FindGameObjectWithTag ("Music Controller");
+		mc = MCobject.GetComponent<Music_Controller> ();
+
+		mc.Play_Music ("Menu");
 
 		//just in case this is the first time playing, set Wiz to be for sure unlocked
 		PlayerPrefs.SetInt ("Wiz unlocked", 1);
@@ -196,6 +201,7 @@ public class TitleController : MonoBehaviour {
 	public IEnumerator GameTransition()
 	{
 		shutter.Begin_Vertical_Close ();
+		mc.Stop_Music ();
 		yield return new WaitForSeconds(2f);
 		Application.LoadLevel("Game Scene");
 	}
