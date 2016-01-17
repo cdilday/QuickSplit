@@ -208,7 +208,6 @@ public class Music_Controller : MonoBehaviour {
 	}
 
 	public void Start_Slow_Tick(){
-		float startTime = MusicSource.time;
 		SlowTickSource.Play ();
 		SlowTickSource.timeSamples = MusicSource.timeSamples;
 		isSlowTicking = true;
@@ -220,7 +219,6 @@ public class Music_Controller : MonoBehaviour {
 	}
 
 	public void Start_Fast_Tick(){
-		float startTime = MusicSource.time;
 		FastTickSource.Play ();
 		FastTickSource.timeSamples = MusicSource.timeSamples;
 		isFastTicking = true;

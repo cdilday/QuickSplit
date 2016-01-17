@@ -320,7 +320,7 @@ public class GameController : MonoBehaviour {
 			}
 		}
 
-		if (Get_Danger_Pieces () > 0) {
+		if (!gameOver && Get_Danger_Pieces () > 0) {
 			mc.Start_Slow_Tick();
 		}
 		else{
