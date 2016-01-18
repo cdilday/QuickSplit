@@ -6,7 +6,7 @@ public class Game_Screen_Camera_Handler : MonoBehaviour {
 	public Vector3 checkerPoint;
 	Camera mainCamera;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		mainCamera = GetComponent<Camera> ();
 
 		//first zoom the camera so everything important is on-screen
@@ -23,10 +23,5 @@ public class Game_Screen_Camera_Handler : MonoBehaviour {
 		while (mainCamera.WorldToViewportPoint(checkerPoint).y >1f) {
 			transform.Translate(new Vector3(0, 0.05f, 0));
 		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		Debug.Log (mainCamera.WorldToViewportPoint (checkerPoint).y);
 	}
 }

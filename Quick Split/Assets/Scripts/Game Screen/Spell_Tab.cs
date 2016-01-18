@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Spell_Tab : MonoBehaviour {
 
@@ -32,19 +33,14 @@ public class Spell_Tab : MonoBehaviour {
 
 	int trackingID = -1;
 
-	GameController gameController;
+	Image imageRenderer;
 
 	void Start () {
-
-		GameObject temp = GameObject.FindGameObjectWithTag ("GameController");
-		if (temp != null) {
-			gameController = temp.GetComponent<GameController>();
-		}
 
 		activePos = transform.position;
 		inActivePos = new Vector3 (transform.position.x, transform.position.y - 1.5f, transform.position.z);
 		transform.position = inActivePos;
-		GameObject shObject = transform.parent.gameObject;
+		GameObject shObject = GameObject.Find ("Spell Handler");
 		if (shObject != null) {
 			spellHandler = shObject.GetComponent<SpellHandler>();
 		}
@@ -54,30 +50,33 @@ public class Spell_Tab : MonoBehaviour {
 
 		spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
 		sprites = spriteHolder.Get_Sprites ();
+
+		imageRenderer = GetComponent<Image> ();
+
 		switch (spellColor){
 		case "Red":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+			imageRenderer.sprite = sprites[0];
 			break;
 		case "Orange":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+			imageRenderer.sprite = sprites[1];
 			break;
 		case "Yellow":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+			imageRenderer.sprite = sprites[2];
 			break;
 		case "Green":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+			imageRenderer.sprite = sprites[3];
 			break;
 		case "Blue":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+			imageRenderer.sprite = sprites[4];
 			break;
 		case "Purple":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+			imageRenderer.sprite = sprites[5];
 			break;
 		case "Cyan":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
+			imageRenderer.sprite = sprites[6];
 			break;
 		case "White":
-			gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
+			imageRenderer.sprite = sprites[7];
 			break;
 		}
 		wasTouching = false;

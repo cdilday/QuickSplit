@@ -59,6 +59,7 @@ public class GPG_Handler : MonoBehaviour {
 				Social.localUser.Authenticate((bool success) => {
 					if(success){
 						notification.GoogleSigninResponse(success);
+						isLoggedIn = true;
 						//sync achievements?
 					}
 					else{
@@ -71,6 +72,7 @@ public class GPG_Handler : MonoBehaviour {
 				Social.localUser.Authenticate((bool success) => {
 					if(success){
 						notification.GoogleSigninResponse(success);
+						isLoggedIn = true;
 						//sync achievements?
 					}
 					else{
@@ -86,6 +88,7 @@ public class GPG_Handler : MonoBehaviour {
 	public void signOut()
 	{
 		PlayGamesPlatform.Instance.SignOut();
+		isLoggedIn = false;
 	}
 
 	public void Post_Score(string gameMode, int score){
