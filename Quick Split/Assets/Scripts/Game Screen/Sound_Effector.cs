@@ -16,12 +16,19 @@ public class Sound_Effector : MonoBehaviour {
 	public bool variation;
 	public float variationAmount;
 
+	GameController gameController;
+
 	// Use this for initialization
 	void Start () {
 		aSources = new List<AudioSource> ();
 		availableSource = new List<bool> ();
 		//get all attatched sources
 		AudioSource[] attatchedSources = gameObject.GetComponents<AudioSource>();
+
+		GameObject temp = GameObject.FindGameObjectWithTag ("GameController");
+		if(temp != null){
+			gameController = temp.GetComponent<GameController>();
+		}
 
 		//load them up properly
 		foreach (AudioSource source in attatchedSources) {
@@ -46,6 +53,11 @@ public class Sound_Effector : MonoBehaviour {
 
 	//Plays the sound with the proper pitch and volume
 	void PlaySound(){
+
+		if(gameController.gameOver){
+			return;
+		}
+
 		for (int i = 0; i < aSources.Count(); i++){
 			//find first available audiosource
 			if (availableSource.ElementAt (i)) {

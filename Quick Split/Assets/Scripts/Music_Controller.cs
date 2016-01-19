@@ -28,7 +28,7 @@ public class Music_Controller : MonoBehaviour {
 	 * The Flying Machine = Wiz
 	 * */
 
-	AudioSource MusicSource;
+	public AudioSource MusicSource;
 	public AudioSource SlowTickSource;
 	public AudioSource FastTickSource;
 

@@ -308,6 +308,11 @@ public class GameController : MonoBehaviour {
 			mc.Play_Music("Gameover");
 		}
 
+		//check that the music controller isn't being a dick about the game over music
+		if (gameOver && (mc.MusicSource.clip.name != "Split It Game Over" || !mc.MusicSource.isPlaying)) {
+			mc.Play_Music("Gameover");
+		}
+
 		if(!achievementHandler.is_Splitter_Unlocked("Caution") || !achievementHandler.is_Pieceset_Unlocked("Blob")){
 			int dangerPieces = Get_Danger_Pieces();
 			if(!achievementHandler.is_Splitter_Unlocked("Caution") && gameType != "Holy" && gameType != "Wiz" && dangerPieces >= 5 && dangerPieces == 0)

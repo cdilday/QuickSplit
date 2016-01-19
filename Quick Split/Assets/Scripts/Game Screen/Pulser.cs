@@ -15,13 +15,18 @@ public class Pulser : MonoBehaviour {
 
 	AudioSource scoreBlip;
 
+	GameController gameController;
+
 	// Use this for initialization
 	void Start () {
 		thisText = gameObject.GetComponent<Text> ();
 		defaultSize = thisText.fontSize;
 		pulsing = false;
 		growing = false;
-
+		GameObject temp = GameObject.FindGameObjectWithTag ("GameController");
+		if(temp != null){
+			gameController = temp.GetComponent<GameController>();
+		}
 		scoreBlip = gameObject.GetComponent<AudioSource> ();
 	}
 	
@@ -32,9 +37,11 @@ public class Pulser : MonoBehaviour {
 	}
 
 	void beginPulse(){
-		scoreBlip.volume = 0.5f * (PlayerPrefs.GetFloat ("SFX Volume", 1));
-		scoreBlip.pitch = 1 + Random.Range (0, 0.1f);
-		scoreBlip.Play ();
+		if(gameController!=null && !gameController.gameOver){
+			scoreBlip.volume = 0.5f * (PlayerPrefs.GetFloat ("SFX Volume", 1));
+			scoreBlip.pitch = 1 + Random.Range (0, 0.1f);
+			scoreBlip.Play ();
+		}
 		if(pulsing){
 			counter = 10;
 			thisText.fontSize = (int) (defaultSize + ((float)counter/2.5f));
