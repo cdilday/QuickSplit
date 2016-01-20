@@ -264,6 +264,7 @@
      <Compile Include="Assets\Scripts\Music_Slider.cs" />
      <Compile Include="Assets\Scripts\Platform_Exchanger.cs" />
      <Compile Include="Assets\Scripts\RGBandHSVconverter.cs" />
+     <Compile Include="Assets\Scripts\Region_Toggler.cs" />
      <Compile Include="Assets\Scripts\SFX_Slider.cs" />
      <Compile Include="Assets\Scripts\Selectable_Color.cs" />
      <Compile Include="Assets\Scripts\Shutter_Handler.cs" />
@@ -278,7 +279,7 @@
      <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />
      <Compile Include="Assets\Scripts\Title Screen\TitleController.cs" />
-     <Compile Include="Assets\Transparent_Guide.cs" />
+     <Compile Include="Assets\Scripts\Transparent_Guide.cs" />
      <Compile Include="Assets\colorblind\ColorBlindFilter.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\Accordion.cs" />
      <Compile Include="Assets\unity-ui-extensions\Scripts\Accordion\AccordionElement.cs" />

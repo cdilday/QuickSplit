@@ -12,6 +12,9 @@ public class Transparent_Guide : MonoBehaviour {
 	bool beingTouched;
 	// Use this for initialization
 	void Start () {
+		if (PlayerPrefs.GetInt ("Region Guide", 1) == 0) {
+			Destroy(gameObject);
+		}
 		image = GetComponent<Image> ();
 		defaultColor = image.color;
 		rectTransform = GetComponent<RectTransform> ();
