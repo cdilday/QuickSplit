@@ -46,6 +46,8 @@ public class TitleController : MonoBehaviour {
 
 	int codeStage = 0;
 
+	public GameObject HTPEmphasizer;
+
 	// Use this for initialization
 	void Start () {
 		highScoreCalculator = GameObject.Find ("High Score Calculator").GetComponent<High_Score_Calculator> ();
@@ -80,6 +82,10 @@ public class TitleController : MonoBehaviour {
 			OrigDescText[i] = Descriptions[i].GetComponent<Text>().text;
 		}
 		GameMode_Unlocker ();
+
+		if (PlayerPrefs.GetInt ("Played Before", 0) == 1) {
+			Destroy(HTPEmphasizer);
+		}
 	}
 
 	void FixedUpdate()
@@ -137,6 +143,10 @@ public class TitleController : MonoBehaviour {
 		optionsLayer.SetActive (false);
 		highScoreLayer.SetActive(false);
 		achievementLayer.SetActive (false);
+		PlayerPrefs.SetInt ("Played Before", 1);
+		if (HTPEmphasizer != null) {
+			Destroy(HTPEmphasizer);
+		}
 	}
 
 	//loads the Credits layer and unloads the other layers
