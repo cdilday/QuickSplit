@@ -13,6 +13,8 @@ public class GP_Icon_Handler : MonoBehaviour {
 	GPG_Handler gpgh;
 	Button_Image_Swapper bts;
 
+	Achievement_Script achievementHandler;
+
 	// Use this for initialization
 	void Start () {
 		GameObject GPGHObject = GameObject.FindGameObjectWithTag ("Google Play");
@@ -33,6 +35,7 @@ public class GP_Icon_Handler : MonoBehaviour {
 			bts.Change_Image(1);
 		}
 
+
 		// make sure the button has the correct functions loaded
 		Button button = GetComponent<Button> ();
 
@@ -44,7 +47,9 @@ public class GP_Icon_Handler : MonoBehaviour {
 			button.onClick.AddListener(() => gpgh.Show_Leaderboards());
 			break;
 		case "Achievements":
+			achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
 			button.onClick.AddListener(() => gpgh.Show_Achievements());
+			button.onClick.AddListener (() => achievementHandler.Sync_With_Google_Play());
 			break;
 		default:
 			button.onClick.AddListener(() => gpgh.Show_Notification());
