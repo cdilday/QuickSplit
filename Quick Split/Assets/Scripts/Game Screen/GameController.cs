@@ -271,6 +271,12 @@ public class GameController : MonoBehaviour {
 		if (Input.GetKeyDown ("0")) {
 			recalculateBoard();
 		}
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			if(!isPaused){
+				TogglePause();
+			}
+		}
 	}
 
 
@@ -832,7 +838,8 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (1f);
 		sideColumns[0].shakeStage = 1;
 		sideColumns[1].shakeStage = 1;
-		mc.Start_Fast_Tick();
+		if(!gameOver)
+			mc.Start_Fast_Tick();
 		sidebars [0].BroadcastMessage ("Increment_Lights");
 		sidebars [1].BroadcastMessage ("Increment_Lights");
 		yield return new WaitForSeconds (1f);
@@ -984,4 +991,11 @@ public class GameController : MonoBehaviour {
 		return dangerPieces;
 	}
 
+	//now for android related things
+	void OnApplicationPause(bool pauseStatus)
+	{
+		if (pauseStatus && !isPaused) {
+			TogglePause();
+		}
+	}
 }

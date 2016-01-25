@@ -110,6 +110,19 @@ public class TitleController : MonoBehaviour {
 		}
 	}
 
+	void Update()
+	{
+		//Back or escape key compatibility
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			// if the main screen is active, just exit the application
+			if(gameModeLayer.activeSelf){
+				Application.Quit();
+			} else {
+				Goto_Game_Mode_Layer();
+			}
+		}
+	}
+
 	//loads the proper game mode into the playerprefs for the game scene to read, then loads the game scene
 	//This is where the UI for the transition would go
 	public void Load_Game()
