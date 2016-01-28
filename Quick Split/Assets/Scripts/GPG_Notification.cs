@@ -7,7 +7,7 @@ public class GPG_Notification : MonoBehaviour {
 	Vector3 activePos = new Vector3(0,0,0);
 	Vector3 inactivePos;
 
-	bool isActive;
+	public bool isActive;
 	bool isBusy;
 
 	public Text description;

@@ -27,6 +27,7 @@ public class TitleController : MonoBehaviour {
 	Achievement_Script achievementHandler;
 	Music_Controller mc;
 	High_Score_Calculator highScoreCalculator;
+	GPG_Notification gpgNotification;
 
 	//gameobjects needed for transitions b/w game mode select and description scenes
 	public GameObject[] GameButtons = new GameObject[4];
@@ -60,7 +61,7 @@ public class TitleController : MonoBehaviour {
 			PlayerPrefs.SetInt ("Version", versionNumber);
 		}
 		achievementHandler = GameObject.Find ("Achievement Handler").GetComponent<Achievement_Script> ();
-
+		gpgNotification = GameObject.Find ("Google Play Notification").GetComponent<GPG_Notification> ();
 		Goto_Game_Mode_Layer ();
 		shutter.Begin_Vertical_Open ();
 
@@ -115,9 +116,13 @@ public class TitleController : MonoBehaviour {
 		//Back or escape key compatibility
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			// if the main screen is active, just exit the application
-			if(gameModeLayer.activeSelf){
+			if(gpgNotification.isActive){
+				gpgNotification.deactivate();
+			}
+			else if(gameModeLayer.activeSelf){
 				Application.Quit();
-			} else {
+			}
+			else {
 				Goto_Game_Mode_Layer();
 			}
 		}
@@ -225,8 +230,11 @@ public class TitleController : MonoBehaviour {
 	{
 		shutter.Begin_Vertical_Close ();
 		mc.Stop_Music ();
-		yield return new WaitForSeconds(2f);
-		Application.LoadLevel("Game Scene");
+		AsyncOperation async = Application.LoadLevelAsync ("Game Scene");
+		async.allowSceneActivation = false;
+		yield return new WaitForSeconds (2f);
+		async.allowSceneActivation = true;
+		yield return async;
 	}
 
 	bool gameNum_unlock_checker(int gameNum)

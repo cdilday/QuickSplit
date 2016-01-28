@@ -262,10 +262,10 @@ public class GameController : MonoBehaviour {
 	{
 		//code for restarting the game after a game over
 		if (gameOver && Input.GetKeyDown ("r")) {
-			Application.LoadLevel(Application.loadedLevel);
+			Application.LoadLevelAsync(Application.loadedLevel);
 		}
 		else if (gameOver && Input.GetKeyDown (KeyCode.Backspace)){
-			Application.LoadLevel ("Split Title Scene");
+			Application.LoadLevelAsync ("Split Title Scene");
 		}
 
 		if (Input.GetKeyDown ("0")) {
@@ -968,8 +968,11 @@ public class GameController : MonoBehaviour {
 	IEnumerator TitleTransition(){
 		mc.Stop_Music ();
 		shutter.Begin_Horizontal_Close ();
+		AsyncOperation async = Application.LoadLevelAsync ("Split Title Scene");
+		async.allowSceneActivation = false;
 		yield return new WaitForSeconds (2f);
-		Application.LoadLevel ("Split Title Scene");
+		async.allowSceneActivation = true;
+		yield return async;
 	}
 
 	//used for handling some gameobject that don't know when to stop
