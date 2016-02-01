@@ -27,7 +27,7 @@ public class Transparent_Guide : MonoBehaviour {
 		beingTouched = false;
 		foreach (Touch poke in Input.touches) {
 			if(RectTransformUtility.RectangleContainsScreenPoint(rectTransform, poke.position, mainCamera)){
-				image.color = new Color(image.color.r, image.color.g, image.color.b, 0.33f);
+				image.color = new Color(image.color.r, image.color.g, image.color.b, 0.5f);
 				beingTouched = true;
 			}
 		}

@@ -21,7 +21,7 @@ public class Music_Slider : MonoBehaviour {
 	//update the volume while the value is being changed
 	void onValueChanged()
 	{
-		MCsource.volume = mySlider.value;
+		MC.GetComponent<Music_Controller> ().Change_Music_Volume (mySlider.value);
 		PlayerPrefs.SetFloat ("Music Volume", mySlider.value);
 	}
 
