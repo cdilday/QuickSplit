@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Splitter_script : MonoBehaviour {
 
@@ -34,9 +35,20 @@ public class Splitter_script : MonoBehaviour {
 	
 	Vector3 mouseLocation;
 
+	public bool overrideControlType;
+	public string controlType;
+
+	//this is used for follow controls so the fingerID's startTimes dn't get messed up
+	Dictionary<int, float> idStartTimes;
+	// same but for if it's been moved or not
+	Dictionary<int, Vector2> idStartPos;
+	//this just defines if it was a tap or not
+	Dictionary<int, bool> idIsTap;
+
 	//objects the splitter will need to use
 	public Holder_Script holder;
 	public GameController gameController;
+	public Camera mainCamera;
 
 	Piece_Sprite_Holder spriteHolder;
 	AudioSource FireSFX;
@@ -71,6 +83,17 @@ public class Splitter_script : MonoBehaviour {
 
 		gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter ();
 		FireSFX = GetComponent<AudioSource> ();
+
+		if (!overrideControlType) 
+			controlType = PlayerPrefs.GetString("Controls", "Regions");
+		else
+			PlayerPrefs.SetString("Controls", controlType);
+
+		if (controlType == "Follow"){
+			idStartTimes = new Dictionary<int, float> ();
+			idStartPos = new Dictionary<int, Vector2>();
+			idIsTap = new Dictionary<int, bool>();
+		}
 	}
 	
 	// Update is called once per frame
@@ -117,58 +140,100 @@ public class Splitter_script : MonoBehaviour {
 			bool hasMoveTouch = false;
 			bool hasFireTouch = false;
 			//touch controls
-			foreach (Touch poke in Input.touches) {
-				//we only want to put in one movement touch per frame, so take the first one and listen to that
-				if( !hasMoveTouch)
-				{
-					//moving up if user has touched top of play field
-					if (poke.position.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
-						MoveUp();
-						hasMoveTouch = true;
-						continue;
-					}
-					//moving down if user has touched bottom of play field
-					if (poke.position.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
-						MoveDown ();
-						hasMoveTouch = true;
-						continue;
-					}
-				}		
-
-				//Vector2 pokeLocation = Camera.main.ScreenToWorldPoint (poke.position);
-				if(!hasFireTouch && poke.phase == TouchPhase.Began)
-				{
-					//check to make sure they touched an area of the screen devoted to actions
-					if(poke.position.y / Screen.height <= 0.66f && poke.position.y / Screen.height >= 0.27f)
+			//Region Control Type
+			if(controlType == "Regions"){
+				foreach (Touch poke in Input.touches) {
+					//we only want to put in one movement touch per frame, so take the first one and listen to that
+					if( !hasMoveTouch)
 					{
-						if(poke.position.x / Screen.width < 0.5f)
-						{
-							swap ();
-							hasFireTouch = true;
+						//moving up if user has touched top of play field
+						if (poke.position.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
+							MoveUp();
+							hasMoveTouch = true;
+							continue;
 						}
-						else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition && !hasMoveTouch) {
-							if(splitState.yellowReady == true){
-								GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
-							}
-							else{
-								StartCoroutine (fire ());
-								splitState.canShoot = false;
-								gameController.movesMade++;
-								gameController.updateMoves ();
+						//moving down if user has touched bottom of play field
+						if (poke.position.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
+							MoveDown ();
+							hasMoveTouch = true;
+							continue;
+						}
+					}		
+
+					//Vector2 pokeLocation = Camera.main.ScreenToWorldPoint (poke.position);
+					if(!hasFireTouch && poke.phase == TouchPhase.Began)
+					{
+						//check to make sure they touched an area of the screen devoted to actions
+						if(poke.position.y / Screen.height <= 0.66f && poke.position.y / Screen.height >= 0.27f)
+						{
+							if(poke.position.x / Screen.width < 0.5f)
+							{
+								swap ();
 								hasFireTouch = true;
+							}
+							else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition && !hasMoveTouch) {
+								if(splitState.yellowReady == true){
+									GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
+								}
+								else{
+									StartCoroutine (fire ());
+									splitState.canShoot = false;
+									gameController.movesMade++;
+									gameController.updateMoves ();
+									hasFireTouch = true;
+								}
 							}
 						}
 					}
 				}
 			}
+			//follow controls
+			else if (controlType == "Follow"){
+				foreach (Touch poke in Input.touches) {		
+					//begin tracking fingers
+					if(poke.phase == TouchPhase.Began){
+						idStartPos[poke.fingerId] = mainCamera.ScreenToWorldPoint(poke.position);
+						idStartTimes[poke.fingerId] = Time.time;
+						idIsTap[poke.fingerId] = true;
+					}
+					else if(!idIsTap[poke.fingerId]){
+						//it goes in here if it's not 
+						Vector3 pokeLocation = mainCamera.ScreenToWorldPoint(poke.position);
+						if (pokeLocation.x <= 7 && pokeLocation.x >= -8 && pokeLocation.y >= -0.5 && pokeLocation.y <= 7.5) {
+							if ((pokeLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
+								MoveUp();
+							}
+							//Moving downwards if the mouse is below the splitter's hitbox
+							if ((pokeLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0) {
+								MoveDown();
+							}
+						}
+					}
 
-		
+					if(poke.phase == TouchPhase.Ended){
+						float xWorldDistance = Mathf.Abs (mainCamera.ScreenToWorldPoint(poke.position).x - idStartPos[poke.fingerId].x);
+						//Debug.Log (xWorldDistance);
 
-		//touch controls
-	
+						if(xWorldDistance > 1f)
+						{
+							swap ();
+						}
+						else if(idIsTap[poke.fingerId]){
+							//tap
+							StartCoroutine (fire ());
+							splitState.canShoot = false;
+							gameController.movesMade++;
+							gameController.updateMoves ();
+							hasFireTouch = true;
+						}
+					}
+
+					if(poke.phase == TouchPhase.Moved || Mathf.Abs(Time.time - idStartTimes[poke.fingerId]) > 0.1f ){
+						idIsTap[poke.fingerId] = false;
+					}
+				}
+			}
 		}
-
-		//mobile input, can't just fake it with the mouse
 
 		//moving upwards with keys W or Up
 		if ((Input.GetKey ("w") || Input.GetKey ("up")) && !splitState.isMoving && transform.position.y < 7) {

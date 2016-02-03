@@ -12,7 +12,7 @@ public class Transparent_Guide : MonoBehaviour {
 	bool beingTouched;
 	// Use this for initialization
 	void Start () {
-		if (PlayerPrefs.GetInt ("Region Guide", 1) == 0) {
+		if (PlayerPrefs.GetInt ("Region Guide", 1) == 0 || PlayerPrefs.GetString("Controls", "Regions") != "Regions") {
 			Destroy(gameObject);
 		}
 		image = GetComponent<Image> ();
