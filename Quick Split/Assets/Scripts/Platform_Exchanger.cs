@@ -7,7 +7,8 @@ public class Platform_Exchanger : MonoBehaviour {
 	// this is a reusable script, so it contains platforms that the game may not be a part of. Also, this can/should be expanded to include all platforms
 
 	public GameObject[] computerObjects;
-	public GameObject[] mobileObjects;
+	public GameObject[] mobileRegionObjects;
+	public GameObject[] mobileFollowObjects;
 
 	//debugging while in editor
 	public bool isMobile;
@@ -18,9 +19,7 @@ public class Platform_Exchanger : MonoBehaviour {
 			foreach(GameObject ob in computerObjects){
 				ob.SetActive(false);
 			}
-			foreach(GameObject ob in mobileObjects){
-				ob.SetActive(true);
-			}
+			mobileControlSwap(true);
 			return;
 		}
 
@@ -29,42 +28,61 @@ public class Platform_Exchanger : MonoBehaviour {
 			foreach(GameObject ob in computerObjects){
 				ob.SetActive(true);
 			}
-			foreach(GameObject ob in mobileObjects){
-				ob.SetActive(false);
-			}
+			mobileControlSwap(false);
 			break;
 		case RuntimePlatform.WebGLPlayer:
 			foreach(GameObject ob in computerObjects){
 				ob.SetActive(true);
 			}
-			foreach(GameObject ob in mobileObjects){
-				ob.SetActive(false);
-			}
+			mobileControlSwap(false);
 			break;
 		case RuntimePlatform.Android:
 			foreach(GameObject ob in computerObjects){
 				ob.SetActive(false);
 			}
-			foreach(GameObject ob in mobileObjects){
-				ob.SetActive(true);
-			}
+			mobileControlSwap(true);
 			break;
 		case RuntimePlatform.IPhonePlayer:
 			foreach(GameObject ob in computerObjects){
 				ob.SetActive(false);
 			}
-			foreach(GameObject ob in mobileObjects){
-				ob.SetActive(true);
-			}
+			mobileControlSwap(true);
 			break;
 		default:
 			foreach(GameObject ob in computerObjects){
 				ob.SetActive(true);
 			}
-			foreach(GameObject ob in mobileObjects){
-				ob.SetActive(false);
-			}
+			mobileControlSwap(false);
 			break;
+		}
+	}
+
+	void mobileControlSwap(bool isMobile){
+		//deactivate everything first
+		foreach(GameObject ob in mobileRegionObjects){
+			ob.SetActive(false);
+		}
+		foreach(GameObject ob in mobileFollowObjects){
+			ob.SetActive(false);
+		}
+		if(isMobile){
+			switch(PlayerPrefs.GetString("Controls", "Regions")){
+			case "Regions":
+				foreach(GameObject ob in mobileRegionObjects){
+					ob.SetActive(true);
+				}
+				break;
+			case "Follow":
+				foreach(GameObject ob in mobileFollowObjects){
+					ob.SetActive(true);
+				}
+				break;
+			default:
+				foreach(GameObject ob in mobileRegionObjects){
+					ob.SetActive(true);
+				}
+				break;
+			}
 		}
 	}
 
