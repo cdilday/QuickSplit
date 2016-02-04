@@ -25,6 +25,7 @@ public class Splitter_script : MonoBehaviour {
 	int moveTarget;
 	float moveStartTime;
 	const float moveDuration = 0.08f;
+	float speed = 1;
 
 	//prefabs containing all the different colored pieces
 	public Transform[] pieces;
@@ -44,6 +45,10 @@ public class Splitter_script : MonoBehaviour {
 	Dictionary<int, Vector2> idStartPos;
 	//this just defines if it was a tap or not
 	Dictionary<int, bool> idIsTap;
+	//for swipes
+	Dictionary<int, bool> idIsSwipe;
+	//for drag
+	Dictionary<int, bool> idIsDrag;
 
 	//objects the splitter will need to use
 	public Holder_Script holder;
@@ -93,7 +98,12 @@ public class Splitter_script : MonoBehaviour {
 			idStartTimes = new Dictionary<int, float> ();
 			idStartPos = new Dictionary<int, Vector2>();
 			idIsTap = new Dictionary<int, bool>();
+			idIsSwipe = new Dictionary<int, bool>();
+			idIsDrag = new Dictionary<int, bool>();
+			speed = 2;
 		}
+		else
+			speed = 1;
 	}
 	
 	// Update is called once per frame
@@ -195,10 +205,13 @@ public class Splitter_script : MonoBehaviour {
 						idStartPos[poke.fingerId] = mainCamera.ScreenToWorldPoint(poke.position);
 						idStartTimes[poke.fingerId] = Time.time;
 						idIsTap[poke.fingerId] = true;
+						idIsSwipe[poke.fingerId] = false;
+						idIsDrag[poke.fingerId] = false;
 					}
-					else if(!idIsTap[poke.fingerId]){
-						//it goes in here if it's not 
+
+					if((!idIsTap[poke.fingerId] && !idIsSwipe[poke.fingerId]) || idIsDrag[poke.fingerId]){
 						Vector3 pokeLocation = mainCamera.ScreenToWorldPoint(poke.position);
+						idIsDrag[poke.fingerId] = true;
 						if (pokeLocation.x <= 7 && pokeLocation.x >= -8 && pokeLocation.y >= -0.5 && pokeLocation.y <= 7.5) {
 							if ((pokeLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
 								MoveUp();
@@ -210,15 +223,20 @@ public class Splitter_script : MonoBehaviour {
 						}
 					}
 
-					if(poke.phase == TouchPhase.Ended){
+					if(!idIsSwipe[poke.fingerId] && !idIsDrag[poke.fingerId]){
 						float xWorldDistance = Mathf.Abs (mainCamera.ScreenToWorldPoint(poke.position).x - idStartPos[poke.fingerId].x);
 						//Debug.Log (xWorldDistance);
-
-						if(xWorldDistance > 1f)
+						
+						if(xWorldDistance > (0.02f)/poke.deltaTime)
 						{
 							swap ();
+							idIsTap[poke.fingerId] = false;
+							idIsSwipe[poke.fingerId] = true;
 						}
-						else if(idIsTap[poke.fingerId]){
+					}
+
+					if(poke.phase == TouchPhase.Ended){
+						if(idIsTap[poke.fingerId]){
 							//tap
 							StartCoroutine (fire ());
 							splitState.canShoot = false;
@@ -278,7 +296,7 @@ public class Splitter_script : MonoBehaviour {
 		if(splitState.isMoving)
 		{
 			//check to see if the movement time is up. If it is, put it to it's proper location
-			if(Mathf.Abs(moveStartTime - Time.time) > moveDuration)
+			if(Mathf.Abs(moveStartTime - Time.time) > (moveDuration / speed))
 			{
 				moveDirection = 0;
 				splitState.isMoving = false;
@@ -287,7 +305,7 @@ public class Splitter_script : MonoBehaviour {
 			}
 			else //visually move it
 			{
-				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * 0.25f) , transform.position.z);
+				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * (0.25f * speed)) , transform.position.z);
 			}
 		}
 

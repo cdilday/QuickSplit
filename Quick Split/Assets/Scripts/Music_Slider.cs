@@ -7,13 +7,11 @@ public class Music_Slider : MonoBehaviour {
 	//This script is attatched to and is used for the volume sliders which control what volume the music is played at
 
 	GameObject MC;
-	AudioSource MCsource;
 	Slider mySlider;
 	// Use this for initialization
 	void Start () {
 		MC = GameObject.Find ("Music Controller");
 		mySlider = gameObject.GetComponent<Slider> ();
-		MCsource = MC.GetComponent<AudioSource> ();
 		mySlider.value = PlayerPrefs.GetFloat ("Music Volume", 1);
 		mySlider.onValueChanged.AddListener (delegate{onValueChanged ();});
 	}
