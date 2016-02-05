@@ -35,8 +35,10 @@ public class Spell_Tab : MonoBehaviour {
 
 	Image imageRenderer;
 
-	void Start () {
+	GameController gameController;
 
+	void Start () {
+		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		activePos = transform.position;
 		inActivePos = new Vector3 (transform.position.x, transform.position.y - 1.5f, transform.position.z);
 		transform.position = inActivePos;
@@ -86,6 +88,8 @@ public class Spell_Tab : MonoBehaviour {
 	void Update()
 	{
 		//mobile controls. Touch screens are too different to use fake mouse controls
+		if (gameController.isPaused)
+					return;
 		if (Application.isMobilePlatform || splitter.mobileDebugging) {
 		
 			bool isNotTouching = true;

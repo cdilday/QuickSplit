@@ -108,7 +108,7 @@ public class Splitter_script : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!splitState.isActive)
+		if (!splitState.isActive || gameController.isPaused || gameController.gameOver)
 			return;
 		//player Input
 		//checks if the player is playing on a mobile phone, if not activate mouse control
@@ -202,7 +202,7 @@ public class Splitter_script : MonoBehaviour {
 				foreach (Touch poke in Input.touches) {		
 					//begin tracking fingers
 					if(poke.phase == TouchPhase.Began){
-						idStartPos[poke.fingerId] = mainCamera.ScreenToWorldPoint(poke.position);
+						idStartPos[poke.fingerId] = poke.position;
 						idStartTimes[poke.fingerId] = Time.time;
 						idIsTap[poke.fingerId] = true;
 						idIsSwipe[poke.fingerId] = false;
@@ -224,11 +224,9 @@ public class Splitter_script : MonoBehaviour {
 					}
 
 					if(!idIsSwipe[poke.fingerId] && !idIsDrag[poke.fingerId]){
-						float xWorldDistance = Mathf.Abs (mainCamera.ScreenToWorldPoint(poke.position).x - idStartPos[poke.fingerId].x);
-						//Debug.Log (xWorldDistance);
-						
-						if(xWorldDistance > (0.02f)/poke.deltaTime)
-						{
+
+
+						if(Mathf.Abs (idStartPos[poke.fingerId].x- poke.position.x) >= DisplayMetricsAndroid.XDPI/8) {
 							swap ();
 							idIsTap[poke.fingerId] = false;
 							idIsSwipe[poke.fingerId] = true;
@@ -236,17 +234,23 @@ public class Splitter_script : MonoBehaviour {
 					}
 
 					if(poke.phase == TouchPhase.Ended){
-						if(idIsTap[poke.fingerId]){
+						//gotta check to make sure they tapped the board to split in order to prevent confusion with the pause or spell interactables
+						Vector3 pokeLocation = mainCamera.ScreenToWorldPoint(poke.position);
+						if(idIsTap[poke.fingerId] && pokeLocation.y < 8 && pokeLocation.y >= -0.5){
 							//tap
-							StartCoroutine (fire ());
-							splitState.canShoot = false;
-							gameController.movesMade++;
-							gameController.updateMoves ();
-							hasFireTouch = true;
+							if(splitState.yellowReady == true){
+								GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
+							}
+							else{
+								StartCoroutine (fire ());
+								splitState.canShoot = false;
+								gameController.movesMade++;
+								gameController.updateMoves ();
+							}
 						}
 					}
 
-					if(poke.phase == TouchPhase.Moved || Mathf.Abs(Time.time - idStartTimes[poke.fingerId]) > 0.1f ){
+					if(poke.phase == TouchPhase.Moved || Mathf.Abs(Time.time - idStartTimes[poke.fingerId]) > 0.13f ){
 						idIsTap[poke.fingerId] = false;
 					}
 				}
