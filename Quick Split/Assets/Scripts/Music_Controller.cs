@@ -101,6 +101,12 @@ public class Music_Controller : MonoBehaviour {
 		else if(Input.GetKeyDown(KeyCode.Keypad4)){
 			Stop_Fast_Tick();
 		}
+		if (MusicSource.clip == GameOverMusic) {
+			if(SlowTickSource.isPlaying)
+				SlowTickSource.Stop();
+			if(FastTickSource.isPlaying)
+				FastTickSource.Stop ();
+		}
 	}
 
 	//stops the music

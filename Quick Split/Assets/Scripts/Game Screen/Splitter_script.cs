@@ -90,7 +90,7 @@ public class Splitter_script : MonoBehaviour {
 		FireSFX = GetComponent<AudioSource> ();
 
 		if (!overrideControlType) 
-			controlType = PlayerPrefs.GetString("Controls", "Regions");
+			controlType = PlayerPrefs.GetString("Controls", "Follow");
 		else
 			PlayerPrefs.SetString("Controls", controlType);
 
@@ -236,7 +236,7 @@ public class Splitter_script : MonoBehaviour {
 					if(poke.phase == TouchPhase.Ended){
 						//gotta check to make sure they tapped the board to split in order to prevent confusion with the pause or spell interactables
 						Vector3 pokeLocation = mainCamera.ScreenToWorldPoint(poke.position);
-						if(idIsTap[poke.fingerId] && pokeLocation.y < 8 && pokeLocation.y >= -0.5){
+						if(idIsTap[poke.fingerId] && pokeLocation.y < 8 && pokeLocation.y >= -0.5 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition){
 							//tap
 							if(splitState.yellowReady == true){
 								GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
@@ -250,7 +250,7 @@ public class Splitter_script : MonoBehaviour {
 						}
 					}
 
-					if(poke.phase == TouchPhase.Moved || Mathf.Abs(Time.time - idStartTimes[poke.fingerId]) > 0.13f ){
+					if(poke.phase == TouchPhase.Moved || Mathf.Abs(Time.time - idStartTimes[poke.fingerId]) > 0.16f ){
 						idIsTap[poke.fingerId] = false;
 					}
 				}

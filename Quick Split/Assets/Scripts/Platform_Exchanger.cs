@@ -66,7 +66,7 @@ public class Platform_Exchanger : MonoBehaviour {
 			ob.SetActive(false);
 		}
 		if(isMobile){
-			switch(PlayerPrefs.GetString("Controls", "Regions")){
+			switch(PlayerPrefs.GetString("Controls", "Follow")){
 			case "Regions":
 				foreach(GameObject ob in mobileRegionObjects){
 					ob.SetActive(true);
