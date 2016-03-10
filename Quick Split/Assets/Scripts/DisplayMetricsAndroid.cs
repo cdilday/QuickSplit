@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class DisplayMetricsAndroid {
-	
+/*	
 	// The logical density of the display
 	public static float Density { get; protected set; }
 	
@@ -58,4 +58,5 @@ public class DisplayMetricsAndroid {
 			}
 		}
 	}
+	*/
 }

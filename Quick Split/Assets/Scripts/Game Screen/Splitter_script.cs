@@ -145,7 +145,7 @@ public class Splitter_script : MonoBehaviour {
 				}
 			}
 		}
-		else
+		/*else
 		{
 			bool hasMoveTouch = false;
 			bool hasFireTouch = false;
@@ -255,7 +255,7 @@ public class Splitter_script : MonoBehaviour {
 					}
 				}
 			}
-		}
+		}*/
 
 		//moving upwards with keys W or Up
 		if ((Input.GetKey ("w") || Input.GetKey ("up")) && !splitState.isMoving && transform.position.y < 7) {
