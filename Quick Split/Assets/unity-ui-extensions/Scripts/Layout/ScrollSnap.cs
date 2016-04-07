@@ -9,321 +9,360 @@
 ///   if you dont wish to use this auto resize turn of autoLayoutItems
 /// - fixed current page made it independant from pivot
 /// - replaced pagination with delegate function
-
 using System;
 using UnityEngine.EventSystems;
 
 namespace UnityEngine.UI.Extensions
 {
-	[ExecuteInEditMode]
+    [ExecuteInEditMode]
     [RequireComponent(typeof(ScrollRect))]
     [AddComponentMenu("UI/Extensions/Scroll Snap")]
     public class ScrollSnap : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
-	{
-		// needed becouse of reversed behavior of axis Y compared to X
-		// (positions of children lower in children list in horizontal directions grows when in vertical it gets smaller)
-		public enum ScrollDirection {
-			Horizontal,
-			Vertical
-		};
+    {
+        // needed becouse of reversed behavior of axis Y compared to X
+        // (positions of children lower in children list in horizontal directions grows when in vertical it gets smaller)
+        public enum ScrollDirection
+        {
+            Horizontal,
+            Vertical
+        }
 
-		public delegate void PageSnapChange(int page);
+        public delegate void PageSnapChange(int page);
 
-		public event PageSnapChange onPageChange;
+        public event PageSnapChange onPageChange;
 
-		public ScrollDirection direction = ScrollDirection.Horizontal;
+        public ScrollDirection direction = ScrollDirection.Horizontal;
 
-		protected ScrollRect scrollRect;
-		protected RectTransform scrollRectTransform;
-		protected Transform listContainerTransform;
-		protected RectTransform rectTransform;
+        protected ScrollRect scrollRect;
 
-		protected int items = 0;
+        protected RectTransform scrollRectTransform;
 
-		int pages;
+        protected Transform listContainerTransform;
 
-		protected int startingPage = 0;
+        protected RectTransform rectTransform;
 
-		// anchor points to lerp to to see child on certain indexes
-		protected Vector3[] pageAnchorPositions;
-		protected Vector3 lerpTarget;
-		protected bool lerp;
+        int pages;
 
-		// item list related
-		protected float listContainerMinPosition;
-		protected float listContainerMaxPosition;
-		protected float listContainerSize;
-		protected RectTransform listContainerRectTransform;
-		protected Vector2 listContainerCachedSize;
+        protected int startingPage = 0;
 
-		protected float itemSize;
+        // anchor points to lerp to to see child on certain indexes
+        protected Vector3[] pageAnchorPositions;
+
+        protected Vector3 lerpTarget;
+
+        protected bool lerp;
+
+        // item list related
+        protected float listContainerMinPosition;
+
+        protected float listContainerMaxPosition;
+
+        protected float listContainerSize;
+
+        protected RectTransform listContainerRectTransform;
+
+        protected Vector2 listContainerCachedSize;
+
+        protected float itemSize;
+
+        protected int itemsCount = 0;
 
         [Tooltip("Button to go to the next page. (optional)")]
-        public GameObject nextButton;
+        public Button nextButton;
+
         [Tooltip("Button to go to the previous page. (optional)")]
-		public GameObject prevButton;
-		
-		[Tooltip("Number of items visible in one page of scroll frame.")]
-		[RangeAttribute(1,100)]
-		public int itemsVisibleAtOnce = 1;
-		
-		[Tooltip("Sets minimum width of list items to 1/itemsVisibleAtOnce.")]
-		public bool autoLayoutItems = true;
-		
-		[Tooltip("If you wish to update scrollbar numberOfSteps to number of active children on list.")]
-		public bool linkScrolbarSteps = false;
+        public Button prevButton;
+
+        [Tooltip("Number of items visible in one page of scroll frame.")]
+        [RangeAttribute(1, 100)]
+        public int itemsVisibleAtOnce = 1;
+
+        [Tooltip("Sets minimum width of list items to 1/itemsVisibleAtOnce.")]
+        public bool autoLayoutItems = true;
+
+        [Tooltip("If you wish to update scrollbar numberOfSteps to number of active children on list.")]
+        public bool linkScrolbarSteps = false;
+
+        [Tooltip("If you wish to update scrollrect sensitivity to size of list element.")]
+        public bool linkScrolrectScrollSensitivity = false;
 
         public Boolean useFastSwipe = true;
+
         public int fastSwipeThreshold = 100;
 
-		// drag related
-		protected bool startDrag = true;
-		protected Vector3 positionOnDragStart = new Vector3();
-		protected int pageOnDragStart;
-		
-		protected bool fastSwipeTimer = false;
-		protected int fastSwipeCounter = 0;
-		protected int fastSwipeTarget = 10;
+        // drag related
+        protected bool startDrag = true;
+
+        protected Vector3 positionOnDragStart = new Vector3();
+
+        protected int pageOnDragStart;
+
+        protected bool fastSwipeTimer = false;
+
+        protected int fastSwipeCounter = 0;
+
+        protected int fastSwipeTarget = 10;
 
         // Use this for initialization
-		void Start()
-		{
-			lerp = false;
+        void Awake()
+        {
+            lerp = false;
 
-			scrollRect = gameObject.GetComponent<ScrollRect> ();
-			scrollRectTransform = gameObject.GetComponent<RectTransform> ();
-			listContainerTransform = scrollRect.content;
-			listContainerRectTransform = listContainerTransform.GetComponent<RectTransform> ();
+            scrollRect = gameObject.GetComponent<ScrollRect>();
+            scrollRectTransform = gameObject.GetComponent<RectTransform>();
+            listContainerTransform = scrollRect.content;
+            listContainerRectTransform = listContainerTransform.GetComponent<RectTransform>();
 
-			rectTransform = listContainerTransform.gameObject.GetComponent<RectTransform> ();
-			UpdateListItemsSize();
-			UpdateListItemPositions();
+            rectTransform = listContainerTransform.gameObject.GetComponent<RectTransform>();
+            UpdateListItemsSize();
+            UpdateListItemPositions();
 
-			ChangePage (CurrentPage ());
+            PageChanged(CurrentPage());
 
-			if (nextButton)
-			{
-				nextButton.GetComponent<Button> ().onClick.AddListener (() => { NextScreen (); });
-			}
+            if (nextButton)
+            {
+                nextButton.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    NextScreen();
+                });
+            }
 
             if (prevButton)
-			{
-				prevButton.GetComponent<Button> ().onClick.AddListener (() => { PreviousScreen (); });
-			}
-		}
+            {
+                prevButton.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    PreviousScreen();
+                });
+            }
+        }
 
-		public void UpdateListItemsSize()
-		{
-			float size = 0;
-			if (direction == ScrollSnap.ScrollDirection.Horizontal)
-			{
-				size = scrollRectTransform.rect.width / itemsVisibleAtOnce;
-			}
-			else
-			{
-				size = scrollRectTransform.rect.height / itemsVisibleAtOnce;
-			}
+        void Start()
+        {
+            Awake();
+        }
 
-			itemSize = size;
+        public void UpdateListItemsSize()
+        {
+            float size = 0;
+            float currentSize = 0;
+            if (direction == ScrollSnap.ScrollDirection.Horizontal)
+            {
+                size = scrollRectTransform.rect.width / itemsVisibleAtOnce;
+                currentSize = listContainerRectTransform.rect.width / itemsCount;
+            }
+            else
+            {
+                size = scrollRectTransform.rect.height / itemsVisibleAtOnce;
+                currentSize = listContainerRectTransform.rect.height / itemsCount;
+            }
 
-			if (autoLayoutItems && size != itemSize)
-			{
-				if (direction == ScrollSnap.ScrollDirection.Horizontal)
-				{
-					foreach (var tr in listContainerTransform)
-					{
-						GameObject child = ((Transform)tr).gameObject;
-						if (child.activeInHierarchy)
-						{
-							var childLayout = child.GetComponent<LayoutElement> ();
-							
-							if (childLayout == null)
-							{
-								childLayout = child.AddComponent<LayoutElement> ();
-							}
-							
-							childLayout.minWidth = itemSize;
-						}
-					}
-				}
-				else
-				{
-					foreach (var tr in listContainerTransform)
-					{
-						GameObject child = ((Transform)tr).gameObject;
-						if (child.activeInHierarchy)
-						{
-							var childLayout = child.GetComponent<LayoutElement> ();
-							
-							if (childLayout == null)
-							{
-								childLayout = child.AddComponent<LayoutElement> ();
-							}
-							
-							childLayout.minHeight = itemSize;
-						}
-					}
-				}
-			}
-		}
-		
-		public void UpdateListItemPositions()
-		{
-			if (!listContainerRectTransform.rect.size.Equals(listContainerCachedSize))
-			{
-				// checking how many children of list are active
-				int activeCount = 0;
-				
-				foreach (var tr in listContainerTransform) {
-					if (((Transform)tr).gameObject.activeInHierarchy) {
-						activeCount++;
-					}
-				}
+            itemSize = size;
 
-				// if anything changed since last check reinitialize anchors list
-				items = 0;
-				Array.Resize(ref pageAnchorPositions, activeCount);
-				
-				if (activeCount > 0)
-				{
-					pages = Mathf.Max (activeCount - itemsVisibleAtOnce + 1, 1);
+            if (linkScrolrectScrollSensitivity)
+            {
+                scrollRect.scrollSensitivity = itemSize;
+            }
 
-					if (direction == ScrollDirection.Horizontal)
-					{
-						// looking for list spanning range min/max
-						scrollRect.horizontalNormalizedPosition = 0;
-						listContainerMaxPosition = listContainerTransform.localPosition.x;
-						scrollRect.horizontalNormalizedPosition = 1;
-						listContainerMinPosition = listContainerTransform.localPosition.x;
-						
-						listContainerSize = listContainerMaxPosition - listContainerMinPosition;
+            if (autoLayoutItems && currentSize != size && itemsCount > 0)
+            {
+                if (direction == ScrollSnap.ScrollDirection.Horizontal)
+                {
+                    foreach (var tr in listContainerTransform)
+                    {
+                        GameObject child = ((Transform)tr).gameObject;
+                        if (child.activeInHierarchy)
+                        {
+                            var childLayout = child.GetComponent<LayoutElement>();
 
-						for (var i = 0; i < pages; i ++)
-						{
-							pageAnchorPositions[i] = new Vector3(
-								listContainerMaxPosition - itemSize * i,
-								listContainerTransform.localPosition.y,
-								listContainerTransform.localPosition.z
-							);
-						}
-					}
-					else
-					{
-						// looking for list spanning range
-						scrollRect.verticalNormalizedPosition = 1;
-						listContainerMinPosition = listContainerTransform.localPosition.y;
-						scrollRect.verticalNormalizedPosition = 0;
-						listContainerMaxPosition = listContainerTransform.localPosition.y;
-						
-						listContainerSize = listContainerMaxPosition - listContainerMinPosition;
+                            if (childLayout == null)
+                            {
+                                childLayout = child.AddComponent<LayoutElement>();
+                            }
 
-						for (var i = 0; i < pages; i ++)
-						{
-							pageAnchorPositions[i] = new Vector3(
-								listContainerTransform.localPosition.x,
-								listContainerMinPosition + itemSize * i,
-								listContainerTransform.localPosition.z
-							);
-						}
-						
-						foreach (var tr in listContainerTransform) {
-							if (((Transform)tr).gameObject.activeInHierarchy) {
-								activeCount++;
-							}
-						}
+                            childLayout.minWidth = itemSize;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var tr in listContainerTransform)
+                    {
+                        GameObject child = ((Transform)tr).gameObject;
+                        if (child.activeInHierarchy)
+                        {
+                            var childLayout = child.GetComponent<LayoutElement>();
 
-					}
+                            if (childLayout == null)
+                            {
+                                childLayout = child.AddComponent<LayoutElement>();
+                            }
 
-					UpdateScrollbar(linkScrolbarSteps);
-					startingPage = Mathf.Min(startingPage, pages);
-					ResetPage();
-				}
-				items = activeCount;
-				listContainerCachedSize.Set (listContainerRectTransform.rect.size.x, listContainerRectTransform.rect.size.y); 
-			}
+                            childLayout.minHeight = itemSize;
+                        }
+                    }
+                }
+            }
+        }
 
-		}
+        public void UpdateListItemPositions()
+        {
+            if (!listContainerRectTransform.rect.size.Equals(listContainerCachedSize))
+            {
+                // checking how many children of list are active
+                int activeCount = 0;
 
-		public void ResetPage()
-		{
-			if (direction == ScrollDirection.Horizontal)
-			{
-				scrollRect.horizontalNormalizedPosition = pages > 1 ? (float)startingPage / (float)(pages - 1) : 0;
-			}
-			else
-			{
-				scrollRect.verticalNormalizedPosition = pages > 1 ? (float)(pages - startingPage - 1) / (float)(pages - 1) : 0;
-			}
-		}
+                foreach (var tr in listContainerTransform)
+                {
+                    if (((Transform)tr).gameObject.activeInHierarchy)
+                    {
+                        activeCount++;
+                    }
+                }
 
-		protected void UpdateScrollbar(bool linkSteps)
-		{
-			if (linkSteps)
-			{
-				if (direction == ScrollDirection.Horizontal)
-				{
-					if (scrollRect.horizontalScrollbar != null)
-					{
-						scrollRect.horizontalScrollbar.numberOfSteps = pages;
-					}
-				}
-				else
-				{
-					if (scrollRect.verticalScrollbar != null)
-					{
-						scrollRect.verticalScrollbar.numberOfSteps = pages;
-					}
-				}
-			}
-			else
-			{
-				if (direction == ScrollDirection.Horizontal)
-				{
-					if (scrollRect.horizontalScrollbar != null)
-					{
-						scrollRect.horizontalScrollbar.numberOfSteps = 0;
-					}
-				}
-				else
-				{
-					if (scrollRect.verticalScrollbar != null)
-					{
-						scrollRect.verticalScrollbar.numberOfSteps = 0;
-					}
-				}
-			}
-		}
+                // if anything changed since last check reinitialize anchors list
+                itemsCount = 0;
+                Array.Resize(ref pageAnchorPositions, activeCount);
 
-        void Update()
-		{
-			UpdateListItemsSize();
-			UpdateListItemPositions();
+                if (activeCount > 0)
+                {
+                    pages = Mathf.Max(activeCount - itemsVisibleAtOnce + 1, 1);
 
-			if (lerp)
-			{
-				UpdateScrollbar(false);
+                    if (direction == ScrollDirection.Horizontal)
+                    {
+                        // looking for list spanning range min/max
+                        scrollRect.horizontalNormalizedPosition = 0;
+                        listContainerMaxPosition = listContainerTransform.localPosition.x;
+                        scrollRect.horizontalNormalizedPosition = 1;
+                        listContainerMinPosition = listContainerTransform.localPosition.x;
+
+                        listContainerSize = listContainerMaxPosition - listContainerMinPosition;
+
+                        for (var i = 0; i < pages; i++)
+                        {
+                            pageAnchorPositions[i] = new Vector3(
+                                listContainerMaxPosition - itemSize * i,
+                                listContainerTransform.localPosition.y,
+                                listContainerTransform.localPosition.z
+                            );
+                        }
+                    }
+                    else
+                    {
+                        //Debug.Log ("-------------looking for list spanning range----------------");
+                        // looking for list spanning range
+                        scrollRect.verticalNormalizedPosition = 1;
+                        listContainerMinPosition = listContainerTransform.localPosition.y;
+                        scrollRect.verticalNormalizedPosition = 0;
+                        listContainerMaxPosition = listContainerTransform.localPosition.y;
+
+                        listContainerSize = listContainerMaxPosition - listContainerMinPosition;
+
+                        for (var i = 0; i < pages; i++)
+                        {
+                            pageAnchorPositions[i] = new Vector3(
+                                listContainerTransform.localPosition.x,
+                                listContainerMinPosition + itemSize * i,
+                                listContainerTransform.localPosition.z
+                            );
+                        }
+                    }
+
+                    UpdateScrollbar(linkScrolbarSteps);
+                    startingPage = Mathf.Min(startingPage, pages);
+                    ResetPage();
+                }
+
+                if (itemsCount != activeCount)
+                {
+                    PageChanged(CurrentPage());
+                }
+
+                itemsCount = activeCount;
+                listContainerCachedSize.Set(listContainerRectTransform.rect.size.x, listContainerRectTransform.rect.size.y);
+            }
+
+        }
+
+        public void ResetPage()
+        {
+            if (direction == ScrollDirection.Horizontal)
+            {
+                scrollRect.horizontalNormalizedPosition = pages > 1 ? (float)startingPage / (float)(pages - 1) : 0;
+            }
+            else
+            {
+                scrollRect.verticalNormalizedPosition = pages > 1 ? (float)(pages - startingPage - 1) / (float)(pages - 1) : 0;
+            }
+        }
+
+        protected void UpdateScrollbar(bool linkSteps)
+        {
+            if (linkSteps)
+            {
+                if (direction == ScrollDirection.Horizontal)
+                {
+                    if (scrollRect.horizontalScrollbar != null)
+                    {
+                        scrollRect.horizontalScrollbar.numberOfSteps = pages;
+                    }
+                }
+                else
+                {
+                    if (scrollRect.verticalScrollbar != null)
+                    {
+                        scrollRect.verticalScrollbar.numberOfSteps = pages;
+                    }
+                }
+            }
+            else
+            {
+                if (direction == ScrollDirection.Horizontal)
+                {
+                    if (scrollRect.horizontalScrollbar != null)
+                    {
+                        scrollRect.horizontalScrollbar.numberOfSteps = 0;
+                    }
+                }
+                else
+                {
+                    if (scrollRect.verticalScrollbar != null)
+                    {
+                        scrollRect.verticalScrollbar.numberOfSteps = 0;
+                    }
+                }
+            }
+        }
+
+        void LateUpdate()
+        {
+            UpdateListItemsSize();
+            UpdateListItemPositions();
+
+            if (lerp)
+            {
+                UpdateScrollbar(false);
 
                 listContainerTransform.localPosition = Vector3.Lerp(listContainerTransform.localPosition, lerpTarget, 7.5f * Time.deltaTime);
-                
-				if (Vector3.Distance(listContainerTransform.localPosition, lerpTarget) < 0.001f)
-				{
-					listContainerTransform.localPosition = lerpTarget;
-					lerp = false;
-					
-					UpdateScrollbar(linkScrolbarSteps);
+
+                if (Vector3.Distance(listContainerTransform.localPosition, lerpTarget) < 0.001f)
+                {
+                    listContainerTransform.localPosition = lerpTarget;
+                    lerp = false;
+
+                    UpdateScrollbar(linkScrolbarSteps);
                 }
 
                 //change the info bullets at the bottom of the screen. Just for visual effect
                 if (Vector3.Distance(listContainerTransform.localPosition, lerpTarget) < 10f)
-				{
-                    ChangePage(CurrentPage());
+                {
+                    PageChanged(CurrentPage());
                 }
             }
 
             if (fastSwipeTimer)
-			{
+            {
                 fastSwipeCounter++;
-			}
+            }
         }
 
         private bool fastSwipe = false; //to determine if a fast swipe was performed
@@ -331,118 +370,140 @@ namespace UnityEngine.UI.Extensions
 
         //Function for switching screens with buttons
         public void NextScreen()
-		{
-			UpdateListItemPositions ();
+        {
+            UpdateListItemPositions();
 
-			if (CurrentPage() < pages - 1)
-			{
+            if (CurrentPage() < pages - 1)
+            {
                 lerp = true;
                 lerpTarget = pageAnchorPositions[CurrentPage() + 1];
 
-                ChangePage(CurrentPage() + 1);
+                PageChanged(CurrentPage() + 1);
             }
         }
 
         //Function for switching screens with buttons
         public void PreviousScreen()
-		{
-			UpdateListItemPositions ();
+        {
+            UpdateListItemPositions();
 
-			if (CurrentPage() > 0)
-			{
+            if (CurrentPage() > 0)
+            {
                 lerp = true;
                 lerpTarget = pageAnchorPositions[CurrentPage() - 1];
 
-                ChangePage(CurrentPage() - 1);
+                PageChanged(CurrentPage() - 1);
             }
         }
 
         //Because the CurrentScreen function is not so reliable, these are the functions used for swipes
         private void NextScreenCommand()
         {
-			if (pageOnDragStart < pages - 1)
-			{
-				int targetPage = Mathf.Min(pages - 1, pageOnDragStart + itemsVisibleAtOnce);
+            if (pageOnDragStart < pages - 1)
+            {
+                int targetPage = Mathf.Min(pages - 1, pageOnDragStart + itemsVisibleAtOnce);
                 lerp = true;
 
-				lerpTarget = pageAnchorPositions[targetPage];
+                lerpTarget = pageAnchorPositions[targetPage];
 
-				ChangePage(targetPage);
+                PageChanged(targetPage);
             }
         }
 
         //Because the CurrentScreen function is not so reliable, these are the functions used for swipes
         private void PrevScreenCommand()
-		{
-			if (pageOnDragStart > 0)
-			{
-				int targetPage = Mathf.Max(0, pageOnDragStart - itemsVisibleAtOnce);
+        {
+            if (pageOnDragStart > 0)
+            {
+                int targetPage = Mathf.Max(0, pageOnDragStart - itemsVisibleAtOnce);
                 lerp = true;
 
-				lerpTarget = pageAnchorPositions[targetPage];
+                lerpTarget = pageAnchorPositions[targetPage];
 
-				ChangePage(targetPage);
+                PageChanged(targetPage);
             }
         }
 
 
         //returns the current screen that the is seeing
         public int CurrentPage()
-		{
-			float pos;
+        {
+            float pos;
 
-			if (direction == ScrollDirection.Horizontal)
-			{
-				pos = listContainerMaxPosition - listContainerTransform.localPosition.x;
-				pos = Mathf.Clamp(pos, 0, listContainerSize);
-			}
-			else
-			{
-				pos = listContainerTransform.localPosition.y - listContainerMinPosition;
-				pos = Mathf.Clamp(pos, 0, listContainerSize);
-			}
+            if (direction == ScrollDirection.Horizontal)
+            {
+                pos = listContainerMaxPosition - listContainerTransform.localPosition.x;
+                pos = Mathf.Clamp(pos, 0, listContainerSize);
+            }
+            else
+            {
+                pos = listContainerTransform.localPosition.y - listContainerMinPosition;
+                pos = Mathf.Clamp(pos, 0, listContainerSize);
+            }
 
-			float page = pos / itemSize;
+            float page = pos / itemSize;
 
-			return Mathf.Clamp(Mathf.RoundToInt(page), 0, pages);
+            return Mathf.Clamp(Mathf.RoundToInt(page), 0, pages);
+        }
+
+        public void ChangePage(int page)
+        {
+            if (0 <= page && page < pages)
+            {
+                lerp = true;
+
+                lerpTarget = pageAnchorPositions[page];
+
+                PageChanged(page);
+            }
         }
 
         //changes the bullets on the bottom of the page - pagination
-        private void ChangePage(int currentPage)
+        private void PageChanged(int currentPage)
         {
-			startingPage = currentPage;
+            startingPage = currentPage;
 
-			if (onPageChange != null)
-			{
-				onPageChange(currentPage);
-			}
+            if (nextButton)
+            {
+                nextButton.interactable = currentPage < pages - 1;
+            }
+
+            if (prevButton)
+            {
+                prevButton.interactable = currentPage > 0;
+            }
+
+            if (onPageChange != null)
+            {
+                onPageChange(currentPage);
+            }
         }
 
         #region Interfaces
         public void OnBeginDrag(PointerEventData eventData)
         {
-			UpdateScrollbar(false);
+            UpdateScrollbar(false);
 
-			fastSwipeCounter = 0;
-			fastSwipeTimer = true;
+            fastSwipeCounter = 0;
+            fastSwipeTimer = true;
 
-			positionOnDragStart = eventData.position;
+            positionOnDragStart = eventData.position;
             pageOnDragStart = CurrentPage();
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
             startDrag = true;
-			float change = 0;
+            float change = 0;
 
-			if (direction == ScrollDirection.Horizontal)
-			{
-				change = positionOnDragStart.x - eventData.position.x;
-			}
-			else
-			{
-				change = -positionOnDragStart.y + eventData.position.y;
-			}
+            if (direction == ScrollDirection.Horizontal)
+            {
+                change = positionOnDragStart.x - eventData.position.x;
+            }
+            else
+            {
+                change = -positionOnDragStart.y + eventData.position.y;
+            }
 
             if (useFastSwipe)
             {
@@ -458,33 +519,33 @@ namespace UnityEngine.UI.Extensions
                 }
                 if (fastSwipe)
                 {
-					if (change > 0)
-					{
-						NextScreenCommand();
-					}
-					else
-					{
-						PrevScreenCommand();
-					}
+                    if (change > 0)
+                    {
+                        NextScreenCommand();
+                    }
+                    else
+                    {
+                        PrevScreenCommand();
+                    }
                 }
                 else
                 {
                     lerp = true;
-					lerpTarget = pageAnchorPositions[CurrentPage()];
+                    lerpTarget = pageAnchorPositions[CurrentPage()];
                 }
             }
             else
             {
                 lerp = true;
-				lerpTarget = pageAnchorPositions[CurrentPage()];
+                lerpTarget = pageAnchorPositions[CurrentPage()];
             }
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-			lerp = false;
+            lerp = false;
 
-			if (startDrag)
+            if (startDrag)
             {
                 OnBeginDrag(eventData);
                 startDrag = false;

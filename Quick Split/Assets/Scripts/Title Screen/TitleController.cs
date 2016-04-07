@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
+using UnityEngine.SceneManagement;
 
 public class TitleController : MonoBehaviour {
 
@@ -230,7 +231,7 @@ public class TitleController : MonoBehaviour {
 	{
 		shutter.Begin_Vertical_Close ();
 		mc.Stop_Music ();
-		AsyncOperation async = Application.LoadLevelAsync ("Game Scene");
+		AsyncOperation async = SceneManager.LoadSceneAsync ("Game Scene");
 		async.allowSceneActivation = false;
 		yield return new WaitForSeconds (2f);
 		async.allowSceneActivation = true;
