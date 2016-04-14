@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
@@ -91,7 +92,9 @@ public class GameController : MonoBehaviour {
 	public AudioSource UnpauseSFX;
 
 	void Awake () {
-
+		if (SceneManager.GetActiveScene ().name == "Split Title Scene") {
+				SceneManager.UnloadScene ("Split Title Scene");
+		}
 		achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
 
 		//begin with the assumption that you're not in quick mode and there's not countdown
@@ -262,10 +265,10 @@ public class GameController : MonoBehaviour {
 	{
 		//code for restarting the game after a game over
 		if (gameOver && Input.GetKeyDown ("r")) {
-			Application.LoadLevelAsync(Application.loadedLevel);
+			StartCoroutine (ReloadScene());
 		}
 		else if (gameOver && Input.GetKeyDown (KeyCode.Backspace)){
-			Application.LoadLevelAsync ("Split Title Scene");
+			StartCoroutine (TitleTransition());
 		}
 
 		if (Input.GetKeyDown ("0")) {
@@ -961,14 +964,17 @@ public class GameController : MonoBehaviour {
 		Time.timeScale = 1;
 		mc.Stop_Music ();
 		shutter.Begin_Horizontal_Close ();
+		AsyncOperation async = SceneManager.LoadSceneAsync ("Game Scene");
+		async.allowSceneActivation = false;
 		yield return new WaitForSeconds (2f);
-		Application.LoadLevel (Application.loadedLevel);
+		async.allowSceneActivation = true;
+		yield return async;
 	}
 	//transitions to the title screen
 	IEnumerator TitleTransition(){
 		mc.Stop_Music ();
-		shutter.Begin_Horizontal_Close ();
-		AsyncOperation async = Application.LoadLevelAsync ("Split Title Scene");
+		shutter.Begin_Horizontal_Close (); 
+		AsyncOperation async = SceneManager.LoadSceneAsync ("Split Title Scene");
 		async.allowSceneActivation = false;
 		yield return new WaitForSeconds (2f);
 		async.allowSceneActivation = true;

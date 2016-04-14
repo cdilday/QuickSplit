@@ -216,7 +216,7 @@ namespace UnityEngine.UI.Extensions
                 child.anchoredPosition = new Vector2(0f - panelDimensions.x / 2, currentYPosition + panelDimensions.y / 2);
             }
 
-            _dimension = currentYPosition + _offset * 1;
+            _dimension = currentYPosition + _offset * -1;
 
             _screensContainer.GetComponent<RectTransform>().offsetMax = new Vector2(0f,_dimension);
         }

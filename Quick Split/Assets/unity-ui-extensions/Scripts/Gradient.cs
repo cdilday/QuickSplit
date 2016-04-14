@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace UnityEngine.UI.Extensions
 {
     [AddComponentMenu("UI/Effects/Extensions/Gradient")]
-    public class Gradient : BaseVertexEffect
+    public class Gradient : BaseMeshEffect
     {
         public GradientMode gradientMode = GradientMode.Global;
         public GradientDir gradientDir = GradientDir.Vertical;
@@ -20,14 +20,16 @@ namespace UnityEngine.UI.Extensions
             targetGraphic = GetComponent<Graphic>();
         }
 
-        public override void ModifyVertices(List<UIVertex> vertexList)
+        public override void ModifyMesh(VertexHelper vh)
         {
-            if (!IsActive() || vertexList.Count == 0)
+            int count = vh.currentVertCount;
+            if (!IsActive() || count == 0)
             {
                 return;
             }
-            int count = vertexList.Count;
-            UIVertex uiVertex = vertexList[0];
+            var vertexList = new List<UIVertex>();
+            vh.GetUIVertexStream(vertexList);
+            UIVertex uiVertex = new UIVertex();
             if (gradientMode == GradientMode.Global)
             {
                 if (gradientDir == GradientDir.DiagonalLeftToRight || gradientDir == GradientDir.DiagonalRightToLeft)
@@ -44,18 +46,18 @@ namespace UnityEngine.UI.Extensions
 
                 for (int i = 0; i < count; i++)
                 {
-                    uiVertex = vertexList[i];
+                    vh.PopulateUIVertex(ref uiVertex, i);
                     if (!overwriteAllColor && uiVertex.color != targetGraphic.color)
                         continue;
                     uiVertex.color *= Color.Lerp(vertex2, vertex1, ((gradientDir == GradientDir.Vertical ? uiVertex.position.y : uiVertex.position.x) - bottomY) / uiElementHeight);
-                    vertexList[i] = uiVertex;
+                    vh.SetUIVertex(uiVertex, i);
                 }
             }
             else
             {
                 for (int i = 0; i < count; i++)
                 {
-                    uiVertex = vertexList[i];
+                    vh.PopulateUIVertex(ref uiVertex, i);
                     if (!overwriteAllColor && !CompareCarefully(uiVertex.color, targetGraphic.color))
                         continue;
                     switch (gradientDir)
@@ -74,7 +76,7 @@ namespace UnityEngine.UI.Extensions
                             break;
 
                     }
-                    vertexList[i] = uiVertex;
+                    vh.SetUIVertex(uiVertex, i);
                 }
             }
         }

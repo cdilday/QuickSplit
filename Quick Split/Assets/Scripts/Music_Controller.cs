@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Music_Controller : MonoBehaviour {
 
@@ -48,7 +49,7 @@ public class Music_Controller : MonoBehaviour {
 		MusicSource = gameObject.GetComponent<AudioSource> ();
 		MusicSource.loop = true;
 
-		if (Application.loadedLevel == 0) {
+		if (SceneManager.GetActiveScene().buildIndex == 0) {
 			MusicSource.clip = MenuMusic;
 		} 
 		else {

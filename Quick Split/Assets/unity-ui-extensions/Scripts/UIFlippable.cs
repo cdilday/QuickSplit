@@ -1,13 +1,14 @@
+
+using System;
 /// Credit ChoMPHi
 /// Sourced from - http://forum.unity3d.com/threads/script-flippable-for-ui-graphics.291711/
-
 using System.Collections.Generic;
 
 namespace UnityEngine.UI.Extensions
 {
     [RequireComponent(typeof(RectTransform), typeof(Graphic)), DisallowMultipleComponent]
     [AddComponentMenu("UI/Effects/Extensions/Flippable")]
-    public class UIFlippable : MonoBehaviour, IVertexModifier
+    public class UIFlippable : MonoBehaviour, IMeshModifier
     {     
         [SerializeField] private bool m_Horizontal = false;
         [SerializeField] private bool m_Veritical = false;
@@ -37,24 +38,30 @@ namespace UnityEngine.UI.Extensions
             this.GetComponent<Graphic>().SetVerticesDirty();
         }
      
-        public void ModifyVertices(List<UIVertex> verts)
+        public void ModifyMesh(VertexHelper verts)
         {
             RectTransform rt = this.transform as RectTransform;
          
-            for (int i = 0; i < verts.Count; ++i)
+            for (int i = 0; i < verts.currentVertCount; ++i)
             {
-                UIVertex v = verts[i];
-             
+                UIVertex uiVertex = new UIVertex();
+                verts.PopulateUIVertex(ref uiVertex,i);
+
                 // Modify positions
-                v.position = new Vector3(
-                    (this.m_Horizontal ? (v.position.x + (rt.rect.center.x - v.position.x) * 2) : v.position.x),
-                    (this.m_Veritical ?  (v.position.y + (rt.rect.center.y - v.position.y) * 2) : v.position.y),
-                    v.position.z
+                uiVertex.position = new Vector3(
+                    (this.m_Horizontal ? (uiVertex.position.x + (rt.rect.center.x - uiVertex.position.x) * 2) : uiVertex.position.x),
+                    (this.m_Veritical ?  (uiVertex.position.y + (rt.rect.center.y - uiVertex.position.y) * 2) : uiVertex.position.y),
+                    uiVertex.position.z
                 );
-             
+
                 // Apply
-                verts[i] = v;
+                verts.SetUIVertex(uiVertex, i);
             }
+        }
+
+        public void ModifyMesh(Mesh mesh)
+        {
+            //Obsolete member implementation
         }
     }
 }

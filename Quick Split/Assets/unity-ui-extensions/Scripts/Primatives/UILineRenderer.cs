@@ -65,7 +65,7 @@ namespace UnityEngine.UI.Extensions
             }
         }
 
-        protected override void OnFillVBO(List<UIVertex> vbo)
+        protected override void OnPopulateMesh(VertexHelper vh)
         {
             // requires sets of quads
             if (Points == null || Points.Length < 2)
@@ -107,7 +107,7 @@ namespace UnityEngine.UI.Extensions
                 offsetY += Margin.y / 2f;
             }
 
-            vbo.Clear();
+            vh.Clear();
 
             Vector2 prevV1 = Vector2.zero;
             Vector2 prevV2 = Vector2.zero;
@@ -143,14 +143,14 @@ namespace UnityEngine.UI.Extensions
                 Vector2[] uvs = new[] { uvTopCenter, uvBottomCenter, uvBottomCenter, uvTopCenter };
 
                 if (i > 1)
-                    SetVbo(vbo, new[] { prevV1, prevV2, v1, v2 }, uvs);
+                    vh.AddUIVertexQuad(SetVbo(new[] { prevV1, prevV2, v1, v2 }, uvs));
 
                 if (i == 1)
                     uvs = new[] { uvTopLeft, uvBottomLeft, uvBottomCenter, uvTopCenter };
                 else if (i == TempPoints.Length - 1)
                     uvs = new[] { uvTopCenter, uvBottomCenter, uvBottomRight, uvTopRight };
 
-                SetVbo(vbo, new[] { v1, v2, v3, v4 }, uvs);
+                vh.AddUIVertexQuad(SetVbo(new[] { v1, v2, v3, v4 }, uvs));
 
 
                 prevV1 = v3;
@@ -158,16 +158,18 @@ namespace UnityEngine.UI.Extensions
             }
         }
 
-        protected void SetVbo(List<UIVertex> vbo, Vector2[] vertices, Vector2[] uvs)
+        protected UIVertex[] SetVbo(Vector2[] vertices, Vector2[] uvs)
         {
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                var vert = UIVertex.simpleVert;
-                vert.color = color;
-                vert.position = vertices[i];
-                vert.uv0 = uvs[i];
-                vbo.Add(vert);
-            }
+            UIVertex[] vbo = new UIVertex[4];
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    var vert = UIVertex.simpleVert;
+                    vert.color = color;
+                    vert.position = vertices[i];
+                    vert.uv0 = uvs[i];
+                    vbo[i] = vert;
+                }
+            return vbo;
         }
 
         public Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles)
