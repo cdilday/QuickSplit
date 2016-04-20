@@ -18,7 +18,7 @@ public class GP_Icon_Handler : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GameObject GPGHObject = GameObject.FindGameObjectWithTag ("Google Play");
-		if (GPGHObject == null) {
+		if (GPGHObject == null|| (!Application.isMobilePlatform && !GPGHObject.GetComponent<GPG_Handler>().debugIsMobile)) {
 			Destroy (gameObject);
 			return;
 		}

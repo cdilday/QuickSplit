@@ -24,7 +24,7 @@ public class GPG_Handler : MonoBehaviour {
 		//this is to stay alive at all times
 		DontDestroyOnLoad (transform.gameObject);
 
-		if( Application.platform == RuntimePlatform.Android || debugIsMobile){
+		if( Application.isMobilePlatform || debugIsMobile){
 			PlayGamesPlatform.InitializeInstance(config);
 			// recommended for debugging:
 			PlayGamesPlatform.DebugLogEnabled = true;

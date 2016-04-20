@@ -37,7 +37,7 @@ public class GPG_Notification : MonoBehaviour {
 	void Start () {
 		//first check to see if google play is even an option and the handler exist
 		GameObject gpgObject = GameObject.FindGameObjectWithTag ("Google Play");
-		if (gpgObject == null) {
+		if (gpgObject == null || (!Application.isMobilePlatform && !gpgObject.GetComponent<GPG_Handler>().debugIsMobile)) {
 			Destroy (gameObject);
 			return;
 		}
