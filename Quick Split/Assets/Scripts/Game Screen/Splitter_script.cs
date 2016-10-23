@@ -39,7 +39,7 @@ public class Splitter_script : MonoBehaviour {
 	public bool overrideControlType;
 	public string controlType;
 
-	//this is used for follow controls so the fingerID's startTimes dn't get messed up
+	//this is used for follow controls so the fingerID's startTimes don't get messed up
 	Dictionary<int, float> idStartTimes;
 	// same but for if it's been moved or not
 	Dictionary<int, Vector2> idStartPos;

@@ -46,6 +46,7 @@ public class TitleController : MonoBehaviour {
 	public int activeMode;
 	int prevMode;
 
+	//Specifically for the Pumpkin Achievement code
 	int codeStage = 0;
 
 	public GameObject HTPEmphasizer;
