@@ -217,6 +217,7 @@
      <Compile Include="Assets\GooglePlayGames\Platforms\PlayGamesClientFactory.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\TokenClient.cs" />
      <Compile Include="Assets\GooglePlayGames\PluginVersion.cs" />
+     <Compile Include="Assets\KongController.cs" />
      <Compile Include="Assets\Scripts\Achievement_Notification.cs" />
      <Compile Include="Assets\Scripts\Achievement_Script.cs" />
      <Compile Include="Assets\Scripts\Achievement_Tally.cs" />
