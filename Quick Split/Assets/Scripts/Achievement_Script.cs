@@ -148,7 +148,7 @@ public class Achievement_Script : MonoBehaviour {
 	}
 
 	//use this to add new high scores
-	public void Add_Score(string gameMode, int score)
+	public void Add_Score (string gameMode, int score)
 	{
 		//you need to actually score to save a high score
 		if (score == 0)
@@ -157,10 +157,16 @@ public class Achievement_Script : MonoBehaviour {
 
 		GameObject temp = GameObject.FindGameObjectWithTag ("Google Play");
 		if (temp != null) {
-			gpgh = temp.GetComponent<GPG_Handler>();
+			gpgh = temp.GetComponent<GPG_Handler> ();
 			if (gpgh.isSignedIn ()) {
-				gpgh.Post_Score(gameMode, score);
+				gpgh.Post_Score (gameMode, score);
 			}
+		}
+
+		//Now for Kong Connection
+		temp = GameObject.FindGameObjectWithTag ("Kong Controller");
+		if (temp != null) {
+			temp.GetComponent<KongController>().Submit_Score(gameMode, score);
 		}
 
 		for (int i = 0; i < 15; i++) {

@@ -86,7 +86,86 @@ public class Achievement_Notification : MonoBehaviour {
 	}
 
 	public void Achievement_Unlocked(string thingUnlocked, string unlockType){
-		//first check to make sure it's not n use. if it is, just play the sound so they know something happened
+		// We're going to send Kongregate the achievement info First, then check for busyness of the notification
+		GameObject temp = GameObject.FindGameObjectWithTag ("Kong Controller");
+		if (temp != null) {
+			string achieveName = "";
+			if (unlockType == "Splitter") {
+				UnlockText.text = "New Splitter Unlocked!";
+				switch(thingUnlocked){
+				case "Candy Cane":
+					achieveName = "Some Candy for the Pain";
+					break;
+				case "Dark":
+					achieveName = "No Light; only darkness";
+					break;
+				case "Caution":
+					achieveName = "Get behind the line";
+					break;
+				case "Red":
+					achieveName = "Not Reddy to die";
+					break;
+				case "Orange":
+					achieveName = "Well Orange you clever?";
+					break;
+				case "Yellow":
+					achieveName = "Nothing to Yellow-ver";
+					break;
+				case "Green":
+					achieveName = "Looking for Greener Pastures";
+					break;
+				case "Blue":
+					achieveName = "In with the Blue";
+					break;
+				case "Purple":
+					achieveName = "Non-Violet Solutions";
+					break;
+				case "Cyan":
+					achieveName = "I'll be Cyan you later";
+					break;
+				case "White":
+					achieveName = "Cleaned up White away";
+					break;
+				case "Programmer":
+					achieveName = "How did this work?";
+					break;
+				}
+			}
+			else if(unlockType == "Pieceset"){
+				UnlockText.text = "New Pieceset Unlocked!";
+				switch(thingUnlocked){
+				case "Blob":
+					achieveName = "What a mess...";
+					break;
+				case "Retro":
+					achieveName = "8-bits of Splits";
+					break;
+				case "Techno":
+					achieveName = "Sleek Splits";
+					break;
+				case "Arcane":
+					achieveName = "You're a Wazard";
+					break;
+				case "Present":
+					achieveName = "Not Exactly Re-gifting";
+					break;
+				case "Domino":
+					achieveName = "A Crazy Contraption";
+					break;
+				case "Pumpkin":
+					achieveName = "Cheater Cheater Pumpkin-Eater";
+					break;
+				case "Programmer":
+					achieveName = "Grey Areas";
+					break;
+				}
+			}
+			if(achieveName != "")
+				temp.GetComponent<KongController>().Submit_Achievement(achieveName);
+			else
+				Debug.Log("given Achievement doesn't match any programmed ones");
+		} 
+		//first check to make sure it's not in use. if it is, just play the sound so they know something happened
 		if (isBusy) {
 			return;
 		}
