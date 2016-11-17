@@ -16,8 +16,6 @@ public class Achievement_Script : MonoBehaviour {
 
 	public Achievement_Notification notification;
 
-	GPG_Handler gpgh;
-
 	// Use this for initialization
 	void Awake () {
 		//there should only ever be 1 of these
@@ -27,11 +25,6 @@ public class Achievement_Script : MonoBehaviour {
 		if (mcs.Length > 1) {
 			Destroy(gameObject);
 			return;
-		}
-
-		GameObject temp = GameObject.FindGameObjectWithTag ("Google Play");
-		if (temp != null) {
-			gpgh = temp.GetComponent<GPG_Handler>();
 		}
 
 		//make sure default sets are always unlocked at start of game to prevent crashes
@@ -155,16 +148,8 @@ public class Achievement_Script : MonoBehaviour {
 			return;
 		int tempScore = score;
 
-		GameObject temp = GameObject.FindGameObjectWithTag ("Google Play");
-		if (temp != null) {
-			gpgh = temp.GetComponent<GPG_Handler> ();
-			if (gpgh.isSignedIn ()) {
-				gpgh.Post_Score (gameMode, score);
-			}
-		}
-
 		//Now for Kong Connection
-		temp = GameObject.FindGameObjectWithTag ("Kong Controller");
+		GameObject temp = GameObject.FindGameObjectWithTag ("Kong Controller");
 		if (temp != null) {
 			temp.GetComponent<KongController>().Submit_Score(gameMode, score);
 		}
@@ -209,11 +194,6 @@ public class Achievement_Script : MonoBehaviour {
 		if (notification != null) {
 			notification.Achievement_Unlocked(name, "Splitter");
 		}
-		if(gpgh != null && gpgh.isSignedIn()){
-			Social.ReportProgress(Name_to_ID(true, name), 100.0f, (bool success) => {
-				// handle success or failure, dunno if necessary here
-			});
-		}
 	}
 
 	//returns true if the given splitter name is unlocked
@@ -228,11 +208,6 @@ public class Achievement_Script : MonoBehaviour {
 		PlayerPrefs.SetInt (name + " Pieceset unlocked", 1);
 		if (notification != null)
 			notification.Achievement_Unlocked (name, "Pieceset");
-		if(gpgh != null && gpgh.isSignedIn()){
-			Social.ReportProgress(Name_to_ID(false, name), 100.0f, (bool success) => {
-				// handle success or failure, dunno if necessary here
-			});
-		}
 	}
 
 	//returns true if the given pieceset name is unlocked
@@ -433,26 +408,5 @@ public class Achievement_Script : MonoBehaviour {
 		if (oldCount - newCount >= 16)
 				Unlock_Splitter ("Blue");
 	} 
-
-	//this syncs all locally unlocked achievements with Google play, unlocking all GP achievements that correspond with locally unlocked
-	public void Sync_With_Google_Play(){
-		if (gpgh == null || !gpgh.isSignedIn ())
-			return;
-		for (int i = 1; i < splittersUnlocked.Length; i++) {
-			if(splittersUnlocked[i]){
-				Social.ReportProgress(Name_to_ID(true, Splitter_Lookup_Name_by_Index(i)), 100.0f, (bool success) => {
-					// handle success or failure, dunno if necessary here
-				});
-			}
-		}
-
-		for (int i = 1; i < piecesetsUnlocked.Length; i++) {
-			if(i != Pieceset_Lookup_Index_by_Name("Symbol") && piecesetsUnlocked[i]){
-				Social.ReportProgress(Name_to_ID(false, Pieceset_Lookup_Name_by_Index(i)), 100.0f, (bool success) => {
-					// handle success or failure, dunno if necessary here
-				});
-			}
-		}
-	}
 
 }
