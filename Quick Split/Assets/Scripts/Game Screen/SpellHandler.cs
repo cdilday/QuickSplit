@@ -656,7 +656,7 @@ public class SpellHandler : MonoBehaviour {
 			for(int r = 0; r < 8; r++)
 			{
 				if(gameController.grid[r,0] != null || gameController.grid[r,15] != null)
-					return true;
+					yield return true;
 			}
 			achievementHandler.Unlock_Splitter("White");
 		}

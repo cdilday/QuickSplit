@@ -39,17 +39,6 @@ public class Splitter_script : MonoBehaviour {
 	public bool overrideControlType;
 	public string controlType;
 
-	//this is used for follow controls so the fingerID's startTimes dn't get messed up
-	Dictionary<int, float> idStartTimes;
-	// same but for if it's been moved or not
-	Dictionary<int, Vector2> idStartPos;
-	//this just defines if it was a tap or not
-	Dictionary<int, bool> idIsTap;
-	//for swipes
-	Dictionary<int, bool> idIsSwipe;
-	//for drag
-	Dictionary<int, bool> idIsDrag;
-
 	//objects the splitter will need to use
 	public Holder_Script holder;
 	public GameController gameController;
@@ -95,11 +84,6 @@ public class Splitter_script : MonoBehaviour {
 			PlayerPrefs.SetString("Controls", controlType);
 
 		if (controlType == "Follow"){
-			idStartTimes = new Dictionary<int, float> ();
-			idStartPos = new Dictionary<int, Vector2>();
-			idIsTap = new Dictionary<int, bool>();
-			idIsSwipe = new Dictionary<int, bool>();
-			idIsDrag = new Dictionary<int, bool>();
 			speed = 2;
 		}
 		else
