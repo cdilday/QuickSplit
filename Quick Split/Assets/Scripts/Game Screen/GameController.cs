@@ -1,14 +1,13 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.UI;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-
-    Camera mainCamera;
+    private Camera mainCamera;
 
     //grid stores the pieces themselves, while colorGrid only stores the color, allowing for easier access for calculations
     public GameObject[,] grid = new GameObject[8, 16];
@@ -23,10 +22,10 @@ public class GameController : MonoBehaviour
     public GameObject[] cluster = new GameObject[16];
 
     //columns that contain pieces to be pushed in at some point
-    SideColumn[] sideColumns = new SideColumn[2];
+    private SideColumn[] sideColumns = new SideColumn[2];
 
     //Script for Spells
-    SpellHandler spellHandler;
+    private SpellHandler spellHandler;
 
     //text that pops up during a game over. also used for the pause screen and other alerts
     public Text gameOverText;
@@ -40,42 +39,43 @@ public class GameController : MonoBehaviour
     public Text movesText;
     public int score;
     public Text scoreText;
-    bool newHighScore;
+    private bool newHighScore;
     public Text HighScoreText;
     public GameObject Score_Text_Canvas;
 
     //pieces places is used to ensure both pieces have landed before checking the grid in Update()
-    int piecesPlaced;
+    private int piecesPlaced;
+
     //checkFlag will make sure that a boardcheck is run when necessary
-    bool checkFlag;
+    private bool checkFlag;
 
     //Splitter keeps track of the splitter for easy access
     public Splitter_script splitter;
 
     //true if the player's lost
     public bool gameOver;
-    bool ffGameOver = true;
+    private bool ffGameOver = true;
     public GameObject GameOverLayer;
 
     //keeps track of the current score multiplier during checks
     public float multiplier;
-    bool multiRun;
-    bool piecesDeletedThisSplit;
-    bool clearedLastTurn;
+    private bool multiRun;
+    private bool piecesDeletedThisSplit;
+    private bool clearedLastTurn;
 
     //set to true to check for game over in the update loop
-    bool checkGameOver;
+    private bool checkGameOver;
 
     //gametype says what mode the board is in to easily set it up accordingly
     public string gameType;
 
     //how many moves until the sides are added onto the board
     public int sideMovesLimit = 16;
-    bool sidesChecked;
-    bool quickMoveSides;
+    private bool sidesChecked;
+    private bool quickMoveSides;
 
     //boolean for whether or not the game is counting down
-    bool isCountingDown;
+    private bool isCountingDown;
 
     //tells if the application is in the process of quitting, for cleanup
     [HideInInspector]
@@ -84,15 +84,13 @@ public class GameController : MonoBehaviour
     public bool isPaused;
     public GameObject pauseLayer;
     public Shutter_Handler shutter;
-
-    Music_Controller mc;
-
-    Achievement_Script achievementHandler;
+    private Music_Controller mc;
+    private Achievement_Script achievementHandler;
 
     public AudioSource PauseSFX;
     public AudioSource UnpauseSFX;
 
-    void Awake()
+    private void Awake()
     {
         if (SceneManager.GetActiveScene().name == "Split Title Scene")
         {
@@ -281,7 +279,7 @@ public class GameController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //code for restarting the game after a game over
         if (gameOver && Input.GetKeyDown("r"))
@@ -307,8 +305,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         //check to see if a piece is in the splitter area after each board check
         if (checkGameOver)
@@ -325,13 +322,17 @@ public class GameController : MonoBehaviour
                         mc.Stop_Music();
                         splitter.setState("canShoot", false);
                         //unlocking candy cane splitter
-                        if (!achievementHandler.is_Splitter_Unlocked("Candy Cane") && score > 0 && score < 200)
-                            achievementHandler.Unlock_Splitter("Candy Cane");
+                        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.CandyCane) && score > 0 && score < 200)
+                        {
+                            achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.CandyCane);
+                        }
 
-                        if (!achievementHandler.is_Splitter_Unlocked("Dark") && (gameType == "Wiz" || gameType == "Holy"))
+                        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Dark) && (gameType == "Wiz" || gameType == "Holy"))
                         {
                             if (!spellHandler.Used_Spells() && score > 1000)
-                                achievementHandler.Unlock_Splitter("Dark");
+                            {
+                                achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Dark);
+                            }
                         }
                     }
                 }
@@ -355,12 +356,12 @@ public class GameController : MonoBehaviour
             mc.Play_Music("Gameover");
         }
 
-        if (!achievementHandler.is_Splitter_Unlocked("Caution") || !achievementHandler.is_Pieceset_Unlocked("Blob"))
+        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Caution) || !achievementHandler.is_Pieceset_Unlocked("Blob"))
         {
             int dangerPieces = Get_Danger_Pieces();
-            if (!achievementHandler.is_Splitter_Unlocked("Caution") && gameType != "Holy" && gameType != "Wiz" && dangerPieces >= 5 && dangerPieces == 0)
+            if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Caution) && gameType != "Holy" && gameType != "Wiz" && dangerPieces >= 5 && dangerPieces == 0)
             {
-                achievementHandler.Unlock_Splitter("Caution");
+                achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Caution);
             }
             if (!achievementHandler.is_Pieceset_Unlocked("Blob") && gameType == "Holy" && dangerPieces == 16)
             {
@@ -560,14 +561,19 @@ public class GameController : MonoBehaviour
                     }
                     //if the previous turn had a clear, add to the multiplier
                     if (groupIncreased && groupCount == 1 && clearedLastTurn && !multiRun)
+                    {
                         multiplier++;
+                    }
+
                     if ((groupCount >= 2 || multiRun) && groupIncreased)
                     {
                         multiplier++;
                     }
                 }
                 else
+                {
                     checkGrid[r, c] = true;
+                }
                 //reset group increased after doing a scanner check in preperation for later checks
                 groupIncreased = false;
             }
@@ -608,13 +614,18 @@ public class GameController : MonoBehaviour
             if (!gameOver)
             {
                 if (!piecesDeletedThisSplit)
+                {
                     multiplier = 1;
+                }
+
                 splitter.setState("canShoot", true);
             }
             clearedLastTurn = piecesDeletedThisSplit;
         }
         if (gameType != "Holy" && gameType != "Wiz" && !achievementHandler.is_Pieceset_Unlocked("Domino") && multiplier >= 9)
+        {
             achievementHandler.Unlock_Pieceset("Domino");
+        }
     }
 
     //collapses the pieces where they belong
@@ -942,7 +953,10 @@ public class GameController : MonoBehaviour
         sideColumns[0].shakeStage = 1;
         sideColumns[1].shakeStage = 1;
         if (!gameOver)
+        {
             mc.Start_Fast_Tick();
+        }
+
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
         yield return new WaitForSeconds(1f);
@@ -996,7 +1010,9 @@ public class GameController : MonoBehaviour
                         colorGrid[(int)temp.gridPos.x, (int)temp.gridPos.y] = temp.pieceColor;
                     }
                     else
+                    {
                         offendingPieces.Add(piece);
+                    }
                 }
             }
         }
@@ -1011,7 +1027,9 @@ public class GameController : MonoBehaviour
     public void TogglePause()
     {
         if (gameOver)
+        {
             return;
+        }
 
         if (!isPaused)
         {
@@ -1063,7 +1081,7 @@ public class GameController : MonoBehaviour
     }
 
     //begins the reloading of the current scene
-    IEnumerator ReloadScene()
+    private IEnumerator ReloadScene()
     {
         if (PlayerPrefs.GetInt(gameType, 0) < score)
         {
@@ -1080,8 +1098,9 @@ public class GameController : MonoBehaviour
         async.allowSceneActivation = true;
         yield return async;
     }
+
     //transitions to the title screen
-    IEnumerator TitleTransition()
+    private IEnumerator TitleTransition()
     {
         mc.Stop_Music();
         shutter.Begin_Horizontal_Close();
@@ -1093,7 +1112,7 @@ public class GameController : MonoBehaviour
     }
 
     //used for handling some gameobject that don't know when to stop
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         isQuitting = true;
     }
@@ -1105,15 +1124,20 @@ public class GameController : MonoBehaviour
         for (int r = 0; r < 8; r++)
         {
             if (grid[r, 6] != null)
+            {
                 dangerPieces++;
+            }
+
             if (grid[r, 9] != null)
+            {
                 dangerPieces++;
+            }
         }
         return dangerPieces;
     }
 
     //now for android related things
-    void OnApplicationPause(bool pauseStatus)
+    private void OnApplicationPause(bool pauseStatus)
     {
         if (pauseStatus && !isPaused)
         {

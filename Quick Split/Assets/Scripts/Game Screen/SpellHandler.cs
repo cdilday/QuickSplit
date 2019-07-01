@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SpellHandler : MonoBehaviour
@@ -9,10 +9,10 @@ public class SpellHandler : MonoBehaviour
 
     //This scripte handles all the spell stuff, including activating and tracking spells
 
-    GameController gameController;
-    Splitter_script splitter;
-    Holder_Script holder;
-    Achievement_Script achievementHandler;
+    private GameController gameController;
+    private Splitter_script splitter;
+    private Holder_Script holder;
+    private Achievement_Script achievementHandler;
 
     #region
     public bool redReady;
@@ -57,32 +57,30 @@ public class SpellHandler : MonoBehaviour
 
     public string spellColor;
     public piece_script selectedPiece;
-    string pickedColor1;
-    string pickedColor2;
-    int spellLimit = 0;
+    private string pickedColor1;
+    private string pickedColor2;
+    private int spellLimit = 0;
 
     //this is to tell scorebits that are created as a result of spells not to charge them
     public bool spellActive;
-    int splitsNeeded = 0;
+    private int splitsNeeded = 0;
 
     //this is to make it so you can't activate multiple spells at once
     public bool spellWorking = false;
-
-    bool[] spellsUsed = new bool[8] { false, false, false, false, false, false, false, false };
+    private bool[] spellsUsed = new bool[8] { false, false, false, false, false, false, false, false };
 
     public float wizMultiplier;
     public float holyMultiplier;
-    float chargeMultiplier;
-
-    GameObject[] RedSpellEffects;
-    GameObject YellowSpellEffect;
+    private float chargeMultiplier;
+    private GameObject[] RedSpellEffects;
+    private GameObject YellowSpellEffect;
 
     public AudioSource RedChargeSFX;
     public AudioSource PurpleEffectSFX;
     public AudioSource WhiteEffectSFX;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         pickedColor1 = null;
         pickedColor2 = null;
@@ -143,17 +141,20 @@ public class SpellHandler : MonoBehaviour
 
         selectedPiece = null;
         if (gameController.gameType == "Wiz")
+        {
             chargeMultiplier = wizMultiplier;
+        }
         else
+        {
             chargeMultiplier = holyMultiplier;
-
+        }
 
         spellActive = false;
         achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //attacks, only activatable one at a time
         if (spellColor == null || spellColor == "")
@@ -207,8 +208,10 @@ public class SpellHandler : MonoBehaviour
         Spell_Used(0);
 
         //Red Splitter Achievement
-        if (!achievementHandler.is_Splitter_Unlocked("Red") && gameController.Get_Danger_Pieces() >= 8)
-            achievementHandler.Unlock_Splitter("Red");
+        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Red) && gameController.Get_Danger_Pieces() >= 8)
+        {
+            achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Red);
+        }
 
         RedChargeSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1) * 0.5f;
         RedChargeSFX.Play();
@@ -245,17 +248,20 @@ public class SpellHandler : MonoBehaviour
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
         picker.GetComponent<Color_Selector>().givePurpose("Select a color to switch with on the left side");
     }
+
     //called after both selections are made
-    void OrangeHelper()
+    private void OrangeHelper()
     {
         List<GameObject> leftPieces = new List<GameObject>();
         List<GameObject> rightPieces = new List<GameObject>();
 
         //Orange Splitter unlock code
-        if (!achievementHandler.is_Splitter_Unlocked("Orange"))
+        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Orange))
         {
             if ((leftPieces.Count == 0 && rightPieces.Count > 0) || (leftPieces.Count > 0 && rightPieces.Count > 0))
-                achievementHandler.Unlock_Splitter("Orange");
+            {
+                achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Orange);
+            }
         }
 
         //go through left side, store all pieces of color 1 in an array
@@ -404,12 +410,16 @@ public class SpellHandler : MonoBehaviour
             {
                 boardPieceCount++;
                 if (boardPieceCount == 3)
+                {
                     break;
+                }
             }
         }
         //TODO: Make a message that tells the player there aren't enough pieces on the board to change
         if (boardPieceCount < 3)
+        {
             return;
+        }
 
         Spell_Used(4);
         spellColor = "Blue";
@@ -427,7 +437,8 @@ public class SpellHandler : MonoBehaviour
 
         splitter.setState("isActive", false);
     }
-    void BlueHelper()
+
+    private void BlueHelper()
     {
         spellLimit--;
         //again, like the green spell it only has 3 uses
@@ -452,8 +463,10 @@ public class SpellHandler : MonoBehaviour
             spellLimit = 0;
             gameController.gameOverText.text = "";
             spellWorking = false;
-            if (!achievementHandler.is_Splitter_Unlocked("Blue"))
+            if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Blue))
+            {
                 StartCoroutine(achievementHandler.Blue_Splitter_Checker());
+            }
         }
     }
 
@@ -468,7 +481,7 @@ public class SpellHandler : MonoBehaviour
         splitter.setState("isActive", false);
     }
 
-    IEnumerator Orange_Waiter()
+    private IEnumerator Orange_Waiter()
     {
         yield return new WaitForSeconds(1.5f);
         gameController.collapse();
@@ -477,14 +490,15 @@ public class SpellHandler : MonoBehaviour
         spellWorking = false;
     }
 
-    void PurpleHelper()
+    private void PurpleHelper()
     {
         //this needed to be a coroutine so it could wait and give a proper effect
         StartCoroutine(Purple_Activator());
         PurpleEffectSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
         PurpleEffectSFX.Play();
     }
-    IEnumerator Purple_Activator()
+
+    private IEnumerator Purple_Activator()
     {
         int rowLeft = 7, rowRight = 7;
         int colLeft = 0, colRight = 15;
@@ -622,7 +636,9 @@ public class SpellHandler : MonoBehaviour
         pickedColor1 = null;
         spellColor = null;
         if (empty)
+        {
             splitter.setState("isActive", true);
+        }
     }
     //cyan spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
     public void Cyanspell()
@@ -653,7 +669,7 @@ public class SpellHandler : MonoBehaviour
         StartCoroutine(WhiteHelper());
     }
 
-    IEnumerator WhiteHelper()
+    private IEnumerator WhiteHelper()
     {
         WhiteEffectSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
         WhiteEffectSFX.Play();
@@ -679,16 +695,22 @@ public class SpellHandler : MonoBehaviour
         //make sure not to game over
         int rowHeight;
         if (leftPieces.Count % 8 == 0)
+        {
             rowHeight = leftPieces.Count / 8;
+        }
         else
+        {
             rowHeight = (leftPieces.Count / 8) + 1;
+        }
         //put them back evenly in sorted over
         for (int r = 0; r < 8; r++)
         {
             for (int c = 0; c < rowHeight; c++)
             {
                 if (leftPieces.Count == 0)
+                {
                     break;
+                }
                 else
                 {
                     leftPieces[0].GetComponent<piece_script>().movePiece(new Vector2((float)(c - 8), (float)r));
@@ -718,16 +740,22 @@ public class SpellHandler : MonoBehaviour
         empty = empty && rightPieces.Count < 1;
         //make sure not to game over
         if (rightPieces.Count % 8 == 0)
+        {
             rowHeight = rightPieces.Count / 8;
+        }
         else
+        {
             rowHeight = (rightPieces.Count / 8) + 1;
+        }
         //put them back evenly in sorted over
         for (int r = 0; r < 8; r++)
         {
             for (int c = 15; c > (15 - rowHeight); c--)
             {
                 if (rightPieces.Count == 0)
+                {
                     break;
+                }
                 else
                 {
                     rightPieces[0].GetComponent<piece_script>().movePiece(new Vector2((float)(c - 8), (float)r));
@@ -742,7 +770,7 @@ public class SpellHandler : MonoBehaviour
         splitter.setState("isActive", true);
         spellWorking = false;
 
-        if (!achievementHandler.is_Splitter_Unlocked("White") && !empty)
+        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.White) && !empty)
         {
             yield return new WaitForSeconds(1.25f);
             for (int r = 0; r < 8; r++)
@@ -752,7 +780,7 @@ public class SpellHandler : MonoBehaviour
                     yield return true;
                 }
             }
-            achievementHandler.Unlock_Splitter("White");
+            achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.White);
         }
     }
 
@@ -805,13 +833,19 @@ public class SpellHandler : MonoBehaviour
             case "Green":
                 selectedPiece.BroadcastMessage("Activate_Green", color, SendMessageOptions.DontRequireReceiver);
                 if (spellLimit == 1)
+                {
                     selectedPiece.GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+                }
+
                 GreenHelper();
                 break;
             case "Blue":
                 selectedPiece.BroadcastMessage("Activate_Blue", color, SendMessageOptions.DontRequireReceiver);
                 if (spellLimit == 1)
+                {
                     selectedPiece.GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+                }
+
                 BlueHelper();
                 break;
             case "Purple":
@@ -825,7 +859,10 @@ public class SpellHandler : MonoBehaviour
     public void addBit(string colorOfBit)
     {
         if (spellActive)
+        {
             return;
+        }
+
         switch (colorOfBit)
         {
             case "Red":
@@ -843,8 +880,11 @@ public class SpellHandler : MonoBehaviour
                 }
                 break;
             case "Orange":
-                if (!achievementHandler.is_Splitter_Unlocked("Green") && spellsUsed[3] && gameController.availableCount < 6)
-                    achievementHandler.Unlock_Splitter("Green");
+                if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Green) && spellsUsed[3] && gameController.availableCount < 6)
+                {
+                    achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Green);
+                }
+
                 orangeProgress++;
                 if (orangeProgress >= orangeGoal || orangeReady)
                 {
@@ -915,8 +955,11 @@ public class SpellHandler : MonoBehaviour
                 }
                 break;
             case "Cyan":
-                if (!achievementHandler.is_Splitter_Unlocked("Green") && spellsUsed[3] && gameController.availableCount < 7)
-                    achievementHandler.Unlock_Splitter("Green");
+                if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Green) && spellsUsed[3] && gameController.availableCount < 7)
+                {
+                    achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Green);
+                }
+
                 cyanProgress++;
                 if (cyanProgress >= cyanGoal || cyanReady)
                 {
@@ -931,8 +974,11 @@ public class SpellHandler : MonoBehaviour
                 }
                 break;
             case "White":
-                if (!achievementHandler.is_Splitter_Unlocked("Green") && spellsUsed[3] && gameController.availableCount < 8)
-                    achievementHandler.Unlock_Splitter("Green");
+                if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Green) && spellsUsed[3] && gameController.availableCount < 8)
+                {
+                    achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Green);
+                }
+
                 whiteProgress++;
                 if (whiteProgress >= whiteGoal || whiteReady)
                 {
@@ -950,7 +996,7 @@ public class SpellHandler : MonoBehaviour
     }
 
     //Call whenever a spell is used. This handles the stuff every spell does.
-    void Spell_Used(int spellNum)
+    private void Spell_Used(int spellNum)
     {
         spellsUsed[spellNum] = true;
         if (!achievementHandler.is_Pieceset_Unlocked("Arcane"))
@@ -958,9 +1004,13 @@ public class SpellHandler : MonoBehaviour
             for (int i = 0; i < 8; i++)
             {
                 if (!spellsUsed[i])
+                {
                     break;
+                }
                 else if (i == 7 && gameController.gameType == "Wiz")
+                {
                     achievementHandler.Unlock_Pieceset("Arcane");
+                }
             }
         }
 
@@ -1038,7 +1088,9 @@ public class SpellHandler : MonoBehaviour
         {
             splitsNeeded--;
             if (splitsNeeded <= 0)
+            {
                 spellActive = false;
+            }
         }
 
     }
@@ -1048,7 +1100,9 @@ public class SpellHandler : MonoBehaviour
         foreach (bool spell in spellsUsed)
         {
             if (spell)
+            {
                 return true;
+            }
         }
         return false;
     }

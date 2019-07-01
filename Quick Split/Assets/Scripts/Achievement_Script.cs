@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Achievement_Script : MonoBehaviour
 {
     //this is for checking specifically for the cyan splitter unlock, as it requires timing
-    bool cyanCheck;
-
-    float startTime;
+    private bool cyanCheck;
+    private float startTime;
     //all the splitter names and their appropriate unlocks
-    public string[] Splitters;
+    public string[] SplitterStrings;
     public bool[] splittersUnlocked;
 
     //all of the pieceset names and an array of bools that are true if the pieceset at that index is unlocked
@@ -18,7 +17,7 @@ public class Achievement_Script : MonoBehaviour
     public Achievement_Notification notification;
 
     // Use this for initialization
-    void Awake()
+    private void Awake()
     {
         //there should only ever be 1 of these
         DontDestroyOnLoad(transform.gameObject);
@@ -36,7 +35,7 @@ public class Achievement_Script : MonoBehaviour
         PlayerPrefs.SetInt("Default Pieceset unlocked", 1);
         PlayerPrefs.SetInt("Symbol Pieceset unlocked", 1);
 
-        splittersUnlocked = new bool[Splitters.Length];
+        splittersUnlocked = new bool[SplitterStrings.Length];
         piecesetsUnlocked = new bool[Piecesets.Length];
 
         //load the arrays for unlocks with the proper values already saved in prefs. This prevents longer lookups later
@@ -77,7 +76,7 @@ public class Achievement_Script : MonoBehaviour
             }
             if (check)
             {
-                Unlock_Splitter("Programmer");
+                Unlock_Splitter(SplittersEnum.Programmer);
             }
         }
 
@@ -100,7 +99,7 @@ public class Achievement_Script : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //debug buttons
         // numpad 5 resets all the unlocks
@@ -116,7 +115,7 @@ public class Achievement_Script : MonoBehaviour
                 PlayerPrefs.SetInt("Holy unlocked", 0);
                 Debug.Log("Unlocked GameModes Reset!");
                 PlayerPrefs.SetInt("Default Splitter unlocked", 1);
-                for (int i = 1; i < Splitters.Length; i++)
+                for (int i = 1; i < SplitterStrings.Length; i++)
                 {
                     splittersUnlocked[i] = false;
                     PlayerPrefs.SetInt(Splitter_Lookup_Name_by_Index(i) + " Splitter unlocked", 0);
@@ -139,7 +138,7 @@ public class Achievement_Script : MonoBehaviour
                 PlayerPrefs.SetInt("Wit unlocked", 1);
                 PlayerPrefs.SetInt("Holy unlocked", 1);
                 Debug.Log("All GameModes Unlocked!");
-                for (int i = 0; i < Splitters.Length; i++)
+                for (int i = 0; i < SplitterStrings.Length; i++)
                 {
                     splittersUnlocked[i] = true;
                     PlayerPrefs.SetInt(Splitter_Lookup_Name_by_Index(i) + " Splitter unlocked", 1);
@@ -171,7 +170,10 @@ public class Achievement_Script : MonoBehaviour
     {
         //you need to actually score to save a high score
         if (score == 0)
+        {
             return;
+        }
+
         int tempScore = score;
 
         for (int i = 0; i < 15; i++)
@@ -192,7 +194,7 @@ public class Achievement_Script : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         //More cyan unlock stuff. This resets it if the time has passed
         if (cyanCheck && startTime + 3f < Time.time)
@@ -212,20 +214,20 @@ public class Achievement_Script : MonoBehaviour
     }
 
     //unlocks the splitter with the given name
-    public void Unlock_Splitter(string name)
+    public void Unlock_Splitter(SplittersEnum name)
     {
-        splittersUnlocked[Splitter_Lookup_Index_by_Name(name)] = true;
-        PlayerPrefs.SetInt(name + " Splitter unlocked", 1);
+        splittersUnlocked[(int)name] = true;
+        PlayerPrefs.SetInt(name.ToString() + " Splitter unlocked", 1);
         if (notification != null)
         {
-            notification.Achievement_Unlocked(name, "Splitter");
+            notification.Achievement_Unlocked(name.ToString(), "Splitter");
         }
     }
 
     //returns true if the given splitter name is unlocked
-    public bool is_Splitter_Unlocked(string splitter)
+    public bool is_Splitter_Unlocked(SplittersEnum splitter)
     {
-        return splittersUnlocked[Splitter_Lookup_Index_by_Name(splitter)];
+        return splittersUnlocked[(int)splitter];
     }
 
     //unlocks the pieceset with the given name
@@ -251,61 +253,77 @@ public class Achievement_Script : MonoBehaviour
     {
         //the unlock order goes from Wiz -> Quick -> Wit -> Holy
         if (PlayerPrefs.GetInt("Wiz score 0", 0) > 0)
+        {
             PlayerPrefs.SetInt("Quick unlocked", 1);
+        }
+
         if (PlayerPrefs.GetInt("Quick score 0", 0) > 0)
+        {
             PlayerPrefs.SetInt("Wit unlocked", 1);
+        }
+
         if (PlayerPrefs.GetInt("Wit score 0", 0) > 0)
+        {
             PlayerPrefs.SetInt("Holy unlocked", 1);
+        }
+
         if (PlayerPrefs.GetInt("Holy score 0", 0) > 0)
+        {
             Unlock_Pieceset("Present");
+        }
     }
 
     //returns the name of the splitter at the given index
     public string Splitter_Lookup_Name_by_Index(int index)
     {
-        return Splitters[index];
+        return ((SplittersEnum)index).ToString();
     }
 
-    //returns the index of the splitter with the given name
-    public int Splitter_Lookup_Index_by_Name(string name)
+    /// <summary>
+    /// Contains all the unlockable splitters and their associated indexes in any arrays that may have them (image arrays, for example)
+    /// </summary>
+    public enum SplittersEnum
     {
-        switch (name)
-        {
-            case "Default":
-                return 0;
-            case "Programmer":
-                return 1;
-            case "Candy Cane":
-                return 2;
-            case "Caution":
-                return 3;
-            case "Dark":
-                return 4;
-            case "Red":
-                return 5;
-            case "Orange":
-                return 6;
-            case "Yellow":
-                return 7;
-            case "Green":
-                return 8;
-            case "Blue":
-                return 9;
-            case "Purple":
-                return 10;
-            case "Cyan":
-                return 11;
-            case "White":
-                return 12;
-            default:
-                return 0;
-        }
+        // TODO: Make way to extract out UI friendly strings ("Candy Cane" instead of CandyCane)
+        Error = -1,
+        Default = 0,
+        Programmer = 1,
+        CandyCane = 2,
+        Caution = 3,
+        Dark = 4,
+        Red = 5,
+        Orange = 6,
+        Yellow = 7,
+        Green = 8,
+        Blue = 9,
+        Purple = 10,
+        Cyan = 11,
+        White = 12,
     }
 
     //returns the name of the Pieceset at the given index
     public string Pieceset_Lookup_Name_by_Index(int index)
     {
         return Piecesets[index];
+    }
+
+    public SplittersEnum Splitter_Lookup_Enum_by_name(string name)
+    {
+        object splitterEnum = System.Enum.Parse(typeof(SplittersEnum), name.Replace(" ", string.Empty));
+        if (splitterEnum == null)
+        {
+            return SplittersEnum.Error;
+        }
+
+        return (SplittersEnum)splitterEnum;
+    }
+
+    /// <summary>
+    /// returns the corresponding int of the given name in the SplittersEnum, if it exists. -1 if it doesn't
+    /// </summary>
+    public int Splitter_Lookup_Index_by_Name(string name)
+    {
+        return (int)Splitter_Lookup_Enum_by_name(name);
     }
 
     //returns the index of the pieceset with the given name
@@ -342,10 +360,12 @@ public class Achievement_Script : MonoBehaviour
     public void Cyan_Splitter_Checker()
     {
         if (splittersUnlocked[Splitter_Lookup_Index_by_Name("Cyan")])
+        {
             return;
+        }
         else if (cyanCheck)
         {
-            Unlock_Splitter("Cyan");
+            Unlock_Splitter(SplittersEnum.Cyan);
         }
         else
         {
@@ -357,11 +377,13 @@ public class Achievement_Script : MonoBehaviour
     //this is for handling the purple splitter's conditions for unlocking
     public IEnumerator Purple_Splitter_Checker(int oldDangerPieces)
     {
-        if (!is_Splitter_Unlocked("Purple") && oldDangerPieces < 3)
+        if (!is_Splitter_Unlocked(SplittersEnum.Purple) && oldDangerPieces < 3)
         {
             yield return new WaitForSeconds(3);
             if (GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().Get_Danger_Pieces() == 0)
-                Unlock_Splitter("Purple");
+            {
+                Unlock_Splitter(SplittersEnum.Purple);
+            }
         }
     }
 
@@ -394,7 +416,9 @@ public class Achievement_Script : MonoBehaviour
         }
 
         if (oldCount - newCount >= 16)
-            Unlock_Splitter("Blue");
+        {
+            Unlock_Splitter(SplittersEnum.Blue);
+        }
     }
 
 }

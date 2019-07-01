@@ -272,7 +272,6 @@ public class TitleController : MonoBehaviour
         if (gameModeLayer.activeSelf)
         {
             activeMode = gameModeScroller.CurrentPage;
-            Debug.Log(activeMode);
             if (activeMode == 4 && prevMode == 3)
             {
                 ScrollUp.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);

@@ -86,8 +86,8 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 						}
 					}
 
-					if(!achievementHandler.is_Splitter_Unlocked("Yellow") && deletedNum == 14)
-						achievementHandler.Unlock_Splitter("Yellow");
+					if(!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Yellow) && deletedNum == 14)
+						achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Yellow);
 
 					//make it so the splitter can't continually fire yellow spells
 					gameController.splitter.setState ("yellowReady", false);
