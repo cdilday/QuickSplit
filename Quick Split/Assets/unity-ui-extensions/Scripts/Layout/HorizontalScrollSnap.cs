@@ -2,216 +2,88 @@
 /// Sourced from - http://forum.unity3d.com/threads/scripts-useful-4-6-scripts-collection.264161/page-2#post-1945602
 /// Updated by ddreaper - removed dependency on a custom ScrollRect script. Now implements drag interfaces and standard Scroll Rect.
 
-using System;
 using UnityEngine.EventSystems;
 
 namespace UnityEngine.UI.Extensions
 {
+
     [RequireComponent(typeof(ScrollRect))]
     [AddComponentMenu("Layout/Extensions/Horizontal Scroll Snap")]
-    public class HorizontalScrollSnap : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class HorizontalScrollSnap : ScrollSnapBase, IEndDragHandler
     {
-        private Transform _screensContainer;
-
-        private int _screens = 1;
-        private int _startingScreen = 1;
-
-        private bool _fastSwipeTimer = false;
-        private int _fastSwipeCounter = 0;
-        private int _fastSwipeTarget = 30;
-
-
-        private System.Collections.Generic.List<Vector3> _positions;
-        private ScrollRect _scroll_rect;
-        private Vector3 _lerp_target;
-        private bool _lerp;
-
-        private int _containerSize;
-
-        [Tooltip("The gameobject that contains toggles which suggest pagination. (optional)")]
-        public GameObject Pagination;
-
-        [Tooltip("Button to go to the next page. (optional)")]
-        public GameObject NextButton;
-        [Tooltip("Button to go to the previous page. (optional)")]
-        public GameObject PrevButton;
-
-        public Boolean UseFastSwipe = true;
-        public int FastSwipeThreshold = 100;
-
-        private bool _startDrag = true;
-        private Vector3 _startPosition = new Vector3();
-        private int _currentScreen;
-
-        // Use this for initialization
         void Start()
         {
-            _scroll_rect = gameObject.GetComponent<ScrollRect>();
-            _screensContainer = _scroll_rect.content;
-            DistributePages();
-
-            _screens = _screensContainer.childCount;
-
-            _lerp = false;
-
-            _positions = new System.Collections.Generic.List<Vector3>();
-
-            if (_screens > 0)
-            {
-                for (int i = 0; i < _screens; ++i)
-                {
-                    _scroll_rect.horizontalNormalizedPosition = (float)i / (float)(_screens - 1);
-                    _positions.Add(_screensContainer.localPosition);
-                }
-            }
-
-            _scroll_rect.horizontalNormalizedPosition = (float)(_startingScreen - 1) / (float)(_screens - 1);
-
-            _containerSize = (int)_screensContainer.gameObject.GetComponent<RectTransform>().offsetMax.x;
-
-            ChangeBulletsInfo(CurrentScreen());
-
-            if (NextButton)
-                NextButton.GetComponent<Button>().onClick.AddListener(() => { NextScreen(); });
-
-            if (PrevButton)
-                PrevButton.GetComponent<Button>().onClick.AddListener(() => { PreviousScreen(); });
+            _isVertical = false;
+            _childAnchorPoint = new Vector2(0, 0.5f);
+            _currentPage = StartingScreen;
+            panelDimensions = gameObject.GetComponent<RectTransform>().rect;
+            UpdateLayout();
         }
 
         void Update()
         {
-            if (_lerp)
+            if (!_lerp && _scroll_rect.velocity == Vector2.zero)
             {
-                _screensContainer.localPosition = Vector3.Lerp(_screensContainer.localPosition, _lerp_target, 7.5f * Time.deltaTime);
-                if (Vector3.Distance(_screensContainer.localPosition, _lerp_target) < 0.005f)
+                if (!_settled && !_pointerDown)
                 {
+                    if (!IsRectSettledOnaPage(_screensContainer.localPosition))
+                    {
+                        ScrollToClosestElement();
+                    }
+                }
+                return;
+            }
+            else if (_lerp)
+            {
+                _screensContainer.localPosition = Vector3.Lerp(_screensContainer.localPosition, _lerp_target, transitionSpeed * (UseTimeScale ? Time.deltaTime : Time.unscaledDeltaTime));
+                if (Vector3.Distance(_screensContainer.localPosition, _lerp_target) < 0.1f)
+                {
+                    _screensContainer.localPosition = _lerp_target;
                     _lerp = false;
+                    EndScreenChange();
                 }
+            }
 
-                //change the info bullets at the bottom of the screen. Just for visual effect
-                if (Vector3.Distance(_screensContainer.localPosition, _lerp_target) < 10f)
+            CurrentPage = GetPageforPosition(_screensContainer.localPosition);
+
+            //If the container is moving check if it needs to settle on a page
+            if (!_pointerDown)
+            {
+                if (_scroll_rect.velocity.x > 0.01 || _scroll_rect.velocity.x < -0.01)
                 {
-                    ChangeBulletsInfo(CurrentScreen());
+                    //if the pointer is released and is moving slower than the threshold, then just land on a page
+                    if (IsRectMovingSlowerThanThreshold(0))
+                    {
+                        ScrollToClosestElement();
+                    }
                 }
             }
-
-            if (_fastSwipeTimer)
-            {
-                _fastSwipeCounter++;
-            }
-
         }
 
-        private bool fastSwipe = false; //to determine if a fast swipe was performed
-
-
-        //Function for switching screens with buttons
-        public void NextScreen()
+        private bool IsRectMovingSlowerThanThreshold(float startingSpeed)
         {
-            if (CurrentScreen() < _screens - 1)
-            {
-                _lerp = true;
-                _lerp_target = _positions[CurrentScreen() + 1];
-
-                ChangeBulletsInfo(CurrentScreen() + 1);
-            }
+            return (_scroll_rect.velocity.x > startingSpeed && _scroll_rect.velocity.x < SwipeVelocityThreshold) ||
+                                (_scroll_rect.velocity.x < startingSpeed && _scroll_rect.velocity.x > -SwipeVelocityThreshold);
         }
 
-        //Function for switching screens with buttons
-        public void PreviousScreen()
+        public void DistributePages()
         {
-            if (CurrentScreen() > 0)
-            {
-                _lerp = true;
-                _lerp_target = _positions[CurrentScreen() - 1];
+            _screens = _screensContainer.childCount;
+            _scroll_rect.horizontalNormalizedPosition = 0;
 
-                ChangeBulletsInfo(CurrentScreen() - 1);
-            }
-        }
-
-        //Because the CurrentScreen function is not so reliable, these are the functions used for swipes
-        private void NextScreenCommand()
-        {
-            if (_currentScreen < _screens - 1)
-            {
-                _lerp = true;
-                _lerp_target = _positions[_currentScreen + 1];
-
-                ChangeBulletsInfo(_currentScreen + 1);
-            }
-        }
-
-        //Because the CurrentScreen function is not so reliable, these are the functions used for swipes
-        private void PrevScreenCommand()
-        {
-            if (_currentScreen > 0)
-            {
-                _lerp = true;
-                _lerp_target = _positions[_currentScreen - 1];
-
-                ChangeBulletsInfo(_currentScreen - 1);
-            }
-        }
-
-
-        //find the closest registered point to the releasing point
-        private Vector3 FindClosestFrom(Vector3 start, System.Collections.Generic.List<Vector3> positions)
-        {
-            Vector3 closest = Vector3.zero;
-            float distance = Mathf.Infinity;
-
-            foreach (Vector3 position in _positions)
-            {
-                if (Vector3.Distance(start, position) < distance)
-                {
-                    distance = Vector3.Distance(start, position);
-                    closest = position;
-                }
-            }
-
-            return closest;
-        }
-
-
-        //returns the current screen that the is seeing
-        public int CurrentScreen()
-        {
-            float absPoz = Math.Abs(_screensContainer.gameObject.GetComponent<RectTransform>().offsetMin.x);
-
-            absPoz = Mathf.Clamp(absPoz, 1, _containerSize - 1);
-
-            float calc = (absPoz / _containerSize) * _screens;
-
-            return (int)calc;
-        }
-
-        //changes the bullets on the bottom of the page - pagination
-        private void ChangeBulletsInfo(int currentScreen)
-        {
-            if (Pagination)
-                for (int i = 0; i < Pagination.transform.childCount; i++)
-                {
-                    Pagination.transform.GetChild(i).GetComponent<Toggle>().isOn = (currentScreen == i)
-                        ? true
-                        : false;
-                }
-        }
-
-        //used for changing between screen resolutions
-        private void DistributePages()
-        {
-            int _offset = 0;
-            int _step = Screen.width;
-            int _dimension = 0;
-
-            int currentXPosition = 0;
+            float _offset = 0;
+            float _dimension = 0;
+            Rect panelDimensions = gameObject.GetComponent<RectTransform>().rect;
+            float currentXPosition = 0;
+            var pageStepValue = _childSize = (int)panelDimensions.width * ((PageStep == 0) ? 3 : PageStep);
 
             for (int i = 0; i < _screensContainer.transform.childCount; i++)
             {
                 RectTransform child = _screensContainer.transform.GetChild(i).gameObject.GetComponent<RectTransform>();
-                currentXPosition = _offset + i * _step;
+                currentXPosition = _offset + i * pageStepValue;
+                child.sizeDelta = new Vector2(panelDimensions.width, panelDimensions.height);
                 child.anchoredPosition = new Vector2(currentXPosition, 0f);
-                child.sizeDelta = new Vector2(gameObject.GetComponent<RectTransform>().rect.width, gameObject.GetComponent<RectTransform>().rect.height);
+                child.anchorMin = child.anchorMax = child.pivot = _childAnchorPoint;
             }
 
             _dimension = currentXPosition + _offset * -1;
@@ -219,65 +91,215 @@ namespace UnityEngine.UI.Extensions
             _screensContainer.GetComponent<RectTransform>().offsetMax = new Vector2(_dimension, 0f);
         }
 
-        #region Interfaces
-        public void OnBeginDrag(PointerEventData eventData)
+        /// <summary>
+        /// Add a new child to this Scroll Snap and recalculate it's children
+        /// </summary>
+        /// <param name="GO">GameObject to add to the ScrollSnap</param>
+        public void AddChild(GameObject GO)
         {
-            _startPosition = _screensContainer.localPosition;
-            _fastSwipeCounter = 0;
-            _fastSwipeTimer = true;
-            _currentScreen = CurrentScreen();
+            AddChild(GO, false);
         }
 
+        /// <summary>
+        /// Add a new child to this Scroll Snap and recalculate it's children
+        /// </summary>
+        /// <param name="GO">GameObject to add to the ScrollSnap</param>
+        /// <param name="WorldPositionStays">Should the world position be updated to it's parent transform?</param>
+        public void AddChild(GameObject GO, bool WorldPositionStays)
+        {
+            _scroll_rect.horizontalNormalizedPosition = 0;
+            GO.transform.SetParent(_screensContainer, WorldPositionStays);
+            InitialiseChildObjectsFromScene();
+            DistributePages();
+            if (MaskArea)
+                UpdateVisible();
+
+            SetScrollContainerPosition();
+        }
+
+        /// <summary>
+        /// Remove a new child to this Scroll Snap and recalculate it's children 
+        /// *Note, this is an index address (0-x)
+        /// </summary>
+        /// <param name="index">Index element of child to remove</param>
+        /// <param name="ChildRemoved">Resulting removed GO</param>
+        public void RemoveChild(int index, out GameObject ChildRemoved)
+        {
+            RemoveChild(index, false, out ChildRemoved);
+        }
+
+        /// <summary>
+        /// Remove a new child to this Scroll Snap and recalculate it's children 
+        /// *Note, this is an index address (0-x)
+        /// </summary>
+        /// <param name="index">Index element of child to remove</param>
+        /// <param name="WorldPositionStays">If true, the parent-relative position, scale and rotation are modified such that the object keeps the same world space position, rotation and scale as before</param>
+        /// <param name="ChildRemoved">Resulting removed GO</param>
+        public void RemoveChild(int index, bool WorldPositionStays, out GameObject ChildRemoved)
+        {
+            ChildRemoved = null;
+            if (index < 0 || index > _screensContainer.childCount)
+            {
+                return;
+            }
+            _scroll_rect.horizontalNormalizedPosition = 0;
+
+            Transform child = _screensContainer.transform.GetChild(index);
+            child.SetParent(null, WorldPositionStays);
+            ChildRemoved = child.gameObject;
+            InitialiseChildObjectsFromScene();
+            DistributePages();
+            if (MaskArea)
+                UpdateVisible();
+
+            if (_currentPage > _screens - 1)
+            {
+                CurrentPage = _screens - 1;
+            }
+
+            SetScrollContainerPosition();
+        }
+
+        /// <summary>
+        /// Remove all children from this ScrollSnap
+        /// </summary>
+        /// <param name="ChildrenRemoved">Array of child GO's removed</param>
+        public void RemoveAllChildren(out GameObject[] ChildrenRemoved)
+        {
+            RemoveAllChildren(false, out ChildrenRemoved);
+        }
+
+        /// <summary>
+        /// Remove all children from this ScrollSnap
+        /// </summary>
+        /// <param name="WorldPositionStays">If true, the parent-relative position, scale and rotation are modified such that the object keeps the same world space position, rotation and scale as before</param>
+        /// <param name="ChildrenRemoved">Array of child GO's removed</param>
+        public void RemoveAllChildren(bool WorldPositionStays, out GameObject[] ChildrenRemoved)
+        {
+            var _screenCount = _screensContainer.childCount;
+            ChildrenRemoved = new GameObject[_screenCount];
+
+            for (int i = _screenCount - 1; i >= 0; i--)
+            {
+                ChildrenRemoved[i] = _screensContainer.GetChild(i).gameObject;
+                ChildrenRemoved[i].transform.SetParent(null, WorldPositionStays);
+            }
+
+            _scroll_rect.horizontalNormalizedPosition = 0;
+            CurrentPage = 0;
+            InitialiseChildObjectsFromScene();
+            DistributePages();
+            if (MaskArea)
+                UpdateVisible();
+        }
+
+        private void SetScrollContainerPosition()
+        {
+            _scrollStartPosition = _screensContainer.localPosition.x;
+            _scroll_rect.horizontalNormalizedPosition = (float)(_currentPage) / (_screens - 1);
+            OnCurrentScreenChange(_currentPage);
+        }
+
+        /// <summary>
+        /// used for changing / updating between screen resolutions
+        /// </summary>
+        public void UpdateLayout()
+        {
+            _lerp = false;
+            DistributePages();
+            if (MaskArea)
+                UpdateVisible();
+            SetScrollContainerPosition();
+            OnCurrentScreenChange(_currentPage);
+        }
+
+        private void OnRectTransformDimensionsChange()
+        {
+            if (_childAnchorPoint != Vector2.zero)
+            {
+                UpdateLayout();
+            }
+        }
+
+        private void OnEnable()
+        {
+            InitialiseChildObjectsFromScene();
+            DistributePages();
+            if (MaskArea)
+                UpdateVisible();
+
+            if (JumpOnEnable || !RestartOnEnable)
+                SetScrollContainerPosition();
+            if (RestartOnEnable)
+                GoToScreen(StartingScreen);
+        }
+
+        #region Interfaces
+
+        /// <summary>
+        /// Release screen to swipe
+        /// </summary>
+        /// <param name="eventData"></param>
         public void OnEndDrag(PointerEventData eventData)
         {
-            _startDrag = true;
+            _pointerDown = false;
+
             if (_scroll_rect.horizontal)
             {
-                if (UseFastSwipe)
+                var distance = Vector3.Distance(_startPosition, _screensContainer.localPosition);
+
+                if (UseHardSwipe)
                 {
-                    fastSwipe = false;
-                    _fastSwipeTimer = false;
-                    if (_fastSwipeCounter <= _fastSwipeTarget)
-                    {
-                        if (Math.Abs(_startPosition.x - _screensContainer.localPosition.x) > FastSwipeThreshold)
-                        {
-                            fastSwipe = true;
-                        }
-                    }
-                    if (fastSwipe)
+                    _scroll_rect.velocity = Vector3.zero;
+
+                    if (distance > FastSwipeThreshold)
                     {
                         if (_startPosition.x - _screensContainer.localPosition.x > 0)
                         {
-                            NextScreenCommand();
+                            NextScreen();
                         }
                         else
                         {
-                            PrevScreenCommand();
+                            PreviousScreen();
                         }
                     }
                     else
                     {
-                        _lerp = true;
-                        _lerp_target = FindClosestFrom(_screensContainer.localPosition, _positions);
+                        ScrollToClosestElement();
                     }
                 }
                 else
                 {
-                    _lerp = true;
-                    _lerp_target = FindClosestFrom(_screensContainer.localPosition, _positions);
+                    if (UseFastSwipe && distance < panelDimensions.width && distance >= FastSwipeThreshold)
+                    {
+                        _scroll_rect.velocity = Vector3.zero;
+                        if (_startPosition.x - _screensContainer.localPosition.x > 0)
+                        {
+                            if (_startPosition.x - _screensContainer.localPosition.x > _childSize / 3)
+                            {
+                                ScrollToClosestElement();
+                            }
+                            else
+                            {
+                                NextScreen();
+                            }
+                        }
+                        else
+                        {
+                            if (_startPosition.x - _screensContainer.localPosition.x < -_childSize / 3)
+                            {
+                                ScrollToClosestElement();
+                            }
+                            else
+                            {
+                                PreviousScreen();
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        public void OnDrag(PointerEventData eventData)
-        {
-            _lerp = false;
-            if (_startDrag)
-            {
-                OnBeginDrag(eventData);
-                _startDrag = false;
-            }
-        }
         #endregion
     }
 }

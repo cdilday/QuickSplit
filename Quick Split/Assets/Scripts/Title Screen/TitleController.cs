@@ -79,9 +79,9 @@ public class TitleController : MonoBehaviour
         //tell achievmement handler to check gamemodes that are supposed to be active
         achievementHandler.Check_Gamemode_Unlocked();
 
-        activeMode = 0;
-        prevMode = 0;
-        ScrollDown.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+        activeMode = 4;
+        prevMode = 4;
+        ScrollUp.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
         for (int i = 0; i < 4; i++)
         {
             OrigButtonSprite[i] = GameButtons[i].GetComponent<Image>().sprite;
@@ -97,30 +97,7 @@ public class TitleController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (gameModeLayer.activeSelf)
-        {
-            activeMode = gameModeScroller.CurrentScreen();
-            if (activeMode != prevMode)
-            {
-                if (activeMode == 0)
-                {
-                    ScrollDown.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else if (prevMode == 0)
-                {
-                    ScrollDown.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else if (activeMode == 4)
-                {
-                    ScrollUp.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else if (prevMode == 4)
-                {
-                    ScrollUp.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                }
-            }
-            prevMode = activeMode;
-        }
+
     }
 
     void Update()
@@ -144,7 +121,7 @@ public class TitleController : MonoBehaviour
     //This is where the UI for the transition would go
     public void Load_Game()
     {
-        activeMode = gameModeScroller.CurrentScreen();
+        activeMode = gameModeScroller.CurrentPage;
         if (activeMode == 4)
         {
             Goto_Credits_Layer();
@@ -287,6 +264,32 @@ public class TitleController : MonoBehaviour
                 Descriptions[i].GetComponent<Text>().text = OrigDescText[i];
                 Scores[i].BroadcastMessage("update_scores", null, SendMessageOptions.DontRequireReceiver);
             }
+        }
+    }
+
+    public void OnGameModeSelectionChanged()
+    {
+        if (gameModeLayer.activeSelf)
+        {
+            activeMode = gameModeScroller.CurrentPage;
+            Debug.Log(activeMode);
+            if (activeMode == 4 && prevMode == 3)
+            {
+                ScrollUp.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+            }
+            else if (prevMode == 4 && activeMode != prevMode)
+            {
+                ScrollUp.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
+            }
+            else if (activeMode == 0 && prevMode == 1)
+            {
+                ScrollDown.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+            }
+            else if (prevMode == 0 && activeMode != prevMode)
+            {
+                ScrollDown.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
+            }
+            prevMode = activeMode;
         }
     }
 
