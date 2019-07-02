@@ -29,7 +29,7 @@ public class Wedges_Script : MonoBehaviour {
 			Destroy(gameObject);
 			return;
 		}
-		index = achievementHandler.Splitter_Lookup_Index_by_Name (SplitterType);
+		index = (int) SplitterHelper.Get_SplitterType_Enum (SplitterType);
 		animator.runtimeAnimatorController = wedgeAnimators [index];
 		spriteRenderer.sprite = IdleSprites [index];
 	}

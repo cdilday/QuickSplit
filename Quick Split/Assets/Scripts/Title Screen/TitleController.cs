@@ -122,14 +122,34 @@ public class TitleController : MonoBehaviour
     public void Load_Game()
     {
         activeMode = gameModeScroller.CurrentPage;
-        if (activeMode == 4)
+        if (activeMode == 0)
         {
             Goto_Credits_Layer();
         }
-        else if (gameNum_unlock_checker(activeMode))
+        else
         {
-            PlayerPrefs.SetInt("Mode", activeMode);
-            StartCoroutine("GameTransition");
+            // TODO Extract out Game modes, fix mis-matching due to reworking menu order on title Screen
+            int gameType = 0;
+            switch (activeMode)
+            {
+                case 4:
+                    gameType = 0;
+                    break;
+                case 3:
+                    gameType = 1;
+                    break;
+                case 2:
+                    gameType = 2;
+                    break;
+                case 1:
+                    gameType = 3;
+                    break;
+            }
+            if (gameNum_unlock_checker(gameType))
+            {
+                PlayerPrefs.SetInt("Mode", gameType);
+                StartCoroutine("GameTransition");
+            }
         }
     }
 
@@ -295,7 +315,7 @@ public class TitleController : MonoBehaviour
     //for the pumpkin pieceset
     public void code(string dir)
     {
-        if (achievementHandler.is_Pieceset_Unlocked("Pumpkin"))
+        if (achievementHandler.is_Pieceset_Unlocked(PieceSets.Pumpkin))
         {
             return;
         }
@@ -375,7 +395,7 @@ public class TitleController : MonoBehaviour
             case 7:
                 if (dir == "Right")
                 {
-                    achievementHandler.Unlock_Pieceset("Pumpkin");
+                    achievementHandler.Unlock_Pieceset(PieceSets.Pumpkin);
                 }
                 else
                 {

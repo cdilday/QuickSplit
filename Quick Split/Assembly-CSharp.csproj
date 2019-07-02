@@ -60,11 +60,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Achievement_List_Item.cs" />
     <Compile Include="Assets\Scripts\Achievement_Notification.cs" />
     <Compile Include="Assets\Scripts\Achievement_Script.cs" />
     <Compile Include="Assets\Scripts\Achievement_Tally.cs" />
-    <Compile Include="Assets\Scripts\Achievment_List_Item.cs" />
     <Compile Include="Assets\Scripts\Button_Image_Swapper.cs" />
+    <Compile Include="Assets\Scripts\Constants.cs" />
     <Compile Include="Assets\Scripts\Control_Selector.cs" />
     <Compile Include="Assets\Scripts\Countdown_Manager.cs" />
     <Compile Include="Assets\Scripts\DisplayMetricsAndroid.cs" />

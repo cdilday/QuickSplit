@@ -22,7 +22,7 @@ public class Sample_Splitter_Selector : MonoBehaviour
         achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
 
         headerText.text = PlayerPrefs.GetString("Splitter Type", "Default");
-        index = achievementHandler.Splitter_Lookup_Index_by_Name(headerText.text);
+        index = (int) SplitterHelper.Get_SplitterType_Enum(headerText.text);
 
         image = gameObject.GetComponent<Image>();
     }
@@ -33,16 +33,17 @@ public class Sample_Splitter_Selector : MonoBehaviour
         {
             if (index <= 0)
             {
-                index = achievementHandler.SplitterStrings.Length - 1;
+                index = SplitterHelper.SplitterStrings.Length - 1;
             }
             else
             {
                 index--;
             }
-        } while (!achievementHandler.is_Splitter_Unlocked((Achievement_Script.SplittersEnum)index));
+        } while (!achievementHandler.is_Splitter_Unlocked((SplitterType)index));
 
-        PlayerPrefs.SetString("Splitter Type", achievementHandler.SplitterStrings[index]);
-        headerText.text = achievementHandler.SplitterStrings[index];
+        string splitterStr = SplitterHelper.SplitterStrings[index];
+        PlayerPrefs.SetString("Splitter Type", splitterStr);
+        headerText.text = splitterStr;
         image.sprite = pieceSpriteHolder.Get_Splitter(index);
         htpSplitter.sprite = pieceSpriteHolder.Get_Splitter(index);
     }
@@ -51,7 +52,7 @@ public class Sample_Splitter_Selector : MonoBehaviour
     {
         do
         {
-            if (index >= achievementHandler.SplitterStrings.Length - 1)
+            if (index >= SplitterHelper.SplitterStrings.Length - 1)
             {
                 index = 0;
             }
@@ -59,10 +60,11 @@ public class Sample_Splitter_Selector : MonoBehaviour
             {
                 index++;
             }
-        } while (!achievementHandler.is_Splitter_Unlocked((Achievement_Script.SplittersEnum)index));
+        } while (!achievementHandler.is_Splitter_Unlocked((SplitterType)index));
 
-        PlayerPrefs.SetString("Splitter Type", achievementHandler.SplitterStrings[index]);
-        headerText.text = achievementHandler.SplitterStrings[index];
+        string splitterStr = SplitterHelper.SplitterStrings[index];
+        PlayerPrefs.SetString("Splitter Type", splitterStr);
+        headerText.text = splitterStr;
         image.sprite = pieceSpriteHolder.Get_Splitter(index);
         htpSplitter.sprite = pieceSpriteHolder.Get_Splitter(index);
     }

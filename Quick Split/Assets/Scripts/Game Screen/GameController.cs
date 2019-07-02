@@ -322,16 +322,16 @@ public class GameController : MonoBehaviour
                         mc.Stop_Music();
                         splitter.setState("canShoot", false);
                         //unlocking candy cane splitter
-                        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.CandyCane) && score > 0 && score < 200)
+                        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.CandyCane) && score > 0 && score < 200)
                         {
-                            achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.CandyCane);
+                            achievementHandler.Unlock_Splitter(SplitterType.CandyCane);
                         }
 
-                        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Dark) && (gameType == "Wiz" || gameType == "Holy"))
+                        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Dark) && (gameType == "Wiz" || gameType == "Holy"))
                         {
                             if (!spellHandler.Used_Spells() && score > 1000)
                             {
-                                achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Dark);
+                                achievementHandler.Unlock_Splitter(SplitterType.Dark);
                             }
                         }
                     }
@@ -356,16 +356,16 @@ public class GameController : MonoBehaviour
             mc.Play_Music("Gameover");
         }
 
-        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Caution) || !achievementHandler.is_Pieceset_Unlocked("Blob"))
+        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Caution) || !achievementHandler.is_Pieceset_Unlocked(PieceSets.Blob))
         {
             int dangerPieces = Get_Danger_Pieces();
-            if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Caution) && gameType != "Holy" && gameType != "Wiz" && dangerPieces >= 5 && dangerPieces == 0)
+            if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Caution) && gameType != "Holy" && gameType != "Wiz" && dangerPieces >= 5 && dangerPieces == 0)
             {
-                achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Caution);
+                achievementHandler.Unlock_Splitter(SplitterType.Caution);
             }
-            if (!achievementHandler.is_Pieceset_Unlocked("Blob") && gameType == "Holy" && dangerPieces == 16)
+            if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Blob) && gameType == "Holy" && dangerPieces == 16)
             {
-                achievementHandler.Unlock_Pieceset("Blob");
+                achievementHandler.Unlock_Pieceset(PieceSets.Blob);
             }
         }
 
@@ -622,9 +622,9 @@ public class GameController : MonoBehaviour
             }
             clearedLastTurn = piecesDeletedThisSplit;
         }
-        if (gameType != "Holy" && gameType != "Wiz" && !achievementHandler.is_Pieceset_Unlocked("Domino") && multiplier >= 9)
+        if (gameType != "Holy" && gameType != "Wiz" && !achievementHandler.is_Pieceset_Unlocked(PieceSets.Domino) && multiplier >= 9)
         {
-            achievementHandler.Unlock_Pieceset("Domino");
+            achievementHandler.Unlock_Pieceset(PieceSets.Domino);
         }
     }
 
@@ -778,15 +778,15 @@ public class GameController : MonoBehaviour
                         break;
                 }
             }
-            else if (!achievementHandler.is_Pieceset_Unlocked("Techno") && gameType == "Quick" && availableCount == 5)
+            else if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Techno) && gameType == "Quick" && availableCount == 5)
             {
-                achievementHandler.Unlock_Pieceset("Techno");
+                achievementHandler.Unlock_Pieceset(PieceSets.Techno);
             }
         }
 
-        if (!achievementHandler.is_Pieceset_Unlocked("Retro") && gameType == "Wit" && movesMade == 255)
+        if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Retro) && gameType == "Wit" && movesMade == 255)
         {
-            achievementHandler.Unlock_Pieceset("Retro");
+            achievementHandler.Unlock_Pieceset(PieceSets.Retro);
         }
 
     }

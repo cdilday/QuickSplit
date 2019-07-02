@@ -208,9 +208,9 @@ public class SpellHandler : MonoBehaviour
         Spell_Used(0);
 
         //Red Splitter Achievement
-        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Red) && gameController.Get_Danger_Pieces() >= 8)
+        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Red) && gameController.Get_Danger_Pieces() >= 8)
         {
-            achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Red);
+            achievementHandler.Unlock_Splitter(SplitterType.Red);
         }
 
         RedChargeSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1) * 0.5f;
@@ -256,11 +256,11 @@ public class SpellHandler : MonoBehaviour
         List<GameObject> rightPieces = new List<GameObject>();
 
         //Orange Splitter unlock code
-        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Orange))
+        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Orange))
         {
             if ((leftPieces.Count == 0 && rightPieces.Count > 0) || (leftPieces.Count > 0 && rightPieces.Count > 0))
             {
-                achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Orange);
+                achievementHandler.Unlock_Splitter(SplitterType.Orange);
             }
         }
 
@@ -463,7 +463,7 @@ public class SpellHandler : MonoBehaviour
             spellLimit = 0;
             gameController.gameOverText.text = "";
             spellWorking = false;
-            if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Blue))
+            if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Blue))
             {
                 StartCoroutine(achievementHandler.Blue_Splitter_Checker());
             }
@@ -770,7 +770,7 @@ public class SpellHandler : MonoBehaviour
         splitter.setState("isActive", true);
         spellWorking = false;
 
-        if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.White) && !empty)
+        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.White) && !empty)
         {
             yield return new WaitForSeconds(1.25f);
             for (int r = 0; r < 8; r++)
@@ -780,7 +780,7 @@ public class SpellHandler : MonoBehaviour
                     yield return true;
                 }
             }
-            achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.White);
+            achievementHandler.Unlock_Splitter(SplitterType.White);
         }
     }
 
@@ -880,9 +880,9 @@ public class SpellHandler : MonoBehaviour
                 }
                 break;
             case "Orange":
-                if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Green) && spellsUsed[3] && gameController.availableCount < 6)
+                if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 6)
                 {
-                    achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Green);
+                    achievementHandler.Unlock_Splitter(SplitterType.Green);
                 }
 
                 orangeProgress++;
@@ -955,9 +955,9 @@ public class SpellHandler : MonoBehaviour
                 }
                 break;
             case "Cyan":
-                if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Green) && spellsUsed[3] && gameController.availableCount < 7)
+                if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 7)
                 {
-                    achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Green);
+                    achievementHandler.Unlock_Splitter(SplitterType.Green);
                 }
 
                 cyanProgress++;
@@ -974,9 +974,9 @@ public class SpellHandler : MonoBehaviour
                 }
                 break;
             case "White":
-                if (!achievementHandler.is_Splitter_Unlocked(Achievement_Script.SplittersEnum.Green) && spellsUsed[3] && gameController.availableCount < 8)
+                if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 8)
                 {
-                    achievementHandler.Unlock_Splitter(Achievement_Script.SplittersEnum.Green);
+                    achievementHandler.Unlock_Splitter(SplitterType.Green);
                 }
 
                 whiteProgress++;
@@ -999,7 +999,7 @@ public class SpellHandler : MonoBehaviour
     private void Spell_Used(int spellNum)
     {
         spellsUsed[spellNum] = true;
-        if (!achievementHandler.is_Pieceset_Unlocked("Arcane"))
+        if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Arcane))
         {
             for (int i = 0; i < 8; i++)
             {
@@ -1009,7 +1009,7 @@ public class SpellHandler : MonoBehaviour
                 }
                 else if (i == 7 && gameController.gameType == "Wiz")
                 {
-                    achievementHandler.Unlock_Pieceset("Arcane");
+                    achievementHandler.Unlock_Pieceset(PieceSets.Arcane);
                 }
             }
         }

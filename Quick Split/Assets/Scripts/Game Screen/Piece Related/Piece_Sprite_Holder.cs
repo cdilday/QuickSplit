@@ -81,7 +81,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	{
 		if(achievementHandler == null)
 			achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
-		int index = achievementHandler.Splitter_Lookup_Index_by_Name (PlayerPrefs.GetString ("Splitter Type", "Default"));
+		int index = (int) SplitterHelper.Get_SplitterType_Enum (PlayerPrefs.GetString ("Splitter Type", "Default"));
 		return Splitters [index];
 	}
 	//returns sprite for the splitter with the given integer index
@@ -125,7 +125,7 @@ public class Piece_Sprite_Holder : MonoBehaviour {
 	{
 		if(achievementHandler == null)
 			achievementHandler = GameObject.FindGameObjectWithTag ("Achievement Handler").GetComponent<Achievement_Script> ();
-		int index = achievementHandler.Splitter_Lookup_Index_by_Name (PlayerPrefs.GetString ("Splitter Type", "Default"));
+		int index = (int) SplitterHelper.Get_SplitterType_Enum (PlayerPrefs.GetString ("Splitter Type", "Default"));
 		return SplitterAnimations [index];
 	}
 
