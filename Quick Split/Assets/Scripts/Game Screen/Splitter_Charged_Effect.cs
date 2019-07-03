@@ -1,43 +1,49 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Splitter_Charged_Effect : MonoBehaviour {
+public class Splitter_Charged_Effect : MonoBehaviour
+{
 
-	//This script is specifically for showing the yellow spell is ready on the splitter
+    //This script is specifically for showing the yellow spell is ready on the splitter
 
-	Splitter_script splitter;
-	Animator animator;
-	SpriteRenderer spriteRenderer;
+    private Splitter_script splitter;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+    private bool prevCharged;
+    private GameController gameController;
 
-	bool prevCharged;
+    // Use this for initialization
+    private void Start()
+    {
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        if (gameController.gameMode != GameMode.Wiz && gameController.gameMode != GameMode.Holy)
+        {
+            Destroy(gameObject);
+        }
 
-	GameController gameController;
+        splitter = gameObject.GetComponentInParent<Splitter_script>();
 
-	// Use this for initialization
-	void Start () {
-		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
-		if (gameController.gameType != "Wiz" && gameController.gameType != "Holy")
-			Destroy (gameObject);
-		splitter = gameObject.GetComponentInParent<Splitter_script> ();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = null;
+        prevCharged = false;
+    }
 
-		animator = GetComponent<Animator> ();
-		spriteRenderer = GetComponent<SpriteRenderer> ();
-		spriteRenderer.sprite = null;
-		prevCharged = false;
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-		if (splitter.getState ("yellowReady")) {
-			if(!prevCharged){
-				animator.SetBool("inActive", false);
-				prevCharged = true;
-			}
-		}
-		else if(prevCharged){
-			animator.SetBool("inActive", true);
-			spriteRenderer.sprite = null;
-			prevCharged = false;
-		}
-	}
+    // Update is called once per frame
+    private void FixedUpdate()
+    {
+        if (splitter.getState("yellowReady"))
+        {
+            if (!prevCharged)
+            {
+                animator.SetBool("inActive", false);
+                prevCharged = true;
+            }
+        }
+        else if (prevCharged)
+        {
+            animator.SetBool("inActive", true);
+            spriteRenderer.sprite = null;
+            prevCharged = false;
+        }
+    }
 }

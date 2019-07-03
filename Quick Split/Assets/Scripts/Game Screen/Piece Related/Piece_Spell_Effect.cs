@@ -45,7 +45,7 @@ public class Piece_Spell_Effect : MonoBehaviour {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		piece = gameObject.GetComponentInParent<piece_script> ();
 		//no need for these if there are no spells
-		if (gameController.gameType == "Wit" || gameController.gameType == "Quick")
+		if (gameController.gameMode == GameMode.Wit || gameController.gameMode == GameMode.Quick)
 			Destroy (gameObject);
 		else
 			spellHandler = GameObject.Find ("Spell Handler").GetComponent<SpellHandler> ();

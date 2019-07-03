@@ -140,7 +140,7 @@ public class SpellHandler : MonoBehaviour
         whiteText.text = "";
 
         selectedPiece = null;
-        if (gameController.gameType == "Wiz")
+        if (gameController.gameMode == GameMode.Wiz)
         {
             chargeMultiplier = wizMultiplier;
         }
@@ -1007,7 +1007,7 @@ public class SpellHandler : MonoBehaviour
                 {
                     break;
                 }
-                else if (i == 7 && gameController.gameType == "Wiz")
+                else if (i == 7 && gameController.gameMode == GameMode.Wiz)
                 {
                     achievementHandler.Unlock_Pieceset(PieceSets.Arcane);
                 }

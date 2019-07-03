@@ -67,7 +67,7 @@ public class GameController : MonoBehaviour
     private bool checkGameOver;
 
     //gametype says what mode the board is in to easily set it up accordingly
-    public string gameType;
+    public GameMode gameMode;
 
     //how many moves until the sides are added onto the board
     public int sideMovesLimit = 16;
@@ -101,21 +101,7 @@ public class GameController : MonoBehaviour
         //begin with the assumption that you're not in quick mode and there's not countdown
         isCountingDown = false;
 
-        switch (PlayerPrefs.GetInt("Mode", 0))
-        {
-            case 0:
-                gameType = "Wiz";
-                break;
-            case 1:
-                gameType = "Quick";
-                break;
-            case 2:
-                gameType = "Wit";
-                break;
-            case 3:
-                gameType = "Holy";
-                break;
-        }
+        gameMode = Game_Mode_Helper.ActiveRuleSet.Mode;
 
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
@@ -160,7 +146,7 @@ public class GameController : MonoBehaviour
         GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
         GameObject spellHandlerObject = GameObject.Find("Spell Handler");
         spellHandler = spellHandlerObject.GetComponent<SpellHandler>();
-        if (gameType == "Wit")
+        if (gameMode == GameMode.Wit)
         {
 
             availableCount = 8;
@@ -171,9 +157,9 @@ public class GameController : MonoBehaviour
             //Wit does not use the sidecolumns, get rid of them
             Destroy(scols[1]);
             Destroy(scols[0]);
-            mc.Play_Music(gameType);
+            mc.Play_Music(gameMode);
         }
-        else if (gameType == "Quick")
+        else if (gameMode == GameMode.Quick)
         {
             availableCount = 4;
             if (scols[0] != null && scols[1] != null)
@@ -197,7 +183,7 @@ public class GameController : MonoBehaviour
             // no powers in Quick, only Holy and Wiz
             Destroy(spellHandlerObject);
         }
-        else if (gameType == "Wiz")
+        else if (gameMode == GameMode.Wiz)
         {
             //powers are in Wiz, start out with 5 kinds of blocks
             availableCount = 5;
@@ -223,9 +209,9 @@ public class GameController : MonoBehaviour
             spellHandler.purpleReady = true;
             spellHandler.cyanReady = false;
             spellHandler.whiteReady = false;
-            mc.Play_Music(gameType);
+            mc.Play_Music(gameMode);
         }
-        else if (gameType == "Holy")
+        else if (gameMode == GameMode.Holy)
         {
             //Holy has everything at once. Essentially hard mode
             availableCount = 8;
@@ -251,10 +237,10 @@ public class GameController : MonoBehaviour
             spellHandler.purpleReady = true;
             spellHandler.cyanReady = true;
             spellHandler.whiteReady = true;
-            mc.Play_Music(gameType);
+            mc.Play_Music(gameMode);
         }
 
-        if (gameType != "Wit" && sideColumns != null && sideColumns[0].side == "Right")
+        if (gameMode != GameMode.Wit && sideColumns != null && sideColumns[0].side == "Right")
         {
             SideColumn temp = sideColumns[0];
             sideColumns[0] = sideColumns[1];
@@ -327,7 +313,7 @@ public class GameController : MonoBehaviour
                             achievementHandler.Unlock_Splitter(SplitterType.CandyCane);
                         }
 
-                        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Dark) && (gameType == "Wiz" || gameType == "Holy"))
+                        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Dark) && (gameMode == GameMode.Wiz || gameMode == GameMode.Holy))
                         {
                             if (!spellHandler.Used_Spells() && score > 1000)
                             {
@@ -344,7 +330,7 @@ public class GameController : MonoBehaviour
         if (gameOver && ffGameOver)
         {
             ffGameOver = false;
-            achievementHandler.Add_Score(gameType, score);
+            achievementHandler.Add_Score(gameMode, score);
             GameObject.Find("GO Black Screen").GetComponent<Fader>().FadeIn();
             tipText.text = tips[Random.Range(0, tips.Count())];
             mc.Play_Music("Gameover");
@@ -359,11 +345,11 @@ public class GameController : MonoBehaviour
         if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Caution) || !achievementHandler.is_Pieceset_Unlocked(PieceSets.Blob))
         {
             int dangerPieces = Get_Danger_Pieces();
-            if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Caution) && gameType != "Holy" && gameType != "Wiz" && dangerPieces >= 5 && dangerPieces == 0)
+            if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Caution) && gameMode != GameMode.Holy && gameMode != GameMode.Wiz && dangerPieces >= 5 && dangerPieces == 0)
             {
                 achievementHandler.Unlock_Splitter(SplitterType.Caution);
             }
-            if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Blob) && gameType == "Holy" && dangerPieces == 16)
+            if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Blob) && gameMode == GameMode.Holy && dangerPieces == 16)
             {
                 achievementHandler.Unlock_Pieceset(PieceSets.Blob);
             }
@@ -396,7 +382,7 @@ public class GameController : MonoBehaviour
             }
             GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
             //here's where we do side-entering management
-            if ((gameType == "Wiz" || gameType == "Holy") && !sidesChecked)
+            if ((gameMode == GameMode.Wiz || gameMode == GameMode.Holy) && !sidesChecked)
             {
                 if (movesMade % sideMovesLimit == 0)
                 {
@@ -462,7 +448,7 @@ public class GameController : MonoBehaviour
                 }
                 sidesChecked = true;
             }
-            else if ((gameType == "Quick") && !sidesChecked)
+            else if ((gameMode == GameMode.Quick) && !sidesChecked)
             {
                 //quick mode moves the sides in based off of time, not moves
                 if (quickMoveSides)
@@ -622,7 +608,7 @@ public class GameController : MonoBehaviour
             }
             clearedLastTurn = piecesDeletedThisSplit;
         }
-        if (gameType != "Holy" && gameType != "Wiz" && !achievementHandler.is_Pieceset_Unlocked(PieceSets.Domino) && multiplier >= 9)
+        if (gameMode != GameMode.Holy && gameMode != GameMode.Wiz && !achievementHandler.is_Pieceset_Unlocked(PieceSets.Domino) && multiplier >= 9)
         {
             achievementHandler.Unlock_Pieceset(PieceSets.Domino);
         }
@@ -755,7 +741,7 @@ public class GameController : MonoBehaviour
         movesText.text = "Splits made: " + movesMade;
 
         //this is the point where any post-move action should be taken
-        if (gameType != "Wit")
+        if (gameMode != GameMode.Wit)
         {
             sidesChecked = false;
         }
@@ -763,7 +749,7 @@ public class GameController : MonoBehaviour
         if (movesMade % 77 == 0 && availableCount != 8 && movesMade != 0)
         {
             availableCount++;
-            if (gameType == "Wiz")
+            if (gameMode == GameMode.Wiz)
             {
                 switch (availableCount)
                 {
@@ -778,13 +764,13 @@ public class GameController : MonoBehaviour
                         break;
                 }
             }
-            else if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Techno) && gameType == "Quick" && availableCount == 5)
+            else if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Techno) && gameMode == GameMode.Quick && availableCount == 5)
             {
                 achievementHandler.Unlock_Pieceset(PieceSets.Techno);
             }
         }
 
-        if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Retro) && gameType == "Wit" && movesMade == 255)
+        if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Retro) && gameMode == GameMode.Wit && movesMade == 255)
         {
             achievementHandler.Unlock_Pieceset(PieceSets.Retro);
         }
@@ -798,7 +784,7 @@ public class GameController : MonoBehaviour
             scoreText.text = "Score:\n" + score;
         }
         //save current score
-        if (PlayerPrefs.GetInt(gameType + " score 0", 0) < score)
+        if (PlayerPrefs.GetInt(gameMode + " score 0", 0) < score)
         {
             if (!newHighScore)
             {
@@ -813,7 +799,7 @@ public class GameController : MonoBehaviour
     // MoveInward will move every piece towards the center and create free columns near the edges
     public void MoveInward()
     {
-        if (gameType != "Wit")
+        if (gameMode != GameMode.Wit)
         {
             //First check to see if this action would create a gameover
             for (int r = 0; r <= 7; r++)
@@ -874,7 +860,7 @@ public class GameController : MonoBehaviour
     //adds the stored side column pieces to the board.
     public void addSideColumns()
     {
-        if (gameType != "Wit")
+        if (gameMode != GameMode.Wit)
         {
             if (sideColumns[0] == null || sideColumns[1] == null)
             {
@@ -931,7 +917,7 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(4f);
         splitter.setState("canShoot", true);
         isCountingDown = false;
-        mc.Play_Music(gameType);
+        mc.Play_Music(gameMode);
         StartCoroutine("QuickSideTimer");
         yield return new WaitForSeconds(1f);
         gameOverText.text = "";
@@ -1061,9 +1047,9 @@ public class GameController : MonoBehaviour
     public void LoadMainMenu()
     {
         //save current score
-        if (PlayerPrefs.GetInt(gameType, 0) < score)
+        if (PlayerPrefs.GetInt(gameMode.ToString(), 0) < score)
         {
-            PlayerPrefs.SetInt(gameType, score);
+            PlayerPrefs.SetInt(gameMode.ToString(), score);
         }
         isQuitting = true;
         //remember to properly reload time
@@ -1083,9 +1069,9 @@ public class GameController : MonoBehaviour
     //begins the reloading of the current scene
     private IEnumerator ReloadScene()
     {
-        if (PlayerPrefs.GetInt(gameType, 0) < score)
+        if (PlayerPrefs.GetInt(gameMode.ToString(), 0) < score)
         {
-            PlayerPrefs.SetInt(gameType, score);
+            PlayerPrefs.SetInt(gameMode.ToString(), score);
         }
         isQuitting = true;
         //remember to properly reload time

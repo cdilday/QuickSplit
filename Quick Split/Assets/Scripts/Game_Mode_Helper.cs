@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public static class Game_Mode_Helper
 {
@@ -16,9 +17,21 @@ public static class Game_Mode_Helper
         null,
     };
 
+    public static RuleSet ActiveRuleSet;
+
     public static RuleSet GetRuleSet(GameMode mode)
     {
         return AllRuleSets[(int)mode];
+    }
+
+    //returns true if the given game mode is unlocked
+    public static bool isGamemodeUnlocked(GameMode gameMode)
+    {
+        if (PlayerPrefs.GetInt(gameMode + " unlocked", 0) == 0)
+        {
+            return false;
+        }
+        return true;
     }
 }
 

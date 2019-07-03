@@ -128,26 +128,26 @@ public class TitleController : MonoBehaviour
         }
         else
         {
+
             // TODO Extract out Game modes, fix mis-matching due to reworking menu order on title Screen
-            int gameType = 0;
             switch (activeMode)
             {
                 case 4:
-                    gameType = 0;
+                    Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wiz];
                     break;
                 case 3:
-                    gameType = 1;
+                    Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Quick];
                     break;
                 case 2:
-                    gameType = 2;
+                    Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wit];
                     break;
                 case 1:
-                    gameType = 3;
+                    Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Holy];
                     break;
             }
-            if (gameNum_unlock_checker(gameType))
+
+            if (Game_Mode_Helper.isGamemodeUnlocked(Game_Mode_Helper.ActiveRuleSet.Mode))
             {
-                PlayerPrefs.SetInt("Mode", gameType);
                 StartCoroutine("GameTransition");
             }
         }
@@ -252,27 +252,11 @@ public class TitleController : MonoBehaviour
         yield return async;
     }
 
-    bool gameNum_unlock_checker(int gameNum)
-    {
-        switch (gameNum)
-        {
-            case 0:
-                return achievementHandler.is_Gamemode_Unlocked("Wiz");
-            case 1:
-                return achievementHandler.is_Gamemode_Unlocked("Quick");
-            case 2:
-                return achievementHandler.is_Gamemode_Unlocked("Wit");
-            case 3:
-                return achievementHandler.is_Gamemode_Unlocked("Holy");
-        }
-        return false;
-    }
-
     void GameMode_Unlocker()
     {
         for (int i = 0; i < 4; i++)
         {
-            if (!gameNum_unlock_checker(i))
+            if (!Game_Mode_Helper.isGamemodeUnlocked((GameMode)i))
             {
                 GameButtons[i].GetComponent<Image>().sprite = lockedSprite;
                 Descriptions[i].GetComponent<Text>().text = "Score in the last Game Mode to unlock this one!";

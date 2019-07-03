@@ -162,7 +162,7 @@ public class Achievement_Script : MonoBehaviour
     }
 
     //use this to add new high scores
-    public void Add_Score(string gameMode, int score)
+    public void Add_Score(GameMode gameMode, int score)
     {
         //you need to actually score to save a high score
         if (score == 0)
@@ -197,16 +197,6 @@ public class Achievement_Script : MonoBehaviour
         {
             cyanCheck = false;
         }
-    }
-
-    //returns true if the given game mode is unlocked
-    public bool is_Gamemode_Unlocked(string gameType)
-    {
-        if (PlayerPrefs.GetInt(gameType + " unlocked", 0) == 0)
-        {
-            return false;
-        }
-        return true;
     }
 
     //unlocks the splitter with the given name

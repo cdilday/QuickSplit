@@ -1,151 +1,179 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Splitter_script : MonoBehaviour {
+public class Splitter_script : MonoBehaviour
+{
 
-	//This script handles controlling the splitter and its states
+    //This script handles controlling the splitter and its states
 
-	//check this if trying to emulate mobile controls on computer
-	public bool mobileDebugging;
+    //check this if trying to emulate mobile controls on computer
+    public bool mobileDebugging;
 
-	public class State{
-		public bool isMoving; // checks if the splitter is in the middle of moving to the next grid spot
-		public bool canShoot;
-		public bool isActive;
-		public bool mouseControl;
-		public bool touchControl;
-		public bool inTransition;
-		public bool yellowReady;
-	}
+    public class State
+    {
+        public bool isMoving; // checks if the splitter is in the middle of moving to the next grid spot
+        public bool canShoot;
+        public bool isActive;
+        public bool mouseControl;
+        public bool touchControl;
+        public bool inTransition;
+        public bool yellowReady;
+    }
 
-	State splitState = new State ();
-	
-	public int moveDirection; // 1 if it's moving upwards, -1 if downwards, 0 if not currently moving
-	int moveTarget;
-	float moveStartTime;
-	const float moveDuration = 0.08f;
-	float speed = 1;
+    private State splitState = new State();
 
-	//prefabs containing all the different colored pieces
-	public Transform[] pieces;
+    public int moveDirection; // 1 if it's moving upwards, -1 if downwards, 0 if not currently moving
+    private int moveTarget;
+    private float moveStartTime;
+    private const float moveDuration = 0.08f;
+    private float speed = 1;
 
-	//pieces currently in the splitter
-	public Transform leftSlot;
-	public Transform rightSlot;
-	
-	Vector3 mouseLocation;
+    //prefabs containing all the different colored pieces
+    public Transform[] pieces;
 
-	public bool overrideControlType;
-	public string controlType;
+    //pieces currently in the splitter
+    public Transform leftSlot;
+    public Transform rightSlot;
+    private Vector3 mouseLocation;
 
-	//this is used for follow controls so the fingerID's startTimes don't get messed up
-	Dictionary<int, float> idStartTimes;
-	// same but for if it's been moved or not
-	Dictionary<int, Vector2> idStartPos;
-	//this just defines if it was a tap or not
-	Dictionary<int, bool> idIsTap;
-	//for swipes
-	Dictionary<int, bool> idIsSwipe;
-	//for drag
-	Dictionary<int, bool> idIsDrag;
+    public bool overrideControlType;
+    public string controlType;
 
-	//objects the splitter will need to use
-	public Holder_Script holder;
-	public GameController gameController;
-	public Camera mainCamera;
+    //this is used for follow controls so the fingerID's startTimes don't get messed up
+    private Dictionary<int, float> idStartTimes;
 
-	Piece_Sprite_Holder spriteHolder;
-	AudioSource FireSFX;
+    // same but for if it's been moved or not
+    private Dictionary<int, Vector2> idStartPos;
 
-	// Use this for initialization
-	void Start () {
-		//get the gamecontroller
-		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
-		if (gameControllerObject != null) {
-			gameController = gameControllerObject.GetComponent <GameController>();
-		}
-		//get the holder
-		GameObject holderObject = GameObject.FindWithTag ("Holder");
-		if (holderObject != null) {
-			holder = holderObject.GetComponent <Holder_Script>();
-		}
-		//start the game with random pieces in the holder
-		int left = Random.Range (0, gameController.availableCount);
-		int right = Random.Range (0, gameController.availableCount);
-		leftSlot = Instantiate(pieces[left], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
-		rightSlot = Instantiate(pieces[right], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
-		leftSlot.GetComponent<piece_script> ().inSplitter = true;
-		rightSlot.GetComponent<piece_script> ().inSplitter = true;
-		if (gameController.gameType != "Quick") {
-			splitState.canShoot = true;
-		} else {
-			splitState.canShoot = false;
-		}
-		splitState.isActive = true;
-		splitState.inTransition = false;
-		splitState.yellowReady = false;
+    //this just defines if it was a tap or not
+    private Dictionary<int, bool> idIsTap;
 
-		gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ().Get_Splitter ();
-		FireSFX = GetComponent<AudioSource> ();
+    //for swipes
+    private Dictionary<int, bool> idIsSwipe;
 
-		if (!overrideControlType) 
-			controlType = PlayerPrefs.GetString("Controls", "Follow");
-		else
-			PlayerPrefs.SetString("Controls", controlType);
+    //for drag
+    private Dictionary<int, bool> idIsDrag;
 
-		if (controlType == "Follow"){
-			idStartTimes = new Dictionary<int, float> ();
-			idStartPos = new Dictionary<int, Vector2>();
-			idIsTap = new Dictionary<int, bool>();
-			idIsSwipe = new Dictionary<int, bool>();
-			idIsDrag = new Dictionary<int, bool>();
-			speed = 2;
-		}
-		else
-			speed = 1;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (!splitState.isActive || gameController.isPaused || gameController.gameOver)
-			return;
-		//player Input
-		//checks if the player is playing on a mobile phone, if not activate mouse control
-		if (!Application.isMobilePlatform && !mobileDebugging) {
-			//uncomment to constantly see mouse position.
-			//Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
-			mouseLocation = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-			//Debug.Log ("Mouse Position: X:" + mouseLocation.x + "    Y: " + mouseLocation.y);
-			//checking that the mouse is within the grid
-			if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5 && mouseLocation.y <= 7.5) {
-				if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
-					MoveUp();
-				}
-				//Moving downwards if the mouse is below the splitter's hitbox
-				if ((mouseLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0) {
-					MoveDown();
-				}
-				//Swapping pieces with right click if on PC
-				if (Input.GetMouseButtonDown (1) ) {
-					swap ();
-				}
-				//launching pieces with Left click while over the board
-				else if (Input.GetMouseButtonDown (0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot 
-				         && !splitState.inTransition && splitState.isActive) {
-					if(splitState.yellowReady == true){
-						GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
-					}
-					else{
-						StartCoroutine (fire ());
-						splitState.canShoot = false;
-						gameController.movesMade++;
-						gameController.updateMoves ();
-					}
-				}
-			}
-		}
-		/*else
+    //objects the splitter will need to use
+    public Holder_Script holder;
+    public GameController gameController;
+    public Camera mainCamera;
+    private Piece_Sprite_Holder spriteHolder;
+    private AudioSource FireSFX;
+
+    // Use this for initialization
+    private void Start()
+    {
+        //get the gamecontroller
+        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+        if (gameControllerObject != null)
+        {
+            gameController = gameControllerObject.GetComponent<GameController>();
+        }
+        //get the holder
+        GameObject holderObject = GameObject.FindWithTag("Holder");
+        if (holderObject != null)
+        {
+            holder = holderObject.GetComponent<Holder_Script>();
+        }
+        //start the game with random pieces in the holder
+        int left = Random.Range(0, gameController.availableCount);
+        int right = Random.Range(0, gameController.availableCount);
+        leftSlot = Instantiate(pieces[left], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
+        rightSlot = Instantiate(pieces[right], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
+        leftSlot.GetComponent<piece_script>().inSplitter = true;
+        rightSlot.GetComponent<piece_script>().inSplitter = true;
+        if (gameController.gameMode != GameMode.Quick)
+        {
+            splitState.canShoot = true;
+        }
+        else
+        {
+            splitState.canShoot = false;
+        }
+        splitState.isActive = true;
+        splitState.inTransition = false;
+        splitState.yellowReady = false;
+
+        gameObject.GetComponent<SpriteRenderer>().sprite = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>().Get_Splitter();
+        FireSFX = GetComponent<AudioSource>();
+
+        if (!overrideControlType)
+        {
+            controlType = PlayerPrefs.GetString("Controls", "Follow");
+        }
+        else
+        {
+            PlayerPrefs.SetString("Controls", controlType);
+        }
+
+        if (controlType == "Follow")
+        {
+            idStartTimes = new Dictionary<int, float>();
+            idStartPos = new Dictionary<int, Vector2>();
+            idIsTap = new Dictionary<int, bool>();
+            idIsSwipe = new Dictionary<int, bool>();
+            idIsDrag = new Dictionary<int, bool>();
+            speed = 2;
+        }
+        else
+        {
+            speed = 1;
+        }
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        if (!splitState.isActive || gameController.isPaused || gameController.gameOver)
+        {
+            return;
+        }
+        //player Input
+        //checks if the player is playing on a mobile phone, if not activate mouse control
+        if (!Application.isMobilePlatform && !mobileDebugging)
+        {
+            //uncomment to constantly see mouse position.
+            //Debug.Log ("Mouse Position: X:" + Input.mousePosition.x + "    Y: " + Input.mousePosition.y);
+            mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Debug.Log ("Mouse Position: X:" + mouseLocation.x + "    Y: " + mouseLocation.y);
+            //checking that the mouse is within the grid
+            if (mouseLocation.x <= 7 && mouseLocation.x >= -8 && mouseLocation.y >= -0.5 && mouseLocation.y <= 7.5)
+            {
+                if ((mouseLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7)
+                {
+                    MoveUp();
+                }
+                //Moving downwards if the mouse is below the splitter's hitbox
+                if ((mouseLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0)
+                {
+                    MoveDown();
+                }
+                //Swapping pieces with right click if on PC
+                if (Input.GetMouseButtonDown(1))
+                {
+                    swap();
+                }
+                //launching pieces with Left click while over the board
+                else if (Input.GetMouseButtonDown(0) && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot
+                         && !splitState.inTransition && splitState.isActive)
+                {
+                    if (splitState.yellowReady == true)
+                    {
+                        GameObject.Find("Spell Handler").BroadcastMessage("YellowActivate");
+                    }
+                    else
+                    {
+                        StartCoroutine(fire());
+                        splitState.canShoot = false;
+                        gameController.movesMade++;
+                        gameController.updateMoves();
+                    }
+                }
+            }
+        }
+        /*else
 		{
 			bool hasMoveTouch = false;
 			bool hasFireTouch = false;
@@ -257,213 +285,233 @@ public class Splitter_script : MonoBehaviour {
 			}
 		}*/
 
-		//moving upwards with keys W or Up
-		if ((Input.GetKey ("w") || Input.GetKey ("up")) && !splitState.isMoving && transform.position.y < 7) {
-			MoveUp ();
-		}
-		//moving downwards with keys S or Down
-		if ((Input.GetKey ("s") || Input.GetKey ("down")) && !splitState.isMoving && transform.position.y > 0) {
-			MoveDown ();
-		}
-		//swapping pieces with keys A, D, Left, or Right
-		if (Input.GetKeyDown ("a") || Input.GetKeyDown ("d") || Input.GetKeyDown ("left") || Input.GetKeyDown ("right")) {
-			swap ();
-		}
-		//launching pieces with key Space
-		if (Input.GetKeyDown ("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition) {
-			if(splitState.yellowReady == true){
-				GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
-			}
-			else{
-				StartCoroutine (fire ());
-				splitState.canShoot = false;
-				gameController.movesMade++;
-				gameController.updateMoves ();
-			}
-		}
+        //moving upwards with keys W or Up
+        if ((Input.GetKey("w") || Input.GetKey("up")) && !splitState.isMoving && transform.position.y < 7)
+        {
+            MoveUp();
+        }
+        //moving downwards with keys S or Down
+        if ((Input.GetKey("s") || Input.GetKey("down")) && !splitState.isMoving && transform.position.y > 0)
+        {
+            MoveDown();
+        }
+        //swapping pieces with keys A, D, Left, or Right
+        if (Input.GetKeyDown("a") || Input.GetKeyDown("d") || Input.GetKeyDown("left") || Input.GetKeyDown("right"))
+        {
+            swap();
+        }
+        //launching pieces with key Space
+        if (Input.GetKeyDown("space") && moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition)
+        {
+            if (splitState.yellowReady == true)
+            {
+                GameObject.Find("Spell Handler").BroadcastMessage("YellowActivate");
+            }
+            else
+            {
+                StartCoroutine(fire());
+                splitState.canShoot = false;
+                gameController.movesMade++;
+                gameController.updateMoves();
+            }
+        }
 
-		if(Input.GetMouseButtonUp(0))
-		{
-			splitState.inTransition = false;
-		}
-		//}//ending bracket for mouse/keyboard exclusivity
+        if (Input.GetMouseButtonUp(0))
+        {
+            splitState.inTransition = false;
+        }
+        //}//ending bracket for mouse/keyboard exclusivity
 
-		//some debug keys
-		if (Input.GetKeyDown (KeyCode.Keypad0)) {
-				gameController.addSideColumns ();
-		}
+        //some debug keys
+        if (Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            gameController.addSideColumns();
+        }
 
-	}
+    }
 
-	void FixedUpdate(){
-		//checks if the splitter is currently between grid movement. 
-		if(splitState.isMoving)
-		{
-			//check to see if the movement time is up. If it is, put it to it's proper location
-			if(Mathf.Abs(moveStartTime - Time.time) > (moveDuration / speed))
-			{
-				moveDirection = 0;
-				splitState.isMoving = false;
-				transform.position = new Vector3(transform.position.x, moveTarget,transform.position.z);
-				gameObject.BroadcastMessage ("Stopping", null, SendMessageOptions.DontRequireReceiver);
-			}
-			else //visually move it
-			{
-				transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * (0.25f * speed)) , transform.position.z);
-			}
-		}
+    private void FixedUpdate()
+    {
+        //checks if the splitter is currently between grid movement. 
+        if (splitState.isMoving)
+        {
+            //check to see if the movement time is up. If it is, put it to it's proper location
+            if (Mathf.Abs(moveStartTime - Time.time) > (moveDuration / speed))
+            {
+                moveDirection = 0;
+                splitState.isMoving = false;
+                transform.position = new Vector3(transform.position.x, moveTarget, transform.position.z);
+                gameObject.BroadcastMessage("Stopping", null, SendMessageOptions.DontRequireReceiver);
+            }
+            else //visually move it
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y + (moveDirection * (0.25f * speed)), transform.position.z);
+            }
+        }
 
-		//keps the stored pieces in the correct positions in the splitter
-		if(leftSlot != null && rightSlot != null)
-		{
-			leftSlot.transform.position = new Vector3(-1, transform.position.y, 0);
-			rightSlot.transform.position = new Vector3(0, transform.position.y, 0);
-		}
+        //keps the stored pieces in the correct positions in the splitter
+        if (leftSlot != null && rightSlot != null)
+        {
+            leftSlot.transform.position = new Vector3(-1, transform.position.y, 0);
+            rightSlot.transform.position = new Vector3(0, transform.position.y, 0);
+        }
 
-		//bugfix to ensure that both slots are full
-		if (leftSlot == null && rightSlot != null) {
-			leftSlot = Instantiate(pieces[Random.Range (0, gameController.availableCount)], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
-		}
-		if (rightSlot == null && leftSlot != null) {
-			rightSlot = Instantiate(pieces[Random.Range (0, gameController.availableCount)], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
-		}
+        //bugfix to ensure that both slots are full
+        if (leftSlot == null && rightSlot != null)
+        {
+            leftSlot = Instantiate(pieces[Random.Range(0, gameController.availableCount)], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
+        }
+        if (rightSlot == null && leftSlot != null)
+        {
+            rightSlot = Instantiate(pieces[Random.Range(0, gameController.availableCount)], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
+        }
 
-		//checks if it's reached its next spot by seeing if it's y position is a whole number. 
-		if (splitState.isMoving && transform.position.y % 1 == 0) {
-			moveDirection = 0;
-		}
-	}
+        //checks if it's reached its next spot by seeing if it's y position is a whole number. 
+        if (splitState.isMoving && transform.position.y % 1 == 0)
+        {
+            moveDirection = 0;
+        }
+    }
 
-	void MoveUp()
-	{
-		//first check to make sure it's possible
-		if (splitState.isMoving || transform.position.y >= 6.9f) {
-			return;
-		}
-		
-		int currentLoc = (int) transform.position.y;
-		moveTarget = currentLoc + 1;
-		
-		moveDirection = 1;
-		moveStartTime = Time.time;
-		splitState.isMoving = true;
-	}
+    private void MoveUp()
+    {
+        //first check to make sure it's possible
+        if (splitState.isMoving || transform.position.y >= 6.9f)
+        {
+            return;
+        }
 
-	void MoveDown()
-	{
-		//first check to make sure it's possible
-		if (splitState.isMoving || transform.position.y <= 0.1f) {
-			return;
-		}
+        int currentLoc = (int)transform.position.y;
+        moveTarget = currentLoc + 1;
 
-		int currentLoc = (int) transform.position.y;
-		moveTarget = currentLoc - 1;
+        moveDirection = 1;
+        moveStartTime = Time.time;
+        splitState.isMoving = true;
+    }
 
-		moveDirection = -1;
-		moveStartTime = Time.time;
-		splitState.isMoving = true;
-	}
-	//swaps the left and right slot
-	public void swap()
-	{
-		if(leftSlot != null && rightSlot != null){
-			Transform temp = leftSlot;
-			leftSlot = rightSlot;
-			rightSlot = temp;
-			leftSlot.transform.position = new Vector2(-1, transform.position.y);
-			rightSlot.transform.position = new Vector2(0, transform.position.y);
-		}
-	}
+    private void MoveDown()
+    {
+        //first check to make sure it's possible
+        if (splitState.isMoving || transform.position.y <= 0.1f)
+        {
+            return;
+        }
 
-	//shoots the pieces in the correct directions
-	public IEnumerator fire()
-	{
-		FireSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
-		FireSFX.Play ();
-		//tell the wedges that it has fired
-		gameObject.BroadcastMessage ("Has_Fired", null, SendMessageOptions.DontRequireReceiver);
-		GameObject tempSH = GameObject.Find ("Spell Handler");
-		if (tempSH != null)
-			tempSH.BroadcastMessage ("split", null, SendMessageOptions.DontRequireReceiver);
-		leftSlot.GetComponent<piece_script> ().inSplitter = false;
-		rightSlot.GetComponent<piece_script> ().inSplitter = false;
-		Transform lefttemp = leftSlot;
-		Transform righttemp = rightSlot;
-		leftSlot = null;
-		rightSlot = null;
-		lefttemp.GetComponent<Rigidbody2D>().velocity = new Vector2 (-20f, 0);
-		righttemp.GetComponent<Rigidbody2D>().velocity = new Vector2 (20f, 0);
-		yield return new WaitForSeconds (0.07f);
-		refill ();
-	}
+        int currentLoc = (int)transform.position.y;
+        moveTarget = currentLoc - 1;
 
-	//refills the splitter with two new pieces
-	public void refill()
-	{
-		holder.getNextPiece ();
-		piece_script[] slots = new piece_script[2] {leftSlot.GetComponent<piece_script> (),rightSlot.GetComponent<piece_script> ()};
-		for (int i = 0; i < 2; i++) {
-			slots[i].locked = false;
-			slots[i].inHolder = false;
-			slots[i].inSplitter = true;
-		}
-	}
+        moveDirection = -1;
+        moveStartTime = Time.time;
+        splitState.isMoving = true;
+    }
+    //swaps the left and right slot
+    public void swap()
+    {
+        if (leftSlot != null && rightSlot != null)
+        {
+            Transform temp = leftSlot;
+            leftSlot = rightSlot;
+            rightSlot = temp;
+            leftSlot.transform.position = new Vector2(-1, transform.position.y);
+            rightSlot.transform.position = new Vector2(0, transform.position.y);
+        }
+    }
 
-	public State getState()
-	{
-		return splitState;
-	}
+    //shoots the pieces in the correct directions
+    public IEnumerator fire()
+    {
+        FireSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        FireSFX.Play();
+        //tell the wedges that it has fired
+        gameObject.BroadcastMessage("Has_Fired", null, SendMessageOptions.DontRequireReceiver);
+        GameObject tempSH = GameObject.Find("Spell Handler");
+        if (tempSH != null)
+        {
+            tempSH.BroadcastMessage("split", null, SendMessageOptions.DontRequireReceiver);
+        }
 
-	public bool getState(string name)
-	{
-		switch (name){
-		case "isMoving":
-			return splitState.isMoving;
-		case "canShoot":
-			return splitState.canShoot;
-		case "isActive":
-			return splitState.isActive;
-		case "mouseControl":
-			return splitState.mouseControl;
-		case "touchControl":
-			return splitState.touchControl;
-		case "inTransition":
-			return splitState.inTransition;
-		case "yellowReady":
-			return splitState.yellowReady;
-		}
-		Debug.LogError ("State error: no state of name " + name + " detected.");
+        leftSlot.GetComponent<piece_script>().inSplitter = false;
+        rightSlot.GetComponent<piece_script>().inSplitter = false;
+        Transform lefttemp = leftSlot;
+        Transform righttemp = rightSlot;
+        leftSlot = null;
+        rightSlot = null;
+        lefttemp.GetComponent<Rigidbody2D>().velocity = new Vector2(-20f, 0);
+        righttemp.GetComponent<Rigidbody2D>().velocity = new Vector2(20f, 0);
+        yield return new WaitForSeconds(0.07f);
+        refill();
+    }
 
-		return false;
-	}
+    //refills the splitter with two new pieces
+    public void refill()
+    {
+        holder.getNextPiece();
+        piece_script[] slots = new piece_script[2] { leftSlot.GetComponent<piece_script>(), rightSlot.GetComponent<piece_script>() };
+        for (int i = 0; i < 2; i++)
+        {
+            slots[i].locked = false;
+            slots[i].inHolder = false;
+            slots[i].inSplitter = true;
+        }
+    }
 
-	public bool setState(string name, bool value)
-	{
-		switch (name){
-		case "isMoving":
-			splitState.isMoving = value;
-			return true;
-		case "canShoot":
-			splitState.canShoot = value;
-			return true;
-		case "isActive":
-			splitState.isActive = value;
-			return true;
-		case "mouseControl":
-			splitState.mouseControl = value;
-			return true;
-		case "touchControl":
-			splitState.touchControl = value;
-			return true;
-		case "inTransition":
-			splitState.inTransition = value;
-			return true;
-		case "yellowReady":
-			splitState.yellowReady = value;
-			return true;
-		}
+    public State getState()
+    {
+        return splitState;
+    }
 
-		Debug.LogError ("State error: no state of name " + name + " detected.");
-		return false;
-	}
+    public bool getState(string name)
+    {
+        switch (name)
+        {
+            case "isMoving":
+                return splitState.isMoving;
+            case "canShoot":
+                return splitState.canShoot;
+            case "isActive":
+                return splitState.isActive;
+            case "mouseControl":
+                return splitState.mouseControl;
+            case "touchControl":
+                return splitState.touchControl;
+            case "inTransition":
+                return splitState.inTransition;
+            case "yellowReady":
+                return splitState.yellowReady;
+        }
+        Debug.LogError("State error: no state of name " + name + " detected.");
+
+        return false;
+    }
+
+    public bool setState(string name, bool value)
+    {
+        switch (name)
+        {
+            case "isMoving":
+                splitState.isMoving = value;
+                return true;
+            case "canShoot":
+                splitState.canShoot = value;
+                return true;
+            case "isActive":
+                splitState.isActive = value;
+                return true;
+            case "mouseControl":
+                splitState.mouseControl = value;
+                return true;
+            case "touchControl":
+                splitState.touchControl = value;
+                return true;
+            case "inTransition":
+                splitState.inTransition = value;
+                return true;
+            case "yellowReady":
+                splitState.yellowReady = value;
+                return true;
+        }
+
+        Debug.LogError("State error: no state of name " + name + " detected.");
+        return false;
+    }
 }

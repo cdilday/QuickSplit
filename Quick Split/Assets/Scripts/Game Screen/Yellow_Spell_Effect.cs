@@ -31,7 +31,8 @@ public class Yellow_Spell_Effect : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
-		if(gameController.gameType != "Wiz" && gameController.gameType != "Holy"){
+		if(gameController.gameMode != GameMode.Wiz && gameController.gameMode != GameMode.Holy)
+        {
 			Destroy(gameObject);
 			return;
 		}

@@ -54,23 +54,23 @@ public class Music_Controller : MonoBehaviour {
 		} 
 		else {
 			//we're in the game scene, need to look up game type
-			switch (GameObject.Find("Gamecontroller").GetComponent<GameController>().gameType){
-			case "Wit":
+			switch (Game_Mode_Helper.ActiveRuleSet.Mode){
+			case GameMode.Wit:
 				MusicSource.clip = WitMusic;
 				SlowTickSource.clip = WitTicks[0];
 				FastTickSource.clip = WitTicks[1];
 				break;
-			case "Quick":
+			case GameMode.Quick:
 				MusicSource.clip = QuickMusic;
 				SlowTickSource.clip = QuickTicks[0];
 				FastTickSource.clip = QuickTicks[1];
 				break;
-			case "Wiz":
+			case GameMode.Wiz:
 				MusicSource.clip = WizMusic;
 				SlowTickSource.clip = WizTicks[0];
 				FastTickSource.clip = WizTicks[1];
 				break;
-			case "Holy":
+			case GameMode.Holy:
 				MusicSource.clip = HolyMusic;
 				SlowTickSource.clip = HolyTicks[0];
 				FastTickSource.clip = HolyTicks[1];
@@ -140,7 +140,7 @@ public class Music_Controller : MonoBehaviour {
 		}
 	}
 
-	//plays the musc for the given game type
+	//plays the musc for the given string
 	public void Play_Music(string gameType)
 	{
 		switch (gameType){
@@ -182,8 +182,41 @@ public class Music_Controller : MonoBehaviour {
 
 	}
 
-	//for if you just wanted to read in the track number
-	public void Play_Music(int trackNum)
+    //plays the musc for the given game type
+    public void Play_Music(GameMode gameMode)
+    {
+        switch (gameMode)
+        {
+            case GameMode.Wit:
+                MusicSource.clip = WitMusic;
+                SlowTickSource.clip = WitTicks[0];
+                FastTickSource.clip = WitTicks[1];
+                break;
+            case GameMode.Quick:
+                MusicSource.clip = QuickMusic;
+                SlowTickSource.clip = QuickTicks[0];
+                FastTickSource.clip = QuickTicks[1];
+                break;
+            case GameMode.Wiz:
+                MusicSource.clip = WizMusic;
+                SlowTickSource.clip = WizTicks[0];
+                FastTickSource.clip = WizTicks[1];
+                break;
+            case GameMode.Holy:
+                MusicSource.clip = HolyMusic;
+                SlowTickSource.clip = HolyTicks[0];
+                FastTickSource.clip = HolyTicks[1];
+                break;
+            default:
+                break;
+        }
+
+        MusicSource.Play();
+
+    }
+
+    //for if you just wanted to read in the track number
+    public void Play_Music(int trackNum)
 	{
 		switch (trackNum){
 		case 1:
