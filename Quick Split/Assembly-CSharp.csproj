@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\Game Screen\Wedges_Script.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Yellow_Spell_Effect.cs" />
     <Compile Include="Assets\Scripts\GameOver_Deleter.cs" />
+    <Compile Include="Assets\Scripts\Game_Mode_Helper.cs" />
     <Compile Include="Assets\Scripts\Game_Screen_Camera_Handler.cs" />
     <Compile Include="Assets\Scripts\Guide_Script.cs" />
     <Compile Include="Assets\Scripts\High_Score_Calculator.cs" />
