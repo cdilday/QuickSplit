@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,6 +24,10 @@ public class GameController : MonoBehaviour
 
     //columns that contain pieces to be pushed in at some point
     private SideColumn[] sideColumns = new SideColumn[2];
+    private TimeSpan timePerCrunch;
+    private TimeSpan lightIncrementTiming;
+    private TimeSpan timeBeforeShaking;
+
 
     //Script for Spells
     private SpellHandler spellHandler;
@@ -36,6 +41,7 @@ public class GameController : MonoBehaviour
 
     //numbers and text for statistics the player should know
     public int movesMade;
+    private int splitsToUnlock;
     public Text movesText;
     public int score;
     public Text scoreText;
@@ -70,7 +76,7 @@ public class GameController : MonoBehaviour
     public GameMode gameMode;
 
     //how many moves until the sides are added onto the board
-    public int sideMovesLimit = 16;
+    public int sideMovesLimit;
     private bool sidesChecked;
     private bool quickMoveSides;
 
@@ -173,6 +179,7 @@ public class GameController : MonoBehaviour
         spellHandler = spellHandlerObject.GetComponent<SpellHandler>();
 
         availableCount = activeRuleSet.UnlockedPieces;
+        splitsToUnlock = activeRuleSet.SplitsToUnlock;
 
         if (activeRuleSet.UsesSides)
         {
@@ -198,6 +205,29 @@ public class GameController : MonoBehaviour
                 sideColumns[0] = sideColumns[1];
                 sideColumns[1] = temp;
             }
+
+            if (activeRuleSet.TimedCrunch)
+            {
+                timePerCrunch = activeRuleSet.TimePerCrunch;
+
+                if (timePerCrunch == null || timePerCrunch.TotalSeconds == 0)
+                {
+                    timePerCrunch = Game_Mode_Helper.AllRuleSets[(int)GameMode.Quick].TimePerCrunch;
+                }
+
+                quickMoveSides = false;
+                StartCoroutine("StartingCountDown");
+                splitter.setState("canShoot", false);
+            }
+            else
+            {
+                sideMovesLimit = activeRuleSet.SplitsPerCrunch;
+                //backup default
+                if (sideMovesLimit == 0)
+                {
+                    sideMovesLimit = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wiz].SplitsPerCrunch;
+                }
+            }
         }
         else
         {
@@ -211,12 +241,6 @@ public class GameController : MonoBehaviour
         if (activeRuleSet.TimedCrunch == false)
         {
             mc.Play_Music(gameMode);
-        }
-        else
-        {
-            quickMoveSides = false;
-            StartCoroutine("StartingCountDown");
-            splitter.setState("canShoot", false);
         }
 
         if (activeRuleSet.HasSpells)
@@ -308,7 +332,7 @@ public class GameController : MonoBehaviour
             ffGameOver = false;
             achievementHandler.Add_Score(gameMode, score);
             GameObject.Find("GO Black Screen").GetComponent<Fader>().FadeIn();
-            tipText.text = tips[Random.Range(0, tips.Count())];
+            tipText.text = tips[UnityEngine.Random.Range(0, tips.Count())];
             mc.Play_Music("Gameover");
         }
 
@@ -722,7 +746,7 @@ public class GameController : MonoBehaviour
             sidesChecked = false;
         }
 
-        if (movesMade % 77 == 0 && availableCount != 8 && movesMade != 0)
+        if (movesMade % splitsToUnlock == 0 && availableCount != 8 && movesMade != 0)
         {
             availableCount++;
             if (gameMode == GameMode.Wiz)
@@ -889,6 +913,10 @@ public class GameController : MonoBehaviour
     //this begins the countdown at the start of Quick mode
     public IEnumerator StartingCountDown()
     {
+        // need to calculate stage timing 
+        double startSeconds = Math.Min(timePerCrunch.TotalSeconds * 0.35f, 7f);
+        lightIncrementTiming = new TimeSpan((long)(Math.Min(startSeconds / 7, 1f) * TimeSpan.TicksPerSecond));
+        timeBeforeShaking = timePerCrunch.Subtract(new TimeSpan((long)(startSeconds * TimeSpan.TicksPerSecond)));
         isCountingDown = true;
         yield return new WaitForSeconds(4f);
         splitter.setState("canShoot", true);
@@ -905,13 +933,13 @@ public class GameController : MonoBehaviour
         GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
         sidebars[0].BroadcastMessage("Reset");
         sidebars[1].BroadcastMessage("Reset");
-        yield return new WaitForSeconds(11f);
+        yield return new WaitForSeconds((float)timeBeforeShaking.TotalSeconds);
         sideColumns[0].isShaking = true;
         sideColumns[1].isShaking = true;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sideColumns[0].shakeStage = 1;
         sideColumns[1].shakeStage = 1;
         if (!gameOver)
@@ -921,24 +949,24 @@ public class GameController : MonoBehaviour
 
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sideColumns[0].shakeStage = 2;
         sideColumns[1].shakeStage = 2;
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sidebars[0].BroadcastMessage("Increment_Lights");
         sidebars[1].BroadcastMessage("Increment_Lights");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds((float)lightIncrementTiming.TotalSeconds);
         sideColumns[0].isShaking = false;
         sideColumns[1].isShaking = false;
         sideColumns[0].ready = true;
