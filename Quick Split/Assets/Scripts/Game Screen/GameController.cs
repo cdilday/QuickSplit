@@ -140,113 +140,8 @@ public class GameController : MonoBehaviour
         }
 
         gameOver = false;
-        //load the side columns if they exist
-        sideColumns[0] = null;
-        sideColumns[1] = null;
-        GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
-        GameObject spellHandlerObject = GameObject.Find("Spell Handler");
-        spellHandler = spellHandlerObject.GetComponent<SpellHandler>();
-        if (gameMode == GameMode.Wit)
-        {
 
-            availableCount = 8;
-
-            //no powers in Wit
-            Destroy(spellHandlerObject);
-
-            //Wit does not use the sidecolumns, get rid of them
-            Destroy(scols[1]);
-            Destroy(scols[0]);
-            mc.Play_Music(gameMode);
-        }
-        else if (gameMode == GameMode.Quick)
-        {
-            availableCount = 4;
-            if (scols[0] != null && scols[1] != null)
-            {
-                //make sure they're loaded properly, left is 0, right is 1
-                if (scols[0].GetComponent<SideColumn>().sideInt == 0)
-                {
-                    sideColumns[0] = scols[0].GetComponent<SideColumn>();
-                    sideColumns[1] = scols[1].GetComponent<SideColumn>();
-                }
-                else
-                {
-                    sideColumns[0] = scols[1].GetComponent<SideColumn>();
-                    sideColumns[1] = scols[0].GetComponent<SideColumn>();
-                }
-            }
-            quickMoveSides = false;
-            StartCoroutine("StartingCountDown");
-            splitter.setState("canShoot", false);
-
-            // no powers in Quick, only Holy and Wiz
-            Destroy(spellHandlerObject);
-        }
-        else if (gameMode == GameMode.Wiz)
-        {
-            //powers are in Wiz, start out with 5 kinds of blocks
-            availableCount = 5;
-            if (scols[0] != null && scols[1] != null)
-            {
-                //make sure they're loaded properly, left is 0, right is 1
-                if (scols[0].GetComponent<SideColumn>().sideInt == 0)
-                {
-                    sideColumns[0] = scols[0].GetComponent<SideColumn>();
-                    sideColumns[1] = scols[1].GetComponent<SideColumn>();
-                }
-                else
-                {
-                    sideColumns[0] = scols[1].GetComponent<SideColumn>();
-                    sideColumns[1] = scols[0].GetComponent<SideColumn>();
-                }
-            }
-            spellHandler.redReady = true;
-            spellHandler.orangeReady = false;
-            spellHandler.yellowReady = true;
-            spellHandler.greenReady = true;
-            spellHandler.blueReady = true;
-            spellHandler.purpleReady = true;
-            spellHandler.cyanReady = false;
-            spellHandler.whiteReady = false;
-            mc.Play_Music(gameMode);
-        }
-        else if (gameMode == GameMode.Holy)
-        {
-            //Holy has everything at once. Essentially hard mode
-            availableCount = 8;
-            if (scols[0] != null && scols[1] != null)
-            {
-                //make sure they're loaded properly, left is 0, right is 1
-                if (scols[0].GetComponent<SideColumn>().sideInt == 0)
-                {
-                    sideColumns[0] = scols[0].GetComponent<SideColumn>();
-                    sideColumns[1] = scols[1].GetComponent<SideColumn>();
-                }
-                else
-                {
-                    sideColumns[0] = scols[1].GetComponent<SideColumn>();
-                    sideColumns[1] = scols[0].GetComponent<SideColumn>();
-                }
-            }
-            spellHandler.redReady = true;
-            spellHandler.orangeReady = true;
-            spellHandler.yellowReady = true;
-            spellHandler.greenReady = true;
-            spellHandler.blueReady = true;
-            spellHandler.purpleReady = true;
-            spellHandler.cyanReady = true;
-            spellHandler.whiteReady = true;
-            mc.Play_Music(gameMode);
-        }
-
-        if (gameMode != GameMode.Wit && sideColumns != null && sideColumns[0].side == "Right")
-        {
-            SideColumn temp = sideColumns[0];
-            sideColumns[0] = sideColumns[1];
-            sideColumns[1] = temp;
-        }
-        sidesChecked = false;
+        loadGameMode(Game_Mode_Helper.ActiveRuleSet);
 
         //initially update the moves and scores
         updateMoves();
@@ -262,6 +157,87 @@ public class GameController : MonoBehaviour
         HighScoreText.text = "";
         tipText.text = "";
         Score_Text_Canvas = GameObject.Find("Score Text Canvas");
+    }
+
+    /// <summary>
+    /// Loads the game scene with the given ruleset
+    /// </summary>
+    /// <param name="activeRuleSet"> RuleSet - the ruleset to load the game with</param>
+    private void loadGameMode(RuleSet activeRuleSet)
+    {
+        //load the side columns if they exist
+        sideColumns[0] = null;
+        sideColumns[1] = null;
+        GameObject[] scols = GameObject.FindGameObjectsWithTag("Side Column");
+        GameObject spellHandlerObject = GameObject.Find("Spell Handler");
+        spellHandler = spellHandlerObject.GetComponent<SpellHandler>();
+
+        availableCount = activeRuleSet.UnlockedPieces;
+
+        if (activeRuleSet.UsesSides)
+        {
+            if (scols[0] != null && scols[1] != null)
+            {
+                //make sure they're loaded properly, left is 0, right is 1
+                if (scols[0].GetComponent<SideColumn>().sideInt == 0)
+                {
+                    sideColumns[0] = scols[0].GetComponent<SideColumn>();
+                    sideColumns[1] = scols[1].GetComponent<SideColumn>();
+                }
+                else
+                {
+                    sideColumns[0] = scols[1].GetComponent<SideColumn>();
+                    sideColumns[1] = scols[0].GetComponent<SideColumn>();
+                }
+            }
+
+            // Possibility that we got them out of order, swap them if so
+            if (sideColumns != null && sideColumns[0].side == "Right")
+            {
+                SideColumn temp = sideColumns[0];
+                sideColumns[0] = sideColumns[1];
+                sideColumns[1] = temp;
+            }
+        }
+        else
+        {
+            Destroy(scols[1]);
+            Destroy(scols[0]);
+        }
+
+        sidesChecked = false;
+
+        // There iss a countdown for timed crunching before game modes, so music is handled after that countdown completes in a seperate thread
+        if (activeRuleSet.TimedCrunch == false)
+        {
+            mc.Play_Music(gameMode);
+        }
+        else
+        {
+            quickMoveSides = false;
+            StartCoroutine("StartingCountDown");
+            splitter.setState("canShoot", false);
+        }
+
+        if (activeRuleSet.HasSpells)
+        {
+            //TODO: Make unlocking pieces and piece order generic; might add option to customize unlock order but this is messy as a result of bad old code.
+            int unlockedPieces = activeRuleSet.UnlockedPieces;
+
+            // obviously need more than one
+            spellHandler.redReady = true;
+            spellHandler.orangeReady = unlockedPieces >= 6;
+            spellHandler.yellowReady = unlockedPieces >= 4;
+            spellHandler.greenReady = unlockedPieces >= 3;
+            spellHandler.blueReady = unlockedPieces >= 2;
+            spellHandler.purpleReady = unlockedPieces >= 5;
+            spellHandler.cyanReady = unlockedPieces >= 7;
+            spellHandler.whiteReady = unlockedPieces >= 8;
+        }
+        else
+        {
+            Destroy(spellHandlerObject);
+        }
     }
 
     // Update is called once per frame

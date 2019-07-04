@@ -105,7 +105,7 @@ public class RuleSet
     {
         Mode = mode;
         HasSpells = hasSpells;
-        TimedCrunch = splitsPerCrunch > 0;
+        TurnedCrunch = splitsPerCrunch > 0;
         SplitsPerCrunch = splitsPerCrunch;
         TimedCrunch = false;
         TimePerCrunch = TimeSpan.MinValue;
