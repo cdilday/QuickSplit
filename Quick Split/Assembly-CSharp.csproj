@@ -76,13 +76,13 @@
     <Compile Include="Assets\Scripts\Game Screen\Multiplier_Displayer.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Bit_Pool.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Color_Selector.cs" />
+    <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceScoreText.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece_Colorer.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece_Pulser.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece_Spell_Effect.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece_Sprite_Holder.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\ScoreBit.cs" />
-    <Compile Include="Assets\Scripts\Game Screen\Piece Related\piece_script.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Pulser.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Red_Spell_Script.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Score_Text_Layer.cs" />

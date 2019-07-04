@@ -24,7 +24,7 @@ public class Piece_Spell_Effect : MonoBehaviour
     private Vector2 gridPos;
     private float startTime;
     private GameController gameController;
-    private piece_script piece;
+    private Piece piece;
     private SpellHandler spellHandler;
 
     public AudioSource TransformationSFX;
@@ -37,7 +37,7 @@ public class Piece_Spell_Effect : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-        piece = gameObject.GetComponentInParent<piece_script>();
+        piece = gameObject.GetComponentInParent<Piece>();
         //no need for these if there are no spells
         if (gameController.gameMode == GameMode.Wit || gameController.gameMode == GameMode.Quick)
         {

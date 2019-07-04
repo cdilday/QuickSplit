@@ -42,7 +42,7 @@ public class Guide_Script : MonoBehaviour {
 		if (isRight) {
 			//get the color to match
 			if(splitter.rightSlot){
-				switch(splitter.rightSlot.GetComponent<piece_script>().pieceColor){
+				switch(splitter.rightSlot.GetComponent<Piece>().pieceColor){
 				case "Red":
 					spriteRenderer.color = Color.red;
 					break;
@@ -94,7 +94,7 @@ public class Guide_Script : MonoBehaviour {
 		else
 		{
 			if(splitter.leftSlot){
-				switch(splitter.leftSlot.GetComponent<piece_script>().pieceColor){
+				switch(splitter.leftSlot.GetComponent<Piece>().pieceColor){
 				case "Red":
 					spriteRenderer.color = Color.red;
 					break;

@@ -56,7 +56,7 @@ public class SpellHandler : MonoBehaviour
     #endregion
 
     public string spellColor;
-    public piece_script selectedPiece;
+    public Piece selectedPiece;
     private string pickedColor1;
     private string pickedColor2;
     private int spellLimit = 0;
@@ -305,8 +305,8 @@ public class SpellHandler : MonoBehaviour
             for (; difference > 0; difference--)
             {
                 int randPiece = (int)Random.Range(0, leftPieces.Count);
-                int r = (int)leftPieces[randPiece].GetComponent<piece_script>().gridPos.x;
-                int c = (int)leftPieces[randPiece].GetComponent<piece_script>().gridPos.y;
+                int r = (int)leftPieces[randPiece].GetComponent<Piece>().gridPos.x;
+                int c = (int)leftPieces[randPiece].GetComponent<Piece>().gridPos.y;
                 leftPieces.RemoveAt(randPiece);
                 //marking the object as dead so that the orangeActive state knows to delete it
                 gameController.grid[r, c].BroadcastMessage("Activate_Orange", "dead", SendMessageOptions.DontRequireReceiver);
@@ -317,8 +317,8 @@ public class SpellHandler : MonoBehaviour
             for (; difference > 0; difference--)
             {
                 int randPiece = (int)Random.Range(0, rightPieces.Count);
-                int r = (int)rightPieces[randPiece].GetComponent<piece_script>().gridPos.x;
-                int c = (int)rightPieces[randPiece].GetComponent<piece_script>().gridPos.y;
+                int r = (int)rightPieces[randPiece].GetComponent<Piece>().gridPos.x;
+                int c = (int)rightPieces[randPiece].GetComponent<Piece>().gridPos.y;
                 rightPieces.RemoveAt(randPiece);
                 gameController.grid[r, c].BroadcastMessage("Activate_Orange", "dead", SendMessageOptions.DontRequireReceiver);
             }
@@ -360,13 +360,13 @@ public class SpellHandler : MonoBehaviour
         Spell_Used(3);
         spellColor = "Green";
         spellLimit = 3;
-        splitter.leftSlot.GetComponent<piece_script>().selectable = true;
-        splitter.rightSlot.GetComponent<piece_script>().selectable = true;
+        splitter.leftSlot.GetComponent<Piece>().selectable = true;
+        splitter.rightSlot.GetComponent<Piece>().selectable = true;
         for (int r = 0; r < 3; r++)
         {
             for (int c = 0; c < 2; c++)
             {
-                holder.holder[r, c].gameObject.GetComponent<piece_script>().selectable = true;
+                holder.holder[r, c].gameObject.GetComponent<Piece>().selectable = true;
             }
         }
         gameController.gameOverText.text = "Select pieces in the holder/splitter to change";
@@ -378,14 +378,14 @@ public class SpellHandler : MonoBehaviour
         //if all 3 tries have been exhausted, then the spell is over
         if (spellLimit <= 0)
         {
-            splitter.leftSlot.GetComponent<piece_script>().selectable = false;
-            splitter.rightSlot.GetComponent<piece_script>().selectable = false;
+            splitter.leftSlot.GetComponent<Piece>().selectable = false;
+            splitter.rightSlot.GetComponent<Piece>().selectable = false;
 
             for (int r = 0; r < 3; r++)
             {
                 for (int c = 0; c < 2; c++)
                 {
-                    holder.holder[r, c].GetComponent<piece_script>().selectable = false;
+                    holder.holder[r, c].GetComponent<Piece>().selectable = false;
                 }
             }
             pickedColor1 = null;
@@ -428,7 +428,7 @@ public class SpellHandler : MonoBehaviour
         GameObject[] allPieces = GameObject.FindGameObjectsWithTag("Piece");
         foreach (GameObject piece in allPieces)
         {
-            piece_script temp = piece.GetComponent<piece_script>();
+            Piece temp = piece.GetComponent<Piece>();
             if (!temp.inSideHolder && !temp.inHolder && !temp.inSplitter)
             {
                 temp.selectable = true;
@@ -444,13 +444,13 @@ public class SpellHandler : MonoBehaviour
         //again, like the green spell it only has 3 uses
         if (spellLimit <= 0)
         {
-            splitter.leftSlot.GetComponent<piece_script>().selectable = false;
-            splitter.rightSlot.GetComponent<piece_script>().selectable = false;
+            splitter.leftSlot.GetComponent<Piece>().selectable = false;
+            splitter.rightSlot.GetComponent<Piece>().selectable = false;
 
             GameObject[] allPieces = GameObject.FindGameObjectsWithTag("Piece");
             foreach (GameObject piece in allPieces)
             {
-                piece_script temp = piece.GetComponent<piece_script>();
+                Piece temp = piece.GetComponent<Piece>();
                 if (!temp.inSideHolder && !temp.inHolder && !temp.inSplitter)
                 {
                     temp.selectable = false;
@@ -645,9 +645,9 @@ public class SpellHandler : MonoBehaviour
     {
         //again most of the hard work is done by the piece spell effect script, this just tells it when to activate
         Spell_Used(6);
-        splitter.rightSlot.GetComponent<piece_script>().isBomb = true;
+        splitter.rightSlot.GetComponent<Piece>().isBomb = true;
         splitter.rightSlot.BroadcastMessage("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
-        splitter.leftSlot.GetComponent<piece_script>().isBomb = true;
+        splitter.leftSlot.GetComponent<Piece>().isBomb = true;
         splitter.leftSlot.BroadcastMessage("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
     }
     //White spell: Sorts the board from rainbow down
@@ -689,7 +689,7 @@ public class SpellHandler : MonoBehaviour
         }
         //sort them by color, alphabetical will do
         IEnumerable<GameObject> sorter = leftPieces;
-        sorter = sorter.OrderBy(colorName => colorName.GetComponent<piece_script>().pieceColor);
+        sorter = sorter.OrderBy(colorName => colorName.GetComponent<Piece>().pieceColor);
         leftPieces = sorter.ToList();
         bool empty = leftPieces.Count < 1;
         //make sure not to game over
@@ -713,7 +713,7 @@ public class SpellHandler : MonoBehaviour
                 }
                 else
                 {
-                    leftPieces[0].GetComponent<piece_script>().movePiece(new Vector2((float)(c - 8), (float)r));
+                    leftPieces[0].GetComponent<Piece>().movePiece(new Vector2((float)(c - 8), (float)r));
                     leftPieces.RemoveAt(0);
                 }
             }
@@ -735,7 +735,7 @@ public class SpellHandler : MonoBehaviour
         }
         //sort them by color, alphabetical will do
         sorter = rightPieces;
-        sorter = sorter.OrderBy(colorName => colorName.GetComponent<piece_script>().pieceColor);
+        sorter = sorter.OrderBy(colorName => colorName.GetComponent<Piece>().pieceColor);
         rightPieces = sorter.ToList();
         empty = empty && rightPieces.Count < 1;
         //make sure not to game over
@@ -758,7 +758,7 @@ public class SpellHandler : MonoBehaviour
                 }
                 else
                 {
-                    rightPieces[0].GetComponent<piece_script>().movePiece(new Vector2((float)(c - 8), (float)r));
+                    rightPieces[0].GetComponent<Piece>().movePiece(new Vector2((float)(c - 8), (float)r));
                     rightPieces.RemoveAt(0);
                 }
             }

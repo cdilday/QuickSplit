@@ -468,7 +468,7 @@ public class GameController : MonoBehaviour
     //puts the pieces in the grid after they've settled into their place
     public void placePiece(GameObject piece)
     {
-        piece_script pieceStats = piece.GetComponent<piece_script>();
+        Piece pieceStats = piece.GetComponent<Piece>();
         int thisX = (int)pieceStats.gridPos.x;
         int thisY = (int)pieceStats.gridPos.y;
         //check to make sure the piece is in the grid
@@ -533,11 +533,11 @@ public class GameController : MonoBehaviour
                     checkGrid[r, c] = true;
                     cluster[0] = grid[r, c];
                     //begin the recursion
-                    int temp = scanner(r, c, grid[r, c].GetComponent<piece_script>().pieceColor, 1);
+                    int temp = scanner(r, c, grid[r, c].GetComponent<Piece>().pieceColor, 1);
                     //loop that assigns each piece in the group the group value to be scanned afterwards
                     for (int i = 0; i < temp; i++)
                     {
-                        cluster[i].GetComponent<piece_script>().groupValue = temp;
+                        cluster[i].GetComponent<Piece>().groupValue = temp;
                     }
                     //if a group has hit the deletion count, and it's not the first, add to the multiplier
                     if (temp >= 4)
@@ -572,9 +572,9 @@ public class GameController : MonoBehaviour
             for (int c = 0; c <= 15; c++)
             {
                 //if the value is high enough it's in a group big enough to delete, so delete it
-                if (grid[r, c] != null && grid[r, c].GetComponent<piece_script>().groupValue >= 4)
+                if (grid[r, c] != null && grid[r, c].GetComponent<Piece>().groupValue >= 4)
                 {
-                    grid[r, c].GetComponent<piece_script>().multiplier = multiplier;
+                    grid[r, c].GetComponent<Piece>().multiplier = multiplier;
                     updateScore();
                     //delete piece, mark that something was deleted
                     Destroy(grid[r, c]);
@@ -634,7 +634,7 @@ public class GameController : MonoBehaviour
                 else if (adjusted && grid[r, c] != null)
                 {
                     //change the piece's stats to reflect the new position
-                    grid[r, c].GetComponent<piece_script>().movePiece(new Vector2(tempCol - 8, r));
+                    grid[r, c].GetComponent<Piece>().movePiece(new Vector2(tempCol - 8, r));
                     //re-assign all grids to fit the new position, add 1 to tempCol
                     grid[r, tempCol] = grid[r, c];
                     grid[r, c] = null;
@@ -662,7 +662,7 @@ public class GameController : MonoBehaviour
                 else if (adjusted && grid[r, c] != null)
                 {
                     //change the piece's stats to reflect the new position
-                    grid[r, c].GetComponent<piece_script>().movePiece(new Vector2(tempCol - 8, r));
+                    grid[r, c].GetComponent<Piece>().movePiece(new Vector2(tempCol - 8, r));
                     //re-assign all grids to fit the new position, subtract to tempCol
                     grid[r, tempCol] = grid[r, c];
                     grid[r, c] = null;
@@ -682,10 +682,10 @@ public class GameController : MonoBehaviour
         //mark current as checked
         checkGrid[x, y] = true;
         //check right of piece
-        if ((x + 1 < 8) && (checkGrid[x + 1, y] == false && grid[x + 1, y] != null && grid[x + 1, y].GetComponent<piece_script>().pieceColor == color))
+        if ((x + 1 < 8) && (checkGrid[x + 1, y] == false && grid[x + 1, y] != null && grid[x + 1, y].GetComponent<Piece>().pieceColor == color))
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x + 1, y].GetComponent<piece_script>().locked)
+            if (grid[x + 1, y].GetComponent<Piece>().locked)
             {
                 adj++;
                 //add to group cluster
@@ -694,10 +694,10 @@ public class GameController : MonoBehaviour
             }
         }
         //check up
-        if (y + 1 < 16 && checkGrid[x, y + 1] == false && grid[x, y + 1] != null && grid[x, y + 1].GetComponent<piece_script>().pieceColor == color)
+        if (y + 1 < 16 && checkGrid[x, y + 1] == false && grid[x, y + 1] != null && grid[x, y + 1].GetComponent<Piece>().pieceColor == color)
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x, y + 1].GetComponent<piece_script>().locked)
+            if (grid[x, y + 1].GetComponent<Piece>().locked)
             {
                 adj++;
                 //add to group cluster
@@ -706,10 +706,10 @@ public class GameController : MonoBehaviour
             }
         }
         //check left
-        if (x - 1 >= 0 && checkGrid[x - 1, y] == false && grid[x - 1, y] != null && grid[x - 1, y].GetComponent<piece_script>().pieceColor == color)
+        if (x - 1 >= 0 && checkGrid[x - 1, y] == false && grid[x - 1, y] != null && grid[x - 1, y].GetComponent<Piece>().pieceColor == color)
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x - 1, y].GetComponent<piece_script>().locked)
+            if (grid[x - 1, y].GetComponent<Piece>().locked)
             {
                 adj++;
                 //add to group cluster
@@ -718,10 +718,10 @@ public class GameController : MonoBehaviour
             }
         }
         //check below
-        if (y - 1 >= 0 && checkGrid[x, y - 1] == false && grid[x, y - 1] != null && grid[x, y - 1].GetComponent<piece_script>().pieceColor == color)
+        if (y - 1 >= 0 && checkGrid[x, y - 1] == false && grid[x, y - 1] != null && grid[x, y - 1].GetComponent<Piece>().pieceColor == color)
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x, y - 1].GetComponent<piece_script>().locked)
+            if (grid[x, y - 1].GetComponent<Piece>().locked)
             {
                 adj++;
                 //add to group cluster
@@ -825,7 +825,7 @@ public class GameController : MonoBehaviour
                         //piece exits, more rightward making sure to
                         //change the piece's stats to reflect the new position
                         grid[r, c].transform.parent = null;
-                        grid[r, c].GetComponent<piece_script>().movePiece(new Vector2((c + 1) - 8, r));
+                        grid[r, c].GetComponent<Piece>().movePiece(new Vector2((c + 1) - 8, r));
                         //re-assign all grids to fit the new position, add 1 to tempCol
                         grid[r, c + 1] = grid[r, c];
                         grid[r, c] = null;
@@ -845,7 +845,7 @@ public class GameController : MonoBehaviour
                     {
                         //piece exits, more rightward making sure to
                         //change the piece's stats to reflect the new position
-                        grid[r, c].GetComponent<piece_script>().movePiece(new Vector2((c - 1) - 8, r));
+                        grid[r, c].GetComponent<Piece>().movePiece(new Vector2((c - 1) - 8, r));
                         //re-assign all grids to fit the new position, add 1 to tempCol
                         grid[r, c - 1] = grid[r, c];
                         grid[r, c] = null;
@@ -876,8 +876,8 @@ public class GameController : MonoBehaviour
             {
                 colorGrid[r, 0] = sideColumns[0].colorColumn[r];
                 grid[r, 0] = sideColumns[0].column[r];
-                grid[r, 0].GetComponent<piece_script>().movePiece(new Vector2(-8, r));
-                grid[r, 0].GetComponent<piece_script>().inSideHolder = false;
+                grid[r, 0].GetComponent<Piece>().movePiece(new Vector2(-8, r));
+                grid[r, 0].GetComponent<Piece>().inSideHolder = false;
                 grid[r, 0].transform.parent = null;
             }
             sideColumns[0].empty();
@@ -888,8 +888,8 @@ public class GameController : MonoBehaviour
             {
                 colorGrid[r, 15] = sideColumns[1].colorColumn[r];
                 grid[r, 15] = sideColumns[1].column[r];
-                grid[r, 15].GetComponent<piece_script>().movePiece(new Vector2(15 - 8, r));
-                grid[r, 15].GetComponent<piece_script>().inSideHolder = false;
+                grid[r, 15].GetComponent<Piece>().movePiece(new Vector2(15 - 8, r));
+                grid[r, 15].GetComponent<Piece>().inSideHolder = false;
                 grid[r, 15].transform.parent = null;
             }
             sideColumns[1].empty();
@@ -987,7 +987,7 @@ public class GameController : MonoBehaviour
         List<GameObject> offendingPieces = new List<GameObject>();
         foreach (GameObject piece in allPieces)
         {
-            piece_script temp = piece.GetComponent<piece_script>();
+            Piece temp = piece.GetComponent<Piece>();
             //if it's on the grid, add it to the grid
             if (temp != null && !temp.inHolder && !temp.inSplitter && !temp.inSideHolder)
             {

@@ -119,10 +119,10 @@ public class SideColumn : MonoBehaviour {
 			int randPiece = Random.Range (0, gameController.availableCount);
 			column[row] = Instantiate (pieces[randPiece], new Vector2 ( sideXValue, row), Quaternion.identity) as GameObject;
 			//column[row].GetComponent<piece_script> ().locked = true;
-			column[row].GetComponent<piece_script> ().lockPos = new Vector2 ( sideXValue, row);
-			column[row].GetComponent<piece_script> ().inSideHolder = true;
+			column[row].GetComponent<Piece> ().lockPos = new Vector2 ( sideXValue, row);
+			column[row].GetComponent<Piece> ().inSideHolder = true;
 			column[row].transform.parent = transform;
-			colorColumn[row] = column[row].GetComponent<piece_script>().pieceColor;
+			colorColumn[row] = column[row].GetComponent<Piece>().pieceColor;
 		}
 	}
 

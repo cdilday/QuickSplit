@@ -6,7 +6,7 @@ public class Piece_Pulser : MonoBehaviour {
 	//this script handles the pulsing effect that happens when pieces are selectable for spells or when they're in danger
 
 	public SpriteRenderer spriteRenderer;
-	piece_script parentPiece;
+	Piece parentPiece;
 
 	Color activeColor;
 	Color inActiveColor;
@@ -16,7 +16,7 @@ public class Piece_Pulser : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
-		parentPiece = transform.GetComponentInParent<piece_script> ();
+		parentPiece = transform.GetComponentInParent<Piece> ();
 		spriteRenderer.sprite = parentPiece.GetComponent<SpriteRenderer> ().sprite;
 		dangerColor = new Color (0, 0, 0, 0.25f);
 		activeColor = new Color (spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);

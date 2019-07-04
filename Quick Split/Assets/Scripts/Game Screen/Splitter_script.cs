@@ -82,8 +82,8 @@ public class Splitter_script : MonoBehaviour
         int right = Random.Range(0, gameController.availableCount);
         leftSlot = Instantiate(pieces[left], new Vector2(-1, transform.position.y), Quaternion.identity) as Transform;
         rightSlot = Instantiate(pieces[right], new Vector2(0, transform.position.y), Quaternion.identity) as Transform;
-        leftSlot.GetComponent<piece_script>().inSplitter = true;
-        rightSlot.GetComponent<piece_script>().inSplitter = true;
+        leftSlot.GetComponent<Piece>().inSplitter = true;
+        rightSlot.GetComponent<Piece>().inSplitter = true;
         if (gameController.gameMode != GameMode.Quick)
         {
             splitState.canShoot = true;
@@ -430,8 +430,8 @@ public class Splitter_script : MonoBehaviour
             tempSH.BroadcastMessage("split", null, SendMessageOptions.DontRequireReceiver);
         }
 
-        leftSlot.GetComponent<piece_script>().inSplitter = false;
-        rightSlot.GetComponent<piece_script>().inSplitter = false;
+        leftSlot.GetComponent<Piece>().inSplitter = false;
+        rightSlot.GetComponent<Piece>().inSplitter = false;
         Transform lefttemp = leftSlot;
         Transform righttemp = rightSlot;
         leftSlot = null;
@@ -446,7 +446,7 @@ public class Splitter_script : MonoBehaviour
     public void refill()
     {
         holder.getNextPiece();
-        piece_script[] slots = new piece_script[2] { leftSlot.GetComponent<piece_script>(), rightSlot.GetComponent<piece_script>() };
+        Piece[] slots = new Piece[2] { leftSlot.GetComponent<Piece>(), rightSlot.GetComponent<Piece>() };
         for (int i = 0; i < 2; i++)
         {
             slots[i].locked = false;

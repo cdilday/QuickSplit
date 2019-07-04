@@ -121,7 +121,7 @@ public class Red_Spell_Script : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.tag == "Piece" && isMoving) {
-			if(other.GetComponent<piece_script>().inSplitter || other.GetComponent<piece_script>().inSideHolder)
+			if(other.GetComponent<Piece>().inSplitter || other.GetComponent<Piece>().inSideHolder)
 			{
 				spellHandler.Red_Spell_Helper();
 				reset ();
@@ -134,7 +134,7 @@ public class Red_Spell_Script : MonoBehaviour {
 			hasHit = true;
 			transform.position = other.transform.position;
 			creationStartTime = Time.time;
-			col = (int) other.GetComponent<piece_script>().gridPos.y;
+			col = (int) other.GetComponent<Piece>().gridPos.y;
 			if(isRight)
 			{
 				animator.SetBool("LeftCollided", true);
