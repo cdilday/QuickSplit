@@ -17,7 +17,7 @@ public static class Game_Mode_Helper
         null,
     };
 
-    public static RuleSet ActiveRuleSet;
+    public static RuleSet ActiveRuleSet = WizRuleSet;
 
     public static RuleSet GetRuleSet(GameMode mode)
     {

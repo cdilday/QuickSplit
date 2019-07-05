@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Guide_Script : MonoBehaviour
+public class Guide : MonoBehaviour
 {
 
     //this script handles the guide circles on the splitter, and is attatched to each one individually
@@ -46,7 +46,7 @@ public class Guide_Script : MonoBehaviour
         {
             if (splitter.rightSlot)
             {
-                spriteRenderer.color = Piece.PieceColorValues[(int)splitter.rightSlot.GetComponent<Piece>().pieceColor];
+                spriteRenderer.sprite = splitter.rightSlot.GetComponent<SpriteRenderer>().sprite;
             }
 
             //check which row/column it should be in relative to the grid info in the gamecontroller
@@ -57,6 +57,7 @@ public class Guide_Script : MonoBehaviour
             }
             else
             {
+                spriteRenderer.color = new Color(1f, 1f, 1f, 0.4f);
                 bool hitEnd = true;
                 for (int c = 10; c < 16; c++)
                 {
@@ -79,7 +80,7 @@ public class Guide_Script : MonoBehaviour
         {
             if (splitter.leftSlot)
             {
-                spriteRenderer.color = Piece.PieceColorValues[(int)splitter.leftSlot.GetComponent<Piece>().pieceColor];
+                spriteRenderer.sprite = splitter.leftSlot.GetComponent<SpriteRenderer>().sprite;
             }
 
             int row = (int)transform.position.y;
@@ -89,6 +90,7 @@ public class Guide_Script : MonoBehaviour
             }
             else
             {
+                spriteRenderer.color = new Color(1f, 1f, 1f, 0.25f);
                 bool hitEnd = true;
                 for (int c = 5; c >= 0; c--)
                 {

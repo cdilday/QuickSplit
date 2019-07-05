@@ -101,7 +101,7 @@
     <Compile Include="Assets\Scripts\GameOver_Deleter.cs" />
     <Compile Include="Assets\Scripts\Game_Mode_Helper.cs" />
     <Compile Include="Assets\Scripts\Game_Screen_Camera_Handler.cs" />
-    <Compile Include="Assets\Scripts\Guide_Script.cs" />
+    <Compile Include="Assets\Scripts\Guide.cs" />
     <Compile Include="Assets\Scripts\High_Score_Calculator.cs" />
     <Compile Include="Assets\Scripts\Music_Controller.cs" />
     <Compile Include="Assets\Scripts\Music_Slider.cs" />
