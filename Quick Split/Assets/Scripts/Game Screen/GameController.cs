@@ -249,14 +249,14 @@ public class GameController : MonoBehaviour
             int unlockedPieces = activeRuleSet.UnlockedPieces;
 
             // obviously need more than one
-            spellHandler.redReady = true;
-            spellHandler.orangeReady = unlockedPieces >= 6;
-            spellHandler.yellowReady = unlockedPieces >= 4;
-            spellHandler.greenReady = unlockedPieces >= 3;
-            spellHandler.blueReady = unlockedPieces >= 2;
-            spellHandler.purpleReady = unlockedPieces >= 5;
-            spellHandler.cyanReady = unlockedPieces >= 7;
-            spellHandler.whiteReady = unlockedPieces >= 8;
+            spellHandler.SpellReady[(int)PieceColor.Red] = true;
+            spellHandler.SpellReady[(int)PieceColor.Orange] = unlockedPieces >= 6;
+            spellHandler.SpellReady[(int)PieceColor.Yellow] = unlockedPieces >= 4;
+            spellHandler.SpellReady[(int)PieceColor.Green] = unlockedPieces >= 3;
+            spellHandler.SpellReady[(int)PieceColor.Blue] = unlockedPieces >= 2;
+            spellHandler.SpellReady[(int)PieceColor.Purple] = unlockedPieces >= 5;
+            spellHandler.SpellReady[(int)PieceColor.Cyan] = unlockedPieces >= 7;
+            spellHandler.SpellReady[(int)PieceColor.White] = unlockedPieces >= 8;
         }
         else
         {
@@ -757,13 +757,13 @@ public class GameController : MonoBehaviour
                 switch (availableCount)
                 {
                     case 6:
-                        spellHandler.orangeReady = true;
+                        spellHandler.SpellReady[(int)PieceColor.Orange] = true;
                         break;
                     case 7:
-                        spellHandler.cyanReady = true;
+                        spellHandler.SpellReady[(int)PieceColor.Cyan] = true;
                         break;
                     case 8:
-                        spellHandler.whiteReady = true;
+                        spellHandler.SpellReady[(int)PieceColor.White] = true;
                         break;
                 }
             }

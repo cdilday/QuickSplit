@@ -14,46 +14,10 @@ public class SpellHandler : MonoBehaviour
     private Holder_Script holder;
     private Achievement_Script achievementHandler;
 
-    #region
-    public bool redReady;
-    public bool orangeReady;
-    public bool yellowReady;
-    public bool greenReady;
-    public bool blueReady;
-    public bool purpleReady;
-    public bool cyanReady;
-    public bool whiteReady;
-    #endregion
-
-    #region
-    public int redProgress;
-    public int redGoal = 100;
-    public int orangeProgress;
-    public int orangeGoal = 100;
-    public int yellowProgress;
-    public int yellowGoal = 100;
-    public int greenProgress;
-    public int greenGoal = 100;
-    public int blueProgress;
-    public int blueGoal = 100;
-    public int purpleProgress;
-    public int purpleGoal = 100;
-    public int cyanProgress;
-    public int cyanGoal = 100;
-    public int whiteProgress;
-    public int whiteGoal = 100;
-    #endregion
-
-    #region
-    public Text redText;
-    public Text orangeText;
-    public Text yellowText;
-    public Text greenText;
-    public Text blueText;
-    public Text purpleText;
-    public Text cyanText;
-    public Text whiteText;
-    #endregion
+    public bool[] SpellReady = new bool[8];
+    public int[] SpellProgress = new int[8];
+    public int[] SpellGoal = Enumerable.Repeat(100, 8).ToArray();
+    public Text[] SpellText = new Text[8];
 
     public PieceColor spellColor;
     public Piece selectedPiece;
@@ -121,23 +85,10 @@ public class SpellHandler : MonoBehaviour
             holder = holderObject.GetComponent<Holder_Script>();
         }
 
-        /*redReady = false;
-		orangeReady = false;
-		yellowReady = false;
-		greenReady = false;
-		blueReady = false;
-		purpleReady = false;
-		cyanReady = false;
-		whiteReady = false;*/
-
-        redText.text = "";
-        orangeText.text = "";
-        yellowText.text = "";
-        greenText.text = "";
-        blueText.text = "";
-        purpleText.text = "";
-        cyanText.text = "";
-        whiteText.text = "";
+        foreach (Text spellText in SpellText)
+        {
+            spellText.text = "";
+        }
 
         selectedPiece = null;
         if (gameController.gameMode == GameMode.Wiz)
@@ -157,45 +108,47 @@ public class SpellHandler : MonoBehaviour
     private void Update()
     {
         //attacks, only activatable one at a time
-        if (spellColor == PieceColor.Empty)
+        if (spellColor == PieceColor.Empty &&
+            splitter.getState("canShoot") &&
+            !splitter.getState("isMoving"))
         {
             //red
-            if (Input.GetKeyDown("1") && splitter.getState("canShoot") && !splitter.getState("isMoving") && redReady)
+            if (Input.GetKeyDown("1") && SpellReady[(int)PieceColor.Red])
             {
                 Redspell();
             }
             //orange
-            if (Input.GetKeyDown("2") && splitter.getState("canShoot") && !splitter.getState("isMoving") && orangeReady)
+            if (Input.GetKeyDown("2")  && SpellReady[(int)PieceColor.Orange])
             {
                 Orangespell();
             }
             //yellow
-            if (Input.GetKeyDown("3") && splitter.getState("canShoot") && !splitter.getState("isMoving") && yellowReady)
+            if (Input.GetKeyDown("3")  && SpellReady[(int)PieceColor.Yellow])
             {
                 Yellowspell();
             }
             //green
-            if (Input.GetKeyDown("4") && splitter.getState("canShoot") && !splitter.getState("isMoving") && greenReady)
+            if (Input.GetKeyDown("4") && SpellReady[(int)PieceColor.Green])
             {
                 Greenspell();
             }
             //blue
-            if (Input.GetKeyDown("5") && splitter.getState("canShoot") && !splitter.getState("isMoving") && blueReady)
+            if (Input.GetKeyDown("5") && SpellReady[(int)PieceColor.Blue])
             {
                 Bluespell();
             }
             //purple
-            if (Input.GetKeyDown("6") && splitter.getState("canShoot") && !splitter.getState("isMoving") && purpleReady)
+            if (Input.GetKeyDown("6") && SpellReady[(int)PieceColor.Purple])
             {
                 Purplespell();
             }
             //cyan
-            if (Input.GetKeyDown("7") && splitter.getState("canShoot") && !splitter.getState("isMoving") && cyanReady)
+            if (Input.GetKeyDown("7") && SpellReady[(int)PieceColor.Cyan])
             {
                 Cyanspell();
             }
             //white
-            if (Input.GetKeyDown("8") && splitter.getState("canShoot") && !splitter.getState("isMoving") && whiteReady)
+            if (Input.GetKeyDown("8") && SpellReady[(int)PieceColor.White])
             {
                 Whitespell();
             }
@@ -205,7 +158,7 @@ public class SpellHandler : MonoBehaviour
     //Red attack: Burns a layer off the top of each side, specifically deleting the block in each row closest to the center
     public void Redspell()
     {
-        Spell_Used(0);
+        Spell_Used(PieceColor.Red);
 
         //Red Splitter Achievement
         if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Red) && gameController.Get_Danger_Pieces() >= 8)
@@ -243,7 +196,7 @@ public class SpellHandler : MonoBehaviour
     //deletes leftover pieces if the switch is uneven.
     public void Orangespell()
     {
-        Spell_Used(1);
+        Spell_Used(PieceColor.Orange);
         spellColor = PieceColor.Orange;
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
         picker.GetComponent<Color_Selector>().givePurpose("Select a color to switch with on the left side");
@@ -344,7 +297,7 @@ public class SpellHandler : MonoBehaviour
     //this method loads the splitter with the power to activate it on the next fire
     public void Yellowspell()
     {
-        Spell_Used(2);
+        Spell_Used(PieceColor.Yellow);
         splitter.setState("yellowReady", true);
         //recolor splitter to show it's ready to fire
         splitter.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 0, 1);
@@ -363,7 +316,7 @@ public class SpellHandler : MonoBehaviour
     public void Greenspell()
     {
         //green spell and helper tell other objects when to activate
-        Spell_Used(3);
+        Spell_Used(PieceColor.Green);
         spellColor = PieceColor.Green;
         spellLimit = 3;
         splitter.leftSlot.GetComponent<Piece>().selectable = true;
@@ -427,7 +380,7 @@ public class SpellHandler : MonoBehaviour
             return;
         }
 
-        Spell_Used(4);
+        Spell_Used(PieceColor.Blue);
         spellColor = PieceColor.Blue;
         spellLimit = 3;
         gameController.gameOverText.text = "Select pieces on the board to change";
@@ -480,7 +433,7 @@ public class SpellHandler : MonoBehaviour
     //Purple attack: deletes all pieces of the selected color on the board
     public void Purplespell()
     {
-        Spell_Used(5);
+        Spell_Used(PieceColor.Purple);
         spellColor = PieceColor.Purple;
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
         picker.GetComponent<Color_Selector>().givePurpose("Select a color to eliminate from the board");
@@ -650,7 +603,7 @@ public class SpellHandler : MonoBehaviour
     public void Cyanspell()
     {
         //again most of the hard work is done by the piece spell effect script, this just tells it when to activate
-        Spell_Used(6);
+        Spell_Used(PieceColor.Cyan);
         splitter.rightSlot.GetComponent<Piece>().isBomb = true;
         splitter.rightSlot.BroadcastMessage("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
         splitter.leftSlot.GetComponent<Piece>().isBomb = true;
@@ -659,7 +612,7 @@ public class SpellHandler : MonoBehaviour
     //White spell: Sorts the board from rainbow down
     public void Whitespell()
     {
-        Spell_Used(7);
+        Spell_Used(PieceColor.White);
         //WhiteHelper does all of the technical stuff; this just tell the pieces to play an aesthetic animation
         for (int r = 0; r < 8; r++)
         {
@@ -864,100 +817,31 @@ public class SpellHandler : MonoBehaviour
     //this is for score bits adding to the spells
     public void addBit(PieceColor colorOfBit)
     {
-        if (spellActive)
+        if (spellActive || colorOfBit == PieceColor.Empty)
         {
             return;
         }
 
+        SpellProgress[(int)colorOfBit] = SpellProgress[(int)colorOfBit] + 1;
+        if (SpellReady[(int)colorOfBit] || 
+            SpellProgress[(int)colorOfBit] >= SpellGoal[(int)colorOfBit])
+        {
+            SpellProgress[(int)colorOfBit] = SpellGoal[(int)colorOfBit];
+            SpellReady[(int)colorOfBit] = true;
+            SpellText[(int)colorOfBit].text = "100%";
+            SpellText[(int)colorOfBit].gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
+        }
+        else
+        {
+            SpellText[(int)colorOfBit].text = ((int)(((float)SpellProgress[(int)colorOfBit] / (float)SpellGoal[(int)colorOfBit]) * 100f)) + "%";
+        }
+
         switch (colorOfBit)
         {
-            case PieceColor.Red:
-                redProgress++;
-                if (redProgress >= redGoal || redReady)
-                {
-                    redProgress = redGoal;
-                    redReady = true;
-                    redText.text = "100%";
-                    redText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    redText.text = ((int)(((float)redProgress / (float)redGoal) * 100f)) + "%";
-                }
-                break;
             case PieceColor.Orange:
                 if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 6)
                 {
                     achievementHandler.Unlock_Splitter(SplitterType.Green);
-                }
-
-                orangeProgress++;
-                if (orangeProgress >= orangeGoal || orangeReady)
-                {
-                    orangeProgress = orangeGoal;
-                    orangeReady = true;
-                    orangeText.text = "100%";
-                    orangeText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    orangeText.text = ((int)(((float)orangeProgress / (float)orangeGoal) * 100f)) + "%";
-                }
-                break;
-            case PieceColor.Yellow:
-                yellowProgress++;
-                if (yellowProgress >= yellowGoal || yellowReady)
-                {
-                    yellowProgress = yellowGoal;
-                    yellowReady = true;
-                    yellowText.text = "100%";
-                    yellowText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    yellowText.text = ((int)(((float)yellowProgress / (float)yellowGoal) * 100f)) + "%";
-                }
-                break;
-            case PieceColor.Green:
-                greenProgress++;
-                if (greenProgress >= greenGoal || greenReady)
-                {
-                    greenProgress = greenGoal;
-                    greenReady = true;
-                    greenText.text = "100%";
-                    greenText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    greenText.text = ((int)(((float)greenProgress / (float)greenGoal) * 100f)) + "%";
-                }
-                break;
-            case PieceColor.Blue:
-                blueProgress++;
-                if (blueProgress >= blueGoal || blueReady)
-                {
-                    blueProgress = blueGoal;
-                    blueReady = true;
-                    blueText.text = "100%";
-                    blueText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    blueText.text = ((int)(((float)blueProgress / (float)blueGoal) * 100f)) + "%";
-                }
-                break;
-            case PieceColor.Purple:
-                purpleProgress++;
-                if (purpleProgress >= purpleGoal || purpleReady)
-                {
-                    purpleProgress = purpleGoal;
-                    purpleReady = true;
-                    purpleText.text = "100%";
-                    purpleText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    purpleText.text = ((int)(((float)purpleProgress / (float)purpleGoal) * 100f)) + "%";
                 }
                 break;
             case PieceColor.Cyan:
@@ -965,46 +849,20 @@ public class SpellHandler : MonoBehaviour
                 {
                     achievementHandler.Unlock_Splitter(SplitterType.Green);
                 }
-
-                cyanProgress++;
-                if (cyanProgress >= cyanGoal || cyanReady)
-                {
-                    cyanProgress = cyanGoal;
-                    cyanReady = true;
-                    cyanText.text = "100%";
-                    cyanText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    cyanText.text = ((int)(((float)cyanProgress / (float)cyanGoal) * 100f)) + "%";
-                }
                 break;
             case PieceColor.White:
                 if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 8)
                 {
                     achievementHandler.Unlock_Splitter(SplitterType.Green);
                 }
-
-                whiteProgress++;
-                if (whiteProgress >= whiteGoal || whiteReady)
-                {
-                    whiteProgress = whiteGoal;
-                    whiteReady = true;
-                    whiteText.text = "100%";
-                    whiteText.gameObject.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    whiteText.text = ((int)(((float)whiteProgress / (float)whiteGoal) * 100f)) + "%";
-                }
                 break;
         }
     }
 
     //Call whenever a spell is used. This handles the stuff every spell does.
-    private void Spell_Used(int spellNum)
+    private void Spell_Used(PieceColor spellColor)
     {
-        spellsUsed[spellNum] = true;
+        spellsUsed[(int)spellColor] = true;
         if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Arcane))
         {
             for (int i = 0; i < 8; i++)
@@ -1025,66 +883,11 @@ public class SpellHandler : MonoBehaviour
 
         spellWorking = true;
 
-        switch (spellNum)
-        {
-            case 0:
-                redReady = false;
-                redProgress = 0;
-                redGoal = (int)(redGoal * chargeMultiplier);
-                redText.text = "0%";
-                redText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                break;
-            case 1:
-                orangeReady = false;
-                orangeProgress = 0;
-                orangeGoal = (int)(orangeGoal * chargeMultiplier);
-                orangeText.text = "0%";
-                orangeText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                break;
-            case 2:
-                yellowReady = false;
-                yellowProgress = 0;
-                yellowGoal = (int)(yellowGoal * chargeMultiplier);
-                yellowText.text = "0%";
-                yellowText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                break;
-            case 3:
-                greenReady = false;
-                greenProgress = 0;
-                greenGoal = (int)(greenGoal * chargeMultiplier);
-                greenText.text = "0%";
-                greenText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                break;
-            case 4:
-                blueReady = false;
-                blueProgress = 0;
-                blueGoal = (int)(blueGoal * chargeMultiplier);
-                blueText.text = "0%";
-                blueText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                break;
-            case 5:
-                purpleReady = false;
-                purpleProgress = 0;
-                purpleGoal = (int)(purpleGoal * chargeMultiplier);
-                purpleText.text = "0%";
-                purpleText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                break;
-            case 6:
-                cyanReady = false;
-                cyanProgress = 0;
-                cyanGoal = (int)(cyanGoal * chargeMultiplier);
-                cyanText.text = "0%";
-                cyanText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                splitsNeeded = 2;
-                break;
-            case 7:
-                whiteReady = false;
-                whiteProgress = 0;
-                whiteGoal = (int)(whiteGoal * chargeMultiplier);
-                whiteText.text = "0%";
-                whiteText.gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
-                break;
-        }
+        SpellReady[(int)spellColor] = false;
+        SpellProgress[(int)spellColor] = 0;
+        SpellGoal[(int)spellColor] = (int)(SpellGoal[(int)spellColor] * chargeMultiplier);
+        SpellText[(int)spellColor].text = "0%";
+        SpellText[(int)spellColor].gameObject.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
     }
 
     //called when the splitter splits. Is used to tell spellhandler to deactive spellActive for scorebits to begin charging
