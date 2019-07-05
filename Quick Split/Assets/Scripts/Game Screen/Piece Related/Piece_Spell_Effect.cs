@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 //this script is used for spell effects that overlay the pieces
 
@@ -15,12 +16,14 @@ public class Piece_Spell_Effect : MonoBehaviour
     private bool greenBlueActive;
     private bool purpleEnd;
     private int cyanStage = 0;
+    private bool orangeLeft = false;
+    private bool orangeDead = false;
     private bool orangeActive;
     private int orangeStage = 0;
     public Sprite orangeMiddleSprite;
     private bool check = false;
     public bool lastPiece = false;
-    private string spellColor;
+    private PieceColor spellColor;
     private Vector2 gridPos;
     private float startTime;
     private GameController gameController;
@@ -109,7 +112,7 @@ public class Piece_Spell_Effect : MonoBehaviour
                             {
                                 Destroy(gameController.grid[(int)gridPos.x - 1 + r, (int)gridPos.y - 1 + c]);
                                 gameController.grid[(int)gridPos.x - 1 + r, (int)gridPos.y - 1 + c] = null;
-                                gameController.colorGrid[(int)gridPos.x - 1 + r, (int)gridPos.y - 1 + c] = null;
+                                gameController.colorGrid[(int)gridPos.x - 1 + r, (int)gridPos.y - 1 + c] = PieceColor.Empty;
                                 numDeleted++;
                             }
                         }
@@ -164,7 +167,7 @@ public class Piece_Spell_Effect : MonoBehaviour
                 animator.SetBool("inActive", true);
                 animator.SetBool("Purple Fade", false);
                 animator.SetBool("Purple Active", false);
-                spellColor = null;
+                spellColor = PieceColor.Empty;
                 //if it's the final piece, do the board checks
                 if (lastPiece)
                 {
@@ -218,7 +221,7 @@ public class Piece_Spell_Effect : MonoBehaviour
                 animator.Play("Orange Selected", -1, Time.time % animator.GetCurrentAnimatorStateInfo(0).length);
                 orangeStage = 1;
                 //left pieces need to be activated twice; once to trigger the first animation, and again to load with the right choice
-                if (spellColor != "left")
+                if (orangeLeft == false)
                 {
                     //if the color is selected skip to the next stage
                     orangeStage = 2;
@@ -229,6 +232,7 @@ public class Piece_Spell_Effect : MonoBehaviour
             {
                 if (spriteRenderer.sprite == orangeMiddleSprite)
                 {
+                    orangeLeft = false;
                     orangeStage = 3;
                     animator.SetBool("Orange Active", false);
                     startTime = Time.time;
@@ -242,14 +246,14 @@ public class Piece_Spell_Effect : MonoBehaviour
                 {
                     check = true;
                     //delete pieces that were marked as uneven remainders
-                    if (spellColor == "dead")
+                    if (orangeDead)
                     {
                         Destroy(piece.gameObject);
                     }
                     else
                     {
                         piece.ConvertColor(spellColor);
-                        TransformationSFX.pitch = 1f + Random.Range(-0.5f, 0.5f);
+                        TransformationSFX.pitch = 1f + UnityEngine.Random.Range(-0.5f, 0.5f);
                         TransformationSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
                         TransformationSFX.Play();
                     }
@@ -299,7 +303,7 @@ public class Piece_Spell_Effect : MonoBehaviour
         }
     }
     //called to start the purple spell
-    public void Activate_Purple(string color)
+    public void Activate_Purple(PieceColor color)
     {
         purpleActive = true;
         spellColor = color;
@@ -308,35 +312,47 @@ public class Piece_Spell_Effect : MonoBehaviour
         animator.SetBool("Purple Active", true);
     }
     //called to start the green spell
-    public void Activate_Green(string color)
+    public void Activate_Green(PieceColor color)
     {
         greenBlueActive = true;
         spellColor = color;
         startTime = Time.time;
         animator.SetBool("inActive", false);
         animator.SetBool("Green Active", true);
-        TransformationSFX.pitch = 1f + Random.Range(-0.5f, 0.5f);
+        TransformationSFX.pitch = 1f + UnityEngine.Random.Range(-0.5f, 0.5f);
         TransformationSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
         TransformationSFX.Play();
     }
     //called to start the blue spell
-    public void Activate_Blue(string color)
+    public void Activate_Blue(PieceColor color)
     {
         greenBlueActive = true;
         spellColor = color;
         startTime = Time.time;
         animator.SetBool("inActive", false);
         animator.SetBool("Blue Active", true);
-        TransformationSFX.pitch = 1f + Random.Range(-0.5f, 0.5f);
+        TransformationSFX.pitch = 1f + UnityEngine.Random.Range(-0.5f, 0.5f);
         TransformationSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
         TransformationSFX.Play();
     }
     //called to start the orange spell
-    public void Activate_Orange(string color)
+    public void Activate_Orange(string action)
     {
         orangeActive = true;
         animator.SetBool("inActive", false);
-        spellColor = color;
+        if (action == "left")
+        {
+            orangeLeft = true;
+        }
+        else if (action == "dead")
+        {
+            orangeDead = true;
+        }
+        else
+        {
+            // convert to PieceColor
+            spellColor = (PieceColor)Enum.Parse(typeof(PieceColor), action, true);
+        }
         //This requires multiple stages depending on whether these pieces are on the left or right side
         if (orangeStage == 0)
         {

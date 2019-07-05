@@ -1,77 +1,35 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-public class Piece_Colorer : MonoBehaviour {
+public class Piece_Colorer : MonoBehaviour
+{
 
-	//This is used to recolor pieces as needed
+    //This is used to recolor pieces as needed
 
-	public string pieceColor;
+    public PieceColor pieceColor;
+    private Sprite[] sprites = new Sprite[8];
 
-	Sprite[] sprites = new Sprite[8];
+    public Piece_Sprite_Holder spriteHolder;
 
-	public Piece_Sprite_Holder spriteHolder;
-	// Use this for initialization
-	void Start () {
-		spriteHolder = GameObject.Find ("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder> ();
-		update_color ();
-	}
+    // Use this for initialization
+    private void Start()
+    {
+        spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>();
+        updateColor();
+    }
 
-	//updates the color based on what color it is
-	public void update_color()
-	{
-		sprites = spriteHolder.Get_Sprites ();
-		switch (pieceColor)
-		{
-		case "Red":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[0];
-			break;
-		case "Orange":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[1];
-			break;
-		case "Yellow":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[2];
-			break;
-		case "Green":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[3];
-			break;
-		case "Blue":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[4];
-			break;
-		case "Purple":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[5];
-			break;
-		case "Cyan":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[6];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[6];
-			break;
-		case "White":
-			if(gameObject.GetComponent<SpriteRenderer>())
-				gameObject.GetComponent<SpriteRenderer>().sprite = sprites[7];
-			else
-				gameObject.GetComponent<Image>().sprite = sprites[7];
-			break;
-		}	
-	}
+    //updates the color based on what color it is
+    public void updateColor()
+    {
+        sprites = spriteHolder.Get_Sprites();
+        if (gameObject.GetComponent<SpriteRenderer>())
+        {
+            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)pieceColor];
+        }
+        else
+        {
+            gameObject.GetComponent<Image>().sprite = sprites[(int)pieceColor];
+        }
+    }
 
 }

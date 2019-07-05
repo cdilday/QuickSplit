@@ -1,11 +1,51 @@
 ﻿using UnityEngine;
 
+public enum PieceColor
+{
+    Empty = -1,
+    Red = 0,
+    Orange = 1,
+    Yellow = 2,
+    Green = 3,
+    Blue = 4,
+    Purple = 5,
+    Cyan = 6,
+    White = 7,
+}
+
 public class Piece : MonoBehaviour
 {
-
     //this script is attatched to every piece and handles their movement, state, and functions
 
-    public string pieceColor;
+    #region Static
+
+    public static readonly string[] PieceColorString =
+    {
+        "Red",
+        "Orange",
+        "Yellow",
+        "Green",
+        "Blue",
+        "Purple",
+        "Cyan",
+        "White",
+    };
+
+    public static readonly Color[] PieceColorValues =
+    {
+            Color.red,
+            new Color(1f, 0.5f, 0f),
+            Color.yellow,
+            Color.green,
+            Color.blue,
+            new Color(0.6f, 0, 0.6f),
+            Color.cyan,
+            Color.white,
+    };
+
+    #endregion
+
+    public PieceColor pieceColor;
     public bool inSplitter;
     public bool inHolder;
     public bool inSideHolder;
@@ -41,7 +81,6 @@ public class Piece : MonoBehaviour
     private GameObject clacker;
     private Piece_Sprite_Holder spriteHolder;
     private RuntimeAnimatorController[] animations;
-    private int colornum;
     private int prevColorNum;
     private bool hasPlayedAnim;
     private float animStartTime;
@@ -91,37 +130,10 @@ public class Piece : MonoBehaviour
             Destroy(gameObject.GetComponent<Animator>());
         }
 
-        switch (pieceColor)
-        {
-            case "Red":
-                colornum = 0;
-                break;
-            case "Orange":
-                colornum = 1;
-                break;
-            case "Yellow":
-                colornum = 2;
-                break;
-            case "Green":
-                colornum = 3;
-                break;
-            case "Blue":
-                colornum = 4;
-                break;
-            case "Purple":
-                colornum = 5;
-                break;
-            case "Cyan":
-                colornum = 6;
-                break;
-            case "White":
-                colornum = 7;
-                break;
-        }
-        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[colornum];
+        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)pieceColor];
         if (animations != null)
         {
-            gameObject.GetComponent<Animator>().runtimeAnimatorController = animations[colornum];
+            gameObject.GetComponent<Animator>().runtimeAnimatorController = animations[(int)pieceColor];
         }
 
         prevColorNum = ((int)Time.time) % 8;
@@ -177,13 +189,13 @@ public class Piece : MonoBehaviour
         //animations
         if (animations != null)
         {
-            if (((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == colornum)
+            if (((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == (int)pieceColor)
             {
                 gameObject.GetComponent<Animator>().SetBool("isPlaying", true);
                 hasPlayedAnim = true;
                 animStartTime = Time.time;
             }
-            else if (hasPlayedAnim && (((int)Time.time) % 8 == colornum || gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time))
+            else if (hasPlayedAnim && (((int)Time.time) % 8 == (int)pieceColor || gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time))
             {
                 float animPlayLength = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * (1 / gameObject.GetComponent<Animator>().speed);
                 if (animPlayLength + animStartTime < Time.time)
@@ -191,7 +203,7 @@ public class Piece : MonoBehaviour
                     gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
                     hasPlayedAnim = false;
                 }
-                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[colornum];
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)pieceColor];
             }
             prevColorNum = ((int)Time.time) % 8;
         }
@@ -274,7 +286,7 @@ public class Piece : MonoBehaviour
         gameController.colorGrid[(int)gridPos.x, (int)gridPos.y] = pieceColor;
     }
 
-    public void ConvertColor(string newColor)
+    public void ConvertColor(PieceColor newColor)
     {
         if (newColor == pieceColor)
         {
@@ -283,43 +295,14 @@ public class Piece : MonoBehaviour
 
         pieceColor = newColor;
 
-
         if (!inHolder && !inSplitter)
         {
             gameController.colorGrid[(int)gridPos.x, (int)gridPos.y] = newColor;
         }
 
-        switch (newColor)
-        {
-            case "Red":
-                colornum = 0;
-                break;
-            case "Orange":
-                colornum = 1;
-                break;
-            case "Yellow":
-                colornum = 2;
-                break;
-            case "Green":
-                colornum = 3;
-                break;
-            case "Blue":
-                colornum = 4;
-                break;
-            case "Purple":
-                colornum = 5;
-                break;
-            case "Cyan":
-                colornum = 6;
-                break;
-            case "White":
-                colornum = 7;
-                break;
-        }
-
         if (animations != null)
         {
-            gameObject.GetComponent<Animator>().runtimeAnimatorController = animations[colornum];
+            gameObject.GetComponent<Animator>().runtimeAnimatorController = animations[(int)pieceColor];
             gameObject.GetComponent<Animator>().SetBool("isPlaying", true);
             hasPlayedAnim = true;
             animStartTime = Time.time;
@@ -330,10 +313,10 @@ public class Piece : MonoBehaviour
         if (GetComponentInChildren<Piece_Pulser>())
         {
             piecePulser = GetComponentInChildren<Piece_Pulser>();
-            piecePulser.spriteRenderer.sprite = sprites[colornum];
+            piecePulser.spriteRenderer.sprite = sprites[(int)pieceColor];
         }
 
-        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[colornum];
+        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)pieceColor];
     }
 
     private void OnDestroy()
@@ -365,7 +348,7 @@ public class Piece : MonoBehaviour
     {
         if (selectable && Input.GetMouseButtonDown(0))
         {
-            if ((spellHandler.spellColor == "Green" || spellHandler.spellColor == "Blue"))
+            if ((spellHandler.spellColor == PieceColor.Green || spellHandler.spellColor == PieceColor.Blue))
             {
                 //check to see if they've already tapped a piece
                 if (GameObject.Find("Color Selector(Clone)") == null)

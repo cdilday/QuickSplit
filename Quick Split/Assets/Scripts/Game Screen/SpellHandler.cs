@@ -55,10 +55,10 @@ public class SpellHandler : MonoBehaviour
     public Text whiteText;
     #endregion
 
-    public string spellColor;
+    public PieceColor spellColor;
     public Piece selectedPiece;
-    private string pickedColor1;
-    private string pickedColor2;
+    private PieceColor pickedColor1 = PieceColor.Empty;
+    private PieceColor pickedColor2 = PieceColor.Empty;
     private int spellLimit = 0;
 
     //this is to tell scorebits that are created as a result of spells not to charge them
@@ -82,8 +82,8 @@ public class SpellHandler : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        pickedColor1 = null;
-        pickedColor2 = null;
+        pickedColor1 = PieceColor.Empty;
+        pickedColor2 = PieceColor.Empty;
         GameObject gameControllerobject = GameObject.FindGameObjectWithTag("GameController");
         RedSpellEffects = GameObject.FindGameObjectsWithTag("Red Spell Effect");
         YellowSpellEffect = GameObject.Find("Yellow Spell Handler");
@@ -157,7 +157,7 @@ public class SpellHandler : MonoBehaviour
     private void Update()
     {
         //attacks, only activatable one at a time
-        if (spellColor == null || spellColor == "")
+        if (spellColor == PieceColor.Empty)
         {
             //red
             if (Input.GetKeyDown("1") && splitter.getState("canShoot") && !splitter.getState("isMoving") && redReady)
@@ -244,7 +244,7 @@ public class SpellHandler : MonoBehaviour
     public void Orangespell()
     {
         Spell_Used(1);
-        spellColor = "Orange";
+        spellColor = PieceColor.Orange;
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
         picker.GetComponent<Color_Selector>().givePurpose("Select a color to switch with on the left side");
     }
@@ -327,11 +327,17 @@ public class SpellHandler : MonoBehaviour
         for (int i = 0; i < leftPieces.Count; i++)
         {
             //recall Activate orange on the left side to update with the second picked color and get the animations going
-            leftPieces[i].BroadcastMessage("Activate_Orange", pickedColor2, SendMessageOptions.DontRequireReceiver);
+            leftPieces[i].BroadcastMessage("Activate_Orange", pickedColor2.ToString(), SendMessageOptions.DontRequireReceiver);
         }
-        pickedColor1 = null;
-        pickedColor2 = null;
-        spellColor = null;
+
+        for (int i = 0; i < rightPieces.Count; i++)
+        {
+            //recall Activate orange on the right side to update with the 1st picked color and get the animations going
+            rightPieces[i].BroadcastMessage("Activate_Orange", pickedColor1.ToString(), SendMessageOptions.DontRequireReceiver);
+        }
+        pickedColor1 = PieceColor.Empty;
+        pickedColor2 = PieceColor.Empty;
+        spellColor = PieceColor.Empty;
         StartCoroutine(Orange_Waiter());
     }
     //Yellow attack: launches a single lightning bolt to each side that removes any blocks in the splitter's row
@@ -358,7 +364,7 @@ public class SpellHandler : MonoBehaviour
     {
         //green spell and helper tell other objects when to activate
         Spell_Used(3);
-        spellColor = "Green";
+        spellColor = PieceColor.Green;
         spellLimit = 3;
         splitter.leftSlot.GetComponent<Piece>().selectable = true;
         splitter.rightSlot.GetComponent<Piece>().selectable = true;
@@ -388,9 +394,9 @@ public class SpellHandler : MonoBehaviour
                     holder.holder[r, c].GetComponent<Piece>().selectable = false;
                 }
             }
-            pickedColor1 = null;
-            pickedColor2 = null;
-            spellColor = null;
+            pickedColor1 = PieceColor.Empty;
+            pickedColor2 = PieceColor.Empty;
+            spellColor = PieceColor.Empty;
             selectedPiece = null;
             spellLimit = 0;
             gameController.gameOverText.text = "";
@@ -422,7 +428,7 @@ public class SpellHandler : MonoBehaviour
         }
 
         Spell_Used(4);
-        spellColor = "Blue";
+        spellColor = PieceColor.Blue;
         spellLimit = 3;
         gameController.gameOverText.text = "Select pieces on the board to change";
         GameObject[] allPieces = GameObject.FindGameObjectsWithTag("Piece");
@@ -456,9 +462,9 @@ public class SpellHandler : MonoBehaviour
                     temp.selectable = false;
                 }
             }
-            pickedColor1 = null;
-            pickedColor2 = null;
-            spellColor = null;
+            pickedColor1 = PieceColor.Empty;
+            pickedColor2 = PieceColor.Empty;
+            spellColor = PieceColor.Empty;
             selectedPiece = null;
             spellLimit = 0;
             gameController.gameOverText.text = "";
@@ -475,7 +481,7 @@ public class SpellHandler : MonoBehaviour
     public void Purplespell()
     {
         Spell_Used(5);
-        spellColor = "Purple";
+        spellColor = PieceColor.Purple;
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
         picker.GetComponent<Color_Selector>().givePurpose("Select a color to eliminate from the board");
         splitter.setState("isActive", false);
@@ -633,8 +639,8 @@ public class SpellHandler : MonoBehaviour
             yield return new WaitForSeconds(0.03f);
         }
 
-        pickedColor1 = null;
-        spellColor = null;
+        pickedColor1 = PieceColor.Empty;
+        spellColor = PieceColor.Empty;
         if (empty)
         {
             splitter.setState("isActive", true);
@@ -785,12 +791,12 @@ public class SpellHandler : MonoBehaviour
     }
 
     //this is what the color selectors spawned from certain colors calls when one is selected
-    public void colorSelected(string color)
+    public void colorSelected(PieceColor color)
     {
         switch (spellColor)
         {
-            case "Orange":
-                if (pickedColor1 == null)
+            case PieceColor.Orange:
+                if (pickedColor1 == PieceColor.Empty)
                 {
                     pickedColor1 = color;
                     GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
@@ -810,7 +816,7 @@ public class SpellHandler : MonoBehaviour
                         }
                     }
                 }
-                else if (pickedColor2 == null)
+                else if (pickedColor2 == PieceColor.Empty)
                 {
                     pickedColor2 = color;
                     for (int r = 0; r < 8; r++)
@@ -822,7 +828,7 @@ public class SpellHandler : MonoBehaviour
                             {
                                 if (gameController.colorGrid[r, c] == pickedColor2)
                                 {
-                                    gameController.grid[r, c].BroadcastMessage("Activate_Orange", pickedColor1, SendMessageOptions.DontRequireReceiver);
+                                    gameController.grid[r, c].BroadcastMessage("Activate_Orange", pickedColor2.ToString(), SendMessageOptions.DontRequireReceiver);
                                 }
                             }
                         }
@@ -830,7 +836,7 @@ public class SpellHandler : MonoBehaviour
                     OrangeHelper();
                 }
                 break;
-            case "Green":
+            case PieceColor.Green:
                 selectedPiece.BroadcastMessage("Activate_Green", color, SendMessageOptions.DontRequireReceiver);
                 if (spellLimit == 1)
                 {
@@ -839,7 +845,7 @@ public class SpellHandler : MonoBehaviour
 
                 GreenHelper();
                 break;
-            case "Blue":
+            case PieceColor.Blue:
                 selectedPiece.BroadcastMessage("Activate_Blue", color, SendMessageOptions.DontRequireReceiver);
                 if (spellLimit == 1)
                 {
@@ -848,7 +854,7 @@ public class SpellHandler : MonoBehaviour
 
                 BlueHelper();
                 break;
-            case "Purple":
+            case PieceColor.Purple:
                 pickedColor1 = color;
                 PurpleHelper();
                 break;
@@ -856,7 +862,7 @@ public class SpellHandler : MonoBehaviour
     }
 
     //this is for score bits adding to the spells
-    public void addBit(string colorOfBit)
+    public void addBit(PieceColor colorOfBit)
     {
         if (spellActive)
         {
@@ -865,7 +871,7 @@ public class SpellHandler : MonoBehaviour
 
         switch (colorOfBit)
         {
-            case "Red":
+            case PieceColor.Red:
                 redProgress++;
                 if (redProgress >= redGoal || redReady)
                 {
@@ -879,7 +885,7 @@ public class SpellHandler : MonoBehaviour
                     redText.text = ((int)(((float)redProgress / (float)redGoal) * 100f)) + "%";
                 }
                 break;
-            case "Orange":
+            case PieceColor.Orange:
                 if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 6)
                 {
                     achievementHandler.Unlock_Splitter(SplitterType.Green);
@@ -898,7 +904,7 @@ public class SpellHandler : MonoBehaviour
                     orangeText.text = ((int)(((float)orangeProgress / (float)orangeGoal) * 100f)) + "%";
                 }
                 break;
-            case "Yellow":
+            case PieceColor.Yellow:
                 yellowProgress++;
                 if (yellowProgress >= yellowGoal || yellowReady)
                 {
@@ -912,7 +918,7 @@ public class SpellHandler : MonoBehaviour
                     yellowText.text = ((int)(((float)yellowProgress / (float)yellowGoal) * 100f)) + "%";
                 }
                 break;
-            case "Green":
+            case PieceColor.Green:
                 greenProgress++;
                 if (greenProgress >= greenGoal || greenReady)
                 {
@@ -926,7 +932,7 @@ public class SpellHandler : MonoBehaviour
                     greenText.text = ((int)(((float)greenProgress / (float)greenGoal) * 100f)) + "%";
                 }
                 break;
-            case "Blue":
+            case PieceColor.Blue:
                 blueProgress++;
                 if (blueProgress >= blueGoal || blueReady)
                 {
@@ -940,7 +946,7 @@ public class SpellHandler : MonoBehaviour
                     blueText.text = ((int)(((float)blueProgress / (float)blueGoal) * 100f)) + "%";
                 }
                 break;
-            case "Purple":
+            case PieceColor.Purple:
                 purpleProgress++;
                 if (purpleProgress >= purpleGoal || purpleReady)
                 {
@@ -954,7 +960,7 @@ public class SpellHandler : MonoBehaviour
                     purpleText.text = ((int)(((float)purpleProgress / (float)purpleGoal) * 100f)) + "%";
                 }
                 break;
-            case "Cyan":
+            case PieceColor.Cyan:
                 if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 7)
                 {
                     achievementHandler.Unlock_Splitter(SplitterType.Green);
@@ -973,7 +979,7 @@ public class SpellHandler : MonoBehaviour
                     cyanText.text = ((int)(((float)cyanProgress / (float)cyanGoal) * 100f)) + "%";
                 }
                 break;
-            case "White":
+            case PieceColor.White:
                 if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Green) && spellsUsed[3] && gameController.availableCount < 8)
                 {
                     achievementHandler.Unlock_Splitter(SplitterType.Green);

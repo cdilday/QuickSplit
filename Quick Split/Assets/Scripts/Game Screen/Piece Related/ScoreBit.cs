@@ -5,7 +5,7 @@ public class ScoreBit : MonoBehaviour
 
     //this handles the movement and function of each individual score bit
 
-    public string bitColor;
+    public PieceColor bitColor;
     public Vector2 target;
     private Vector2 moveVector;
     private Color thisColor;
@@ -85,45 +85,14 @@ public class ScoreBit : MonoBehaviour
         }
     }
 
-    public void changeColor(string newColor)
+    public void changeColor(PieceColor newColor)
     {
         bitColor = newColor;
         SpriteRenderer myRenderer = GetComponent<SpriteRenderer>();
-        switch (newColor)
-        {
-            case "Red":
-                thisColor = Color.red;
-                myRenderer.sprite = sprites[0];
-                break;
-            case "Orange":
-                thisColor = new Color(1f, 0.5f, 0f);
-                myRenderer.sprite = sprites[1];
-                break;
-            case "Yellow":
-                thisColor = Color.yellow;
-                myRenderer.sprite = sprites[2];
-                break;
-            case "Green":
-                thisColor = Color.green;
-                myRenderer.sprite = sprites[3];
-                break;
-            case "Blue":
-                thisColor = Color.blue;
-                myRenderer.sprite = sprites[4];
-                break;
-            case "Purple":
-                thisColor = new Color(0.6f, 0, 0.6f);
-                myRenderer.sprite = sprites[5];
-                break;
-            case "Cyan":
-                thisColor = Color.cyan;
-                myRenderer.sprite = sprites[6];
-                break;
-            case "White":
-                thisColor = Color.white;
-                myRenderer.sprite = sprites[7];
-                break;
-        }
+
+        thisColor = Piece.PieceColorValues[(int)newColor];
+        myRenderer.sprite = sprites[(int)newColor];
+
         gameObject.GetComponentInChildren<SpriteRenderer>().color = thisColor;
     }
 

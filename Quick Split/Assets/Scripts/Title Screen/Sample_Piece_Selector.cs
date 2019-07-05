@@ -75,7 +75,7 @@ public class Sample_Piece_Selector : MonoBehaviour
         headerText.text = PieceSetHelper.PieceSetStrings[index];
         foreach (Piece_Colorer pc in samplePieces)
         {
-            pc.update_color();
+            pc.updateColor();
         }
     }
 
@@ -97,7 +97,7 @@ public class Sample_Piece_Selector : MonoBehaviour
         headerText.text = PieceSetHelper.PieceSetStrings[index];
         foreach (Piece_Colorer pc in samplePieces)
         {
-            pc.update_color();
+            pc.updateColor();
         }
 
     }

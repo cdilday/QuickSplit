@@ -25,7 +25,7 @@ public class SideColumn : MonoBehaviour {
 
 	//Will contain the gameobjects, similar to the grids in the gamecontroller
 	public GameObject[] column = new GameObject[8];
-	public string[] colorColumn = new string[8];
+	public PieceColor[] colorColumn = new PieceColor[8];
 
 	public GameController gameController;
 
@@ -81,7 +81,7 @@ public class SideColumn : MonoBehaviour {
 	{
 		for (int row = 0; row < 8; row++) {
 			column[row] = null;
-			colorColumn[row] = null;
+			colorColumn[row] = PieceColor.Empty;
 		}
 	}
 
@@ -105,7 +105,7 @@ public class SideColumn : MonoBehaviour {
 	//reloads column after it's been taken by the grid. Only for use by the gamecontroller
 	public void reload()
 	{
-		if(column[0] != null || colorColumn[0] != null)
+		if(column[0] != null || colorColumn[0] != PieceColor.Empty)
 		{
 			Debug.LogError ("Side Column Error: Trying to reload a loaded column");
 			return;

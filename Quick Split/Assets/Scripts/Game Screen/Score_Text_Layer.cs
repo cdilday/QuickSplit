@@ -15,7 +15,7 @@ public class Score_Text_Layer : MonoBehaviour {
 	}
 
 	//this spawns the score text with the given properties on the score text layer
-	public void Spawn_Score_Text(Vector2 location, string color, int value)
+	public void Spawn_Score_Text(Vector2 location, PieceColor color, int value)
 	{
 		GameObject scoreText = Instantiate (ScoreTextPrefab) as GameObject;
 		scoreText.transform.SetParent(transform);

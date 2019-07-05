@@ -91,7 +91,7 @@ public class Red_Spell_Script : MonoBehaviour {
 				if(!hasDestroyed && (animator.GetCurrentAnimatorStateInfo(0).length / 2f) + creationStartTime < Time.time)
 				{
 					Destroy (gameController.grid[row,col]);
-					gameController.colorGrid[row,col] = null;
+					gameController.colorGrid[row,col] = PieceColor.Empty;
 					gameController.grid[row,col] = null;
 					hasDestroyed = true;
 				}

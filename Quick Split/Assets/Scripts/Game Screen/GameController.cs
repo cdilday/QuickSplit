@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
 
     //grid stores the pieces themselves, while colorGrid only stores the color, allowing for easier access for calculations
     public GameObject[,] grid = new GameObject[8, 16];
-    public string[,] colorGrid = new string[8, 16];
+    public PieceColor[,] colorGrid = new PieceColor[8, 16];
 
     //Pieces available to pull from
     public int availableCount;
@@ -126,7 +126,7 @@ public class GameController : MonoBehaviour
             for (int c = 0; c <= 15; c++)
             {
                 grid[r, c] = null;
-                colorGrid[r, c] = null;
+                colorGrid[r, c] = PieceColor.Empty;
                 checkGrid[r, c] = false;
             }
             cluster[r] = null;
@@ -300,7 +300,7 @@ public class GameController : MonoBehaviour
             {
                 for (int r = 0; r <= 7; r++)
                 {
-                    if (colorGrid[r, c] != null && grid[r, c] != null)
+                    if (colorGrid[r, c] != PieceColor.Empty && grid[r, c] != null)
                     {
                         gameOverText.text = "Game Over";
                         gameOver = true;
@@ -639,7 +639,7 @@ public class GameController : MonoBehaviour
                     grid[r, tempCol] = grid[r, c];
                     grid[r, c] = null;
                     colorGrid[r, tempCol] = colorGrid[r, c];
-                    colorGrid[r, c] = null;
+                    colorGrid[r, c] = PieceColor.Empty;
                     tempCol++;
                     //set c to TempCol to restart the check for later things in the column
                     c = tempCol;
@@ -667,7 +667,7 @@ public class GameController : MonoBehaviour
                     grid[r, tempCol] = grid[r, c];
                     grid[r, c] = null;
                     colorGrid[r, tempCol] = colorGrid[r, c];
-                    colorGrid[r, c] = null;
+                    colorGrid[r, c] = PieceColor.Empty;
                     tempCol--;
                     //set c to TempCol to restart the check for later things in the column
                     c = tempCol;
@@ -677,7 +677,7 @@ public class GameController : MonoBehaviour
     }
 
     //scanner goes through and checks every adjacent piece recursively, then returns the amount of pieces in a cluster.
-    public int scanner(int x, int y, string color, int adj)
+    public int scanner(int x, int y, PieceColor color, int adj)
     {
         //mark current as checked
         checkGrid[x, y] = true;
@@ -746,7 +746,10 @@ public class GameController : MonoBehaviour
             sidesChecked = false;
         }
 
-        if (movesMade % splitsToUnlock == 0 && availableCount != 8 && movesMade != 0)
+        if (splitsToUnlock > 0 && 
+            movesMade % splitsToUnlock == 0 && 
+            availableCount != 8 && 
+            movesMade != 0)
         {
             availableCount++;
             if (gameMode == GameMode.Wiz)
@@ -804,8 +807,8 @@ public class GameController : MonoBehaviour
             //First check to see if this action would create a gameover
             for (int r = 0; r <= 7; r++)
             {
-                if ((colorGrid[r, 6] != null && grid[r, 6] != null) ||
-                   (colorGrid[r, 9] != null && grid[r, 9] != null))
+                if ((colorGrid[r, 6] != PieceColor.Empty && grid[r, 6] != null) ||
+                   (colorGrid[r, 9] != PieceColor.Empty && grid[r, 9] != null))
                 {
                     gameOverText.text = "Game Over";
                     GameOverLayer.SetActive(true);
@@ -820,7 +823,7 @@ public class GameController : MonoBehaviour
             {
                 for (int r = 0; r <= 7; r++)
                 {
-                    if (colorGrid[r, c] != null && grid[r, c] != null)
+                    if (colorGrid[r, c] != PieceColor.Empty && grid[r, c] != null)
                     {
                         //piece exits, more rightward making sure to
                         //change the piece's stats to reflect the new position
@@ -830,7 +833,7 @@ public class GameController : MonoBehaviour
                         grid[r, c + 1] = grid[r, c];
                         grid[r, c] = null;
                         colorGrid[r, (c + 1)] = colorGrid[r, c];
-                        colorGrid[r, c] = null;
+                        colorGrid[r, c] = PieceColor.Empty;
                     }
                 }
             }
@@ -841,7 +844,7 @@ public class GameController : MonoBehaviour
             {
                 for (int r = 0; r <= 7; r++)
                 {
-                    if (colorGrid[r, c] != null && grid[r, c] != null)
+                    if (colorGrid[r, c] != PieceColor.Empty && grid[r, c] != null)
                     {
                         //piece exits, more rightward making sure to
                         //change the piece's stats to reflect the new position
@@ -850,7 +853,7 @@ public class GameController : MonoBehaviour
                         grid[r, c - 1] = grid[r, c];
                         grid[r, c] = null;
                         colorGrid[r, (c - 1)] = colorGrid[r, c];
-                        colorGrid[r, c] = null;
+                        colorGrid[r, c] = PieceColor.Empty;
                     }
                 }
             }
@@ -982,7 +985,7 @@ public class GameController : MonoBehaviour
     public void recalculateBoard()
     {
         grid = new GameObject[8, 16];
-        colorGrid = new string[8, 16];
+        colorGrid = new PieceColor[8, 16];
         GameObject[] allPieces = GameObject.FindGameObjectsWithTag("Piece");
         List<GameObject> offendingPieces = new List<GameObject>();
         foreach (GameObject piece in allPieces)
