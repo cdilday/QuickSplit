@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
-using UnityEngine.SceneManagement;
 
 public class TitleController : MonoBehaviour
 {
@@ -24,42 +24,43 @@ public class TitleController : MonoBehaviour
     public GameObject ScrollDown;
 
     public High_Score_Displayer[] hsds = new High_Score_Displayer[4];
-    int resetPresses = 0;
-
-    Achievement_Script achievementHandler;
-    Music_Controller mc;
-    High_Score_Calculator highScoreCalculator;
+    private int resetPresses = 0;
+    private Achievement_Script achievementHandler;
+    private Music_Controller mc;
+    private High_Score_Calculator highScoreCalculator;
 
     //gameobjects needed for transitions b/w game mode select and description scenes
     public GameObject[] GameButtons = new GameObject[4];
-    Sprite[] OrigButtonSprite = new Sprite[4];
+    private Sprite[] OrigButtonSprite = new Sprite[4];
     public Sprite lockedSprite;
     public GameObject[] Descriptions = new GameObject[4];
-    string[] OrigDescText = new string[4];
+    private string[] OrigDescText = new string[4];
     public GameObject[] Scores = new GameObject[4];
 
     public GameObject PlayButton;
     private Text playButtonText;
     public GameObject BackButton;
-
-    bool isInPlayScreen;
+    private bool isInPlayScreen;
 
     public int activeMode;
-    int prevMode;
+    private int prevMode;
 
     //Specifically for the Pumpkin Achievement code
-    int codeStage = 0;
+    private int codeStage = 0;
 
     public GameObject HTPEmphasizer;
 
     #region Custom mode controls
 
     public Toggle CustomSpellToggle;
+    public Text CustomSidesText;
+    public string[] SideOptions = { "None", "Timed", "Split-Based" };
+    private int sideOptionIndex = 0;
 
     #endregion
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         highScoreCalculator = GameObject.Find("High Score Calculator").GetComponent<High_Score_Calculator>();
         //first check if they're using the most recent version of the game
@@ -88,8 +89,8 @@ public class TitleController : MonoBehaviour
         //tell achievmement handler to check gamemodes that are supposed to be active
         achievementHandler.Check_Gamemode_Unlocked();
 
-        activeMode = 4;
-        prevMode = 4;
+        activeMode = gameModeScroller.ChildObjects.Length - 1;
+        prevMode = activeMode;
         ScrollUp.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
         for (int i = 0; i < 4; i++)
         {
@@ -98,6 +99,7 @@ public class TitleController : MonoBehaviour
         }
         GameMode_Unlocker();
 
+        LoadCustomOptions();
         //Set a default for custom 
         OnCustomModeUpdated();
 
@@ -107,12 +109,7 @@ public class TitleController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-
-    }
-
-    void Update()
+    private void Update()
     {
         //Back or escape key compatibility
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -267,7 +264,7 @@ public class TitleController : MonoBehaviour
         yield return async;
     }
 
-    void GameMode_Unlocker()
+    private void GameMode_Unlocker()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -291,11 +288,11 @@ public class TitleController : MonoBehaviour
         if (gameModeLayer.activeSelf)
         {
             activeMode = gameModeScroller.CurrentPage;
-            if (activeMode == 5 && prevMode == 4)
+            if (activeMode == gameModeScroller.ChildObjects.Length - 1 && prevMode == gameModeScroller.ChildObjects.Length - 2)
             {
                 ScrollUp.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
             }
-            else if (prevMode == 5 && activeMode != prevMode)
+            else if (prevMode == gameModeScroller.ChildObjects.Length - 1 && activeMode != prevMode)
             {
                 ScrollUp.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
             }
@@ -313,15 +310,96 @@ public class TitleController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the Sides options in code and the text shown on screen to match. Called when the left/right side buttons for custom sides are pressed
+    /// </summary>
+    /// <param name="isLeft"> bool - call with true if this is the left button, denoting that they want to go to a previous option</param>
+    public void OnSideOptionChanged(bool isLeft)
+    {
+        if (isLeft)
+        {
+            if (sideOptionIndex == 0)
+            {
+                sideOptionIndex = SideOptions.Length - 1;
+            }
+            else
+            {
+                sideOptionIndex--;
+            }
+        }
+        else
+        {
+            if (sideOptionIndex == SideOptions.Length - 1)
+            {
+                sideOptionIndex = 0;
+            }
+            else
+            {
+                sideOptionIndex++;
+            }
+        }
+
+        CustomSidesText.text = SideOptions[sideOptionIndex];
+        OnCustomModeUpdated();
+    }
+
+    public void LoadCustomOptions()
+    {
+        RuleSet rulesetToLoad;
+        if (Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom] == null)
+        {
+            rulesetToLoad = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wiz];
+        }
+        else
+        {
+            rulesetToLoad = Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom];
+        }
+
+        CustomSpellToggle.isOn = rulesetToLoad.HasSpells;
+
+        if (rulesetToLoad.TimedCrunch)
+        {
+            sideOptionIndex = 1;
+        }
+        else if (rulesetToLoad.TurnedCrunch)
+        {
+            sideOptionIndex = 2;
+        }
+        else
+        {
+            sideOptionIndex = 0;
+        }
+
+        CustomSidesText.text = SideOptions[sideOptionIndex];
+    }
+
     public void OnCustomModeUpdated()
     {
         RuleSet customRuleSet = new RuleSet();
         customRuleSet.Mode = GameMode.Custom;
         customRuleSet.HasSpells = CustomSpellToggle.isOn;
-        customRuleSet.SplitsPerCrunch = 16;
-        customRuleSet.TurnedCrunch = true;
+
+        switch (sideOptionIndex)
+        {
+            default:
+            case 0:
+                customRuleSet.TurnedCrunch = false;
+                customRuleSet.TimedCrunch = false;
+                break;
+            case 1:
+                customRuleSet.TurnedCrunch = false;
+                customRuleSet.TimedCrunch = true;
+                customRuleSet.TimePerCrunch = new System.TimeSpan(0, 0, 20);
+                break;
+            case 2:
+                customRuleSet.TimedCrunch = false;
+                customRuleSet.TurnedCrunch = true;
+                customRuleSet.SplitsPerCrunch = 16;
+                break;
+        }
+
         customRuleSet.UnlockedPieces = 5;
-        customRuleSet.TimedCrunch = false;
+        customRuleSet.SplitsToUnlock = 77;
 
         Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom] = customRuleSet;
     }

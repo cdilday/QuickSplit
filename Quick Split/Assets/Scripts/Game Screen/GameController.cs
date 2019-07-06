@@ -448,7 +448,7 @@ public class GameController : MonoBehaviour
                 }
                 sidesChecked = true;
             }
-            else if ((gameMode == GameMode.Quick) && !sidesChecked)
+            else if ((Game_Mode_Helper.ActiveRuleSet.TimedCrunch) && !sidesChecked)
             {
                 //quick mode moves the sides in based off of time, not moves
                 if (quickMoveSides)

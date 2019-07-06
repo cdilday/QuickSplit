@@ -258,7 +258,10 @@ public class Achievement_Script : MonoBehaviour
 
         if (PlayerPrefs.GetInt("Holy score 0", 0) > 0)
         {
-            Unlock_Pieceset(PieceSets.Present);
+            if (is_Pieceset_Unlocked(PieceSets.Present) == false)
+            {
+                Unlock_Pieceset(PieceSets.Present);
+            }
             PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 1);
         }
     }

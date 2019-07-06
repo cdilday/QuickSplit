@@ -28,7 +28,7 @@ public class Countdown_Manager : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         image = GetComponent<Image>();
         CountdownSFX = GetComponent<AudioSource>();
-        if (gameController.gameMode == GameMode.Quick)
+        if (Game_Mode_Helper.ActiveRuleSet.TimedCrunch)
         {
             Begin_Countdown();
         }
