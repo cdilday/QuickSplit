@@ -39,6 +39,7 @@ public class TitleController : MonoBehaviour
     public GameObject[] Scores = new GameObject[4];
 
     public GameObject PlayButton;
+    private Text playButtonText;
     public GameObject BackButton;
 
     bool isInPlayScreen;
@@ -50,6 +51,12 @@ public class TitleController : MonoBehaviour
     int codeStage = 0;
 
     public GameObject HTPEmphasizer;
+
+    #region Custom mode controls
+
+    public Toggle CustomSpellToggle;
+
+    #endregion
 
     // Use this for initialization
     void Start()
@@ -72,6 +79,8 @@ public class TitleController : MonoBehaviour
         GameObject MCobject = GameObject.FindGameObjectWithTag("Music Controller");
         mc = MCobject.GetComponent<Music_Controller>();
 
+        playButtonText = PlayButton.GetComponentInChildren<Text>();
+
         mc.Play_Music("Menu");
 
         //just in case this is the first time playing, set Wiz to be for sure unlocked
@@ -88,6 +97,9 @@ public class TitleController : MonoBehaviour
             OrigDescText[i] = Descriptions[i].GetComponent<Text>().text;
         }
         GameMode_Unlocker();
+
+        //Set a default for custom 
+        OnCustomModeUpdated();
 
         if (PlayerPrefs.GetInt("Played Before", 0) == 1)
         {
@@ -132,17 +144,20 @@ public class TitleController : MonoBehaviour
             // TODO Extract out Game modes, fix mis-matching due to reworking menu order on title Screen
             switch (activeMode)
             {
-                case 4:
+                case 5:
                     Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wiz];
                     break;
-                case 3:
+                case 4:
                     Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Quick];
                     break;
-                case 2:
+                case 3:
                     Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wit];
                     break;
-                case 1:
+                case 2:
                     Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Holy];
+                    break;
+                case 1:
+                    Game_Mode_Helper.ActiveRuleSet = Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom];
                     break;
             }
 
@@ -259,7 +274,7 @@ public class TitleController : MonoBehaviour
             if (!Game_Mode_Helper.isGamemodeUnlocked((GameMode)i))
             {
                 GameButtons[i].GetComponent<Image>().sprite = lockedSprite;
-                Descriptions[i].GetComponent<Text>().text = "Score in the last Game Mode to unlock this one!";
+                Descriptions[i].GetComponent<Text>().text = "Score in the previous Game Mode to unlock this one!";
                 Scores[i].GetComponent<Text>().text = "";
             }
             else
@@ -276,24 +291,39 @@ public class TitleController : MonoBehaviour
         if (gameModeLayer.activeSelf)
         {
             activeMode = gameModeScroller.CurrentPage;
-            if (activeMode == 4 && prevMode == 3)
+            if (activeMode == 5 && prevMode == 4)
             {
                 ScrollUp.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
             }
-            else if (prevMode == 4 && activeMode != prevMode)
+            else if (prevMode == 5 && activeMode != prevMode)
             {
                 ScrollUp.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
             }
             else if (activeMode == 0 && prevMode == 1)
             {
+                playButtonText.text = "VIEW";
                 ScrollDown.BroadcastMessage("FadeOut", null, SendMessageOptions.DontRequireReceiver);
             }
             else if (prevMode == 0 && activeMode != prevMode)
             {
+                playButtonText.text = "PLAY";
                 ScrollDown.BroadcastMessage("FadeIn", null, SendMessageOptions.DontRequireReceiver);
             }
             prevMode = activeMode;
         }
+    }
+
+    public void OnCustomModeUpdated()
+    {
+        RuleSet customRuleSet = new RuleSet();
+        customRuleSet.Mode = GameMode.Custom;
+        customRuleSet.HasSpells = CustomSpellToggle.isOn;
+        customRuleSet.SplitsPerCrunch = 16;
+        customRuleSet.TurnedCrunch = true;
+        customRuleSet.UnlockedPieces = 5;
+        customRuleSet.TimedCrunch = false;
+
+        Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom] = customRuleSet;
     }
 
     //for the pumpkin pieceset

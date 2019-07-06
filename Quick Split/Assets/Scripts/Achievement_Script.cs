@@ -105,10 +105,11 @@ public class Achievement_Script : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Keypad5))
             {
-                PlayerPrefs.SetInt("Wiz unlocked", 1);
-                PlayerPrefs.SetInt("Quick unlocked", 0);
-                PlayerPrefs.SetInt("Wit unlocked", 0);
-                PlayerPrefs.SetInt("Holy unlocked", 0);
+                PlayerPrefs.SetInt(GameMode.Wiz + " unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Quick + " unlocked", 0);
+                PlayerPrefs.SetInt(GameMode.Wit + " unlocked", 0);
+                PlayerPrefs.SetInt(GameMode.Holy + " unlocked", 0);
+                PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 0);
                 Debug.Log("Unlocked GameModes Reset!");
                 for (int i = 1; i < SplitterHelper.SplitterStrings.Length; i++)
                 {
@@ -129,10 +130,11 @@ public class Achievement_Script : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.Keypad7))
             {
-                PlayerPrefs.SetInt("Wiz unlocked", 1);
-                PlayerPrefs.SetInt("Quick unlocked", 1);
-                PlayerPrefs.SetInt("Wit unlocked", 1);
-                PlayerPrefs.SetInt("Holy unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Wiz + " unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Quick + " unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Wit + " unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Holy + " unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 1);
                 Debug.Log("All GameModes Unlocked!");
                 for (int i = 0; i < SplitterHelper.SplitterStrings.Length; i++)
                 {
@@ -157,6 +159,7 @@ public class Achievement_Script : MonoBehaviour
                 Debug.Log("Quick " + PlayerPrefs.GetInt("Quick unlocked", 0));
                 Debug.Log("Wit " + PlayerPrefs.GetInt("Wit unlocked", 0));
                 Debug.Log("Holy " + PlayerPrefs.GetInt("Holy unlocked", 0));
+                Debug.Log("Custom " + PlayerPrefs.GetInt("Custom unlocked", 0));
             }
         }
     }
@@ -240,22 +243,23 @@ public class Achievement_Script : MonoBehaviour
         //the unlock order goes from Wiz -> Quick -> Wit -> Holy
         if (PlayerPrefs.GetInt("Wiz score 0", 0) > 0)
         {
-            PlayerPrefs.SetInt("Quick unlocked", 1);
+            PlayerPrefs.SetInt(GameMode.Quick + " unlocked", 1);
         }
 
         if (PlayerPrefs.GetInt("Quick score 0", 0) > 0)
         {
-            PlayerPrefs.SetInt("Wit unlocked", 1);
+            PlayerPrefs.SetInt(GameMode.Wit + " unlocked", 1);
         }
 
         if (PlayerPrefs.GetInt("Wit score 0", 0) > 0)
         {
-            PlayerPrefs.SetInt("Holy unlocked", 1);
+            PlayerPrefs.SetInt(GameMode.Holy + " unlocked", 1);
         }
 
         if (PlayerPrefs.GetInt("Holy score 0", 0) > 0)
         {
             Unlock_Pieceset(PieceSets.Present);
+            PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 1);
         }
     }
 
