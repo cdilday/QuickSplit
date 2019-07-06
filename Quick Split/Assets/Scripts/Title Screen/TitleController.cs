@@ -53,9 +53,12 @@ public class TitleController : MonoBehaviour
     #region Custom mode controls
 
     public Toggle CustomSpellToggle;
+    public Toggle CustomUnlockOverTimeToggle;
     public Text CustomSidesText;
+    public Text CustomUnlockedColorCountText;
     public string[] SideOptions = { "None", "Timed", "Split-Based" };
     private int sideOptionIndex = 0;
+    private int unlockedColorCount = 3;
 
     #endregion
 
@@ -310,6 +313,36 @@ public class TitleController : MonoBehaviour
         }
     }
 
+    public void LoadCustomOptions()
+    {
+        RuleSet rulesetToLoad;
+        if (Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom] == null)
+        {
+            rulesetToLoad = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wiz];
+        }
+        else
+        {
+            rulesetToLoad = Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom];
+        }
+
+        CustomSpellToggle.isOn = rulesetToLoad.HasSpells;
+
+        if (rulesetToLoad.TimedCrunch)
+        {
+            sideOptionIndex = 1;
+        }
+        else if (rulesetToLoad.TurnedCrunch)
+        {
+            sideOptionIndex = 2;
+        }
+        else
+        {
+            sideOptionIndex = 0;
+        }
+
+        CustomSidesText.text = SideOptions[sideOptionIndex];
+    }
+
     /// <summary>
     /// Updates the Sides options in code and the text shown on screen to match. Called when the left/right side buttons for custom sides are pressed
     /// </summary>
@@ -343,34 +376,26 @@ public class TitleController : MonoBehaviour
         OnCustomModeUpdated();
     }
 
-    public void LoadCustomOptions()
+    /// <summary>
+    /// Updates the number of Unlocked Piece colors in code and the text shown on screen to match. Called when the left/right side buttons for custom sides are pressed
+    /// </summary>
+    /// <param name="isLeft"> bool - call with true if this is the left button, denoting that they want to go to a previous option</param>
+    public void OnUnlockedColorCountChanged(bool isLeft)
     {
-        RuleSet rulesetToLoad;
-        if (Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom] == null)
+        if (isLeft)
         {
-            rulesetToLoad = Game_Mode_Helper.AllRuleSets[(int)GameMode.Wiz];
+            if (unlockedColorCount > 3)
+            {
+                unlockedColorCount--;
+            }
         }
-        else
+        else if (unlockedColorCount < 8)
         {
-            rulesetToLoad = Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom];
-        }
-
-        CustomSpellToggle.isOn = rulesetToLoad.HasSpells;
-
-        if (rulesetToLoad.TimedCrunch)
-        {
-            sideOptionIndex = 1;
-        }
-        else if (rulesetToLoad.TurnedCrunch)
-        {
-            sideOptionIndex = 2;
-        }
-        else
-        {
-            sideOptionIndex = 0;
+            unlockedColorCount++;
         }
 
-        CustomSidesText.text = SideOptions[sideOptionIndex];
+        CustomUnlockedColorCountText.text = unlockedColorCount.ToString();
+        OnCustomModeUpdated();
     }
 
     public void OnCustomModeUpdated()
@@ -378,6 +403,14 @@ public class TitleController : MonoBehaviour
         RuleSet customRuleSet = new RuleSet();
         customRuleSet.Mode = GameMode.Custom;
         customRuleSet.HasSpells = CustomSpellToggle.isOn;
+        if (CustomUnlockOverTimeToggle.isOn)
+        {
+            customRuleSet.SplitsToUnlock = 77;
+        }
+        else
+        {
+            customRuleSet.SplitsToUnlock = 0;
+        }
 
         switch (sideOptionIndex)
         {
@@ -398,8 +431,7 @@ public class TitleController : MonoBehaviour
                 break;
         }
 
-        customRuleSet.UnlockedPieces = 5;
-        customRuleSet.SplitsToUnlock = 77;
+        customRuleSet.UnlockedPieces = unlockedColorCount;
 
         Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom] = customRuleSet;
     }
