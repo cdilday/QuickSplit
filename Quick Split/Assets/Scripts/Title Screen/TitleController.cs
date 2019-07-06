@@ -56,6 +56,12 @@ public class TitleController : MonoBehaviour
     public Toggle CustomUnlockOverTimeToggle;
     public Text CustomSidesText;
     public Text CustomUnlockedColorCountText;
+    public GameObject CustomTimedSidesOptions;
+    public GameObject CustomSplitSidesOptions;
+    public Text CustomSecondsSelector;
+    private int secondsPerCrunch = 20;
+    public Text CustomSplitsSelector;
+    private int splitsPerCrunch = 16;
     public string[] SideOptions = { "None", "Timed", "Split-Based" };
     private int sideOptionIndex = 0;
     private int unlockedColorCount = 3;
@@ -330,14 +336,22 @@ public class TitleController : MonoBehaviour
         if (rulesetToLoad.TimedCrunch)
         {
             sideOptionIndex = 1;
+            secondsPerCrunch = (int)rulesetToLoad.TimePerCrunch.TotalSeconds;
+            CustomTimedSidesOptions.SetActive(true);
+            CustomSplitSidesOptions.SetActive(false);
         }
         else if (rulesetToLoad.TurnedCrunch)
         {
             sideOptionIndex = 2;
+            splitsPerCrunch = rulesetToLoad.SplitsPerCrunch;
+            CustomSplitSidesOptions.SetActive(true);
+            CustomTimedSidesOptions.SetActive(false);
         }
         else
         {
             sideOptionIndex = 0;
+            CustomSplitSidesOptions.SetActive(false);
+            CustomTimedSidesOptions.SetActive(false);
         }
 
         CustomSidesText.text = SideOptions[sideOptionIndex];
@@ -373,6 +387,62 @@ public class TitleController : MonoBehaviour
         }
 
         CustomSidesText.text = SideOptions[sideOptionIndex];
+        if (sideOptionIndex == 1)
+        {
+            CustomTimedSidesOptions.SetActive(true);
+            CustomSplitSidesOptions.SetActive(false);
+        }
+        else if (sideOptionIndex == 2)
+        {
+            CustomSplitSidesOptions.SetActive(true);
+            CustomTimedSidesOptions.SetActive(false);
+        }
+        else
+        {
+            CustomSplitSidesOptions.SetActive(false);
+            CustomTimedSidesOptions.SetActive(false);
+        }
+
+        OnCustomModeUpdated();
+    }
+
+    public void OnSplitsCrunchButtonClicked(bool isLeft)
+    {
+        if (isLeft)
+        {
+            if (splitsPerCrunch > 1)
+            {
+                splitsPerCrunch--;
+            }
+        }
+        else
+        {
+            if (splitsPerCrunch < 999)
+            {
+                splitsPerCrunch++;
+            }
+        }
+
+        OnCustomModeUpdated();
+    }
+
+    public void OnTimedCrunchButtonClicked(bool isLeft)
+    {
+        if (isLeft)
+        {
+            if (secondsPerCrunch > 1)
+            {
+                secondsPerCrunch--;
+            }
+        }
+        else
+        {
+            if (secondsPerCrunch < 999)
+            {
+                secondsPerCrunch++;
+            }
+        }
+
         OnCustomModeUpdated();
     }
 
@@ -422,12 +492,14 @@ public class TitleController : MonoBehaviour
             case 1:
                 customRuleSet.TurnedCrunch = false;
                 customRuleSet.TimedCrunch = true;
-                customRuleSet.TimePerCrunch = new System.TimeSpan(0, 0, 20);
+                customRuleSet.TimePerCrunch = new System.TimeSpan(0, 0, secondsPerCrunch);
+                CustomSecondsSelector.text = secondsPerCrunch.ToString();
                 break;
             case 2:
                 customRuleSet.TimedCrunch = false;
                 customRuleSet.TurnedCrunch = true;
-                customRuleSet.SplitsPerCrunch = 16;
+                customRuleSet.SplitsPerCrunch = splitsPerCrunch;
+                CustomSplitsSelector.text = splitsPerCrunch.ToString();
                 break;
         }
 

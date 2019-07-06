@@ -43,7 +43,7 @@ public class Sidebar_Script : MonoBehaviour
     //lights up an additional light
     public void Increment_Lights()
     {
-        if (activeGameMode != GameMode.Wit)
+        if (Game_Mode_Helper.ActiveRuleSet.UsesSides)
         {
             if (lightStage == Sequential_Lights.Length - 1)
             {
@@ -54,6 +54,22 @@ public class Sidebar_Script : MonoBehaviour
                 lightStage++;
                 spriteRenderer.sprite = Sequential_Lights[lightStage];
             }
+        }
+    }
+    public void SetLightStage(int stage)
+    {
+        if (Game_Mode_Helper.ActiveRuleSet.UsesSides)
+        {
+            lightStage = stage;
+        }
+
+        if (lightStage == Sequential_Lights.Length - 1)
+        {
+            isFlashing = true;
+        }
+        else
+        {
+            spriteRenderer.sprite = Sequential_Lights[lightStage];
         }
     }
 

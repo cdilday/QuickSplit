@@ -382,7 +382,7 @@ public class GameController : MonoBehaviour
             }
             GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
             //here's where we do side-entering management
-            if ((gameMode == GameMode.Wiz || gameMode == GameMode.Holy) && !sidesChecked)
+            if (Game_Mode_Helper.ActiveRuleSet.TurnedCrunch && !sidesChecked)
             {
                 if (movesMade % sideMovesLimit == 0)
                 {
@@ -395,7 +395,8 @@ public class GameController : MonoBehaviour
                 }
                 else if (sideMovesLimit - (movesMade % sideMovesLimit) <= 8)
                 {
-                    switch (sideMovesLimit - (movesMade % sideMovesLimit))
+                    int splitsLeft = sideMovesLimit - (movesMade % sideMovesLimit);
+                    switch (splitsLeft)
                     {
                         case 1:
                             sideColumns[0].isShaking = false;
@@ -404,8 +405,6 @@ public class GameController : MonoBehaviour
                             sideColumns[1].ready = true;
                             sideColumns[0].shakeStage = 0;
                             sideColumns[1].shakeStage = 0;
-                            sidebars[0].BroadcastMessage("Increment_Lights");
-                            sidebars[1].BroadcastMessage("Increment_Lights");
                             break;
                         case 2:
                             sideColumns[0].shakeStage = 3;
@@ -424,27 +423,18 @@ public class GameController : MonoBehaviour
                             sideColumns[1].isShaking = true;
                             sideColumns[0].shakeStage = 1;
                             sideColumns[1].shakeStage = 1;
-                            mc.Start_Fast_Tick();
-                            sidebars[0].BroadcastMessage("Increment_Lights");
-                            sidebars[1].BroadcastMessage("Increment_Lights");
-                            break;
-                        case 5:
-                            sidebars[0].BroadcastMessage("Increment_Lights");
-                            sidebars[1].BroadcastMessage("Increment_Lights");
-                            break;
-                        case 6:
-                            sidebars[0].BroadcastMessage("Increment_Lights");
-                            sidebars[1].BroadcastMessage("Increment_Lights");
-                            break;
-                        case 7:
-                            sidebars[0].BroadcastMessage("Increment_Lights");
-                            sidebars[1].BroadcastMessage("Increment_Lights");
-                            break;
-                        case 8:
-                            sidebars[0].BroadcastMessage("Increment_Lights");
-                            sidebars[1].BroadcastMessage("Increment_Lights");
                             break;
                     }
+
+                    int turnToTick = Math.Min((int)(0.5 * Game_Mode_Helper.ActiveRuleSet.SplitsPerCrunch), 4);
+
+                    if(splitsLeft <= turnToTick && !mc.IsFastTicking)
+                    {
+                        mc.Start_Fast_Tick();
+                    }
+
+                    sidebars[0].BroadcastMessage("SetLightStage", 8 - splitsLeft);
+                    sidebars[1].BroadcastMessage("SetLightStage", 8 - splitsLeft);
                 }
                 sidesChecked = true;
             }
@@ -752,10 +742,16 @@ public class GameController : MonoBehaviour
             movesMade != 0)
         {
             availableCount++;
-            if (gameMode == GameMode.Wiz)
+            if (Game_Mode_Helper.ActiveRuleSet.HasSpells)
             {
                 switch (availableCount)
                 {
+                    case 4:
+                        spellHandler.SpellReady[(int)PieceColor.Yellow] = true;
+                        break;
+                    case 5:
+                        spellHandler.SpellReady[(int)PieceColor.Purple] = true;
+                        break;
                     case 6:
                         spellHandler.SpellReady[(int)PieceColor.Orange] = true;
                         break;
@@ -802,7 +798,7 @@ public class GameController : MonoBehaviour
     // MoveInward will move every piece towards the center and create free columns near the edges
     public void MoveInward()
     {
-        if (gameMode != GameMode.Wit)
+        if (Game_Mode_Helper.ActiveRuleSet.UsesSides)
         {
             //First check to see if this action would create a gameover
             for (int r = 0; r <= 7; r++)
@@ -863,7 +859,7 @@ public class GameController : MonoBehaviour
     //adds the stored side column pieces to the board.
     public void addSideColumns()
     {
-        if (gameMode != GameMode.Wit)
+        if (Game_Mode_Helper.ActiveRuleSet.UsesSides)
         {
             if (sideColumns[0] == null || sideColumns[1] == null)
             {
