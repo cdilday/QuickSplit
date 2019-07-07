@@ -27,7 +27,7 @@ public static class Game_Mode_Helper
     //returns true if the given game mode is unlocked
     public static bool isGamemodeUnlocked(GameMode gameMode)
     {
-        if (PlayerPrefs.GetInt(gameMode + " unlocked", 0) == 0)
+        if (PlayerPrefs.GetInt(gameMode + Constants.GameModeUnlockedPredicate, 0) == 0)
         {
             return false;
         }

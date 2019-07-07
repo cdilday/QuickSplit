@@ -63,7 +63,7 @@ public class Sound_Effector : MonoBehaviour {
 			if (availableSource.ElementAt (i)) {
 				availableSource[i] = false;
 				//set proper volume
-				aSources[i].volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+				aSources[i].volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 
 				//add variation if needed
 				if(variation){

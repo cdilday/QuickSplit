@@ -8,14 +8,14 @@ public class Holder_Script : MonoBehaviour {
 	public Transform[,] holder = new Transform[3,2];
 
 	public GameController gameController;
-	public Splitter_script splitScript;
+	public Splitter splitScript;
 
 	// Use this for initialization
 	void Start () {
 		//getting the splitter object for easy use later in the code
 		GameObject splitterObject = GameObject.FindWithTag ("Splitter");
 		if (splitterObject != null) {
-			splitScript = splitterObject.GetComponent <Splitter_script>();
+			splitScript = splitterObject.GetComponent <Splitter>();
 		}
 		//getting the gamecontroller for easy reference later in the code
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");

@@ -85,7 +85,7 @@ public class Piece_Spell_Effect : MonoBehaviour
             {
                 animator.SetBool("Cyan Active", false);
                 cyanStage = 3;
-                CyanBombExplodeSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1) * 0.75f;
+                CyanBombExplodeSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1) * 0.75f;
                 CyanBombExplodeSFX.Play();
             }
             //stage 3 means the bomb is in the process of exploding and pieces need to be taken crae of
@@ -174,7 +174,7 @@ public class Piece_Spell_Effect : MonoBehaviour
                     StartCoroutine(GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>().Purple_Splitter_Checker(gameController.Get_Danger_Pieces()));
                     gameController.collapse();
                     StartCoroutine(gameController.boardWaiter());
-                    gameController.splitter.setState("isActive", true);
+                    gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
                     spellHandler.spellWorking = false;
                 }
                 //if the piece was deleted, this effect is standalone and therefore uselees
@@ -207,7 +207,7 @@ public class Piece_Spell_Effect : MonoBehaviour
                 if (lastPiece)
                 {
                     gameController.checkBoard();
-                    gameController.splitter.setState("isActive", true);
+                    gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
                     lastPiece = false;
                 }
             }
@@ -254,7 +254,7 @@ public class Piece_Spell_Effect : MonoBehaviour
                     {
                         piece.ConvertColor(spellColor);
                         TransformationSFX.pitch = 1f + UnityEngine.Random.Range(-0.5f, 0.5f);
-                        TransformationSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+                        TransformationSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
                         TransformationSFX.Play();
                     }
                 }
@@ -288,7 +288,7 @@ public class Piece_Spell_Effect : MonoBehaviour
             animator.SetBool("Cyan Active", true);
             cyanActive = true;
             cyanStage = 1;
-            CyanBombActiveSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1) * 0.5f;
+            CyanBombActiveSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1) * 0.5f;
             CyanBombActiveSFX.Play();
         }
         //second call tells it to explode
@@ -320,7 +320,7 @@ public class Piece_Spell_Effect : MonoBehaviour
         animator.SetBool("inActive", false);
         animator.SetBool("Green Active", true);
         TransformationSFX.pitch = 1f + UnityEngine.Random.Range(-0.5f, 0.5f);
-        TransformationSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        TransformationSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         TransformationSFX.Play();
     }
     //called to start the blue spell
@@ -332,7 +332,7 @@ public class Piece_Spell_Effect : MonoBehaviour
         animator.SetBool("inActive", false);
         animator.SetBool("Blue Active", true);
         TransformationSFX.pitch = 1f + UnityEngine.Random.Range(-0.5f, 0.5f);
-        TransformationSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        TransformationSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         TransformationSFX.Play();
     }
     //called to start the orange spell

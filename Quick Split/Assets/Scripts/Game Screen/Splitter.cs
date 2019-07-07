@@ -2,13 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Splitter_script : MonoBehaviour
+public class Splitter : MonoBehaviour
 {
 
     //This script handles controlling the splitter and its states
 
     //check this if trying to emulate mobile controls on computer
     public bool mobileDebugging;
+
+    public enum SplitterStates
+    {
+        isMoving = 0,
+        canShoot = 1,
+        isActive = 2,
+        mouseControl = 3,
+        touchControl = 4,
+        inTransition = 5,
+        yellowReady = 6,
+    }
 
     public class State
     {
@@ -173,117 +184,6 @@ public class Splitter_script : MonoBehaviour
                 }
             }
         }
-        /*else
-		{
-			bool hasMoveTouch = false;
-			bool hasFireTouch = false;
-			//touch controls
-			//Region Control Type
-			if(controlType == "Regions"){
-				foreach (Touch poke in Input.touches) {
-					//we only want to put in one movement touch per frame, so take the first one and listen to that
-					if( !hasMoveTouch)
-					{
-						//moving up if user has touched top of play field
-						if (poke.position.y / Screen.height > 0.66f && !splitState.isMoving && transform.position.y < 7) {
-							MoveUp();
-							hasMoveTouch = true;
-							continue;
-						}
-						//moving down if user has touched bottom of play field
-						if (poke.position.y / Screen.height < 0.27f && !splitState.isMoving && transform.position.y > 0) {
-							MoveDown ();
-							hasMoveTouch = true;
-							continue;
-						}
-					}		
-
-					//Vector2 pokeLocation = Camera.main.ScreenToWorldPoint (poke.position);
-					if(!hasFireTouch && poke.phase == TouchPhase.Began)
-					{
-						//check to make sure they touched an area of the screen devoted to actions
-						if(poke.position.y / Screen.height <= 0.66f && poke.position.y / Screen.height >= 0.27f)
-						{
-							if(poke.position.x / Screen.width < 0.5f)
-							{
-								swap ();
-								hasFireTouch = true;
-							}
-							else if(moveDirection == 0 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition && !hasMoveTouch) {
-								if(splitState.yellowReady == true){
-									GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
-								}
-								else{
-									StartCoroutine (fire ());
-									splitState.canShoot = false;
-									gameController.movesMade++;
-									gameController.updateMoves ();
-									hasFireTouch = true;
-								}
-							}
-						}
-					}
-				}
-			}
-			//follow controls
-			else if (controlType == "Follow"){
-				foreach (Touch poke in Input.touches) {		
-					//begin tracking fingers
-					if(poke.phase == TouchPhase.Began){
-						idStartPos[poke.fingerId] = poke.position;
-						idStartTimes[poke.fingerId] = Time.time;
-						idIsTap[poke.fingerId] = true;
-						idIsSwipe[poke.fingerId] = false;
-						idIsDrag[poke.fingerId] = false;
-					}
-
-					if((!idIsTap[poke.fingerId] && !idIsSwipe[poke.fingerId]) || idIsDrag[poke.fingerId]){
-						Vector3 pokeLocation = mainCamera.ScreenToWorldPoint(poke.position);
-						idIsDrag[poke.fingerId] = true;
-						if (pokeLocation.x <= 7 && pokeLocation.x >= -8 && pokeLocation.y >= -0.5 && pokeLocation.y <= 7.5) {
-							if ((pokeLocation.y > transform.position.y + 0.5f) && !splitState.isMoving && transform.position.y < 7) {
-								MoveUp();
-							}
-							//Moving downwards if the mouse is below the splitter's hitbox
-							if ((pokeLocation.y < transform.position.y - 0.5f) && !splitState.isMoving && transform.position.y > 0) {
-								MoveDown();
-							}
-						}
-					}
-
-					if(!idIsSwipe[poke.fingerId] && !idIsDrag[poke.fingerId]){
-
-
-						if(Mathf.Abs (idStartPos[poke.fingerId].x- poke.position.x) >= DisplayMetricsAndroid.XDPI/8) {
-							swap ();
-							idIsTap[poke.fingerId] = false;
-							idIsSwipe[poke.fingerId] = true;
-						}
-					}
-
-					if(poke.phase == TouchPhase.Ended){
-						//gotta check to make sure they tapped the board to split in order to prevent confusion with the pause or spell interactables
-						Vector3 pokeLocation = mainCamera.ScreenToWorldPoint(poke.position);
-						if(idIsTap[poke.fingerId] && pokeLocation.y < 8 && pokeLocation.y >= -0.5 && rightSlot != null && leftSlot != null && splitState.canShoot && !splitState.inTransition){
-							//tap
-							if(splitState.yellowReady == true){
-								GameObject.Find ("Spell Handler").BroadcastMessage("YellowActivate");
-							}
-							else{
-								StartCoroutine (fire ());
-								splitState.canShoot = false;
-								gameController.movesMade++;
-								gameController.updateMoves ();
-							}
-						}
-					}
-
-					if(poke.phase == TouchPhase.Moved || Mathf.Abs(Time.time - idStartTimes[poke.fingerId]) > 0.16f ){
-						idIsTap[poke.fingerId] = false;
-					}
-				}
-			}
-		}*/
 
         //moving upwards with keys W or Up
         if ((Input.GetKey("w") || Input.GetKey("up")) && !splitState.isMoving && transform.position.y < 7)
@@ -420,7 +320,7 @@ public class Splitter_script : MonoBehaviour
     //shoots the pieces in the correct directions
     public IEnumerator fire()
     {
-        FireSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        FireSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         FireSFX.Play();
         //tell the wedges that it has fired
         gameObject.BroadcastMessage("Has_Fired", null, SendMessageOptions.DontRequireReceiver);
@@ -460,23 +360,23 @@ public class Splitter_script : MonoBehaviour
         return splitState;
     }
 
-    public bool getState(string name)
+    public bool getState(SplitterStates state)
     {
-        switch (name)
+        switch (state)
         {
-            case "isMoving":
+            case SplitterStates.isMoving:
                 return splitState.isMoving;
-            case "canShoot":
+            case SplitterStates.canShoot:
                 return splitState.canShoot;
-            case "isActive":
+            case SplitterStates.isActive:
                 return splitState.isActive;
-            case "mouseControl":
+            case SplitterStates.mouseControl:
                 return splitState.mouseControl;
-            case "touchControl":
+            case SplitterStates.touchControl:
                 return splitState.touchControl;
-            case "inTransition":
+            case SplitterStates.inTransition:
                 return splitState.inTransition;
-            case "yellowReady":
+            case SplitterStates.yellowReady:
                 return splitState.yellowReady;
         }
         Debug.LogError("State error: no state of name " + name + " detected.");
@@ -484,34 +384,34 @@ public class Splitter_script : MonoBehaviour
         return false;
     }
 
-    public bool setState(string name, bool value)
+    public bool setState(SplitterStates state, bool value)
     {
-        switch (name)
+        switch (state)
         {
-            case "isMoving":
+            case SplitterStates.isMoving:
                 splitState.isMoving = value;
                 return true;
-            case "canShoot":
+            case SplitterStates.canShoot:
                 splitState.canShoot = value;
                 return true;
-            case "isActive":
+            case SplitterStates.isActive:
                 splitState.isActive = value;
                 return true;
-            case "mouseControl":
+            case SplitterStates.mouseControl:
                 splitState.mouseControl = value;
                 return true;
-            case "touchControl":
+            case SplitterStates.touchControl:
                 splitState.touchControl = value;
                 return true;
-            case "inTransition":
+            case SplitterStates.inTransition:
                 splitState.inTransition = value;
                 return true;
-            case "yellowReady":
+            case SplitterStates.yellowReady:
                 splitState.yellowReady = value;
                 return true;
         }
 
-        Debug.LogError("State error: no state of name " + name + " detected.");
+        Debug.LogError("State error: no state of name " + state + " detected.");
         return false;
     }
 }

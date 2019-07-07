@@ -11,7 +11,7 @@ public class Spell_Tab : MonoBehaviour
 	 */
 
     public PieceColor spellColor;
-    private Splitter_script splitter;
+    private Splitter splitter;
     private SpellHandler spellHandler;
     private GameObject DescCanvas;
     private bool isReady;
@@ -40,7 +40,7 @@ public class Spell_Tab : MonoBehaviour
         }
         isReady = false;
         DescCanvas = GameObject.Find("Description Canvas");
-        splitter = GameObject.FindGameObjectWithTag("Splitter").GetComponent<Splitter_script>();
+        splitter = GameObject.FindGameObjectWithTag("Splitter").GetComponent<Splitter>();
 
         spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>();
         sprites = spriteHolder.Get_Sprites();
@@ -133,7 +133,7 @@ public class Spell_Tab : MonoBehaviour
                     if (poke.phase == TouchPhase.Began)
                     {
                         //popup the explination
-                        splitter.setState("canShoot", false);
+                        splitter.setState(Splitter.SplitterStates.canShoot, false);
                         DescCanvas.GetComponent<Spell_Descriptions>().display(spellColor);
                         trackingID = poke.fingerId;
                     }
@@ -142,7 +142,7 @@ public class Spell_Tab : MonoBehaviour
             if (wasTouching && isNotTouching)
             {
                 //hide popup
-                splitter.setState("canShoot", true);
+                splitter.setState(Splitter.SplitterStates.canShoot, true);
                 DescCanvas.GetComponent<Spell_Descriptions>().hide();
             }
 
@@ -211,7 +211,7 @@ public class Spell_Tab : MonoBehaviour
         //prevent mouse controls from firing when you click on the tab
         if (!Application.isMobilePlatform && !splitter.mobileDebugging)
         {
-            splitter.setState("canShoot", false);
+            splitter.setState(Splitter.SplitterStates.canShoot, false);
             DescCanvas.GetComponent<Spell_Descriptions>().display(spellColor);
         }
     }
@@ -220,7 +220,7 @@ public class Spell_Tab : MonoBehaviour
     {
         if (!Application.isMobilePlatform && !splitter.mobileDebugging)
         {
-            splitter.setState("canShoot", true);
+            splitter.setState(Splitter.SplitterStates.canShoot, true);
             DescCanvas.GetComponent<Spell_Descriptions>().hide();
         }
     }

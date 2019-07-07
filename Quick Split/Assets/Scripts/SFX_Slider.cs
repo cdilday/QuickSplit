@@ -16,7 +16,7 @@ public class SFX_Slider : MonoBehaviour, IPointerUpHandler {
 	void Awake () {
 		MC = GameObject.Find ("Music Controller");
 		mySlider = gameObject.GetComponent<Slider> ();
-		mySlider.value = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		mySlider.value = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 		mySlider.onValueChanged.AddListener (delegate{onValueChanged ();});
 
 		sampleSource = gameObject.GetComponent<AudioSource> ();
@@ -26,13 +26,13 @@ public class SFX_Slider : MonoBehaviour, IPointerUpHandler {
 	void onValueChanged()
 	{
 		MC.GetComponent<Music_Controller> ().SFXVolume = mySlider.value;
-		PlayerPrefs.SetFloat ("SFX Volume", mySlider.value);
+		PlayerPrefs.SetFloat (Constants.SfxVolumeLookup, mySlider.value);
 	}
 
 	//this will play a sound to indicate what it will sound like at the new volume
 	void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
 	{
-		sampleSource.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		sampleSource.volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 		sampleSource.Play ();
 	}
 }

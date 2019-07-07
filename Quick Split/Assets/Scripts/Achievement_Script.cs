@@ -26,11 +26,11 @@ public class Achievement_Script : MonoBehaviour
         }
 
         //make sure default sets are always unlocked at start of game to prevent crashes
-        PlayerPrefs.SetInt(GameMode.Wiz + " unlocked", 1);
-        PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 1);
-        PlayerPrefs.SetInt(SplitterType.Default + " Splitter unlocked", 1);
-        PlayerPrefs.SetInt(PieceSets.Default +" Pieceset unlocked", 1);
-        PlayerPrefs.SetInt(PieceSets.Symbol + " Pieceset unlocked", 1);
+        PlayerPrefs.SetInt(GameMode.Wiz + Constants.GameModeUnlockedPredicate, 1);
+        PlayerPrefs.SetInt(GameMode.Custom + Constants.GameModeUnlockedPredicate, 1);
+        PlayerPrefs.SetInt(SplitterType.Default + Constants.SplitterUnlockedPredicate, 1);
+        PlayerPrefs.SetInt(PieceSets.Default +Constants.PieceSetUnlockedPredicate, 1);
+        PlayerPrefs.SetInt(PieceSets.Symbol + Constants.PieceSetUnlockedPredicate, 1);
 
         splittersUnlocked = new bool[SplitterHelper.SplitterStrings.Length];
         piecesetsUnlocked = new bool[PieceSetHelper.PieceSetStrings.Length];
@@ -38,7 +38,7 @@ public class Achievement_Script : MonoBehaviour
         //load the arrays for unlocks with the proper values already saved in prefs. This prevents longer lookups later
         for (int i = 0; i < splittersUnlocked.Length; i++)
         {
-            if (PlayerPrefs.GetInt((SplitterType)i + " Splitter unlocked", 0) == 0)
+            if (PlayerPrefs.GetInt((SplitterType)i + Constants.SplitterUnlockedPredicate, 0) == 0)
             {
                 splittersUnlocked[i] = false;
             }
@@ -50,7 +50,7 @@ public class Achievement_Script : MonoBehaviour
 
         for (int i = 0; i < piecesetsUnlocked.Length; i++)
         {
-            if (PlayerPrefs.GetInt((PieceSets)i + " Pieceset unlocked", 0) == 0)
+            if (PlayerPrefs.GetInt((PieceSets)i + Constants.PieceSetUnlockedPredicate, 0) == 0)
             {
                 piecesetsUnlocked[i] = false;
             }
@@ -60,7 +60,7 @@ public class Achievement_Script : MonoBehaviour
             }
         }
         //the programmer unlocks require all other things to be unlocked, so do that check now
-        if (PlayerPrefs.GetInt(SplitterType.Programmer + " Splitter unlocked", 0) == 0)
+        if (PlayerPrefs.GetInt(SplitterType.Programmer + Constants.SplitterUnlockedPredicate, 0) == 0)
         {
             bool check = true;
             for (int i = 0; i < splittersUnlocked.Length; i++)
@@ -77,7 +77,7 @@ public class Achievement_Script : MonoBehaviour
             }
         }
 
-        if (PlayerPrefs.GetInt(PieceSets.Programmer + " Pieceset unlocked", 0) == 0)
+        if (PlayerPrefs.GetInt(PieceSets.Programmer + Constants.PieceSetUnlockedPredicate, 0) == 0)
         {
             bool check = true;
             for (int i = 0; i < piecesetsUnlocked.Length; i++)
@@ -106,47 +106,47 @@ public class Achievement_Script : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Keypad5))
             {
-                PlayerPrefs.SetInt(GameMode.Wiz + " unlocked", 1);
-                PlayerPrefs.SetInt(GameMode.Quick + " unlocked", 0);
-                PlayerPrefs.SetInt(GameMode.Wit + " unlocked", 0);
-                PlayerPrefs.SetInt(GameMode.Holy + " unlocked", 0);
-                PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Wiz + Constants.GameModeUnlockedPredicate, 1);
+                PlayerPrefs.SetInt(GameMode.Quick + Constants.GameModeUnlockedPredicate, 0);
+                PlayerPrefs.SetInt(GameMode.Wit + Constants.GameModeUnlockedPredicate, 0);
+                PlayerPrefs.SetInt(GameMode.Holy + Constants.GameModeUnlockedPredicate, 0);
+                PlayerPrefs.SetInt(GameMode.Custom + Constants.GameModeUnlockedPredicate, 1);
                 Debug.Log("Unlocked GameModes Reset!");
                 for (int i = 1; i < SplitterHelper.SplitterStrings.Length; i++)
                 {
                     splittersUnlocked[i] = false;
-                    PlayerPrefs.SetInt((SplitterType)i + " Splitter unlocked", 0);
+                    PlayerPrefs.SetInt((SplitterType)i + Constants.SplitterUnlockedPredicate, 0);
                 }
-                PlayerPrefs.SetInt(SplitterType.Default + " Splitter unlocked", 1);
+                PlayerPrefs.SetInt(SplitterType.Default + Constants.SplitterUnlockedPredicate, 1);
                 Debug.Log("Unlocked Splitters Reset!");
                 for (int i = 1; i < PieceSetHelper.PieceSetStrings.Length; i++)
                 {
                     piecesetsUnlocked[i] = false;
-                    PlayerPrefs.SetInt((PieceSets)i + " Pieceset unlocked", 0);
+                    PlayerPrefs.SetInt((PieceSets)i + Constants.PieceSetUnlockedPredicate, 0);
                 }
-                PlayerPrefs.SetInt(PieceSets.Default + " Pieceset unlocked", 1);
+                PlayerPrefs.SetInt(PieceSets.Default + Constants.PieceSetUnlockedPredicate, 1);
                 Unlock_Pieceset(PieceSets.Symbol);
                 Debug.Log("Unlocked Piecesets Reset!");
 
             }
             else if (Input.GetKey(KeyCode.Keypad7))
             {
-                PlayerPrefs.SetInt(GameMode.Wiz + " unlocked", 1);
-                PlayerPrefs.SetInt(GameMode.Quick + " unlocked", 1);
-                PlayerPrefs.SetInt(GameMode.Wit + " unlocked", 1);
-                PlayerPrefs.SetInt(GameMode.Holy + " unlocked", 1);
-                PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 1);
+                PlayerPrefs.SetInt(GameMode.Wiz + Constants.GameModeUnlockedPredicate, 1);
+                PlayerPrefs.SetInt(GameMode.Quick + Constants.GameModeUnlockedPredicate, 1);
+                PlayerPrefs.SetInt(GameMode.Wit + Constants.GameModeUnlockedPredicate, 1);
+                PlayerPrefs.SetInt(GameMode.Holy + Constants.GameModeUnlockedPredicate, 1);
+                PlayerPrefs.SetInt(GameMode.Custom + Constants.GameModeUnlockedPredicate, 1);
                 Debug.Log("All GameModes Unlocked!");
                 for (int i = 0; i < SplitterHelper.SplitterStrings.Length; i++)
                 {
                     splittersUnlocked[i] = true;
-                    PlayerPrefs.SetInt((SplitterType)i + " Splitter unlocked", 1);
+                    PlayerPrefs.SetInt((SplitterType)i + Constants.SplitterUnlockedPredicate, 1);
                 }
                 Debug.Log("All Splitters Unlocked!");
                 for (int i = 0; i < PieceSetHelper.PieceSetStrings.Length; i++)
                 {
                     piecesetsUnlocked[i] = true;
-                    PlayerPrefs.SetInt((PieceSets)i + " Pieceset unlocked", 1);
+                    PlayerPrefs.SetInt((PieceSets)i + Constants.PieceSetUnlockedPredicate, 1);
                 }
                 Debug.Log("All Piecesets Unlocked!");
             }
@@ -156,10 +156,10 @@ public class Achievement_Script : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.Keypad1))
             {
-                Debug.Log("Wiz " + PlayerPrefs.GetInt(GameMode.Wiz + " unlocked", 1));
-                Debug.Log("Quick " + PlayerPrefs.GetInt(GameMode.Quick + " unlocked", 0));
-                Debug.Log("Wit " + PlayerPrefs.GetInt(GameMode.Wit + " unlocked", 0));
-                Debug.Log("Holy " + PlayerPrefs.GetInt(GameMode.Holy + " unlocked", 0));
+                Debug.Log("Wiz " + PlayerPrefs.GetInt(GameMode.Wiz + Constants.GameModeUnlockedPredicate, 1));
+                Debug.Log("Quick " + PlayerPrefs.GetInt(GameMode.Quick + Constants.GameModeUnlockedPredicate, 0));
+                Debug.Log("Wit " + PlayerPrefs.GetInt(GameMode.Wit + Constants.GameModeUnlockedPredicate, 0));
+                Debug.Log("Holy " + PlayerPrefs.GetInt(GameMode.Holy + Constants.GameModeUnlockedPredicate, 0));
                 Debug.Log("Custom " + PlayerPrefs.GetInt(GameMode.Custom + "  unlocked", 0));
             }
         }
@@ -178,17 +178,17 @@ public class Achievement_Script : MonoBehaviour
 
         for (int i = 0; i < 15; i++)
         {
-            int currScore = PlayerPrefs.GetInt(gameMode + " score " + i, 0);
+            int currScore = PlayerPrefs.GetInt(gameMode + Constants.ScoreLookup + i, 0);
             if (currScore == 0)
             {
                 //We've hit the end of the list. Place the score here and exit
-                PlayerPrefs.SetInt(gameMode + " score " + i, tempScore);
+                PlayerPrefs.SetInt(gameMode + Constants.ScoreLookup + i, tempScore);
                 break;
             }
             else if (currScore <= tempScore)
             {
                 //continue looking through the list
-                PlayerPrefs.SetInt(gameMode + " score " + i, tempScore);
+                PlayerPrefs.SetInt(gameMode + Constants.ScoreLookup + i, tempScore);
                 tempScore = currScore;
             }
         }
@@ -207,7 +207,7 @@ public class Achievement_Script : MonoBehaviour
     public void Unlock_Splitter(SplitterType splitterType)
     {
         splittersUnlocked[(int)splitterType] = true;
-        PlayerPrefs.SetInt(name + " Splitter unlocked", 1);
+        PlayerPrefs.SetInt(name + Constants.SplitterUnlockedPredicate, 1);
         if (notification != null)
         {
             notification.Achievement_Unlocked(SplitterHelper.Get_Splitter_Name(splitterType), "Splitter");
@@ -224,7 +224,7 @@ public class Achievement_Script : MonoBehaviour
     public void Unlock_Pieceset(PieceSets pieceSet)
     {
         piecesetsUnlocked[(int)pieceSet] = true;
-        PlayerPrefs.SetInt(pieceSet + " Pieceset unlocked", 1);
+        PlayerPrefs.SetInt(pieceSet + Constants.PieceSetUnlockedPredicate, 1);
 
         if (notification != null)
         {
@@ -242,28 +242,28 @@ public class Achievement_Script : MonoBehaviour
     public void Check_Gamemode_Unlocked()
     {
         //the unlock order goes from Wiz -> Quick -> Wit -> Holy
-        if (PlayerPrefs.GetInt(GameMode.Wiz + " score 0", 0) > 0)
+        if (PlayerPrefs.GetInt(GameMode.Wiz + Constants.TopScorePredicate, 0) > 0)
         {
-            PlayerPrefs.SetInt(GameMode.Quick + " unlocked", 1);
+            PlayerPrefs.SetInt(GameMode.Quick + Constants.GameModeUnlockedPredicate, 1);
         }
 
-        if (PlayerPrefs.GetInt(GameMode.Quick + " score 0", 0) > 0)
+        if (PlayerPrefs.GetInt(GameMode.Quick + Constants.TopScorePredicate, 0) > 0)
         {
-            PlayerPrefs.SetInt(GameMode.Wit + " unlocked", 1);
+            PlayerPrefs.SetInt(GameMode.Wit + Constants.GameModeUnlockedPredicate, 1);
         }
 
-        if (PlayerPrefs.GetInt(GameMode.Wit + " score 0", 0) > 0)
+        if (PlayerPrefs.GetInt(GameMode.Wit + Constants.TopScorePredicate, 0) > 0)
         {
-            PlayerPrefs.SetInt(GameMode.Holy + " unlocked", 1);
+            PlayerPrefs.SetInt(GameMode.Holy + Constants.GameModeUnlockedPredicate, 1);
         }
 
-        if (PlayerPrefs.GetInt(GameMode.Holy + " score 0", 0) > 0)
+        if (PlayerPrefs.GetInt(GameMode.Holy + Constants.TopScorePredicate, 0) > 0)
         {
             if (is_Pieceset_Unlocked(PieceSets.Present) == false)
             {
                 Unlock_Pieceset(PieceSets.Present);
             }
-            PlayerPrefs.SetInt(GameMode.Custom + " unlocked", 1);
+            PlayerPrefs.SetInt(GameMode.Custom + Constants.GameModeUnlockedPredicate, 1);
         }
     }
 

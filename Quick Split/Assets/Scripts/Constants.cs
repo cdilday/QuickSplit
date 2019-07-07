@@ -1,11 +1,22 @@
 ﻿using UnityEngine;
 
+public static class Constants
+{
+    public static readonly string TopScorePredicate = " score 0";
+    public static readonly string ScoreLookup = " score ";
+    public static readonly string GameModeUnlockedPredicate = " unlocked";
+    public static readonly string SplitterUnlockedPredicate = " Splitter unlocked";
+    public static readonly string PieceSetUnlockedPredicate = " Pieceset unlocked";
+
+    public static readonly string SfxVolumeLookup = "SFX Volume";
+    public static readonly string MusicVolumeLookup = "Music Volume";
+}
+
 /// <summary>
 /// Contains all the unlockable splitters and their associated indexes in any arrays that may have them (image arrays, for example)
 /// </summary>
 public enum SplitterType
 {
-    // TODO: Make way to extract out UI friendly strings ("Candy Cane" instead of CandyCane)
     Error = -1,
     Default = 0,
     Programmer = 1,

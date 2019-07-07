@@ -60,7 +60,7 @@ public class Yellow_Spell_Effect : MonoBehaviour
                 yellowSpellEffects[9].GetComponent<Animator>().SetBool("isGrowing", true);
                 increment = ((yellowSpellEffects[1].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * (1 / yellowSpellEffects[1].GetComponent<Animator>().speed)) / 6f);
                 startTime = Time.time;
-                YellowFireSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+                YellowFireSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
                 YellowFireSFX.Play();
             }
             else if (isChaining)
@@ -99,7 +99,7 @@ public class Yellow_Spell_Effect : MonoBehaviour
                     }
 
                     //make it so the splitter can't continually fire yellow spells
-                    gameController.splitter.setState("yellowReady", false);
+                    gameController.splitter.setState(Splitter.SplitterStates.yellowReady, false);
                     //check the board to update group values
                     gameController.checkBoard();
                     yellowSpellEffects[0].GetComponent<Animator>().SetInteger("LeftStage", 2);
@@ -164,14 +164,14 @@ public class Yellow_Spell_Effect : MonoBehaviour
         }
 
         activated = true;
-        YellowChargeSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        YellowChargeSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         YellowChargeSFX.Play();
     }
 
     //This resets it back to a state where it can be reused
     private void reset()
     {
-        gameController.splitter.setState("isActive", true);
+        gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
         activated = false;
         isChaining = false;
         finishedGrowing = false;

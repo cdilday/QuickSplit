@@ -97,11 +97,11 @@ public class Music_Controller : MonoBehaviour
             }
         }
 
-        MusicSource.volume = PlayerPrefs.GetFloat("Music Volume", 1);
+        MusicSource.volume = PlayerPrefs.GetFloat(Constants.MusicVolumeLookup, 1);
         musicVolume = MusicSource.volume;
         SlowTickSource.volume = musicVolume;
         FastTickSource.volume = musicVolume;
-        SFXVolume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        SFXVolume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
 
     }
 

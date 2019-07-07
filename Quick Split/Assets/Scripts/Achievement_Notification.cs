@@ -90,7 +90,7 @@ public class Achievement_Notification : MonoBehaviour {
 		if (isBusy) {
 			return;
 		}
-		AchievementSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		AchievementSFX.volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 		AchievementSFX.Play ();
 
 		isBusy = true;

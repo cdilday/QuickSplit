@@ -140,7 +140,7 @@ public class Shutter_Handler : MonoBehaviour {
 		//begin the timer
 		StartTime = Time.time;
 
-		ClosingSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		ClosingSFX.volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 		ClosingSFX.Play ();
 	}
 
@@ -180,7 +180,7 @@ public class Shutter_Handler : MonoBehaviour {
 		//begin the timer
 		StartTime = Time.time;
 
-		ClosingSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		ClosingSFX.volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 		ClosingSFX.Play ();
 	}
 
@@ -219,7 +219,7 @@ public class Shutter_Handler : MonoBehaviour {
 
 		//begin the timer
 		StartTime = Time.time;
-		OpeningSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		OpeningSFX.volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 		OpeningSFX.Play ();
 
 	}
@@ -260,7 +260,7 @@ public class Shutter_Handler : MonoBehaviour {
 		//begin the timer
 		StartTime = Time.time;
 
-		OpeningSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+		OpeningSFX.volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 		OpeningSFX.Play ();
 	}
 }

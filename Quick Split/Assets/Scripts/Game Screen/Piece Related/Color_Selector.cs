@@ -7,7 +7,7 @@ public class Color_Selector : MonoBehaviour
     //This script handles the color selecor object as a whole as used by certain spells
 
     public Text selectionText;
-    private Splitter_script splitter;
+    private Splitter splitter;
     private SpellHandler spellHandler;
 
     // Use this for initialization
@@ -15,8 +15,8 @@ public class Color_Selector : MonoBehaviour
     {
         selectionText = GameObject.Find("Color Selector Text").GetComponent<Text>();
         //selectionText.pixelOffset = new Vector2 (Screen.width / 2f, Screen.height / 2f);
-        splitter = GameObject.FindGameObjectWithTag("Splitter").GetComponent<Splitter_script>();
-        splitter.setState("isActive", false);
+        splitter = GameObject.FindGameObjectWithTag("Splitter").GetComponent<Splitter>();
+        splitter.setState(Splitter.SplitterStates.isActive, false);
         spellHandler = GameObject.Find("Spell Handler").GetComponent<SpellHandler>();
     }
 
@@ -28,7 +28,7 @@ public class Color_Selector : MonoBehaviour
     public void colorSelected(PieceColor color)
     {
         spellHandler.colorSelected(color);
-        splitter.setState("inTransition", true);
+        splitter.setState(Splitter.SplitterStates.inTransition, true);
         selectionText.text = "";
         Destroy(gameObject);
     }

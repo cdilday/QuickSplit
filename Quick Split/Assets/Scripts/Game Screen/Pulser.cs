@@ -38,7 +38,7 @@ public class Pulser : MonoBehaviour {
 
 	void beginPulse(){
 		if(gameController!=null && !gameController.gameOver){
-			scoreBlip.volume = 0.5f * (PlayerPrefs.GetFloat ("SFX Volume", 1));
+			scoreBlip.volume = 0.5f * (PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1));
 			scoreBlip.pitch = 1 + Random.Range (0, 0.1f);
 			scoreBlip.Play ();
 		}

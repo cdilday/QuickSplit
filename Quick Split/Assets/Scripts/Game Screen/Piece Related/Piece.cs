@@ -74,7 +74,7 @@ public class Piece : MonoBehaviour
 
     public GameController gameController;
 
-    public Splitter_script splitter;
+    public Splitter splitter;
 
     public SpellHandler spellHandler;
     private Bit_Pool BitPool;
@@ -99,7 +99,7 @@ public class Piece : MonoBehaviour
         GameObject splitterObject = GameObject.Find("Splitter");
         if (splitterObject != null)
         {
-            splitter = splitterObject.GetComponent<Splitter_script>();
+            splitter = splitterObject.GetComponent<Splitter>();
         }
         GameObject spellHandlerObject = GameObject.Find("Spell Handler");
         if (spellHandlerObject != null)

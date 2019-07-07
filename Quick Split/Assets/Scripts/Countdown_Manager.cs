@@ -60,7 +60,7 @@ public class Countdown_Manager : MonoBehaviour
             if (Time.time >= startTime + 1f)
             {
                 image.color = new Color(1, 1, 1, 1);
-                CountdownSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+                CountdownSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
                 CountdownSFX.Play();
                 stage--;
                 startTime = Time.time;

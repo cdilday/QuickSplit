@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour
     private bool checkFlag;
 
     //Splitter keeps track of the splitter for easy access
-    public Splitter_script splitter;
+    public Splitter splitter;
 
     //true if the player's lost
     public bool gameOver;
@@ -142,7 +142,7 @@ public class GameController : MonoBehaviour
         GameObject splitterObject = GameObject.Find("Splitter");
         if (splitterObject != null)
         {
-            splitter = splitterObject.GetComponent<Splitter_script>();
+            splitter = splitterObject.GetComponent<Splitter>();
         }
 
         gameOver = false;
@@ -217,7 +217,7 @@ public class GameController : MonoBehaviour
 
                 quickMoveSides = false;
                 StartCoroutine("StartingCountDown");
-                splitter.setState("canShoot", false);
+                splitter.setState(Splitter.SplitterStates.canShoot, false);
             }
             else
             {
@@ -306,7 +306,7 @@ public class GameController : MonoBehaviour
                         gameOver = true;
                         GameOverLayer.SetActive(true);
                         mc.Stop_Music();
-                        splitter.setState("canShoot", false);
+                        splitter.setState(Splitter.SplitterStates.canShoot, false);
                         //unlocking candy cane splitter
                         if (!achievementHandler.is_Splitter_Unlocked(SplitterType.CandyCane) && score > 0 && score < 200)
                         {
@@ -378,7 +378,7 @@ public class GameController : MonoBehaviour
             }
             else if (!isCountingDown)
             {
-                splitter.setState("canShoot", true);
+                splitter.setState(Splitter.SplitterStates.canShoot, true);
             }
             GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
             //here's where we do side-entering management
@@ -594,7 +594,7 @@ public class GameController : MonoBehaviour
                     multiplier = 1;
                 }
 
-                splitter.setState("canShoot", true);
+                splitter.setState(Splitter.SplitterStates.canShoot, true);
             }
             clearedLastTurn = piecesDeletedThisSplit;
         }
@@ -783,11 +783,11 @@ public class GameController : MonoBehaviour
             scoreText.text = "Score:\n" + score;
         }
         //save current score
-        if (PlayerPrefs.GetInt(gameMode + " score 0", 0) < score)
+        if (PlayerPrefs.GetInt(gameMode + Constants.TopScorePredicate, 0) < score)
         {
             if (!newHighScore)
             {
-                HighScoreText.gameObject.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+                HighScoreText.gameObject.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
                 HighScoreText.gameObject.GetComponent<AudioSource>().Play();
                 newHighScore = true;
                 HighScoreText.text = "New High Score!";
@@ -809,7 +809,7 @@ public class GameController : MonoBehaviour
                     gameOverText.text = "Game Over";
                     GameOverLayer.SetActive(true);
                     gameOver = true;
-                    splitter.setState("canShoot", false);
+                    splitter.setState(Splitter.SplitterStates.canShoot, false);
                     mc.Stop_Music();
                 }
             }
@@ -918,7 +918,7 @@ public class GameController : MonoBehaviour
         timeBeforeShaking = timePerCrunch.Subtract(new TimeSpan((long)(startSeconds * TimeSpan.TicksPerSecond)));
         isCountingDown = true;
         yield return new WaitForSeconds(4f);
-        splitter.setState("canShoot", true);
+        splitter.setState(Splitter.SplitterStates.canShoot, true);
         isCountingDown = false;
         mc.Play_Music(gameMode);
         StartCoroutine("QuickSideTimer");
@@ -1026,10 +1026,10 @@ public class GameController : MonoBehaviour
             Time.timeScale = 0;
             gameOverText.text = "PAUSED";
             pauseLayer.SetActive(true);
-            splitter.setState("isActive", false);
+            splitter.setState(Splitter.SplitterStates.isActive, false);
             GameObject.Find("Pause Button Text").GetComponent<Text>().text = "Unpause";
             mc.Pause_Music();
-            PauseSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+            PauseSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
             PauseSFX.Play();
         }
         else
@@ -1037,11 +1037,11 @@ public class GameController : MonoBehaviour
             isPaused = false;
             Time.timeScale = 1;
             gameOverText.text = "";
-            splitter.setState("isActive", true);
+            splitter.setState(Splitter.SplitterStates.isActive, true);
             pauseLayer.SetActive(false);
             GameObject.Find("Pause Button Text").GetComponent<Text>().text = "Pause";
             mc.Resume_Music();
-            UnpauseSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+            UnpauseSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
             UnpauseSFX.Play();
         }
     }

@@ -6,7 +6,7 @@ public class Guide : MonoBehaviour
     //this script handles the guide circles on the splitter, and is attatched to each one individually
 
     private bool isRight;
-    private Splitter_script splitter;
+    private Splitter splitter;
     private GameController gameController;
     private string pieceColor;
     private SpriteRenderer spriteRenderer;
@@ -23,7 +23,7 @@ public class Guide : MonoBehaviour
         }
 
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-        splitter = GameObject.FindGameObjectWithTag("Splitter").GetComponent<Splitter_script>();
+        splitter = GameObject.FindGameObjectWithTag("Splitter").GetComponent<Splitter>();
 
         //assign which side it's on
         if (transform.localPosition.x > 0)

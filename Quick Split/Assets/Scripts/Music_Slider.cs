@@ -12,7 +12,7 @@ public class Music_Slider : MonoBehaviour {
 	void Start () {
 		MC = GameObject.Find ("Music Controller");
 		mySlider = gameObject.GetComponent<Slider> ();
-		mySlider.value = PlayerPrefs.GetFloat ("Music Volume", 1);
+		mySlider.value = PlayerPrefs.GetFloat (Constants.MusicVolumeLookup, 1);
 		mySlider.onValueChanged.AddListener (delegate{onValueChanged ();});
 	}
 
@@ -20,7 +20,7 @@ public class Music_Slider : MonoBehaviour {
 	void onValueChanged()
 	{
 		MC.GetComponent<Music_Controller> ().Change_Music_Volume (mySlider.value);
-		PlayerPrefs.SetFloat ("Music Volume", mySlider.value);
+		PlayerPrefs.SetFloat (Constants.MusicVolumeLookup, mySlider.value);
 	}
 
 }

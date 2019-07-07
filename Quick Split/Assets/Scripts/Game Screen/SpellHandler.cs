@@ -10,7 +10,7 @@ public class SpellHandler : MonoBehaviour
     //This scripte handles all the spell stuff, including activating and tracking spells
 
     private GameController gameController;
-    private Splitter_script splitter;
+    private Splitter splitter;
     private Holder_Script holder;
     private Achievement_Script achievementHandler;
 
@@ -72,7 +72,7 @@ public class SpellHandler : MonoBehaviour
         }
         else
         {
-            splitter = splitterObject.GetComponent<Splitter_script>();
+            splitter = splitterObject.GetComponent<Splitter>();
         }
 
         GameObject holderObject = GameObject.FindGameObjectWithTag("Holder");
@@ -109,8 +109,8 @@ public class SpellHandler : MonoBehaviour
     {
         //attacks, only activatable one at a time
         if (spellColor == PieceColor.Empty &&
-            splitter.getState("canShoot") &&
-            !splitter.getState("isMoving"))
+            splitter.getState(Splitter.SplitterStates.canShoot) &&
+            !splitter.getState(Splitter.SplitterStates.isMoving))
         {
             //red
             if (Input.GetKeyDown("1") && SpellReady[(int)PieceColor.Red])
@@ -166,7 +166,7 @@ public class SpellHandler : MonoBehaviour
             achievementHandler.Unlock_Splitter(SplitterType.Red);
         }
 
-        RedChargeSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1) * 0.5f;
+        RedChargeSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1) * 0.5f;
         RedChargeSFX.Play();
 
         //This spell uses the Red Spell Effect Gameobjects to do all the dirty work
@@ -177,7 +177,7 @@ public class SpellHandler : MonoBehaviour
         }
         //there are 16 RSE objects
         spellLimit = 16;
-        splitter.setState("isActive", false);
+        splitter.setState(Splitter.SplitterStates.isActive, false);
     }
 
     public void Red_Spell_Helper()
@@ -187,7 +187,7 @@ public class SpellHandler : MonoBehaviour
         if (spellLimit == 0)
         {
             gameController.checkBoard();
-            splitter.setState("isActive", true);
+            splitter.setState(Splitter.SplitterStates.isActive, true);
             spellWorking = false;
         }
     }
@@ -298,7 +298,7 @@ public class SpellHandler : MonoBehaviour
     public void Yellowspell()
     {
         Spell_Used(PieceColor.Yellow);
-        splitter.setState("yellowReady", true);
+        splitter.setState(Splitter.SplitterStates.yellowReady, true);
         //recolor splitter to show it's ready to fire
         splitter.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 0, 1);
     }
@@ -307,10 +307,10 @@ public class SpellHandler : MonoBehaviour
     {
         //set splitter to default color
         splitter.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
-        splitter.setState("isActive", false);
+        splitter.setState(Splitter.SplitterStates.isActive, false);
         //this spell is also entirely handled by a seperate gameobject
         YellowSpellEffect.BroadcastMessage("Activate", null, SendMessageOptions.DontRequireReceiver);
-        splitter.setState("yellowReady", false);
+        splitter.setState(Splitter.SplitterStates.yellowReady, false);
     }
     //Green attack: change the color of three pieces currently in holder or splitter to any color the player chooses
     public void Greenspell()
@@ -329,7 +329,7 @@ public class SpellHandler : MonoBehaviour
             }
         }
         gameController.gameOverText.text = "Select pieces in the holder/splitter to change";
-        splitter.setState("isActive", false);
+        splitter.setState(Splitter.SplitterStates.isActive, false);
     }
     public void GreenHelper()
     {
@@ -394,7 +394,7 @@ public class SpellHandler : MonoBehaviour
             }
         }
 
-        splitter.setState("isActive", false);
+        splitter.setState(Splitter.SplitterStates.isActive, false);
     }
 
     private void BlueHelper()
@@ -437,7 +437,7 @@ public class SpellHandler : MonoBehaviour
         spellColor = PieceColor.Purple;
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
         picker.GetComponent<Color_Selector>().givePurpose("Select a color to eliminate from the board");
-        splitter.setState("isActive", false);
+        splitter.setState(Splitter.SplitterStates.isActive, false);
     }
 
     private IEnumerator Orange_Waiter()
@@ -445,7 +445,7 @@ public class SpellHandler : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         gameController.collapse();
         StartCoroutine(gameController.boardWaiter());
-        gameController.splitter.setState("isActive", true);
+        gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
         spellWorking = false;
     }
 
@@ -453,7 +453,7 @@ public class SpellHandler : MonoBehaviour
     {
         //this needed to be a coroutine so it could wait and give a proper effect
         StartCoroutine(Purple_Activator());
-        PurpleEffectSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        PurpleEffectSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         PurpleEffectSFX.Play();
     }
 
@@ -596,7 +596,7 @@ public class SpellHandler : MonoBehaviour
         spellColor = PieceColor.Empty;
         if (empty)
         {
-            splitter.setState("isActive", true);
+            splitter.setState(Splitter.SplitterStates.isActive, true);
         }
     }
     //cyan spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
@@ -624,13 +624,13 @@ public class SpellHandler : MonoBehaviour
                 }
             }
         }
-        splitter.setState("isActive", false);
+        splitter.setState(Splitter.SplitterStates.isActive, false);
         StartCoroutine(WhiteHelper());
     }
 
     private IEnumerator WhiteHelper()
     {
-        WhiteEffectSFX.volume = PlayerPrefs.GetFloat("SFX Volume", 1);
+        WhiteEffectSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         WhiteEffectSFX.Play();
         yield return new WaitForSeconds(1f);
         //get all pieces on left side
@@ -726,7 +726,7 @@ public class SpellHandler : MonoBehaviour
         //check the board
         gameController.recalculateBoard();
         StartCoroutine(gameController.boardWaiter());
-        splitter.setState("isActive", true);
+        splitter.setState(Splitter.SplitterStates.isActive, true);
         spellWorking = false;
 
         if (!achievementHandler.is_Splitter_Unlocked(SplitterType.White) && !empty)

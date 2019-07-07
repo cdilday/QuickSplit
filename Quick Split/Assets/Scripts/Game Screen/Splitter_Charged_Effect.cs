@@ -5,7 +5,7 @@ public class Splitter_Charged_Effect : MonoBehaviour
 
     //This script is specifically for showing the yellow spell is ready on the splitter
 
-    private Splitter_script splitter;
+    private Splitter splitter;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private bool prevCharged;
@@ -20,7 +20,7 @@ public class Splitter_Charged_Effect : MonoBehaviour
             Destroy(gameObject);
         }
 
-        splitter = gameObject.GetComponentInParent<Splitter_script>();
+        splitter = gameObject.GetComponentInParent<Splitter>();
 
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -31,7 +31,7 @@ public class Splitter_Charged_Effect : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        if (splitter.getState("yellowReady"))
+        if (splitter.getState(Splitter.SplitterStates.yellowReady))
         {
             if (!prevCharged)
             {

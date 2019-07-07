@@ -128,7 +128,7 @@ public class Red_Spell_Script : MonoBehaviour {
 				return;
 			}
 			CollisionSFX.pitch = 1f + Random.Range (-0.5f,0.5f);
-			CollisionSFX.volume = PlayerPrefs.GetFloat ("SFX Volume", 1);
+			CollisionSFX.volume = PlayerPrefs.GetFloat (Constants.SfxVolumeLookup, 1);
 			CollisionSFX.Play ();
 			isMoving = false;
 			hasHit = true;
