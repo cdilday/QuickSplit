@@ -373,6 +373,7 @@ public class TitleController : MonoBehaviour
             {
                 sideOptionIndex--;
             }
+            code("Left");
         }
         else
         {
@@ -384,6 +385,7 @@ public class TitleController : MonoBehaviour
             {
                 sideOptionIndex++;
             }
+            code("Right");
         }
 
         CustomSidesText.text = SideOptions[sideOptionIndex];
@@ -414,6 +416,7 @@ public class TitleController : MonoBehaviour
             {
                 splitsPerCrunch--;
             }
+            code("Left");
         }
         else
         {
@@ -421,6 +424,7 @@ public class TitleController : MonoBehaviour
             {
                 splitsPerCrunch++;
             }
+            code("Right");
         }
 
         OnCustomModeUpdated();
@@ -434,6 +438,7 @@ public class TitleController : MonoBehaviour
             {
                 secondsPerCrunch--;
             }
+            code("Left");
         }
         else
         {
@@ -441,6 +446,7 @@ public class TitleController : MonoBehaviour
             {
                 secondsPerCrunch++;
             }
+            code("Right");
         }
 
         OnCustomModeUpdated();
