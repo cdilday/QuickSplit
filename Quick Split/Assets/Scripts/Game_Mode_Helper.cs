@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using UnityEngine;
 
 public static class Game_Mode_Helper
@@ -114,6 +115,55 @@ public class RuleSet
     }
 
     #endregion Constructors
+
+    #region Public Methods
+
+    public override string ToString()
+    {
+        if (Mode != GameMode.Custom)
+        {
+            return Mode.ToString();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.Append(Mode.ToString());
+        sb.Append(" ");
+        sb.Append((HasSpells ? 1 : 0).ToString());
+        sb.Append(" ");
+        sb.Append((TimedCrunch ? 1 : 0).ToString());
+        sb.Append(" ");
+        if (TimedCrunch)
+        {
+            sb.Append(((int)TimePerCrunch.TotalSeconds).ToString());
+            sb.Append(" ");
+        }
+        else
+        {
+            sb.Append("0 ");
+        }
+
+        sb.Append((TurnedCrunch ? 1 : 0).ToString());
+        sb.Append(" ");
+
+        if (TurnedCrunch)
+        {
+            sb.Append(SplitsPerCrunch.ToString());
+            sb.Append(" ");
+        }
+        else
+        {
+            sb.Append("0 ");
+        }
+
+        sb.Append(UnlockedPieces);
+        sb.Append(" ");
+
+        sb.Append(SplitsToUnlock);
+
+        return sb.ToString();
+    }
+
+    #endregion
 }
 
 /// <summary>

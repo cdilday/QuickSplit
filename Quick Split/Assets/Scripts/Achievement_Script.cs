@@ -166,7 +166,7 @@ public class Achievement_Script : MonoBehaviour
     }
 
     //use this to add new high scores
-    public void Add_Score(GameMode gameMode, int score)
+    public void Add_Score(RuleSet ruleSet, int score)
     {
         //you need to actually score to save a high score
         if (score == 0)
@@ -176,20 +176,32 @@ public class Achievement_Script : MonoBehaviour
 
         int tempScore = score;
 
-        for (int i = 0; i < 15; i++)
+        if (ruleSet.Mode != GameMode.Custom)
         {
-            int currScore = PlayerPrefs.GetInt(gameMode + Constants.ScoreLookup + i, 0);
-            if (currScore == 0)
+            for (int i = 0; i < 15; i++)
             {
-                //We've hit the end of the list. Place the score here and exit
-                PlayerPrefs.SetInt(gameMode + Constants.ScoreLookup + i, tempScore);
-                break;
+                int currScore = PlayerPrefs.GetInt(ruleSet.ToString() + Constants.ScoreLookup + i, 0);
+                if (currScore == 0)
+                {
+                    //We've hit the end of the list. Place the score here and exit
+                    PlayerPrefs.SetInt(ruleSet.ToString() + Constants.ScoreLookup + i, tempScore);
+                    break;
+                }
+                else if (currScore <= tempScore)
+                {
+                    //continue looking through the list
+                    PlayerPrefs.SetInt(ruleSet.ToString() + Constants.ScoreLookup + i, tempScore);
+                    tempScore = currScore;
+                }
             }
-            else if (currScore <= tempScore)
+        }
+        else
+        {
+            // Custom game modes are unique per ruleset, we only keep the highest score here
+            int topScore = PlayerPrefs.GetInt(ruleSet.ToString() + Constants.TopScorePredicate, 0);
+            if (score > topScore)
             {
-                //continue looking through the list
-                PlayerPrefs.SetInt(gameMode + Constants.ScoreLookup + i, tempScore);
-                tempScore = currScore;
+                PlayerPrefs.SetInt(ruleSet.ToString() + Constants.TopScorePredicate, score);
             }
         }
     }
@@ -242,22 +254,22 @@ public class Achievement_Script : MonoBehaviour
     public void Check_Gamemode_Unlocked()
     {
         //the unlock order goes from Wiz -> Quick -> Wit -> Holy
-        if (PlayerPrefs.GetInt(GameMode.Wiz + Constants.TopScorePredicate, 0) > 0)
+        if (PlayerPrefs.GetInt(Game_Mode_Helper.AllRuleSets[(int)GameMode.Wiz].ToString() + Constants.TopScorePredicate, 0) > 0)
         {
             PlayerPrefs.SetInt(GameMode.Quick + Constants.GameModeUnlockedPredicate, 1);
         }
 
-        if (PlayerPrefs.GetInt(GameMode.Quick + Constants.TopScorePredicate, 0) > 0)
+        if (PlayerPrefs.GetInt(Game_Mode_Helper.AllRuleSets[(int)GameMode.Quick].ToString() + Constants.TopScorePredicate, 0) > 0)
         {
             PlayerPrefs.SetInt(GameMode.Wit + Constants.GameModeUnlockedPredicate, 1);
         }
 
-        if (PlayerPrefs.GetInt(GameMode.Wit + Constants.TopScorePredicate, 0) > 0)
+        if (PlayerPrefs.GetInt(Game_Mode_Helper.AllRuleSets[(int)GameMode.Wit].ToString() + Constants.TopScorePredicate, 0) > 0)
         {
             PlayerPrefs.SetInt(GameMode.Holy + Constants.GameModeUnlockedPredicate, 1);
         }
 
-        if (PlayerPrefs.GetInt(GameMode.Holy + Constants.TopScorePredicate, 0) > 0)
+        if (PlayerPrefs.GetInt(Game_Mode_Helper.AllRuleSets[(int)GameMode.Holy].ToString() + Constants.TopScorePredicate, 0) > 0)
         {
             if (is_Pieceset_Unlocked(PieceSets.Present) == false)
             {

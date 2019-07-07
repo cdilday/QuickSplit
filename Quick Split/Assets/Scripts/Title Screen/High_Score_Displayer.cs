@@ -11,8 +11,16 @@ public class High_Score_Displayer : MonoBehaviour
 
     public void update_scores()
     {
-        score = PlayerPrefs.GetInt(gameType + Constants.TopScorePredicate, 0);
-        gameObject.GetComponent<Text>().text = gameType + " High Score: " + score;
+        score = PlayerPrefs.GetInt(Game_Mode_Helper.AllRuleSets[(int)gameType].ToString() + Constants.TopScorePredicate, 0);
+
+        if (gameType != GameMode.Custom)
+        {
+            gameObject.GetComponent<Text>().text = gameType + " High Score: " + score;
+        }
+        else
+        {
+            gameObject.GetComponent<Text>().text = "Highest Score with these settings: \n" + score;
+        }
     }
 
 }

@@ -512,6 +512,8 @@ public class TitleController : MonoBehaviour
         customRuleSet.UnlockedPieces = unlockedColorCount;
 
         Game_Mode_Helper.AllRuleSets[(int)GameMode.Custom] = customRuleSet;
+
+        hsds[(int)GameMode.Custom].update_scores();
     }
 
     //for the pumpkin pieceset

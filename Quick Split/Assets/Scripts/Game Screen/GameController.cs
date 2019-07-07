@@ -330,7 +330,7 @@ public class GameController : MonoBehaviour
         if (gameOver && ffGameOver)
         {
             ffGameOver = false;
-            achievementHandler.Add_Score(gameMode, score);
+            achievementHandler.Add_Score(Game_Mode_Helper.ActiveRuleSet, score);
             GameObject.Find("GO Black Screen").GetComponent<Fader>().FadeIn();
             tipText.text = tips[UnityEngine.Random.Range(0, tips.Count())];
             mc.Play_Music("Gameover");
@@ -783,7 +783,7 @@ public class GameController : MonoBehaviour
             scoreText.text = "Score:\n" + score;
         }
         //save current score
-        if (PlayerPrefs.GetInt(gameMode + Constants.TopScorePredicate, 0) < score)
+        if (PlayerPrefs.GetInt(Game_Mode_Helper.ActiveRuleSet.ToString() + Constants.TopScorePredicate, 0) < score)
         {
             if (!newHighScore)
             {
