@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
@@ -13,14 +12,13 @@ public class High_Score_Calculator : MonoBehaviour
     public Text[] ScoreList;
     public VerticalScrollSnap Scopes;
     public HorizontalScrollSnap Modes;
-
-    int currScope;
-    int prevScope;
-    int currMode;
-    int prevMode;
+    private int currScope;
+    private int prevScope;
+    private int currMode;
+    private int prevMode;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         currScope = 0;
         prevScope = -1;
@@ -29,7 +27,7 @@ public class High_Score_Calculator : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         //check to make sure the scores for the proper scope and mode are on display, and if they aren't, change them
         if (Scopes.gameObject.activeInHierarchy)
@@ -50,7 +48,7 @@ public class High_Score_Calculator : MonoBehaviour
     {
         if (Lookup_Scope(Scopes.CurrentPage) == "Local")
         {
-            string gameMode = Lookup_Game_Type(Modes.CurrentPage);
+            GameMode gameMode = (GameMode)Modes.CurrentPage;
             for (int i = 0; i < 15; i++)
             {
                 int currScore = PlayerPrefs.GetInt(gameMode + " score " + i, 0);
@@ -68,7 +66,9 @@ public class High_Score_Calculator : MonoBehaviour
         {
             //TODO: Implement global and friends lists for real
             for (int i = 0; i < 14; i++)
+            {
                 ScoreList[i].text = (i + 1) + " -------";
+            }
         }
     }
 
@@ -81,32 +81,26 @@ public class High_Score_Calculator : MonoBehaviour
         {
             for (int i = 0; i < 15; i++)
             {
-                PlayerPrefs.SetInt(Lookup_Game_Type(g) + " score " + i, 0);
+                PlayerPrefs.SetInt((GameMode)g + " score " + i, 0);
             }
         }
-        //This will not affect server scores
+
+        // reset custom top scores. Stores in strings which need to be looked up
+        for (int i = 0; i < Achievement_Script.NumberOfCustomScores; i++)
+        {
+            string rulesetStr = PlayerPrefs.GetString(Constants.CustomHighScoreRulesetLookup + i.ToString());
+            PlayerPrefs.DeleteKey(rulesetStr + Constants.TopScorePredicate);
+            PlayerPrefs.DeleteKey(Constants.CustomHighScoreRulesetLookup + i.ToString());
+        }
+
+        PlayerPrefs.SetInt(Constants.CustomHighScoreCountNumLookup, 0);
+        Achievement_Script.NumberOfCustomScores = 0;
+        //This will not affect server scores (if they existed)
     }
 
-    //this returns the game type name at the given index
-    string Lookup_Game_Type(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                return "Wiz";
-            case 1:
-                return "Quick";
-            case 2:
-                return "Wit";
-            case 3:
-                return "Holy";
-            default:
-                return "Wiz";
-        }
-    }
 
     //This reutrns the name of the scope at the given index
-    string Lookup_Scope(int index)
+    private string Lookup_Scope(int index)
     {
         switch (index)
         {

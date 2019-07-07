@@ -10,6 +10,9 @@ public static class Constants
 
     public static readonly string SfxVolumeLookup = "SFX Volume";
     public static readonly string MusicVolumeLookup = "Music Volume";
+
+    public static readonly string CustomHighScoreCountNumLookup = "Number of Custom Scores";
+    public static readonly string CustomHighScoreRulesetLookup = "Custom Ruleset ";
 }
 
 /// <summary>

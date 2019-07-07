@@ -12,6 +12,8 @@ public class Achievement_Script : MonoBehaviour
 
     public Achievement_Notification notification;
 
+    public static int NumberOfCustomScores;
+
     // Use this for initialization
     private void Awake()
     {
@@ -31,6 +33,8 @@ public class Achievement_Script : MonoBehaviour
         PlayerPrefs.SetInt(SplitterType.Default + Constants.SplitterUnlockedPredicate, 1);
         PlayerPrefs.SetInt(PieceSets.Default +Constants.PieceSetUnlockedPredicate, 1);
         PlayerPrefs.SetInt(PieceSets.Symbol + Constants.PieceSetUnlockedPredicate, 1);
+
+        NumberOfCustomScores = PlayerPrefs.GetInt(Constants.CustomHighScoreCountNumLookup, 0);
 
         splittersUnlocked = new bool[SplitterHelper.SplitterStrings.Length];
         piecesetsUnlocked = new bool[PieceSetHelper.PieceSetStrings.Length];
@@ -199,8 +203,16 @@ public class Achievement_Script : MonoBehaviour
         {
             // Custom game modes are unique per ruleset, we only keep the highest score here
             int topScore = PlayerPrefs.GetInt(ruleSet.ToString() + Constants.TopScorePredicate, 0);
+
             if (score > topScore)
             {
+                if (topScore == 0)
+                {
+                    PlayerPrefs.SetString(Constants.CustomHighScoreRulesetLookup + NumberOfCustomScores, ruleSet.ToString());
+                    NumberOfCustomScores++;
+                    PlayerPrefs.SetInt(Constants.CustomHighScoreCountNumLookup, NumberOfCustomScores);
+                }
+
                 PlayerPrefs.SetInt(ruleSet.ToString() + Constants.TopScorePredicate, score);
             }
         }
