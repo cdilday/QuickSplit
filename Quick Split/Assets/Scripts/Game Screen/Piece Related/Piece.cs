@@ -77,7 +77,7 @@ public class Piece : MonoBehaviour
     public Splitter splitter;
 
     public SpellHandler spellHandler;
-    private Bit_Pool BitPool;
+    private BitPool BitPool;
     private GameObject clacker;
     private Piece_Sprite_Holder spriteHolder;
     private RuntimeAnimatorController[] animations;
@@ -116,7 +116,7 @@ public class Piece : MonoBehaviour
         }
         else
         {
-            BitPool = BitPoolObject.GetComponent<Bit_Pool>();
+            BitPool = BitPoolObject.GetComponent<BitPool>();
         }
 
         clacker = GameObject.Find("Clacker");

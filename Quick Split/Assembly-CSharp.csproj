@@ -68,13 +68,12 @@
     <Compile Include="Assets\Scripts\Constants.cs" />
     <Compile Include="Assets\Scripts\Control_Selector.cs" />
     <Compile Include="Assets\Scripts\Countdown_Manager.cs" />
-    <Compile Include="Assets\Scripts\DisplayMetricsAndroid.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Fader.cs" />
     <Compile Include="Assets\Scripts\Game Screen\GameController.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Gears_Script.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Holder_Script.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Multiplier_Displayer.cs" />
-    <Compile Include="Assets\Scripts\Game Screen\Piece Related\Bit_Pool.cs" />
+    <Compile Include="Assets\Scripts\Game Screen\Piece Related\BitPool.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Color_Selector.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceScoreText.cs" />
@@ -116,8 +115,6 @@
     <Compile Include="Assets\Scripts\Title Screen\Guide_Toggler.cs" />
     <Compile Include="Assets\Scripts\Title Screen\High_Score_Displayer.cs" />
     <Compile Include="Assets\Scripts\Title Screen\Horizontal_Bar_Mover.cs" />
-    <Compile Include="Assets\Scripts\Title Screen\Image_Spriter.cs" />
-    <Compile Include="Assets\Scripts\Title Screen\Layer_Resizer.cs" />
     <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
     <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />
     <Compile Include="Assets\Scripts\Title Screen\TitleController.cs" />

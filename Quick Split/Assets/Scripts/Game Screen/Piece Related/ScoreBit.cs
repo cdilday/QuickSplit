@@ -14,7 +14,7 @@ public class ScoreBit : MonoBehaviour
     private float acceleration = 0.5f;
     private float speed;
     public int value;
-    private Bit_Pool BitPool;
+    private BitPool BitPool;
     private GameController gameController;
     private bool spellActive = false;
     private SpellHandler spellHandler;
@@ -33,7 +33,7 @@ public class ScoreBit : MonoBehaviour
         }
         else
         {
-            BitPool = BitPoolObject.GetComponent<Bit_Pool>();
+            BitPool = BitPoolObject.GetComponent<BitPool>();
         }
         transform.position = BitPoolObject.transform.position;
         Piece_Sprite_Holder spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>();

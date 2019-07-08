@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Bit_Pool : MonoBehaviour
+public class BitPool : MonoBehaviour
 {
 
     //This script is for proper tracking and efficient handling of score bits
