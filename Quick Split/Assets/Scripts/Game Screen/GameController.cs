@@ -14,12 +14,19 @@ public class GameController : MonoBehaviour
     public GameObject[,] grid = new GameObject[8, 16];
     public PieceColor[,] colorGrid = new PieceColor[8, 16];
 
-    //Pieces available to pull from
+    /// <summary>
+    /// Number of unlocked piece colors (Note : the pieces are unlocked in a different order thant their position in the PieceColor enum)
+    /// </summary>
     public int availableCount;
 
-    //checkgrid keeps track of what tiles have been checked
+    /// <summary>
+    /// This is used to keep track of which tiles have been checked during the checking process, since groups cause it to check out of order
+    /// </summary>
     public bool[,] checkGrid = new bool[8, 16];
-    //keeps track of every piece in a cluster during checks.
+
+    /// <summary>
+    /// Every cluster made while checking the board. This is be used to clear them and count combos
+    /// </summary>
     public GameObject[] cluster = new GameObject[16];
 
     //columns that contain pieces to be pushed in at some point
@@ -28,7 +35,6 @@ public class GameController : MonoBehaviour
     private TimeSpan lightIncrementTiming;
     private TimeSpan timeBeforeShaking;
 
-
     //Script for Spells
     private SpellHandler spellHandler;
 
@@ -36,7 +42,10 @@ public class GameController : MonoBehaviour
     public Text gameOverText;
     //text that gives a tip at gameover
     public Text tipText;
-    //tiptext to randomly pick from in editor
+    
+    /// <summary>
+    /// List of tips, set in the editor
+    /// </summary>
     public string[] tips;
 
     //numbers and text for statistics the player should know
@@ -49,11 +58,29 @@ public class GameController : MonoBehaviour
     public Text HighScoreText;
     public GameObject Score_Text_Canvas;
 
-    //pieces places is used to ensure both pieces have landed before checking the grid in Update()
+    /// <summary>
+    /// After each split piece lands this is incremented, so every 2 pieces the board needs to see if it should be checked in 
+    /// FixedUpdate using this value
+    /// </summary>
     private int piecesPlaced;
 
-    //checkFlag will make sure that a boardcheck is run when necessary
+    /// <summary>
+    /// This is set to true when a piece is split next to a piece of similar color, in which case the board needs to be re-checked for
+    /// potential pieces being cleared. Mainly for performance, as if pieces don't touch pieces of the same color this is still false
+    /// </summary>
     private bool checkFlag;
+
+    /// <summary>
+    /// This is true while the board is waiting to collapse, and will prevent the board from trying to check/delete pieces while sides 
+    /// are being moved in or the board is otherwise being altered 
+    /// </summary>
+    private bool boardWaiting = false;
+
+    /// <summary>
+    /// This forces a check of the board without breaking the multiplier. Used when chains of events occur, ie a group clearing causes a collapse that then forms
+    /// another group or a group clears and the sides come in
+    /// </summary>
+    private bool forceCheck = false;
 
     //Splitter keeps track of the splitter for easy access
     public Splitter splitter;
@@ -363,15 +390,21 @@ public class GameController : MonoBehaviour
         {
             mc.Stop_Slow_Tick();
         }
+
         //if both pieces have been placed, set the checkGrid to false and check the board
-        if (piecesPlaced >= 2)
+        if (!boardWaiting && (piecesPlaced >= 2 || forceCheck))
         {
-            piecesPlaced = 0;
-            checkGameOver = true;
-            if (checkFlag)
+            if(piecesPlaced >= 2 && !forceCheck)
             {
                 clearedLastTurn = piecesDeletedThisSplit;
                 piecesDeletedThisSplit = false;
+            }
+
+            piecesPlaced = 0;
+            checkGameOver = true;
+            if (checkFlag || forceCheck)
+            {
+                forceCheck = false;
                 checkBoard();
                 checkFlag = false;
                 //check to see if it's time to move the sides in
@@ -382,7 +415,7 @@ public class GameController : MonoBehaviour
             }
             GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
             //here's where we do side-entering management
-            if (Game_Mode_Helper.ActiveRuleSet.TurnedCrunch && !sidesChecked)
+            if (!boardWaiting && Game_Mode_Helper.ActiveRuleSet.TurnedCrunch && !sidesChecked)
             {
                 if (movesMade % sideMovesLimit == 0)
                 {
@@ -438,7 +471,7 @@ public class GameController : MonoBehaviour
                 }
                 sidesChecked = true;
             }
-            else if ((Game_Mode_Helper.ActiveRuleSet.TimedCrunch) && !sidesChecked)
+            else if (!boardWaiting && (Game_Mode_Helper.ActiveRuleSet.TimedCrunch) && !sidesChecked)
             {
                 //quick mode moves the sides in based off of time, not moves
                 if (quickMoveSides)
@@ -576,28 +609,32 @@ public class GameController : MonoBehaviour
 
 
         //if the board changed, collapse & check it again
-        if (deleted)
+        if (!boardWaiting)
         {
-            collapse();
-            multiRun = true;
-            piecesDeletedThisSplit = true;
-            StartCoroutine(boardWaiter());
-        }
-        else
-        {
-            multiRun = false;
-            checkGameOver = true;
-            if (!gameOver)
+            if (deleted)
             {
-                if (!piecesDeletedThisSplit)
-                {
-                    multiplier = 1;
-                }
-
-                splitter.setState(Splitter.SplitterStates.canShoot, true);
+                collapse();
+                multiRun = true;
+                piecesDeletedThisSplit = true;
+                StartCoroutine(boardWaiter());
             }
-            clearedLastTurn = piecesDeletedThisSplit;
+            else
+            {
+                multiRun = false;
+                checkGameOver = true;
+                if (!gameOver)
+                {
+                    if (!piecesDeletedThisSplit)
+                    {
+                        multiplier = 1;
+                    }
+
+                    splitter.setState(Splitter.SplitterStates.canShoot, true);
+                }
+                clearedLastTurn = piecesDeletedThisSplit;
+            }
         }
+
         if (gameMode != GameMode.Holy && gameMode != GameMode.Wiz && !achievementHandler.is_Pieceset_Unlocked(PieceSets.Domino) && multiplier >= 9)
         {
             achievementHandler.Unlock_Pieceset(PieceSets.Domino);
@@ -905,8 +942,10 @@ public class GameController : MonoBehaviour
     //this is solely to let the pieces fall into place aesthetically
     public IEnumerator boardWaiter()
     {
-        yield return new WaitForSeconds(0.25f);
-        checkBoard();
+        boardWaiting = true;
+        yield return new WaitForSeconds(0.3f);
+        forceCheck = true;
+        boardWaiting = false;
     }
 
     //this begins the countdown at the start of Quick mode
