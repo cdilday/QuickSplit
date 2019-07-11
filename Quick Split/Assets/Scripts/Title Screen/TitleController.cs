@@ -11,12 +11,19 @@ public class TitleController : MonoBehaviour
 
     public int versionNumber;
 
-    public GameObject gameModeLayer;
-    public GameObject howToPlayLayer;
-    public GameObject creditsLayer;
-    public GameObject optionsLayer;
-    public GameObject highScoreLayer;
-    public GameObject achievementLayer;
+    public enum TitleLayer
+    {
+        GameSelect = 0,
+        HowToPlay = 1,
+        Credits = 2,
+        Options = 3,
+        HighScore = 4,
+        Achievement = 5,
+        MusicPlayer = 6,
+    }
+
+    public GameObject[] TitleScreens;
+
     public Shutter_Handler shutter;
     public VerticalScrollSnap gameModeScroller;
 
@@ -48,6 +55,10 @@ public class TitleController : MonoBehaviour
     //Specifically for the Pumpkin Achievement code
     private int codeStage = 0;
 
+    /// <summary>
+    /// This is a big mask that covers the whole game if it detects it's the first time a player's played. It will only allow the player to
+    /// go to the how to play layer, which will then set a playerpref to 1, destroy this mask, and it won't show up ever again
+    /// </summary>
     public GameObject HTPEmphasizer;
 
     #region Custom mode controls
@@ -83,7 +94,7 @@ public class TitleController : MonoBehaviour
             PlayerPrefs.SetInt("Version", versionNumber);
         }
         achievementHandler = GameObject.Find("Achievement Handler").GetComponent<Achievement_Script>();
-        Goto_Game_Mode_Layer();
+        ChangeLayer((int)TitleLayer.GameSelect);
         shutter.Begin_Vertical_Open();
 
         GameObject MCobject = GameObject.FindGameObjectWithTag("Music Controller");
@@ -124,13 +135,13 @@ public class TitleController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             // if the main screen is active, just exit the application
-            if (gameModeLayer.activeSelf)
+            if (TitleScreens[(int)TitleLayer.GameSelect].activeSelf)
             {
                 Application.Quit();
             }
             else
             {
-                Goto_Game_Mode_Layer();
+                ChangeLayer((int)TitleLayer.GameSelect);
             }
         }
     }
@@ -142,7 +153,7 @@ public class TitleController : MonoBehaviour
         activeMode = gameModeScroller.CurrentPage;
         if (activeMode == 0)
         {
-            Goto_Credits_Layer();
+            ChangeLayer((int)TitleLayer.Credits);
         }
         else
         {
@@ -174,72 +185,34 @@ public class TitleController : MonoBehaviour
         }
     }
 
-    //loads the game mode layer and unloads the other layers
-    public void Goto_Game_Mode_Layer()
+    /// <summary>
+    /// Changes the layer to the given Title Layer
+    /// </summary>
+    public void ChangeLayer (int layerNum)
     {
-        gameModeLayer.SetActive(true);
-        howToPlayLayer.SetActive(false);
-        creditsLayer.SetActive(false);
-        optionsLayer.SetActive(false);
-        highScoreLayer.SetActive(false);
-        achievementLayer.SetActive(false);
+        ChangeLayer((TitleLayer)layerNum);
     }
 
-    //loads the How to Play Layer and unloads the other layers
-    public void Goto_How_To_Play_Layer()
+    /// <summary>
+    /// Changes the layer to the given Title Layer
+    /// </summary>
+    public void ChangeLayer(TitleLayer newScreen)
     {
-        howToPlayLayer.SetActive(true);
-        gameModeLayer.SetActive(false);
-        creditsLayer.SetActive(false);
-        optionsLayer.SetActive(false);
-        highScoreLayer.SetActive(false);
-        achievementLayer.SetActive(false);
-        PlayerPrefs.SetInt("Played Before", 1);
-        if (HTPEmphasizer != null)
+        foreach (GameObject layer in TitleScreens)
         {
-            Destroy(HTPEmphasizer);
+            layer.SetActive(false);
         }
-    }
 
-    //loads the Credits layer and unloads the other layers
-    public void Goto_Credits_Layer()
-    {
-        creditsLayer.SetActive(true);
-        gameModeLayer.SetActive(false);
-        howToPlayLayer.SetActive(false);
-        optionsLayer.SetActive(false);
-        highScoreLayer.SetActive(false);
-        achievementLayer.SetActive(false);
-    }
+        TitleScreens[(int)newScreen].SetActive(true);
 
-    public void Goto_Options_Layer()
-    {
-        optionsLayer.SetActive(true);
-        howToPlayLayer.SetActive(false);
-        gameModeLayer.SetActive(false);
-        creditsLayer.SetActive(false);
-        highScoreLayer.SetActive(false);
-        achievementLayer.SetActive(false);
-    }
-
-    public void Goto_High_Score_Layer()
-    {
-        highScoreLayer.SetActive(true);
-        optionsLayer.SetActive(false);
-        howToPlayLayer.SetActive(false);
-        gameModeLayer.SetActive(false);
-        creditsLayer.SetActive(false);
-        achievementLayer.SetActive(false);
-    }
-
-    public void Goto_Achievement_Layer()
-    {
-        gameModeLayer.SetActive(false);
-        howToPlayLayer.SetActive(false);
-        creditsLayer.SetActive(false);
-        optionsLayer.SetActive(false);
-        highScoreLayer.SetActive(false);
-        achievementLayer.SetActive(true);
+        if (newScreen == TitleLayer.HowToPlay)
+        {
+            PlayerPrefs.SetInt("Played Before", 1);
+            if (HTPEmphasizer != null)
+            {
+                Destroy(HTPEmphasizer);
+            }
+        }
     }
 
     public void Reset_High_Scores()
@@ -294,7 +267,7 @@ public class TitleController : MonoBehaviour
 
     public void OnGameModeSelectionChanged()
     {
-        if (gameModeLayer.activeSelf)
+        if (TitleScreens[(int)TitleLayer.GameSelect].activeSelf)
         {
             activeMode = gameModeScroller.CurrentPage;
             if (activeMode == gameModeScroller.ChildObjects.Length - 1 && prevMode == gameModeScroller.ChildObjects.Length - 2)
@@ -516,7 +489,10 @@ public class TitleController : MonoBehaviour
         hsds[(int)GameMode.Custom].update_scores();
     }
 
-    //for the pumpkin pieceset
+    /// <summary>
+    /// Takes in directions to unlock the Pumpkin Piece set
+    /// </summary>
+    /// <param name="dir"> string - Up, Down, Left, or Right</param>
     public void code(string dir)
     {
         if (achievementHandler.is_Pieceset_Unlocked(PieceSets.Pumpkin))
@@ -527,15 +503,6 @@ public class TitleController : MonoBehaviour
         switch (codeStage)
         {
             case 0:
-                if (dir == "Up")
-                {
-                    codeStage++;
-                }
-                else
-                {
-                    codeStage = 0;
-                }
-                break;
             case 1:
                 if (dir == "Up")
                 {
@@ -547,15 +514,6 @@ public class TitleController : MonoBehaviour
                 }
                 break;
             case 2:
-                if (dir == "Down")
-                {
-                    codeStage++;
-                }
-                else
-                {
-                    codeStage = 0;
-                }
-                break;
             case 3:
                 if (dir == "Down")
                 {
@@ -567,6 +525,7 @@ public class TitleController : MonoBehaviour
                 }
                 break;
             case 4:
+            case 6:
                 if (dir == "Left")
                 {
                     codeStage++;
@@ -578,16 +537,6 @@ public class TitleController : MonoBehaviour
                 break;
             case 5:
                 if (dir == "Right")
-                {
-                    codeStage++;
-                }
-                else
-                {
-                    codeStage = 0;
-                }
-                break;
-            case 6:
-                if (dir == "Left")
                 {
                     codeStage++;
                 }
