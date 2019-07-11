@@ -199,7 +199,7 @@ public class SpellHandler : MonoBehaviour
         Spell_Used(PieceColor.Orange);
         spellColor = PieceColor.Orange;
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
-        picker.GetComponent<Color_Selector>().givePurpose("Select a color to switch with on the left side");
+        picker.GetComponent<ColorSelector>().givePurpose("Select a color to switch with on the left side");
     }
 
     //called after both selections are made
@@ -436,7 +436,7 @@ public class SpellHandler : MonoBehaviour
         Spell_Used(PieceColor.Purple);
         spellColor = PieceColor.Purple;
         GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
-        picker.GetComponent<Color_Selector>().givePurpose("Select a color to eliminate from the board");
+        picker.GetComponent<ColorSelector>().givePurpose("Select a color to eliminate from the board");
         splitter.setState(Splitter.SplitterStates.isActive, false);
     }
 
@@ -753,7 +753,7 @@ public class SpellHandler : MonoBehaviour
                 {
                     pickedColor1 = color;
                     GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
-                    picker.GetComponent<Color_Selector>().givePurpose("Select a color to switch with on the right side");
+                    picker.GetComponent<ColorSelector>().givePurpose("Select a color to switch with on the right side");
                     //go through left side, activate
                     for (int r = 0; r < 8; r++)
                     {

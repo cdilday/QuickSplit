@@ -11,7 +11,7 @@ public class Selectable_Color : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            gameObject.GetComponentInParent<Color_Selector>().colorSelected(pieceColor);
+            gameObject.GetComponentInParent<ColorSelector>().colorSelected(pieceColor);
         }
     }
 

@@ -309,10 +309,10 @@ public class Piece : MonoBehaviour
         }
 
         //make sure to change the color of the pulser as well
-        Piece_Pulser piecePulser = null;
-        if (GetComponentInChildren<Piece_Pulser>())
+        PiecePulseEffect piecePulser = null;
+        if (GetComponentInChildren<PiecePulseEffect>())
         {
-            piecePulser = GetComponentInChildren<Piece_Pulser>();
+            piecePulser = GetComponentInChildren<PiecePulseEffect>();
             piecePulser.spriteRenderer.sprite = sprites[(int)pieceColor];
         }
 
@@ -354,7 +354,7 @@ public class Piece : MonoBehaviour
                 if (GameObject.Find("Color Selector(Clone)") == null)
                 {
                     GameObject picker = (GameObject)Instantiate(Resources.Load("Color Selector"));
-                    picker.GetComponent<Color_Selector>().givePurpose("Select a color to change this piece to");
+                    picker.GetComponent<ColorSelector>().givePurpose("Select a color to change this piece to");
                     spellHandler.selectedPiece = this;
                     selectable = false;
                 }

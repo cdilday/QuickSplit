@@ -6,7 +6,7 @@ public class Sample_Piece_Selector : MonoBehaviour
 
     //this script puts the correct sprite on the given pieces on the various creens showing pieces, and also handles option menu selection
 
-    public Piece_Colorer[] samplePieces;
+    public PieceColorer[] samplePieces;
     public int index = 0;
     public Text headerText;
     private Achievement_Script achievementHandler;
@@ -73,7 +73,7 @@ public class Sample_Piece_Selector : MonoBehaviour
 
         PlayerPrefs.SetString("Piece Set", ((PieceSets)index).ToString());
         headerText.text = PieceSetHelper.PieceSetStrings[index];
-        foreach (Piece_Colorer pc in samplePieces)
+        foreach (PieceColorer pc in samplePieces)
         {
             pc.updateColor();
         }
@@ -95,7 +95,7 @@ public class Sample_Piece_Selector : MonoBehaviour
 
         PlayerPrefs.SetString("Piece Set", PieceSetHelper.PieceSetStrings[index]);
         headerText.text = PieceSetHelper.PieceSetStrings[index];
-        foreach (Piece_Colorer pc in samplePieces)
+        foreach (PieceColorer pc in samplePieces)
         {
             pc.updateColor();
         }
