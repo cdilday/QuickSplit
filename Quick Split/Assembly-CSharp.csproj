@@ -79,7 +79,7 @@
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceColorer.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PiecePulseEffect.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceScoreText.cs" />
-    <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece_Spell_Effect.cs" />
+    <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceSpellEffect.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece_Sprite_Holder.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\ScoreBit.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Pulser.cs" />

@@ -262,7 +262,7 @@ public class SpellHandler : MonoBehaviour
                 int c = (int)leftPieces[randPiece].GetComponent<Piece>().gridPos.y;
                 leftPieces.RemoveAt(randPiece);
                 //marking the object as dead so that the orangeActive state knows to delete it
-                gameController.grid[r, c].BroadcastMessage("Activate_Orange", "dead", SendMessageOptions.DontRequireReceiver);
+                gameController.grid[r, c].BroadcastMessage("ActivateOrange", "dead", SendMessageOptions.DontRequireReceiver);
             }
         }
         else
@@ -273,20 +273,20 @@ public class SpellHandler : MonoBehaviour
                 int r = (int)rightPieces[randPiece].GetComponent<Piece>().gridPos.x;
                 int c = (int)rightPieces[randPiece].GetComponent<Piece>().gridPos.y;
                 rightPieces.RemoveAt(randPiece);
-                gameController.grid[r, c].BroadcastMessage("Activate_Orange", "dead", SendMessageOptions.DontRequireReceiver);
+                gameController.grid[r, c].BroadcastMessage("ActivateOrange", "dead", SendMessageOptions.DontRequireReceiver);
             }
         }
         //swap colors in each array
         for (int i = 0; i < leftPieces.Count; i++)
         {
             //recall Activate orange on the left side to update with the second picked color and get the animations going
-            leftPieces[i].BroadcastMessage("Activate_Orange", pickedColor2.ToString(), SendMessageOptions.DontRequireReceiver);
+            leftPieces[i].BroadcastMessage("ActivateOrange", pickedColor2.ToString(), SendMessageOptions.DontRequireReceiver);
         }
 
         for (int i = 0; i < rightPieces.Count; i++)
         {
             //recall Activate orange on the right side to update with the 1st picked color and get the animations going
-            rightPieces[i].BroadcastMessage("Activate_Orange", pickedColor1.ToString(), SendMessageOptions.DontRequireReceiver);
+            rightPieces[i].BroadcastMessage("ActivateOrange", pickedColor1.ToString(), SendMessageOptions.DontRequireReceiver);
         }
         pickedColor1 = PieceColor.Empty;
         pickedColor2 = PieceColor.Empty;
@@ -475,7 +475,7 @@ public class SpellHandler : MonoBehaviour
                 if (gameController.grid[rowLeft, colLeft] != null)
                 {
                     empty = false;
-                    gameController.grid[rowLeft, colLeft].BroadcastMessage("Activate_Purple", pickedColor1, SendMessageOptions.DontRequireReceiver);
+                    gameController.grid[rowLeft, colLeft].BroadcastMessage("ActivatePurple", pickedColor1, SendMessageOptions.DontRequireReceiver);
                     tempr = rowLeft;
                     tempc = colLeft;
                 }
@@ -528,7 +528,7 @@ public class SpellHandler : MonoBehaviour
                 //if this was marked and the previous checks marked it done, mark the lastpiece so it know to run a check
                 if (tempr != -1 && leftDone && rightDone)
                 {
-                    gameController.grid[tempr, tempc].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+                    gameController.grid[tempr, tempc].GetComponentInChildren<PieceSpellEffect>().lastPiece = true;
                 }
             }
 
@@ -539,7 +539,7 @@ public class SpellHandler : MonoBehaviour
                 if (gameController.grid[rowRight, colRight] != null)
                 {
                     empty = false;
-                    gameController.grid[rowRight, colRight].BroadcastMessage("Activate_Purple", pickedColor1, SendMessageOptions.DontRequireReceiver);
+                    gameController.grid[rowRight, colRight].BroadcastMessage("ActivatePurple", pickedColor1, SendMessageOptions.DontRequireReceiver);
                     tempr = rowRight;
                     tempc = colRight;
                 }
@@ -585,7 +585,7 @@ public class SpellHandler : MonoBehaviour
                 } while (!rightDone && gameController.grid[rowRight, colRight] == null);
                 if (tempr != -1 && leftDone && rightDone)
                 {
-                    gameController.grid[tempr, tempc].GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+                    gameController.grid[tempr, tempc].GetComponentInChildren<PieceSpellEffect>().lastPiece = true;
                 }
             }
 
@@ -605,9 +605,9 @@ public class SpellHandler : MonoBehaviour
         //again most of the hard work is done by the piece spell effect script, this just tells it when to activate
         Spell_Used(PieceColor.Cyan);
         splitter.rightSlot.GetComponent<Piece>().isBomb = true;
-        splitter.rightSlot.BroadcastMessage("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
+        splitter.rightSlot.BroadcastMessage("ActivateCyan", null, SendMessageOptions.DontRequireReceiver);
         splitter.leftSlot.GetComponent<Piece>().isBomb = true;
-        splitter.leftSlot.BroadcastMessage("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
+        splitter.leftSlot.BroadcastMessage("ActivateCyan", null, SendMessageOptions.DontRequireReceiver);
     }
     //White spell: Sorts the board from rainbow down
     public void Whitespell()
@@ -620,7 +620,7 @@ public class SpellHandler : MonoBehaviour
             {
                 if (gameController.grid[r, c] != null)
                 {
-                    gameController.grid[r, c].BroadcastMessage("Activate_White", null, SendMessageOptions.DontRequireReceiver);
+                    gameController.grid[r, c].BroadcastMessage("ActivateWhite", null, SendMessageOptions.DontRequireReceiver);
                 }
             }
         }
@@ -763,7 +763,7 @@ public class SpellHandler : MonoBehaviour
                             {
                                 if (gameController.colorGrid[r, c] == pickedColor1)
                                 {
-                                    gameController.grid[r, c].BroadcastMessage("Activate_Orange", "left", SendMessageOptions.DontRequireReceiver);
+                                    gameController.grid[r, c].BroadcastMessage("ActivateOrange", "left", SendMessageOptions.DontRequireReceiver);
                                 }
                             }
                         }
@@ -781,7 +781,7 @@ public class SpellHandler : MonoBehaviour
                             {
                                 if (gameController.colorGrid[r, c] == pickedColor2)
                                 {
-                                    gameController.grid[r, c].BroadcastMessage("Activate_Orange", pickedColor2.ToString(), SendMessageOptions.DontRequireReceiver);
+                                    gameController.grid[r, c].BroadcastMessage("ActivateOrange", pickedColor2.ToString(), SendMessageOptions.DontRequireReceiver);
                                 }
                             }
                         }
@@ -790,19 +790,19 @@ public class SpellHandler : MonoBehaviour
                 }
                 break;
             case PieceColor.Green:
-                selectedPiece.BroadcastMessage("Activate_Green", color, SendMessageOptions.DontRequireReceiver);
+                selectedPiece.BroadcastMessage("ActivateGreen", color, SendMessageOptions.DontRequireReceiver);
                 if (spellLimit == 1)
                 {
-                    selectedPiece.GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+                    selectedPiece.GetComponentInChildren<PieceSpellEffect>().lastPiece = true;
                 }
 
                 GreenHelper();
                 break;
             case PieceColor.Blue:
-                selectedPiece.BroadcastMessage("Activate_Blue", color, SendMessageOptions.DontRequireReceiver);
+                selectedPiece.BroadcastMessage("ActivateBlue", color, SendMessageOptions.DontRequireReceiver);
                 if (spellLimit == 1)
                 {
-                    selectedPiece.GetComponentInChildren<Piece_Spell_Effect>().lastPiece = true;
+                    selectedPiece.GetComponentInChildren<PieceSpellEffect>().lastPiece = true;
                 }
 
                 BlueHelper();

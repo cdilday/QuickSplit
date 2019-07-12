@@ -205,6 +205,7 @@ public class Piece : MonoBehaviour
                 }
                 gameObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)pieceColor];
             }
+
             prevColorNum = ((int)Time.time) % 8;
         }
     }
@@ -262,7 +263,7 @@ public class Piece : MonoBehaviour
             }
             if (isBomb)
             {
-                gameObject.BroadcastMessage("Activate_Cyan", null, SendMessageOptions.DontRequireReceiver);
+                gameObject.BroadcastMessage("ActivateCyan", null, SendMessageOptions.DontRequireReceiver);
             }
         }
     }
