@@ -189,20 +189,16 @@ public class Piece : MonoBehaviour
         //animations
         if (animations != null)
         {
-            if (((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == (int)pieceColor)
+            if (((int)Time.time) % 8 != prevColorNum && ((int)Time.time) % 8 == (int)pieceColor && !hasPlayedAnim)
             {
                 gameObject.GetComponent<Animator>().SetBool("isPlaying", true);
                 hasPlayedAnim = true;
                 animStartTime = Time.time;
             }
-            else if (hasPlayedAnim && (((int)Time.time) % 8 == (int)pieceColor || gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time))
+            else if (hasPlayedAnim && gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + animStartTime < Time.time)
             {
-                float animPlayLength = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * (1 / gameObject.GetComponent<Animator>().speed);
-                if (animPlayLength + animStartTime < Time.time)
-                {
-                    gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
-                    hasPlayedAnim = false;
-                }
+                gameObject.GetComponent<Animator>().SetBool("isPlaying", false);
+                hasPlayedAnim = false;
                 gameObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)pieceColor];
             }
 
