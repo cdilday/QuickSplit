@@ -11,7 +11,7 @@ public class SpellHandler : MonoBehaviour
 
     private GameController gameController;
     private Splitter splitter;
-    private Holder_Script holder;
+    private HolderScript holder;
     private Achievement_Script achievementHandler;
 
     public bool[] SpellReady = new bool[8];
@@ -82,7 +82,7 @@ public class SpellHandler : MonoBehaviour
         }
         else
         {
-            holder = holderObject.GetComponent<Holder_Script>();
+            holder = holderObject.GetComponent<HolderScript>();
         }
 
         foreach (Text spellText in SpellText)

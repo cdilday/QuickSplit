@@ -67,7 +67,7 @@ public class Splitter : MonoBehaviour
     private Dictionary<int, bool> idIsDrag;
 
     //objects the splitter will need to use
-    public Holder_Script holder;
+    public HolderScript holder;
     public GameController gameController;
     public Camera mainCamera;
     private PieceSplitterAssetHelper spriteHolder;
@@ -86,7 +86,7 @@ public class Splitter : MonoBehaviour
         GameObject holderObject = GameObject.FindWithTag("Holder");
         if (holderObject != null)
         {
-            holder = holderObject.GetComponent<Holder_Script>();
+            holder = holderObject.GetComponent<HolderScript>();
         }
         //start the game with random pieces in the holder
         int left = Random.Range(0, gameController.availableCount);
