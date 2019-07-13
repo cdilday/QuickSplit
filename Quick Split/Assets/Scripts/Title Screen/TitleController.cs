@@ -6,9 +6,7 @@ using UnityEngine.UI.Extensions;
 
 public class TitleController : MonoBehaviour
 {
-
     //This script handles most of the important UI and movements on the main menu, and acts on other objects in the menu as well
-
     public int versionNumber;
 
     public enum TitleLayer

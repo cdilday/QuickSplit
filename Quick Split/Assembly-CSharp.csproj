@@ -80,7 +80,7 @@
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PiecePulseEffect.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceScoreText.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceSpellEffect.cs" />
-    <Compile Include="Assets\Scripts\Game Screen\Piece Related\Piece_Sprite_Holder.cs" />
+    <Compile Include="Assets\Scripts\Game Screen\Piece Related\PieceSplitterAssetHelper.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Piece Related\ScoreBit.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Pulser.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Red_Spell_Script.cs" />
@@ -95,7 +95,7 @@
     <Compile Include="Assets\Scripts\Game Screen\Splitter.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Splitter_Animator_Script.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Splitter_Charged_Effect.cs" />
-    <Compile Include="Assets\Scripts\Game Screen\Wedges_Script.cs" />
+    <Compile Include="Assets\Scripts\Game Screen\WedgesScript.cs" />
     <Compile Include="Assets\Scripts\Game Screen\Yellow_Spell_Effect.cs" />
     <Compile Include="Assets\Scripts\GameOver_Deleter.cs" />
     <Compile Include="Assets\Scripts\Game_Mode_Helper.cs" />
@@ -115,8 +115,8 @@
     <Compile Include="Assets\Scripts\Title Screen\Guide_Toggler.cs" />
     <Compile Include="Assets\Scripts\Title Screen\High_Score_Displayer.cs" />
     <Compile Include="Assets\Scripts\Title Screen\Horizontal_Bar_Mover.cs" />
-    <Compile Include="Assets\Scripts\Title Screen\Sample_Piece_Selector.cs" />
-    <Compile Include="Assets\Scripts\Title Screen\Sample_Splitter_Selector.cs" />
+    <Compile Include="Assets\Scripts\Title Screen\SamplePieceSelector.cs" />
+    <Compile Include="Assets\Scripts\Title Screen\SampleSplitterSelector.cs" />
     <Compile Include="Assets\Scripts\Title Screen\TitleController.cs" />
     <Compile Include="Assets\Scripts\Transparent_Guide.cs" />
     <Compile Include="Assets\colorblind\ColorBlindFilter.cs" />

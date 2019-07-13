@@ -36,8 +36,8 @@ public class ScoreBit : MonoBehaviour
             BitPool = BitPoolObject.GetComponent<BitPool>();
         }
         transform.position = BitPoolObject.transform.position;
-        Piece_Sprite_Holder spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>();
-        sprites = spriteHolder.Get_Sprites();
+        PieceSplitterAssetHelper spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<PieceSplitterAssetHelper>();
+        sprites = spriteHolder.GetSprites();
         gameObject.SetActive(false);
     }
 

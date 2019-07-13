@@ -19,7 +19,7 @@ public class Spell_Tab : MonoBehaviour
     private bool wasTouching;
     private float startTime;
     public float transitionLength;
-    private Piece_Sprite_Holder spriteHolder;
+    private PieceSplitterAssetHelper spriteHolder;
     public Sprite[] sprites = new Sprite[8];
     private Vector3 activePos;
     private Vector3 inActivePos;
@@ -42,8 +42,8 @@ public class Spell_Tab : MonoBehaviour
         DescCanvas = GameObject.Find("Description Canvas");
         splitter = GameObject.FindGameObjectWithTag("Splitter").GetComponent<Splitter>();
 
-        spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>();
-        sprites = spriteHolder.Get_Sprites();
+        spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<PieceSplitterAssetHelper>();
+        sprites = spriteHolder.GetSprites();
 
         imageRenderer = GetComponent<Image>();
 

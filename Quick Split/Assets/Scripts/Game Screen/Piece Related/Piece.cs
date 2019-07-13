@@ -79,7 +79,7 @@ public class Piece : MonoBehaviour
     public SpellHandler spellHandler;
     private BitPool BitPool;
     private GameObject clacker;
-    private Piece_Sprite_Holder spriteHolder;
+    private PieceSplitterAssetHelper spriteHolder;
     private RuntimeAnimatorController[] animations;
     private int prevColorNum;
     private bool hasPlayedAnim;
@@ -122,9 +122,9 @@ public class Piece : MonoBehaviour
         clacker = GameObject.Find("Clacker");
 
         //time to set up piece visuals
-        spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>();
-        sprites = spriteHolder.Get_Sprites();
-        animations = spriteHolder.Get_Animations();
+        spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<PieceSplitterAssetHelper>();
+        sprites = spriteHolder.GetSprites();
+        animations = spriteHolder.GetPieceSetAnimations();
         if (animations == null)
         {
             Destroy(gameObject.GetComponent<Animator>());

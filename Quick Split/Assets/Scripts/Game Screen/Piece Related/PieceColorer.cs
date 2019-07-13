@@ -8,12 +8,12 @@ public class PieceColorer : MonoBehaviour
     public PieceColor pieceColor;
     private Sprite[] sprites = new Sprite[8];
 
-    public Piece_Sprite_Holder spriteHolder;
+    public PieceSplitterAssetHelper spriteHolder;
 
     // Use this for initialization
     private void Start()
     {
-        spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>();
+        spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<PieceSplitterAssetHelper>();
         updateColor();
     }
 
@@ -22,7 +22,7 @@ public class PieceColorer : MonoBehaviour
     /// </summary>
     public void updateColor()
     {
-        sprites = spriteHolder.Get_Sprites();
+        sprites = spriteHolder.GetSprites();
         if (gameObject.GetComponent<SpriteRenderer>())
         {
             gameObject.GetComponent<SpriteRenderer>().sprite = sprites[(int)pieceColor];

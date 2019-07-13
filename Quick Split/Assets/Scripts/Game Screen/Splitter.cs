@@ -70,7 +70,7 @@ public class Splitter : MonoBehaviour
     public Holder_Script holder;
     public GameController gameController;
     public Camera mainCamera;
-    private Piece_Sprite_Holder spriteHolder;
+    private PieceSplitterAssetHelper spriteHolder;
     private AudioSource FireSFX;
 
     // Use this for initialization
@@ -107,7 +107,7 @@ public class Splitter : MonoBehaviour
         splitState.inTransition = false;
         splitState.yellowReady = false;
 
-        gameObject.GetComponent<SpriteRenderer>().sprite = GameObject.Find("Piece Sprite Holder").GetComponent<Piece_Sprite_Holder>().Get_Splitter();
+        gameObject.GetComponent<SpriteRenderer>().sprite = GameObject.Find("Piece Sprite Holder").GetComponent<PieceSplitterAssetHelper>().GetSplitter();
         FireSFX = GetComponent<AudioSource>();
 
         if (!overrideControlType)
@@ -323,7 +323,7 @@ public class Splitter : MonoBehaviour
         FireSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         FireSFX.Play();
         //tell the wedges that it has fired
-        gameObject.BroadcastMessage("Has_Fired", null, SendMessageOptions.DontRequireReceiver);
+        gameObject.BroadcastMessage("HasFired", null, SendMessageOptions.DontRequireReceiver);
         GameObject tempSH = GameObject.Find("Spell Handler");
         if (tempSH != null)
         {

@@ -13,6 +13,9 @@ public static class Constants
 
     public static readonly string CustomHighScoreCountNumLookup = "Number of Custom Scores";
     public static readonly string CustomHighScoreRulesetLookup = "Custom Ruleset ";
+
+    public static readonly string PieceSetOption = "Piece Set";
+    public static readonly string SplitterTypeOption = "Splitter Type";
 }
 
 /// <summary>
