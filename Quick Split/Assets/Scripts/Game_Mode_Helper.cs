@@ -2,6 +2,9 @@
 using System.Text;
 using UnityEngine;
 
+/// <summary>
+/// Static cless that contains important functions involving checking game modes
+/// </summary>
 public static class Game_Mode_Helper
 {
     public static readonly RuleSet WizRuleSet = new RuleSet(GameMode.Wiz, true, 15, 5, 77);

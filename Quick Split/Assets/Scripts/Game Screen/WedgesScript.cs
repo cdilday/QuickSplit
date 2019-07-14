@@ -13,14 +13,14 @@ public class WedgesScript : MonoBehaviour
 
     public Sprite[] IdleSprites;
     public RuntimeAnimatorController[] wedgeAnimators;
-    private Achievement_Script achievementHandler;
+    private ScoreAndAchievementHandler achievementHandler;
 
     // Use this for initialization
     private void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        achievementHandler = GameObject.Find("Achievement Handler").GetComponent<Achievement_Script>();
+        achievementHandler = GameObject.Find("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
         SplitterType = (SplitterType)PlayerPrefs.GetInt(Constants.SplitterTypeOption, (int) SplitterType.Default);
         if (SplitterType == SplitterType.Programmer)
         {

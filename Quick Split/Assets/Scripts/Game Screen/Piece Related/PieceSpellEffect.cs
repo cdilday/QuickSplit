@@ -206,7 +206,7 @@ public class PieceSpellEffect : MonoBehaviour
             //if it's the final piece, do the board checks
             if (lastPiece)
             {
-                StartCoroutine(GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>().Purple_Splitter_Checker(gameController.Get_Danger_Pieces()));
+                StartCoroutine(GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>().PurpleSplitterChecker(gameController.Get_Danger_Pieces()));
                 gameController.collapse();
                 StartCoroutine(gameController.boardWaiter());
                 gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
@@ -273,7 +273,7 @@ public class PieceSpellEffect : MonoBehaviour
 
                     if (numDeleted >= 10)
                     {
-                        GameObject.FindGameObjectWithTag("Achievement Handler").BroadcastMessage("Cyan_Splitter_Checker", null, SendMessageOptions.DontRequireReceiver);
+                        GameObject.FindGameObjectWithTag("Achievement Handler").BroadcastMessage("CyanSplitterChecker", null, SendMessageOptions.DontRequireReceiver);
                     }
                 }
             }

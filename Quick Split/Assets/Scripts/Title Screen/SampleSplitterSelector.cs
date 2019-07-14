@@ -9,7 +9,7 @@ public class SampleSplitterSelector : MonoBehaviour
     public int index = 0;
     public Text headerText;
     private Image image;
-    private Achievement_Script achievementHandler;
+    private ScoreAndAchievementHandler achievementHandler;
     private PieceSplitterAssetHelper pieceSpriteHolder;
     private SplitterType activeSplitter;
 
@@ -20,10 +20,10 @@ public class SampleSplitterSelector : MonoBehaviour
         pieceSpriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<PieceSplitterAssetHelper>();
         htpSplitter.sprite = pieceSpriteHolder.GetSplitter();
 
-        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
+        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
 
         activeSplitter = (SplitterType)PlayerPrefs.GetInt(Constants.SplitterTypeOption, (int)SplitterType.Default);
-        headerText.text = SplitterHelper.Get_Splitter_Name(activeSplitter);
+        headerText.text = Splitter_Helper.Get_Splitter_Name(activeSplitter);
         index = (int) activeSplitter;
 
         image = gameObject.GetComponent<Image>();
@@ -35,17 +35,17 @@ public class SampleSplitterSelector : MonoBehaviour
         {
             if (index <= 0)
             {
-                index = SplitterHelper.SplitterStrings.Length - 1;
+                index = Splitter_Helper.SplitterStrings.Length - 1;
             }
             else
             {
                 index--;
             }
-        } while (!achievementHandler.is_Splitter_Unlocked((SplitterType)index));
+        } while (!achievementHandler.isSplitterUnlocked((SplitterType)index));
 
         activeSplitter = (SplitterType)index;
         PlayerPrefs.SetInt(Constants.SplitterTypeOption, index);
-        headerText.text = SplitterHelper.Get_Splitter_Name(activeSplitter);
+        headerText.text = Splitter_Helper.Get_Splitter_Name(activeSplitter);
         image.sprite = pieceSpriteHolder.GetSplitter(index);
         htpSplitter.sprite = pieceSpriteHolder.GetSplitter(index);
     }
@@ -54,7 +54,7 @@ public class SampleSplitterSelector : MonoBehaviour
     {
         do
         {
-            if (index >= SplitterHelper.SplitterStrings.Length - 1)
+            if (index >= Splitter_Helper.SplitterStrings.Length - 1)
             {
                 index = 0;
             }
@@ -62,11 +62,11 @@ public class SampleSplitterSelector : MonoBehaviour
             {
                 index++;
             }
-        } while (!achievementHandler.is_Splitter_Unlocked((SplitterType)index));
+        } while (!achievementHandler.isSplitterUnlocked((SplitterType)index));
 
         activeSplitter = (SplitterType)index;
         PlayerPrefs.SetInt(Constants.SplitterTypeOption, index);
-        headerText.text = SplitterHelper.Get_Splitter_Name(activeSplitter);
+        headerText.text = Splitter_Helper.Get_Splitter_Name(activeSplitter);
         image.sprite = pieceSpriteHolder.GetSplitter(index);
         htpSplitter.sprite = pieceSpriteHolder.GetSplitter(index);
     }

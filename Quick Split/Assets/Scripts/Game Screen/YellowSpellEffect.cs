@@ -21,7 +21,7 @@ public class YellowSpellEffect : MonoBehaviour
 
     public AudioSource YellowChargeSFX;
     public AudioSource YellowFireSFX;
-    private Achievement_Script achievementHandler;
+    private ScoreAndAchievementHandler achievementHandler;
 
     // Use this for initialization
     private void Start()
@@ -38,7 +38,7 @@ public class YellowSpellEffect : MonoBehaviour
             yse.GetComponent<SpriteRenderer>().sprite = null;
         }
 
-        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
+        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
 
         spellHandler = GameObject.Find("Spell Handler").GetComponent<SpellHandler>();
 
@@ -92,9 +92,9 @@ public class YellowSpellEffect : MonoBehaviour
                         }
                     }
 
-                    if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Yellow) && deletedNum == 14)
+                    if (!achievementHandler.isSplitterUnlocked(SplitterType.Yellow) && deletedNum == 14)
                     {
-                        achievementHandler.Unlock_Splitter(SplitterType.Yellow);
+                        achievementHandler.UnlockSplitter(SplitterType.Yellow);
                     }
 
                     //make it so the splitter can't continually fire yellow spells

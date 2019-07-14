@@ -116,9 +116,9 @@ public class GameController : MonoBehaviour
 
     public bool isPaused;
     public GameObject pauseLayer;
-    public Shutter_Handler shutter;
-    private Music_Controller mc;
-    private Achievement_Script achievementHandler;
+    public ShutterHandler shutter;
+    private MusicController mc;
+    private ScoreAndAchievementHandler achievementHandler;
 
     public AudioSource PauseSFX;
     public AudioSource UnpauseSFX;
@@ -129,7 +129,7 @@ public class GameController : MonoBehaviour
         {
             SceneManager.UnloadSceneAsync("Split Title Scene");
         }
-        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
+        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
 
         //begin with the assumption that you're not in quick mode and there's not countdown
         isCountingDown = false;
@@ -140,7 +140,7 @@ public class GameController : MonoBehaviour
 
         //let's grab the music controller
         GameObject MCobject = GameObject.FindGameObjectWithTag("Music Controller");
-        mc = MCobject.GetComponent<Music_Controller>();
+        mc = MCobject.GetComponent<MusicController>();
 
         //reposition score to wherever it may be
         scoreText.transform.GetComponent<BoxCollider2D>().offset = (mainCamera.ViewportToWorldPoint(scoreText.transform.position))
@@ -183,7 +183,7 @@ public class GameController : MonoBehaviour
         //get the pause stuff in order
         isPaused = false;
         GameOverLayer.SetActive(false);
-        shutter.Begin_Horizontal_Open();
+        shutter.BeginHorizontalOpen();
 
         //high score stuff
         newHighScore = false;
@@ -267,7 +267,7 @@ public class GameController : MonoBehaviour
         // There iss a countdown for timed crunching before game modes, so music is handled after that countdown completes in a seperate thread
         if (activeRuleSet.TimedCrunch == false)
         {
-            mc.Play_Music(gameMode);
+            mc.PlayMusic(gameMode);
         }
 
         if (activeRuleSet.HasSpells)
@@ -332,19 +332,19 @@ public class GameController : MonoBehaviour
                         gameOverText.text = "Game Over";
                         gameOver = true;
                         GameOverLayer.SetActive(true);
-                        mc.Stop_Music();
+                        mc.StopMusic();
                         splitter.setState(Splitter.SplitterStates.canShoot, false);
                         //unlocking candy cane splitter
-                        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.CandyCane) && score > 0 && score < 200)
+                        if (!achievementHandler.isSplitterUnlocked(SplitterType.CandyCane) && score > 0 && score < 200)
                         {
-                            achievementHandler.Unlock_Splitter(SplitterType.CandyCane);
+                            achievementHandler.UnlockSplitter(SplitterType.CandyCane);
                         }
 
-                        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Dark) && (gameMode == GameMode.Wiz || gameMode == GameMode.Holy))
+                        if (!achievementHandler.isSplitterUnlocked(SplitterType.Dark) && (gameMode == GameMode.Wiz || gameMode == GameMode.Holy))
                         {
                             if (!spellHandler.Used_Spells() && score > 1000)
                             {
-                                achievementHandler.Unlock_Splitter(SplitterType.Dark);
+                                achievementHandler.UnlockSplitter(SplitterType.Dark);
                             }
                         }
                     }
@@ -357,38 +357,38 @@ public class GameController : MonoBehaviour
         if (gameOver && ffGameOver)
         {
             ffGameOver = false;
-            achievementHandler.Add_Score(Game_Mode_Helper.ActiveRuleSet, score);
+            achievementHandler.AddScore(Game_Mode_Helper.ActiveRuleSet, score);
             GameObject.Find("GO Black Screen").GetComponent<Fader>().FadeIn();
             tipText.text = tips[UnityEngine.Random.Range(0, tips.Count())];
-            mc.Play_Music("Gameover");
+            mc.PlayMusic("Gameover");
         }
 
         //check that the music controller isn't being a dick about the game over music
         if (gameOver && (mc.MusicSource.clip.name != "Split It Game Over" || !mc.MusicSource.isPlaying))
         {
-            mc.Play_Music("Gameover");
+            mc.PlayMusic("Gameover");
         }
 
-        if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Caution) || !achievementHandler.is_Pieceset_Unlocked(PieceSets.Blob))
+        if (!achievementHandler.isSplitterUnlocked(SplitterType.Caution) || !achievementHandler.isPiecesetUnlocked(PieceSets.Blob))
         {
             int dangerPieces = Get_Danger_Pieces();
-            if (!achievementHandler.is_Splitter_Unlocked(SplitterType.Caution) && gameMode != GameMode.Holy && gameMode != GameMode.Wiz && dangerPieces >= 5 && dangerPieces == 0)
+            if (!achievementHandler.isSplitterUnlocked(SplitterType.Caution) && gameMode != GameMode.Holy && gameMode != GameMode.Wiz && dangerPieces >= 5 && dangerPieces == 0)
             {
-                achievementHandler.Unlock_Splitter(SplitterType.Caution);
+                achievementHandler.UnlockSplitter(SplitterType.Caution);
             }
-            if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Blob) && gameMode == GameMode.Holy && dangerPieces == 16)
+            if (!achievementHandler.isPiecesetUnlocked(PieceSets.Blob) && gameMode == GameMode.Holy && dangerPieces == 16)
             {
-                achievementHandler.Unlock_Pieceset(PieceSets.Blob);
+                achievementHandler.UnlockPieceset(PieceSets.Blob);
             }
         }
 
         if (!gameOver && Get_Danger_Pieces() > 0)
         {
-            mc.Start_Slow_Tick();
+            mc.StartSlowTick();
         }
         else
         {
-            mc.Stop_Slow_Tick();
+            mc.StopSlowTick();
         }
 
         //if both pieces have been placed, set the checkGrid to false and check the board
@@ -424,7 +424,7 @@ public class GameController : MonoBehaviour
                     sideColumns[1].shakeStage = 0;
                     sidebars[0].BroadcastMessage("Reset");
                     sidebars[1].BroadcastMessage("Reset");
-                    mc.Stop_Fast_Tick();
+                    mc.StopFastTick();
                 }
                 else if (sideMovesLimit - (movesMade % sideMovesLimit) <= 8)
                 {
@@ -463,7 +463,7 @@ public class GameController : MonoBehaviour
 
                     if(splitsLeft <= turnToTick && !mc.IsFastTicking)
                     {
-                        mc.Start_Fast_Tick();
+                        mc.StartFastTick();
                     }
 
                     sidebars[0].BroadcastMessage("SetLightStage", 8 - splitsLeft);
@@ -481,7 +481,7 @@ public class GameController : MonoBehaviour
                     sideColumns[1].ready = false;
                     quickMoveSides = false;
                     StartCoroutine("QuickSideTimer");
-                    mc.Stop_Fast_Tick();
+                    mc.StopFastTick();
                 }
                 sidesChecked = true;
             }
@@ -635,9 +635,9 @@ public class GameController : MonoBehaviour
             }
         }
 
-        if (gameMode != GameMode.Holy && gameMode != GameMode.Wiz && !achievementHandler.is_Pieceset_Unlocked(PieceSets.Domino) && multiplier >= 9)
+        if (gameMode != GameMode.Holy && gameMode != GameMode.Wiz && !achievementHandler.isPiecesetUnlocked(PieceSets.Domino) && multiplier >= 9)
         {
-            achievementHandler.Unlock_Pieceset(PieceSets.Domino);
+            achievementHandler.UnlockPieceset(PieceSets.Domino);
         }
     }
 
@@ -800,15 +800,15 @@ public class GameController : MonoBehaviour
                         break;
                 }
             }
-            else if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Techno) && gameMode == GameMode.Quick && availableCount == 5)
+            else if (!achievementHandler.isPiecesetUnlocked(PieceSets.Techno) && gameMode == GameMode.Quick && availableCount == 5)
             {
-                achievementHandler.Unlock_Pieceset(PieceSets.Techno);
+                achievementHandler.UnlockPieceset(PieceSets.Techno);
             }
         }
 
-        if (!achievementHandler.is_Pieceset_Unlocked(PieceSets.Retro) && gameMode == GameMode.Wit && movesMade == 255)
+        if (!achievementHandler.isPiecesetUnlocked(PieceSets.Retro) && gameMode == GameMode.Wit && movesMade == 255)
         {
-            achievementHandler.Unlock_Pieceset(PieceSets.Retro);
+            achievementHandler.UnlockPieceset(PieceSets.Retro);
         }
 
     }
@@ -847,7 +847,7 @@ public class GameController : MonoBehaviour
                     GameOverLayer.SetActive(true);
                     gameOver = true;
                     splitter.setState(Splitter.SplitterStates.canShoot, false);
-                    mc.Stop_Music();
+                    mc.StopMusic();
                 }
             }
 
@@ -959,7 +959,7 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(4f);
         splitter.setState(Splitter.SplitterStates.canShoot, true);
         isCountingDown = false;
-        mc.Play_Music(gameMode);
+        mc.PlayMusic(gameMode);
         StartCoroutine("QuickSideTimer");
         yield return new WaitForSeconds(1f);
         gameOverText.text = "";
@@ -982,7 +982,7 @@ public class GameController : MonoBehaviour
         sideColumns[1].shakeStage = 1;
         if (!gameOver)
         {
-            mc.Start_Fast_Tick();
+            mc.StartFastTick();
         }
 
         sidebars[0].BroadcastMessage("IncrementLights");
@@ -1067,7 +1067,7 @@ public class GameController : MonoBehaviour
             pauseLayer.SetActive(true);
             splitter.setState(Splitter.SplitterStates.isActive, false);
             GameObject.Find("Pause Button Text").GetComponent<Text>().text = "Unpause";
-            mc.Pause_Music();
+            mc.PauseMusic();
             PauseSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
             PauseSFX.Play();
         }
@@ -1079,7 +1079,7 @@ public class GameController : MonoBehaviour
             splitter.setState(Splitter.SplitterStates.isActive, true);
             pauseLayer.SetActive(false);
             GameObject.Find("Pause Button Text").GetComponent<Text>().text = "Pause";
-            mc.Resume_Music();
+            mc.ResumeMusic();
             UnpauseSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
             UnpauseSFX.Play();
         }
@@ -1097,7 +1097,7 @@ public class GameController : MonoBehaviour
         //remember to properly reload time
         Time.timeScale = 1;
         //stop the music
-        mc.Stop_Music();
+        mc.StopMusic();
         //load the main menu
         StartCoroutine("TitleTransition");
     }
@@ -1118,8 +1118,8 @@ public class GameController : MonoBehaviour
         isQuitting = true;
         //remember to properly reload time
         Time.timeScale = 1;
-        mc.Stop_Music();
-        shutter.Begin_Horizontal_Close();
+        mc.StopMusic();
+        shutter.BeginHorizontalClose();
         AsyncOperation async = SceneManager.LoadSceneAsync("Game Scene");
         async.allowSceneActivation = false;
         yield return new WaitForSeconds(2f);
@@ -1130,8 +1130,8 @@ public class GameController : MonoBehaviour
     //transitions to the title screen
     private IEnumerator TitleTransition()
     {
-        mc.Stop_Music();
-        shutter.Begin_Horizontal_Close();
+        mc.StopMusic();
+        shutter.BeginHorizontalClose();
         AsyncOperation async = SceneManager.LoadSceneAsync("Split Title Scene");
         async.allowSceneActivation = false;
         yield return new WaitForSeconds(2f);

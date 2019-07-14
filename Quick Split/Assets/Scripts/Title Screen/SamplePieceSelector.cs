@@ -9,15 +9,15 @@ public class SamplePieceSelector : MonoBehaviour
     public PieceColorer[] samplePieces;
     public int index = 0;
     public Text headerText;
-    private Achievement_Script achievementHandler;
+    private ScoreAndAchievementHandler achievementHandler;
 
 
     // Use this for initialization
     private void Start()
     {
-        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
+        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
         PieceSets activePieceSet = (PieceSets) PlayerPrefs.GetInt(Constants.PieceSetOption, (int)PieceSets.Default);
-        headerText.text = PieceSetHelper.Get_Pieceset_Name(activePieceSet);
+        headerText.text = Piece_Set_Helper.Get_Pieceset_Name(activePieceSet);
 
         index = (int)activePieceSet;
     }
@@ -28,16 +28,16 @@ public class SamplePieceSelector : MonoBehaviour
         {
             if (index == 0)
             {
-                index = PieceSetHelper.PieceSetStrings.Length - 1;
+                index = Piece_Set_Helper.PieceSetStrings.Length - 1;
             }
             else
             {
                 index--;
             }
-        } while (!achievementHandler.is_Pieceset_Unlocked((PieceSets)index));
+        } while (!achievementHandler.isPiecesetUnlocked((PieceSets)index));
 
         PlayerPrefs.SetInt(Constants.PieceSetOption, index);
-        headerText.text = PieceSetHelper.PieceSetStrings[index];
+        headerText.text = Piece_Set_Helper.PieceSetStrings[index];
         foreach (PieceColorer pc in samplePieces)
         {
             pc.updateColor();
@@ -48,7 +48,7 @@ public class SamplePieceSelector : MonoBehaviour
     {
         do
         {
-            if (index == PieceSetHelper.PieceSetStrings.Length - 1)
+            if (index == Piece_Set_Helper.PieceSetStrings.Length - 1)
             {
                 index = 0;
             }
@@ -56,10 +56,10 @@ public class SamplePieceSelector : MonoBehaviour
             {
                 index++;
             }
-        } while (!achievementHandler.is_Pieceset_Unlocked((PieceSets)index));
+        } while (!achievementHandler.isPiecesetUnlocked((PieceSets)index));
 
         PlayerPrefs.SetInt(Constants.PieceSetOption, index);
-        headerText.text = PieceSetHelper.PieceSetStrings[index];
+        headerText.text = Piece_Set_Helper.PieceSetStrings[index];
         foreach (PieceColorer pc in samplePieces)
         {
             pc.updateColor();

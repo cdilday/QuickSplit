@@ -16,6 +16,44 @@ public static class Constants
 
     public static readonly string PieceSetOption = "Piece Set";
     public static readonly string SplitterTypeOption = "Splitter Type";
+    public static readonly string GuideOption = "Guide";
+    public static readonly string PlayedBeforeLookup = "Played Before";
+
+    public static readonly string Splitter = "Splitter";
+    public static readonly string PieceSet = "PieceSet";
+    public static readonly string NewSplitterUnlocked = "New Splitter Unlocked!";
+    public static readonly string NewPieceSetUnlocked = "New Piece Set Unlocked!";
+
+    public static readonly string[] SplitterUnlockDescriptions =
+    {
+        "", // Default = 0, automatically unlocked
+        "How did this work?", // Programmer = 1,
+        "Some Candy for the Pain", // CandyCane = 2,
+        "Get behind the line", // Caution = 3,
+        "No Light; only darkness", // Dark = 4,
+        "Not Reddy to die", // Red = 5,
+        "Well Orange you clever?", // Orange = 6,
+        "Nothing to Yellow-ver", // Yellow = 7,
+        "Looking for Greener Pastures", // Green = 8,
+        "In with the Blue", // Blue = 9,
+        "Non-Violet Solutions", // Purple = 10,
+        "I'll be Cyan you later", // Cyan = 11,
+        "Cleaned up White away" // White = 12,
+    };
+
+    public static readonly string[] PieceSetUnlockDescriptions =
+    {
+        "", // Default = 0, always unlocked
+        "You're a Wizard", // Arcane = 1,
+        "8-bits of Splits", // Retro = 2,
+        "Grey Areas", // Programmer = 3,
+        "What a mess...", // Blob = 4,
+        "A Crazy Contraption", // Domino = 5,
+        "Not Exactly Re-gifting", // Present = 6,
+        "Cheater Cheater Pumpkin-Eater", // Pumpkin = 7,
+        "", // Symbol = 8, unlocked by default for colorblind players
+        "Sleek Splits" // Techno = 9,
+    };
 }
 
 /// <summary>
@@ -39,7 +77,7 @@ public enum SplitterType
     White = 12,
 }
 
-public static class SplitterHelper
+public static class Splitter_Helper
 {
     public static readonly string[] SplitterStrings =
     {
@@ -123,7 +161,7 @@ public enum PieceSets
     Techno = 9,
 }
 
-public static class PieceSetHelper
+public static class Piece_Set_Helper
 {
     public static readonly string[] PieceSetStrings =
     {

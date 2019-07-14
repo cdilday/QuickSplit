@@ -32,12 +32,12 @@ public class PieceSplitterAssetHelper : MonoBehaviour
     public RuntimeAnimatorController[] PumpkinAnimations = new RuntimeAnimatorController[8];
     public RuntimeAnimatorController[] SymbolAnimations = new RuntimeAnimatorController[8];
     public RuntimeAnimatorController[] TechnoAnimations = new RuntimeAnimatorController[8];
-    private Achievement_Script achievementHandler;
+    private ScoreAndAchievementHandler achievementHandler;
 
     // Use this for initialization
     private void Start()
     {
-        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
+        achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
         if (PieceSet == PieceSets.Error)
         {
             PieceSet = (PieceSets)PlayerPrefs.GetInt(Constants.PieceSetOption, (int)PieceSets.Default);
@@ -84,7 +84,7 @@ public class PieceSplitterAssetHelper : MonoBehaviour
     {
         if (achievementHandler == null)
         {
-            achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
+            achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
         }
 
         int index = PlayerPrefs.GetInt(Constants.SplitterTypeOption, (int)SplitterType.Default);
@@ -130,7 +130,7 @@ public class PieceSplitterAssetHelper : MonoBehaviour
     {
         if (achievementHandler == null)
         {
-            achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<Achievement_Script>();
+            achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
         }
 
         int index = PlayerPrefs.GetInt(Constants.SplitterTypeOption, (int)SplitterType.Default);

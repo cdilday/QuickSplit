@@ -22,17 +22,17 @@ public class TitleController : MonoBehaviour
 
     public GameObject[] TitleScreens;
 
-    public Shutter_Handler shutter;
+    public ShutterHandler shutter;
     public VerticalScrollSnap gameModeScroller;
 
     public GameObject ScrollUp;
     public GameObject ScrollDown;
 
-    public High_Score_Displayer[] hsds = new High_Score_Displayer[4];
+    public HighScoreDisplayer[] hsds = new HighScoreDisplayer[4];
     private int resetPresses = 0;
-    private Achievement_Script achievementHandler;
-    private Music_Controller mc;
-    private High_Score_Calculator highScoreCalculator;
+    private ScoreAndAchievementHandler achievementHandler;
+    private MusicController mc;
+    private HighScorePopulator highScoreCalculator;
 
     //gameobjects needed for transitions b/w game mode select and description scenes
     public GameObject[] GameButtons = new GameObject[4];
@@ -80,32 +80,32 @@ public class TitleController : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        highScoreCalculator = GameObject.Find("High Score Calculator").GetComponent<High_Score_Calculator>();
+        highScoreCalculator = GameObject.Find("High Score Calculator").GetComponent<HighScorePopulator>();
         //first check if they're using the most recent version of the game
         if (PlayerPrefs.GetInt("Version", 0) != versionNumber)
         {
-            highScoreCalculator.Reset_All_Scores();
-            foreach (High_Score_Displayer hsd in hsds)
+            highScoreCalculator.ResetAllScores();
+            foreach (HighScoreDisplayer hsd in hsds)
             {
                 hsd.update_scores();
             }
             PlayerPrefs.SetInt("Version", versionNumber);
         }
-        achievementHandler = GameObject.Find("Achievement Handler").GetComponent<Achievement_Script>();
+        achievementHandler = GameObject.Find("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
         ChangeLayer((int)TitleLayer.GameSelect);
-        shutter.Begin_Vertical_Open();
+        shutter.BeginVerticalOpen();
 
         GameObject MCobject = GameObject.FindGameObjectWithTag("Music Controller");
-        mc = MCobject.GetComponent<Music_Controller>();
+        mc = MCobject.GetComponent<MusicController>();
 
         playButtonText = PlayButton.GetComponentInChildren<Text>();
 
-        mc.Play_Music("Menu");
+        mc.PlayMusic("Menu");
 
         //just in case this is the first time playing, set Wiz to be for sure unlocked
-        PlayerPrefs.SetInt("Wiz unlocked", 1);
+        PlayerPrefs.SetInt(GameMode.Wiz + Constants.GameModeUnlockedPredicate, 1);
         //tell achievmement handler to check gamemodes that are supposed to be active
-        achievementHandler.Check_Gamemode_Unlocked();
+        achievementHandler.UpdateUnlockedGameModes();
 
         activeMode = gameModeScroller.ChildObjects.Length - 1;
         prevMode = activeMode;
@@ -121,7 +121,7 @@ public class TitleController : MonoBehaviour
         //Set a default for custom 
         OnCustomModeUpdated();
 
-        if (PlayerPrefs.GetInt("Played Before", 0) == 1)
+        if (PlayerPrefs.GetInt(Constants.PlayedBeforeLookup, 0) == 1)
         {
             Destroy(HTPEmphasizer);
         }
@@ -205,7 +205,7 @@ public class TitleController : MonoBehaviour
 
         if (newScreen == TitleLayer.HowToPlay)
         {
-            PlayerPrefs.SetInt("Played Before", 1);
+            PlayerPrefs.SetInt(Constants.PlayedBeforeLookup, 1);
             if (HTPEmphasizer != null)
             {
                 Destroy(HTPEmphasizer);
@@ -223,9 +223,9 @@ public class TitleController : MonoBehaviour
         }
         else
         {
-            highScoreCalculator.Reset_All_Scores();
+            highScoreCalculator.ResetAllScores();
             Text rhst = GameObject.Find("Reset High Scores Text").GetComponent<Text>();
-            foreach (High_Score_Displayer hsd in hsds)
+            foreach (HighScoreDisplayer hsd in hsds)
             {
                 hsd.update_scores();
             }
@@ -235,8 +235,8 @@ public class TitleController : MonoBehaviour
 
     public IEnumerator GameTransition()
     {
-        shutter.Begin_Vertical_Close();
-        mc.Stop_Music();
+        shutter.BeginVerticalClose();
+        mc.StopMusic();
         AsyncOperation async = SceneManager.LoadSceneAsync("Game Scene");
         async.allowSceneActivation = false;
         yield return new WaitForSeconds(2f);
@@ -493,7 +493,7 @@ public class TitleController : MonoBehaviour
     /// <param name="dir"> string - Up, Down, Left, or Right</param>
     public void code(string dir)
     {
-        if (achievementHandler.is_Pieceset_Unlocked(PieceSets.Pumpkin))
+        if (achievementHandler.isPiecesetUnlocked(PieceSets.Pumpkin))
         {
             return;
         }
@@ -546,7 +546,7 @@ public class TitleController : MonoBehaviour
             case 7:
                 if (dir == "Right")
                 {
-                    achievementHandler.Unlock_Pieceset(PieceSets.Pumpkin);
+                    achievementHandler.UnlockPieceset(PieceSets.Pumpkin);
                 }
                 else
                 {
