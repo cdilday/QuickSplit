@@ -38,19 +38,20 @@ public class ColorBlindFilter : MonoBehaviour
         { new Color(.618f, .32f, .062f), new Color(.163f, .775f, .062f), new Color(.163f, .320f, .516f)  }    // Achromatomaly
     };
 
-    void Awake()
+    private void Awake()
     {
-		//this is used for debugging and should therefore be auto-removed in real builds
-		if (!Debug.isDebugBuild) {
-			Destroy(this);
-		}
+        //this is used for debugging and should therefore be auto-removed in real builds
+        if (!Debug.isDebugBuild)
+        {
+            DestroyImmediate(this);
+        }
         material = new Material(Shader.Find("Hidden/ChannelMixer"));
         material.SetColor("_R", RGB[0, 0]);
         material.SetColor("_G", RGB[0, 1]);
         material.SetColor("_B", RGB[0, 2]);
     }
 
-    void OnRenderImage(RenderTexture source, RenderTexture destination)
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         // No effect
         if (mode == ColorBlindMode.Normal)
