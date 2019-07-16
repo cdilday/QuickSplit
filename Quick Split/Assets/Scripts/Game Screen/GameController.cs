@@ -87,7 +87,6 @@ public class GameController : MonoBehaviour
 
     //true if the player's lost
     public bool gameOver;
-    private bool ffGameOver = true;
     public GameObject GameOverLayer;
 
     //keeps track of the current score multiplier during checks
@@ -320,67 +319,7 @@ public class GameController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //check to see if a piece is in the splitter area after each board check
-        if (checkGameOver)
-        {
-            for (int c = 7; c <= 8; c++)
-            {
-                for (int r = 0; r <= 7; r++)
-                {
-                    if (colorGrid[r, c] != PieceColor.Empty && grid[r, c] != null)
-                    {
-                        gameOverText.text = "Game Over";
-                        gameOver = true;
-                        GameOverLayer.SetActive(true);
-                        mc.StopMusic();
-                        splitter.setState(Splitter.SplitterStates.canShoot, false);
-                        //unlocking candy cane splitter
-                        if (!achievementHandler.isSplitterUnlocked(SplitterType.CandyCane) && score > 0 && score < 200)
-                        {
-                            achievementHandler.UnlockSplitter(SplitterType.CandyCane);
-                        }
-
-                        if (!achievementHandler.isSplitterUnlocked(SplitterType.Dark) && (gameMode == GameMode.Wiz || gameMode == GameMode.Holy))
-                        {
-                            if (!spellHandler.Used_Spells() && score > 1000)
-                            {
-                                achievementHandler.UnlockSplitter(SplitterType.Dark);
-                            }
-                        }
-                    }
-                }
-            }
-            checkGameOver = false;
-        }
-
-        //things that should only happen once at gameover
-        if (gameOver && ffGameOver)
-        {
-            ffGameOver = false;
-            achievementHandler.AddScore(Game_Mode_Helper.ActiveRuleSet, score);
-            GameObject.Find("GO Black Screen").GetComponent<Fader>().FadeIn();
-            tipText.text = tips[UnityEngine.Random.Range(0, tips.Count())];
-            mc.PlayMusic("Gameover");
-        }
-
-        //check that the music controller isn't being a dick about the game over music
-        if (gameOver && (mc.MusicSource.clip.name != "Split It Game Over" || !mc.MusicSource.isPlaying))
-        {
-            mc.PlayMusic("Gameover");
-        }
-
-        if (!achievementHandler.isSplitterUnlocked(SplitterType.Caution) || !achievementHandler.isPiecesetUnlocked(PieceSets.Blob))
-        {
-            int dangerPieces = Get_Danger_Pieces();
-            if (!achievementHandler.isSplitterUnlocked(SplitterType.Caution) && gameMode != GameMode.Holy && gameMode != GameMode.Wiz && dangerPieces >= 5 && dangerPieces == 0)
-            {
-                achievementHandler.UnlockSplitter(SplitterType.Caution);
-            }
-            if (!achievementHandler.isPiecesetUnlocked(PieceSets.Blob) && gameMode == GameMode.Holy && dangerPieces == 16)
-            {
-                achievementHandler.UnlockPieceset(PieceSets.Blob);
-            }
-        }
+        checkForGameOver();
 
         if (!gameOver && Get_Danger_Pieces() > 0)
         {
@@ -390,6 +329,7 @@ public class GameController : MonoBehaviour
         {
             mc.StopSlowTick();
         }
+
 
         //if both pieces have been placed, set the checkGrid to false and check the board
         if (!boardWaiting && (piecesPlaced >= 2 || forceCheck))
@@ -401,7 +341,6 @@ public class GameController : MonoBehaviour
             }
 
             piecesPlaced = 0;
-            checkGameOver = true;
             if (checkFlag || forceCheck)
             {
                 forceCheck = false;
@@ -411,7 +350,11 @@ public class GameController : MonoBehaviour
             }
             else if (!isCountingDown)
             {
-                splitter.setState(Splitter.SplitterStates.canShoot, true);
+                checkForGameOver();
+                if (!gameOver)
+                {
+                    splitter.setState(Splitter.SplitterStates.canShoot, true);
+                }
             }
             GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
             //here's where we do side-entering management
@@ -488,6 +431,76 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void checkForGameOver()
+    {
+        //check to see if a piece is in the splitter area after each board check
+        if (checkGameOver && !gameOver)
+        {
+            for (int c = 7; c <= 8; c++)
+            {
+                for (int r = 0; r <= 7; r++)
+                {
+                    if (colorGrid[r, c] != PieceColor.Empty && grid[r, c] != null)
+                    {
+                        startGameOver();
+                        return;
+                    }
+                }
+            }
+            if (!gameOver)
+            {
+                splitter.setState(Splitter.SplitterStates.canShoot, true);
+            }
+            checkGameOver = false;
+        }
+    }
+
+    public void startGameOver()
+    {
+        //things that should only happen once at gameover
+        gameOver = true;
+        gameOverText.text = "Game Over";
+        GameOverLayer.SetActive(true);
+        mc.StopMusic();
+
+        // TODO: Cleanup score bits still lingering on the board, they should be counted
+
+        achievementHandler.AddScore(Game_Mode_Helper.ActiveRuleSet, score);
+        GameObject goBlackScreen = GameObject.Find("GO Black Screen");
+        goBlackScreen.SetActive(true);
+        goBlackScreen.GetComponent<Fader>().FadeIn();
+        tipText.text = tips[UnityEngine.Random.Range(0, tips.Count())];
+        mc.PlayMusic("Gameover");
+
+        splitter.setState(Splitter.SplitterStates.canShoot, false);
+        //unlocking candy cane splitter
+        if (!achievementHandler.isSplitterUnlocked(SplitterType.CandyCane) && score > 0 && score < 200)
+        {
+            achievementHandler.UnlockSplitter(SplitterType.CandyCane);
+        }
+
+        if (!achievementHandler.isSplitterUnlocked(SplitterType.Dark) && (gameMode == GameMode.Wiz || gameMode == GameMode.Holy))
+        {
+            if (!spellHandler.Used_Spells() && score > 1000)
+            {
+                achievementHandler.UnlockSplitter(SplitterType.Dark);
+            }
+        }
+
+        if (!achievementHandler.isSplitterUnlocked(SplitterType.Caution) || !achievementHandler.isPiecesetUnlocked(PieceSets.Blob))
+        {
+            int dangerPieces = Get_Danger_Pieces();
+            if (!achievementHandler.isSplitterUnlocked(SplitterType.Caution) && gameMode != GameMode.Holy && gameMode != GameMode.Wiz && dangerPieces >= 5 && dangerPieces == 0)
+            {
+                achievementHandler.UnlockSplitter(SplitterType.Caution);
+            }
+            if (!achievementHandler.isPiecesetUnlocked(PieceSets.Blob) && gameMode == GameMode.Holy && dangerPieces == 16)
+            {
+                achievementHandler.UnlockPieceset(PieceSets.Blob);
+            }
+        }
+    }
+
     //puts the pieces in the grid after they've settled into their place
     public void placePiece(GameObject piece)
     {
@@ -509,8 +522,8 @@ public class GameController : MonoBehaviour
             if (((thisX + 1 < 8) && (grid[thisX + 1, thisY] != null && colorGrid[thisX + 1, thisY] == pieceStats.pieceColor)) || //right
                ((thisY + 1 < 16) && (grid[thisX, thisY + 1] != null && colorGrid[thisX, thisY + 1] == pieceStats.pieceColor)) || //up
                ((thisX - 1 >= 0) && (grid[thisX - 1, thisY] != null && colorGrid[thisX - 1, thisY] == pieceStats.pieceColor)) || //left
-               ((thisY - 1 >= 0) && (grid[thisX, thisY - 1] != null && colorGrid[thisX, thisY - 1] == pieceStats.pieceColor)))
-            { //below
+               ((thisY - 1 >= 0) && (grid[thisX, thisY - 1] != null && colorGrid[thisX, thisY - 1] == pieceStats.pieceColor)))   //below
+            { 
                 checkFlag = true;
                 //Debug.Log ("Matching adjacent piece detected");
             }
@@ -621,16 +634,15 @@ public class GameController : MonoBehaviour
             else
             {
                 multiRun = false;
-                checkGameOver = true;
+
                 if (!gameOver)
                 {
                     if (!piecesDeletedThisSplit)
                     {
                         multiplier = 1;
                     }
-
-                    splitter.setState(Splitter.SplitterStates.canShoot, true);
                 }
+                checkGameOver = true;
                 clearedLastTurn = piecesDeletedThisSplit;
             }
         }
