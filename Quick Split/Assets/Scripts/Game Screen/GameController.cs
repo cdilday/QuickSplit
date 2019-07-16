@@ -64,24 +64,6 @@ public class GameController : MonoBehaviour
     /// </summary>
     private int piecesPlaced;
 
-    /// <summary>
-    /// This is set to true when a piece is split next to a piece of similar color, in which case the board needs to be re-checked for
-    /// potential pieces being cleared. Mainly for performance, as if pieces don't touch pieces of the same color this is still false
-    /// </summary>
-    private bool checkFlag;
-
-    /// <summary>
-    /// This is true while the board is waiting to collapse, and will prevent the board from trying to check/delete pieces while sides 
-    /// are being moved in or the board is otherwise being altered 
-    /// </summary>
-    private bool boardWaiting = false;
-
-    /// <summary>
-    /// This forces a check of the board without breaking the multiplier. Used when chains of events occur, ie a group clearing causes a collapse that then forms
-    /// another group or a group clears and the sides come in
-    /// </summary>
-    private bool forceCheck = false;
-
     //Splitter keeps track of the splitter for easy access
     public Splitter splitter;
 
@@ -95,19 +77,13 @@ public class GameController : MonoBehaviour
     private bool piecesDeletedThisSplit;
     private bool clearedLastTurn;
 
-    //set to true to check for game over in the update loop
-    private bool checkGameOver;
-
     //gametype says what mode the board is in to easily set it up accordingly
     public GameMode gameMode;
 
     //how many moves until the sides are added onto the board
     public int sideMovesLimit;
-    private bool sidesChecked;
     private bool quickMoveSides;
-
-    //boolean for whether or not the game is counting down
-    private bool isCountingDown;
+    private bool sidesChecked = false;
 
     //tells if the application is in the process of quitting, for cleanup
     [HideInInspector]
@@ -129,9 +105,6 @@ public class GameController : MonoBehaviour
             SceneManager.UnloadSceneAsync("Split Title Scene");
         }
         achievementHandler = GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>();
-
-        //begin with the assumption that you're not in quick mode and there's not countdown
-        isCountingDown = false;
 
         gameMode = Game_Mode_Helper.ActiveRuleSet.Mode;
 
@@ -159,9 +132,7 @@ public class GameController : MonoBehaviour
         }
 
         multiplier = 1;
-        checkGameOver = false;
         piecesPlaced = 0;
-        checkFlag = false;
         movesMade = 0;
         score = 0;
         //load the splitter with the spawned splitter object
@@ -261,8 +232,6 @@ public class GameController : MonoBehaviour
             Destroy(scols[0]);
         }
 
-        sidesChecked = false;
-
         // There iss a countdown for timed crunching before game modes, so music is handled after that countdown completes in a seperate thread
         if (activeRuleSet.TimedCrunch == false)
         {
@@ -319,8 +288,6 @@ public class GameController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        checkForGameOver();
-
         if (!gameOver && Get_Danger_Pieces() > 0)
         {
             mc.StartSlowTick();
@@ -329,112 +296,15 @@ public class GameController : MonoBehaviour
         {
             mc.StopSlowTick();
         }
-
-
-        //if both pieces have been placed, set the checkGrid to false and check the board
-        if (!boardWaiting && (piecesPlaced >= 2 || forceCheck))
-        {
-            if(piecesPlaced >= 2 && !forceCheck)
-            {
-                clearedLastTurn = piecesDeletedThisSplit;
-                piecesDeletedThisSplit = false;
-            }
-
-            piecesPlaced = 0;
-            if (checkFlag || forceCheck)
-            {
-                forceCheck = false;
-                checkBoard();
-                checkFlag = false;
-                //check to see if it's time to move the sides in
-            }
-            else if (!isCountingDown)
-            {
-                checkForGameOver();
-                if (!gameOver)
-                {
-                    splitter.setState(Splitter.SplitterStates.canShoot, true);
-                }
-            }
-            GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
-            //here's where we do side-entering management
-            if (!boardWaiting && Game_Mode_Helper.ActiveRuleSet.TurnedCrunch && !sidesChecked)
-            {
-                if (movesMade % sideMovesLimit == 0)
-                {
-                    addSideColumns();
-                    sideColumns[0].shakeStage = 0;
-                    sideColumns[1].shakeStage = 0;
-                    sidebars[0].BroadcastMessage("Reset");
-                    sidebars[1].BroadcastMessage("Reset");
-                    mc.StopFastTick();
-                }
-                else if (sideMovesLimit - (movesMade % sideMovesLimit) <= 8)
-                {
-                    int splitsLeft = sideMovesLimit - (movesMade % sideMovesLimit);
-                    switch (splitsLeft)
-                    {
-                        case 1:
-                            sideColumns[0].isShaking = false;
-                            sideColumns[1].isShaking = false;
-                            sideColumns[0].ready = true;
-                            sideColumns[1].ready = true;
-                            sideColumns[0].shakeStage = 0;
-                            sideColumns[1].shakeStage = 0;
-                            break;
-                        case 2:
-                            sideColumns[0].shakeStage = 3;
-                            sideColumns[1].shakeStage = 3;
-                            sidebars[0].BroadcastMessage("IncrementLights");
-                            sidebars[1].BroadcastMessage("IncrementLights");
-                            break;
-                        case 3:
-                            sideColumns[0].shakeStage = 2;
-                            sideColumns[1].shakeStage = 2;
-                            sidebars[0].BroadcastMessage("IncrementLights");
-                            sidebars[1].BroadcastMessage("IncrementLights");
-                            break;
-                        case 4:
-                            sideColumns[0].isShaking = true;
-                            sideColumns[1].isShaking = true;
-                            sideColumns[0].shakeStage = 1;
-                            sideColumns[1].shakeStage = 1;
-                            break;
-                    }
-
-                    int turnToTick = Math.Min((int)(0.5 * Game_Mode_Helper.ActiveRuleSet.SplitsPerCrunch), 4);
-
-                    if(splitsLeft <= turnToTick && !mc.IsFastTicking)
-                    {
-                        mc.StartFastTick();
-                    }
-
-                    sidebars[0].BroadcastMessage("SetLightStage", 8 - splitsLeft);
-                    sidebars[1].BroadcastMessage("SetLightStage", 8 - splitsLeft);
-                }
-                sidesChecked = true;
-            }
-            else if (!boardWaiting && (Game_Mode_Helper.ActiveRuleSet.TimedCrunch) && !sidesChecked)
-            {
-                //quick mode moves the sides in based off of time, not moves
-                if (quickMoveSides)
-                {
-                    addSideColumns();
-                    sideColumns[0].ready = false;
-                    sideColumns[1].ready = false;
-                    quickMoveSides = false;
-                    StartCoroutine("QuickSideTimer");
-                    mc.StopFastTick();
-                }
-                sidesChecked = true;
-            }
-        }
     }
 
+    /// <summary>
+    /// checks to see if a game over has occurred
+    /// </summary>
     public void checkForGameOver()
     {
         //check to see if a piece is in the splitter area after each board check
-        if (checkGameOver && !gameOver)
+        if (!gameOver)
         {
             for (int c = 7; c <= 8; c++)
             {
@@ -451,10 +321,12 @@ public class GameController : MonoBehaviour
             {
                 splitter.setState(Splitter.SplitterStates.canShoot, true);
             }
-            checkGameOver = false;
         }
     }
 
+    /// <summary>
+    /// Puts the game in its game over state and sets appropriate gameobject status
+    /// </summary>
     public void startGameOver()
     {
         //things that should only happen once at gameover
@@ -514,20 +386,15 @@ public class GameController : MonoBehaviour
             //Debug.Log ("Grid Position is" +(int)pieceStats.gridPos.x +" " + (int)pieceStats.gridPos.y);
             colorGrid[(int)pieceStats.gridPos.x, (int)pieceStats.gridPos.y] = pieceStats.pieceColor;
             grid[(int)pieceStats.gridPos.x, (int)pieceStats.gridPos.y] = piece;
-            //uncomment this to show what the color of the newly placed piece is
-            //if(colorGrid[(int)pieceStats.gridPos.x, (int)pieceStats.gridPos.y] != null)
-            //	Debug.Log ("inserted " +grid [(int)pieceStats.gridPos.x, (int)pieceStats.gridPos.y].GetComponent<piece_script>().pieceColor + " piece into colorgrid position " +(int)pieceStats.gridPos.x +" " + (int)pieceStats.gridPos.y);
-            //This if statement will check if a check board is necessary, for optimization.
-            //Debug.Log ("Beginning check");
-            if (((thisX + 1 < 8) && (grid[thisX + 1, thisY] != null && colorGrid[thisX + 1, thisY] == pieceStats.pieceColor)) || //right
-               ((thisY + 1 < 16) && (grid[thisX, thisY + 1] != null && colorGrid[thisX, thisY + 1] == pieceStats.pieceColor)) || //up
-               ((thisX - 1 >= 0) && (grid[thisX - 1, thisY] != null && colorGrid[thisX - 1, thisY] == pieceStats.pieceColor)) || //left
-               ((thisY - 1 >= 0) && (grid[thisX, thisY - 1] != null && colorGrid[thisX, thisY - 1] == pieceStats.pieceColor)))   //below
-            { 
-                checkFlag = true;
-                //Debug.Log ("Matching adjacent piece detected");
+            
+            if (piecesPlaced > 0)
+            {
+                BeginBoardChecking();
             }
-            piecesPlaced++;
+            else
+            {
+                piecesPlaced++;
+            }
         }
         // if it isn't in the grid, throw an error up and delete the offending piece.
         else
@@ -538,11 +405,141 @@ public class GameController : MonoBehaviour
 
     }
 
-    /* checkBoard() begins the recursive checkBoard check. The recursive sister method, scanner(), will check off some
-	 * of the pieces but not all, so checkboard calls scanner on every piece not yet checked in its main loop. any groups
-	 * are stored for easier deletion post-check and the deletion check calculates scores based off of group size and
-	 * current multiplier.*/
-    public void checkBoard()
+    /// <summary>
+    /// Starts off board checking after the splitter's pieces have been settled
+    /// </summary>
+    public void BeginBoardChecking()
+    {
+        // if both pieces have been placed, set the checkGrid to false and check the board
+        clearedLastTurn = piecesDeletedThisSplit;
+        piecesDeletedThisSplit = false;
+        piecesPlaced = 0;
+        checkBoardLoop();
+    }
+
+    /// <summary>
+    /// The board needs to be re-checked every time something changes on it
+    /// </summary>
+    public void checkBoardLoop()
+    {
+        bool deleted = checkForMatches();
+        piecesDeletedThisSplit = piecesDeletedThisSplit || deleted;
+
+        if (deleted)
+        {
+            collapse();
+            StartCoroutine(boardWaiter());
+        }
+        else if (Game_Mode_Helper.ActiveRuleSet.UsesSides && !sidesChecked)
+        {
+            if (checkSideStatus())
+            {
+                sidesChecked = true;
+                StartCoroutine(boardWaiter());
+            }
+            else
+            {
+                endTurn();
+            }
+        }
+        else
+        {
+            endTurn();
+        }
+    }
+
+    /// <summary>
+    /// Updates the sides as needed, adds them and returns true if they're ready to be added
+    /// </summary>
+    /// <returns> bool - true if the sides were added to the board, false otherwise</returns>
+    public bool checkSideStatus()
+    {
+        GameObject[] sidebars = GameObject.FindGameObjectsWithTag("Sidebar");
+        //here's where we do side-entering management
+        if (Game_Mode_Helper.ActiveRuleSet.TurnedCrunch)
+        {
+            if (movesMade % sideMovesLimit == 0)
+            {
+                addSideColumns();
+                sideColumns[0].shakeStage = 0;
+                sideColumns[1].shakeStage = 0;
+                sidebars[0].BroadcastMessage("Reset");
+                sidebars[1].BroadcastMessage("Reset");
+                mc.StopFastTick();
+                return true;
+            }
+            else if (sideMovesLimit - (movesMade % sideMovesLimit) <= 8)
+            {
+                int splitsLeft = sideMovesLimit - (movesMade % sideMovesLimit);
+                switch (splitsLeft)
+                {
+                    case 1:
+                        sideColumns[0].isShaking = false;
+                        sideColumns[1].isShaking = false;
+                        sideColumns[0].ready = true;
+                        sideColumns[1].ready = true;
+                        sideColumns[0].shakeStage = 0;
+                        sideColumns[1].shakeStage = 0;
+                        break;
+                    case 2:
+                        sideColumns[0].shakeStage = 3;
+                        sideColumns[1].shakeStage = 3;
+                        sidebars[0].BroadcastMessage("IncrementLights");
+                        sidebars[1].BroadcastMessage("IncrementLights");
+                        break;
+                    case 3:
+                        sideColumns[0].shakeStage = 2;
+                        sideColumns[1].shakeStage = 2;
+                        sidebars[0].BroadcastMessage("IncrementLights");
+                        sidebars[1].BroadcastMessage("IncrementLights");
+                        break;
+                    case 4:
+                        sideColumns[0].isShaking = true;
+                        sideColumns[1].isShaking = true;
+                        sideColumns[0].shakeStage = 1;
+                        sideColumns[1].shakeStage = 1;
+                        break;
+                }
+
+                int turnToTick = Math.Min((int)(0.5 * Game_Mode_Helper.ActiveRuleSet.SplitsPerCrunch), 4);
+
+                if (splitsLeft <= turnToTick && !mc.IsFastTicking)
+                {
+                    mc.StartFastTick();
+                }
+
+                sidebars[0].BroadcastMessage("SetLightStage", 8 - splitsLeft);
+                sidebars[1].BroadcastMessage("SetLightStage", 8 - splitsLeft);
+
+                return false;
+            }
+        }
+        else if (Game_Mode_Helper.ActiveRuleSet.TimedCrunch)
+        {
+            //quick mode moves the sides in based off of time, not moves
+            if (quickMoveSides)
+            {
+                addSideColumns();
+                sideColumns[0].ready = false;
+                sideColumns[1].ready = false;
+                quickMoveSides = false;
+                StartCoroutine("QuickSideTimer");
+                mc.StopFastTick();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// checkForMatches() begins the recursive checkBoard check. The recursive sister method, scanner(), will check off some
+	/// of the pieces but not all, so checkboard calls scanner on every piece not yet checked in its main loop.any groups
+	/// are stored for easier deletion post-check and the deletion check calculates scores based off of group size and
+    /// current multiplier.
+    /// </summary>
+    /// <returns> bool - true if any combos were found, false if nothing's changed</returns>
+    public bool checkForMatches()
     {
         recalculateBoard();
         //reset the bool board for the current run
@@ -620,40 +617,53 @@ public class GameController : MonoBehaviour
             }
         }
 
+        return deleted;
+    }
 
-        //if the board changed, collapse & check it again
-        if (!boardWaiting)
+    /// <summary>
+    /// Does the combo/game over checking, as well as re-allowing the splitter to shoot if needed. Called after the sides and board were
+    /// checked and nothing was changed on the board
+    /// </summary>
+    public void endTurn()
+    {
+        checkForGameOver();
+
+        if (piecesDeletedThisSplit)
         {
-            if (deleted)
-            {
-                collapse();
-                multiRun = true;
-                piecesDeletedThisSplit = true;
-                StartCoroutine(boardWaiter());
-            }
-            else
-            {
-                multiRun = false;
+            multiRun = true;
+        }
+        else
+        {
+            multiRun = false;
 
-                if (!gameOver)
+            if (!gameOver)
+            {
+                if (!piecesDeletedThisSplit)
                 {
-                    if (!piecesDeletedThisSplit)
-                    {
-                        multiplier = 1;
-                    }
+                    multiplier = 1;
                 }
-                checkGameOver = true;
-                clearedLastTurn = piecesDeletedThisSplit;
             }
+                
+            clearedLastTurn = piecesDeletedThisSplit;
         }
 
         if (gameMode != GameMode.Holy && gameMode != GameMode.Wiz && !achievementHandler.isPiecesetUnlocked(PieceSets.Domino) && multiplier >= 9)
         {
             achievementHandler.UnlockPieceset(PieceSets.Domino);
         }
+
+        if (!gameOver)
+        {
+            splitter.setState(Splitter.SplitterStates.canShoot, true);
+            sidesChecked = false;
+        }
     }
 
-    //collapses the pieces where they belong
+    /// <summary>
+    /// Collapses the game board, which makes pieces on the left that have no piece left of them will fall as far left as they can
+    /// and any pieces on the right will fall to the right if they have no pieces to the right. Visually this will take a moment,
+    /// so call the board waiter after every call to this
+    /// </summary>
     public void collapse()
     {
         int tempCol;
@@ -691,7 +701,7 @@ public class GameController : MonoBehaviour
         {
             tempCol = 0;
             adjusted = false;
-            for (int c = 15; c > 8; c--)
+            for (int c = 15; c > 7; c--)
             {
                 if (grid[r, c] == null && !adjusted)
                 {
@@ -779,12 +789,6 @@ public class GameController : MonoBehaviour
     {
         movesText.text = "Splits made: " + movesMade;
 
-        //this is the point where any post-move action should be taken
-        if (gameMode != GameMode.Wit)
-        {
-            sidesChecked = false;
-        }
-
         if (splitsToUnlock > 0 && 
             movesMade % splitsToUnlock == 0 && 
             availableCount != 8 && 
@@ -822,8 +826,8 @@ public class GameController : MonoBehaviour
         {
             achievementHandler.UnlockPieceset(PieceSets.Retro);
         }
-
     }
+
     //call this when the score counter needs to be updated
     public void updateScore()
     {
@@ -849,21 +853,7 @@ public class GameController : MonoBehaviour
     {
         if (Game_Mode_Helper.ActiveRuleSet.UsesSides)
         {
-            //First check to see if this action would create a gameover
-            for (int r = 0; r <= 7; r++)
-            {
-                if ((colorGrid[r, 6] != PieceColor.Empty && grid[r, 6] != null) ||
-                   (colorGrid[r, 9] != PieceColor.Empty && grid[r, 9] != null))
-                {
-                    gameOverText.text = "Game Over";
-                    GameOverLayer.SetActive(true);
-                    gameOver = true;
-                    splitter.setState(Splitter.SplitterStates.canShoot, false);
-                    mc.StopMusic();
-                }
-            }
-
-            //next we iterate through the left side moving everything forward a column
+            // iterate through the left side moving everything forward a column
             for (int c = 6; c >= 0; c--)
             {
                 for (int r = 0; r <= 7; r++)
@@ -945,19 +935,14 @@ public class GameController : MonoBehaviour
 
             sideColumns[0].isShaking = false;
             sideColumns[1].isShaking = false;
-
-            //and finally check to get rid of new matches.
-            StartCoroutine(boardWaiter());
         }
     }
 
     //this is solely to let the pieces fall into place aesthetically
     public IEnumerator boardWaiter()
     {
-        boardWaiting = true;
         yield return new WaitForSeconds(0.3f);
-        forceCheck = true;
-        boardWaiting = false;
+        checkBoardLoop();
     }
 
     //this begins the countdown at the start of Quick mode
@@ -967,10 +952,8 @@ public class GameController : MonoBehaviour
         double startSeconds = Math.Min(timePerCrunch.TotalSeconds * 0.35f, 7f);
         lightIncrementTiming = new TimeSpan((long)(Math.Min(startSeconds / 7, 1f) * TimeSpan.TicksPerSecond));
         timeBeforeShaking = timePerCrunch.Subtract(new TimeSpan((long)(startSeconds * TimeSpan.TicksPerSecond)));
-        isCountingDown = true;
         yield return new WaitForSeconds(4f);
         splitter.setState(Splitter.SplitterStates.canShoot, true);
-        isCountingDown = false;
         mc.PlayMusic(gameMode);
         StartCoroutine("QuickSideTimer");
         yield return new WaitForSeconds(1f);

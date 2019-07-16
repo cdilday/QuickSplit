@@ -186,7 +186,7 @@ public class SpellHandler : MonoBehaviour
         spellLimit--;
         if (spellLimit == 0)
         {
-            gameController.checkBoard();
+            gameController.checkForMatches();
             splitter.setState(Splitter.SplitterStates.isActive, true);
             spellWorking = false;
         }

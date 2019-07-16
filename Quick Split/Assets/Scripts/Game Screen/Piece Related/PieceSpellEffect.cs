@@ -163,7 +163,7 @@ public class PieceSpellEffect : MonoBehaviour
             //do the board checks if the piece was the final one. This allows for bigger combos using the immediate multiplier
             if (lastPiece)
             {
-                gameController.checkBoard();
+                gameController.checkForMatches();
                 gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
                 lastPiece = false;
             }

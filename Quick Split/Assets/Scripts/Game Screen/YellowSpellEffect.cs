@@ -100,7 +100,7 @@ public class YellowSpellEffect : MonoBehaviour
                     //make it so the splitter can't continually fire yellow spells
                     gameController.splitter.setState(Splitter.SplitterStates.yellowReady, false);
                     //check the board to update group values
-                    gameController.checkBoard();
+                    gameController.checkForMatches();
                     yellowSpellEffects[0].GetComponent<Animator>().SetInteger("LeftStage", 2);
                     yellowSpellEffects[8].GetComponent<Animator>().SetInteger("RightStage", 2);
                     startTime = Time.time;
