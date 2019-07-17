@@ -725,6 +725,35 @@ public class GameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Begins/continues the Board check -> collapse -> wait -> Board check loop without checking for sides, game overs, or affecting the combo
+    /// </summary>
+    public void lazyBoardLoop()
+    {
+        Debug.Log("LazyBoardLoop");
+        bool deleted = checkForMatches();
+
+        if (deleted)
+        {
+            collapse();
+            StartCoroutine(lazyBoardWaiter());
+        }
+        else
+        {
+            splitter.setState(Splitter.SplitterStates.canShoot, true);
+        }
+    }
+
+    /// <summary>
+    /// to continue the checkboard-> collapse -> checkboard loop without checking sides, game overs, or affecting piece combos
+    /// </summary>
+    public IEnumerator lazyBoardWaiter()
+    {
+        Debug.Log("LazyBoardWaiter");
+        yield return new WaitForSeconds(0.3f);
+        lazyBoardLoop();
+    }
+
     //scanner goes through and checks every adjacent piece recursively, then returns the amount of pieces in a cluster.
     public int scanner(int x, int y, PieceColor color, int adj)
     {

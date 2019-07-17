@@ -163,7 +163,7 @@ public class PieceSpellEffect : MonoBehaviour
             //do the board checks if the piece was the final one. This allows for bigger combos using the immediate multiplier
             if (lastPiece)
             {
-                gameController.checkForMatches();
+                gameController.lazyBoardLoop();
                 gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
                 lastPiece = false;
             }
@@ -207,9 +207,7 @@ public class PieceSpellEffect : MonoBehaviour
             if (lastPiece)
             {
                 StartCoroutine(GameObject.FindGameObjectWithTag("Achievement Handler").GetComponent<ScoreAndAchievementHandler>().PurpleSplitterChecker(gameController.Get_Danger_Pieces()));
-                gameController.collapse();
-                StartCoroutine(gameController.boardWaiter());
-                gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
+                StartCoroutine(gameController.lazyBoardWaiter());
                 spellHandler.spellWorking = false;
             }
             //if the piece was deleted, this effect is standalone and therefore uselees

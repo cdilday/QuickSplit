@@ -186,7 +186,8 @@ public class SpellHandler : MonoBehaviour
         spellLimit--;
         if (spellLimit == 0)
         {
-            gameController.checkForMatches();
+            // deleting pieces from the top of each row should never create combos
+            //gameController.checkForMatches();
             splitter.setState(Splitter.SplitterStates.isActive, true);
             spellWorking = false;
         }
@@ -444,7 +445,7 @@ public class SpellHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         gameController.collapse();
-        StartCoroutine(gameController.boardWaiter());
+        StartCoroutine(gameController.lazyBoardWaiter());
         gameController.splitter.setState(Splitter.SplitterStates.isActive, true);
         spellWorking = false;
     }
@@ -725,7 +726,7 @@ public class SpellHandler : MonoBehaviour
 
         //check the board
         gameController.recalculateBoard();
-        StartCoroutine(gameController.boardWaiter());
+        StartCoroutine(gameController.lazyBoardWaiter());
         splitter.setState(Splitter.SplitterStates.isActive, true);
         spellWorking = false;
 
