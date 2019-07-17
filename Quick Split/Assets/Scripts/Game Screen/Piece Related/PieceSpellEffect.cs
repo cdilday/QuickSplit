@@ -266,7 +266,9 @@ public class PieceSpellEffect : MonoBehaviour
                         numDeleted++;
                         Destroy(piece.gameObject);
                     }
+                    spellHandler.spellWorking = false;
                     gameController.collapse();
+                    StartCoroutine(gameController.lazyBoardWaiter());
                     spellStage = 4;
 
                     if (numDeleted >= 10)

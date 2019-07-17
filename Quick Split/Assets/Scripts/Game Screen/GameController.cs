@@ -312,6 +312,14 @@ public class GameController : MonoBehaviour
                 {
                     if (colorGrid[r, c] != PieceColor.Empty && grid[r, c] != null)
                     {
+                        if (Game_Mode_Helper.ActiveRuleSet.HasSpells && spellHandler.spellWorking)
+                        {
+                            //there's a cyan bomb and the game should've ended. Wait it out, it will be re-checked after the bombs clear
+                            Debug.Log("cyan bomb on field while a game over should've occurred, deactivating splitter until it's cleared");
+                            splitter.setState(Splitter.SplitterStates.canShoot, false);
+                            return;
+                        }
+
                         startGameOver();
                         return;
                     }
@@ -726,11 +734,10 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// Begins/continues the Board check -> collapse -> wait -> Board check loop without checking for sides, game overs, or affecting the combo
+    /// Begins/continues the Board check -> collapse -> wait -> Board check loop without checking for sides, or affecting the combo
     /// </summary>
     public void lazyBoardLoop()
     {
-        Debug.Log("LazyBoardLoop");
         bool deleted = checkForMatches();
 
         if (deleted)
@@ -740,7 +747,12 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            splitter.setState(Splitter.SplitterStates.canShoot, true);
+            checkForGameOver();
+            if (!gameOver)
+            {
+                splitter.setState(Splitter.SplitterStates.isActive, true);
+                splitter.setState(Splitter.SplitterStates.canShoot, true);
+            }
         }
     }
 
@@ -749,7 +761,6 @@ public class GameController : MonoBehaviour
     /// </summary>
     public IEnumerator lazyBoardWaiter()
     {
-        Debug.Log("LazyBoardWaiter");
         yield return new WaitForSeconds(0.3f);
         lazyBoardLoop();
     }
@@ -760,10 +771,12 @@ public class GameController : MonoBehaviour
         //mark current as checked
         checkGrid[x, y] = true;
         //check right of piece
-        if ((x + 1 < 8) && (checkGrid[x + 1, y] == false && grid[x + 1, y] != null && grid[x + 1, y].GetComponent<Piece>().pieceColor == color))
+        if ((x + 1 < 8) && 
+            (checkGrid[x + 1, y] == false && grid[x + 1, y] != null && grid[x + 1, y].GetComponent<Piece>().pieceColor == color))
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x + 1, y].GetComponent<Piece>().locked)
+            if (grid[x + 1, y].GetComponent<Piece>().locked &&
+                grid[x + 1, y].GetComponent<Piece>().isBomb == false)
             {
                 adj++;
                 //add to group cluster
@@ -775,7 +788,8 @@ public class GameController : MonoBehaviour
         if (y + 1 < 16 && checkGrid[x, y + 1] == false && grid[x, y + 1] != null && grid[x, y + 1].GetComponent<Piece>().pieceColor == color)
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x, y + 1].GetComponent<Piece>().locked)
+            if (grid[x, y + 1].GetComponent<Piece>().locked &&
+                grid[x, y + 1].GetComponent<Piece>().isBomb == false)
             {
                 adj++;
                 //add to group cluster
@@ -787,7 +801,8 @@ public class GameController : MonoBehaviour
         if (x - 1 >= 0 && checkGrid[x - 1, y] == false && grid[x - 1, y] != null && grid[x - 1, y].GetComponent<Piece>().pieceColor == color)
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x - 1, y].GetComponent<Piece>().locked)
+            if (grid[x - 1, y].GetComponent<Piece>().locked &&
+                grid[x - 1, y].GetComponent<Piece>().isBomb == false)
             {
                 adj++;
                 //add to group cluster
@@ -799,7 +814,8 @@ public class GameController : MonoBehaviour
         if (y - 1 >= 0 && checkGrid[x, y - 1] == false && grid[x, y - 1] != null && grid[x, y - 1].GetComponent<Piece>().pieceColor == color)
         {
             //check to make sure the piece actually has a grid position and isn't in the splitter
-            if (grid[x, y - 1].GetComponent<Piece>().locked)
+            if (grid[x, y - 1].GetComponent<Piece>().locked &&
+                grid[x, y - 1].GetComponent<Piece>().isBomb == false)
             {
                 adj++;
                 //add to group cluster

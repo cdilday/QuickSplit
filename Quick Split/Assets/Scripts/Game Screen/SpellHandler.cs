@@ -600,6 +600,7 @@ public class SpellHandler : MonoBehaviour
             splitter.setState(Splitter.SplitterStates.isActive, true);
         }
     }
+
     //cyan spell: the splitter pieces turn to "bombs" which explode and destroy any pieces that come into contact with the explosion when launched
     public void Cyanspell()
     {
