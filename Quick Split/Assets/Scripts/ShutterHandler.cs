@@ -60,7 +60,7 @@ public class ShutterHandler : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void FixedUpdate()
+    private void Update()
     {
         //check if it's currently doing something
         if (isOpeningH || isOpeningV || isClosingH || isClosingV)
@@ -76,7 +76,7 @@ public class ShutterHandler : MonoBehaviour
         if (inMotion)
         {
             //let's start with the case that the time has passed
-            if (Time.time >= StartTime + MoveDuration)
+            if (Time.realtimeSinceStartup >= StartTime + MoveDuration)
             {
                 isOpeningV = false;
                 isOpeningH = false;
@@ -91,19 +91,19 @@ public class ShutterHandler : MonoBehaviour
             {
                 //the shutter should be moving, time for some calculations per shutter
                 //ULShutter
-                float distCovered = (Time.time - StartTime) * ULSpeed;
+                float distCovered = (Time.realtimeSinceStartup - StartTime) * ULSpeed;
                 float fracJourney = distCovered / (ULSpeed * MoveDuration);
                 ULShutter.rectTransform.localPosition = Vector3.Lerp(ULStart, ULTarget, fracJourney);
                 //URShutter
-                distCovered = (Time.time - StartTime) * URSpeed;
+                distCovered = (Time.realtimeSinceStartup - StartTime) * URSpeed;
                 fracJourney = distCovered / (URSpeed * MoveDuration);
                 URShutter.rectTransform.localPosition = Vector3.Lerp(URStart, URTarget, fracJourney);
                 //DRShutter
-                distCovered = (Time.time - StartTime) * DRSpeed;
+                distCovered = (Time.realtimeSinceStartup - StartTime) * DRSpeed;
                 fracJourney = distCovered / (DRSpeed * MoveDuration);
                 DRShutter.rectTransform.localPosition = Vector3.Lerp(DRStart, DRTarget, fracJourney);
                 //DLShutter
-                distCovered = (Time.time - StartTime) * DLSpeed;
+                distCovered = (Time.realtimeSinceStartup - StartTime) * DLSpeed;
                 fracJourney = distCovered / (DLSpeed * MoveDuration);
                 DLShutter.rectTransform.localPosition = Vector3.Lerp(DLStart, DLTarget, fracJourney);
             }
@@ -116,18 +116,7 @@ public class ShutterHandler : MonoBehaviour
     /// </summary>
     public void BeginVerticalClose()
     {
-        if (inMotion)
-        {
-            Debug.Log("Shutters are busy, redo the timing so this is impossible");
-            return;
-        }
         isOpeningV = true;
-
-        //begin by setting the starting position of all four shutters
-        ULShutter.rectTransform.localPosition = ULOpenUpPos;
-        URShutter.rectTransform.localPosition = UROpenUpPos;
-        DLShutter.rectTransform.localPosition = DLOpenDownPos;
-        DRShutter.rectTransform.localPosition = DROpenDownPos;
 
         //load the start positions for movement calculations later
         ULStart = ULShutter.rectTransform.localPosition;
@@ -148,8 +137,7 @@ public class ShutterHandler : MonoBehaviour
         DLSpeed = Mathf.Abs(Vector3.Distance(DLStart, DLTarget) / MoveDuration);
 
         //begin the timer
-        StartTime = Time.time;
-
+        StartTime = Time.realtimeSinceStartup;
         ClosingSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         ClosingSFX.Play();
     }
@@ -159,18 +147,7 @@ public class ShutterHandler : MonoBehaviour
     /// </summary>
     public void BeginHorizontalClose()
     {
-        if (inMotion)
-        {
-            Debug.Log("Shutters are busy, redo the timing so this is impossible");
-            return;
-        }
         isOpeningH = true;
-
-        //begin by setting the starting position of all four shutters
-        ULShutter.rectTransform.localPosition = ULOpenLeftPos;
-        URShutter.rectTransform.localPosition = UROpenRightPos;
-        DLShutter.rectTransform.localPosition = DLOpenLeftPos;
-        DRShutter.rectTransform.localPosition = DROpenRightPos;
 
         //load the start positions for movement calculations later
         ULStart = ULShutter.rectTransform.localPosition;
@@ -191,7 +168,7 @@ public class ShutterHandler : MonoBehaviour
         DLSpeed = Mathf.Abs(Vector3.Distance(DLStart, DLTarget) / MoveDuration);
 
         //begin the timer
-        StartTime = Time.time;
+        StartTime = Time.realtimeSinceStartup;
 
         ClosingSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         ClosingSFX.Play();
@@ -204,7 +181,7 @@ public class ShutterHandler : MonoBehaviour
     {
         if (inMotion)
         {
-            Debug.Log("Shutters are busy, redo the timing so this is impossible");
+            Debug.Log("Shutters are busy closing, continuing for a scene transition");
             return;
         }
         isClosingV = true;
@@ -234,7 +211,7 @@ public class ShutterHandler : MonoBehaviour
         DLSpeed = Mathf.Abs(Vector3.Distance(DLStart, DLTarget) / MoveDuration);
 
         //begin the timer
-        StartTime = Time.time;
+        StartTime = Time.realtimeSinceStartup;
         OpeningSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         OpeningSFX.Play();
 
@@ -277,7 +254,7 @@ public class ShutterHandler : MonoBehaviour
         DLSpeed = Mathf.Abs(Vector3.Distance(DLStart, DLTarget) / MoveDuration);
 
         //begin the timer
-        StartTime = Time.time;
+        StartTime = Time.realtimeSinceStartup;
 
         OpeningSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
         OpeningSFX.Play();

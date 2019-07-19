@@ -1139,7 +1139,7 @@ public class GameController : MonoBehaviour
         //stop the music
         mc.StopMusic();
         //load the main menu
-        StartCoroutine("TitleTransition");
+        StartCoroutine(TitleTransition());
     }
 
     //restarts the game scene
