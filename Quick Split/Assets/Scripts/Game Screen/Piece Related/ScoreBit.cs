@@ -57,7 +57,7 @@ public class ScoreBit : MonoBehaviour
                 if (prevMagnitude < Vector2.Distance(transform.position, target))
                 {
                     GameObject.Find("Score Text").BroadcastMessage("beginPulse");
-                    End_Journey();
+                    endJourney();
                 }
             }
             else
@@ -81,7 +81,7 @@ public class ScoreBit : MonoBehaviour
         if (other.gameObject.tag == "Bit Receptor")
         {
             other.BroadcastMessage("beginPulse");
-            End_Journey();
+            endJourney();
         }
     }
 
@@ -97,7 +97,7 @@ public class ScoreBit : MonoBehaviour
     }
 
     //call once it begins to handle motion of the bit and spell activation 
-    public void Begin_Journey()
+    public void beginJourney()
     {
         //reactivate this object
         gameObject.SetActive(true);
@@ -129,7 +129,7 @@ public class ScoreBit : MonoBehaviour
     }
 
     //handles what should happen when the bit is finished
-    public void End_Journey()
+    public void endJourney()
     {
         if (value < 1)
         {
@@ -146,7 +146,7 @@ public class ScoreBit : MonoBehaviour
             }
         }
 
-        BitPool.return_to_pool(gameObject);
+        BitPool.returnToPool(gameObject);
         gameObject.SetActive(false);
     }
 

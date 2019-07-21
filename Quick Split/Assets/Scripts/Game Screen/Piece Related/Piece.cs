@@ -337,7 +337,7 @@ public class Piece : MonoBehaviour
 
         gameController.Score_Text_Canvas.GetComponent<ScoreTextLayer>().SpawnScoreText(spawnPoint, pieceColor, scoreValue);
 
-        BitPool.spawn_bits(scoreValue, transform.position, pieceColor);
+        BitPool.spawnBits(scoreValue, transform.position, pieceColor);
 
     }
 

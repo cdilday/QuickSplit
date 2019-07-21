@@ -34,7 +34,7 @@ public class BitPool : MonoBehaviour
     }
 
     //this spawns the correct number of bits by repurposing bits not active in the pool
-    public void spawn_bits(int score, Vector3 spawnLoc, PieceColor color)
+    public void spawnBits(int score, Vector3 spawnLoc, PieceColor color)
     {
         int indivalue = score / scoreBitMax;
         int leftover = score % scoreBitMax;
@@ -61,13 +61,13 @@ public class BitPool : MonoBehaviour
 
                 activeBits.Add(newbit);
 
-                newbit.GetComponent<ScoreBit>().Begin_Journey();
+                newbit.GetComponent<ScoreBit>().beginJourney();
             }
         }
     }
 
     //loads an old bit back into the pool of ready to use bits, and repositions it instantly offscreen
-    public void return_to_pool(GameObject scoreBit)
+    public void returnToPool(GameObject scoreBit)
     {
         activeBits.Remove(scoreBit);
         availableBits.Add(scoreBit);
@@ -81,8 +81,8 @@ public class BitPool : MonoBehaviour
     {
         while (activeBits.Count > 0)
         {
-            activeBits[0].GetComponent<ScoreBit>().End_Journey();
-            return_to_pool(activeBits[0]);
+            activeBits[0].GetComponent<ScoreBit>().endJourney();
+            returnToPool(activeBits[0]);
         }
     }
 
