@@ -10,6 +10,7 @@ public class BitPool : MonoBehaviour
 
     public GameController gameController;
     private List<GameObject> availableBits;
+    private List<GameObject> activeBits;
 
     private void Start()
     {
@@ -28,6 +29,8 @@ public class BitPool : MonoBehaviour
             newbit.transform.SetParent(transform);
             newbit.name = ("Score Bit " + i);
         }
+
+        activeBits = new List<GameObject>();
     }
 
     //this spawns the correct number of bits by repurposing bits not active in the pool
@@ -55,6 +58,9 @@ public class BitPool : MonoBehaviour
                     leftover--;
                     newbit.GetComponent<ScoreBit>().value++;
                 }
+
+                activeBits.Add(newbit);
+
                 newbit.GetComponent<ScoreBit>().Begin_Journey();
             }
         }
@@ -63,8 +69,21 @@ public class BitPool : MonoBehaviour
     //loads an old bit back into the pool of ready to use bits, and repositions it instantly offscreen
     public void return_to_pool(GameObject scoreBit)
     {
+        activeBits.Remove(scoreBit);
         availableBits.Add(scoreBit);
         scoreBit.transform.position = transform.position;
+    }
+
+    /// <summary>
+    /// Puts all active bits in the score, called when a game over occurs and there might've been a combo recently
+    /// </summary>
+    public void cashInAllBits ()
+    {
+        while (activeBits.Count > 0)
+        {
+            activeBits[0].GetComponent<ScoreBit>().End_Journey();
+            return_to_pool(activeBits[0]);
+        }
     }
 
 }

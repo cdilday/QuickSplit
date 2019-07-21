@@ -129,25 +129,23 @@ public class ScoreBit : MonoBehaviour
     }
 
     //handles what should happen when the bit is finished
-    private void End_Journey()
+    public void End_Journey()
     {
         if (value < 1)
         {
             value = 1;
         }
 
-        if (!gameController.gameOver)
+        gameController.score += value;
+        gameController.updateScore();
+        if (spellActive && !gameController.gameOver)
         {
-            gameController.score += value;
-            gameController.updateScore();
-            if (spellActive)
+            for (int i = 0; i < value; i++)
             {
-                for (int i = 0; i < value; i++)
-                {
-                    spellHandler.addBit(bitColor);
-                }
+                spellHandler.addBit(bitColor);
             }
         }
+
         BitPool.return_to_pool(gameObject);
         gameObject.SetActive(false);
     }

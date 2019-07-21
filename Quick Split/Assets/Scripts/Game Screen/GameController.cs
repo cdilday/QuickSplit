@@ -42,11 +42,6 @@ public class GameController : MonoBehaviour
     public Text gameOverText;
     //text that gives a tip at gameover
     public Text tipText;
-    
-    /// <summary>
-    /// List of tips, set in the editor
-    /// </summary>
-    public string[] tips;
 
     //numbers and text for statistics the player should know
     public int movesMade;
@@ -343,13 +338,14 @@ public class GameController : MonoBehaviour
         GameOverLayer.SetActive(true);
         mc.StopMusic();
 
-        // TODO: Cleanup score bits still lingering on the board, they should be counted
+        BitPool bitPool = GameObject.Find("Bit Pool").GetComponent<BitPool>();
+        bitPool.cashInAllBits();
 
         achievementHandler.AddScore(Game_Mode_Helper.ActiveRuleSet, score);
         GameObject goBlackScreen = GameObject.Find("GO Black Screen");
         goBlackScreen.SetActive(true);
         goBlackScreen.GetComponent<Fader>().FadeIn();
-        tipText.text = tips[UnityEngine.Random.Range(0, tips.Count())];
+        tipText.text = Constants.Hints[UnityEngine.Random.Range(0, Constants.Hints.Count())];
         mc.PlayMusic("Gameover");
 
         splitter.setState(Splitter.SplitterStates.canShoot, false);
@@ -876,7 +872,7 @@ public class GameController : MonoBehaviour
     //call this when the score counter needs to be updated
     public void updateScore()
     {
-        if (!gameOver && !isQuitting)
+        if (!isQuitting)
         {
             scoreText.text = "Score:\n" + score;
         }

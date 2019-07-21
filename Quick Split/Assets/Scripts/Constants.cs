@@ -54,6 +54,23 @@ public static class Constants
         "", // Symbol = 8, unlocked by default for colorblind players
         "Sleek Splits" // Techno = 9,
     };
+
+    public static readonly string[] Hints =
+    {
+        "Having trouble telling pieces apart? Try a different set in the options menu!",
+        "Spells take longer to charge the more you use them. Use them wisely",
+        "The best time to earn points is at the start. Use the pieces on the sides to your advantage!",
+        "Wit Split is all about piece management. Keep track of your next few pieces and take your time!",
+        "Side pieces pulse after they shake. Pulsing means they'll enter the board only after your next move.",
+        "Holy mode requires really smart use of your spells. Be careful.",
+        "If you split-it into the void long enough, it splits you.",
+        "The lights on the side of the grid will light up as the side pieces get closer to entering.",
+        "Pieces cleared as a result of spells do not charge spells, but still add to your score.",
+        "Cyan Spell Bombs take a moment to explode. Use that to pile on spillter pieces you don't want",
+        "High Scores are only recorded on Game Overs. Splitters never Quit!",
+        "Making combos over successive splits will save your multiplier. Use it to your advantage!",
+        "You can turn the Splitter guides off in the options menu if you don't need it",
+    };
 }
 
 /// <summary>
