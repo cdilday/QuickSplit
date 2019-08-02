@@ -18,6 +18,7 @@ public static class Constants
     public static readonly string SplitterTypeOption = "Splitter Type";
     public static readonly string GuideOption = "Guide";
     public static readonly string PlayedBeforeLookup = "Played Before";
+    public static readonly string CustomModeMusic = "Custom Music";
 
     public static readonly string Splitter = "Splitter";
     public static readonly string PieceSet = "PieceSet";
@@ -70,6 +71,7 @@ public static class Constants
         "High Scores are only recorded on Game Overs. Splitters never Quit!",
         "Making combos over successive splits will save your multiplier. Use it to your advantage!",
         "You can turn the Splitter guides off in the options menu if you don't need it",
+        "The music that plays in Custom Split can be set in the options menu. Pick your favorite!"
     };
 }
 

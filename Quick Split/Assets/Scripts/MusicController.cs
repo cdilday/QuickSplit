@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 /// This script is attatched to the Music controller and handles the current song and volume that is being played
 /// </summary>
 public class MusicController : MonoBehaviour
-{ 
+{
     public float musicVolume;
     public float SFXVolume;
 
@@ -88,9 +88,8 @@ public class MusicController : MonoBehaviour
                     FastTickSource.clip = HolyTicks[1];
                     break;
                 case GameMode.Custom:
-                    MusicSource.clip = QuickMusic;
-                    SlowTickSource.clip = QuickTicks[0];
-                    FastTickSource.clip = QuickTicks[1];
+                    int gameNum = PlayerPrefs.GetInt(Constants.CustomModeMusic, 0);
+                    PlayMusic((GameMode)gameNum);
                     break;
                 default:
                     break;
@@ -228,9 +227,8 @@ public class MusicController : MonoBehaviour
                 FastTickSource.clip = HolyTicks[1];
                 break;
             case GameMode.Custom:
-                MusicSource.clip = QuickMusic;
-                SlowTickSource.clip = QuickTicks[0];
-                FastTickSource.clip = QuickTicks[1];
+                int gameNum = PlayerPrefs.GetInt(Constants.CustomModeMusic, 0);
+                PlayMusic((GameMode)gameNum);
                 break;
             default:
                 break;
@@ -285,5 +283,4 @@ public class MusicController : MonoBehaviour
         FastTickSource.Stop();
         isFastTicking = false;
     }
-
 }

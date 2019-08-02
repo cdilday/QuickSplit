@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\Title Screen\AchievementTally.cs" />
     <Compile Include="Assets\Scripts\Title Screen\CircleRotater.cs" />
     <Compile Include="Assets\Scripts\Title Screen\ControlSelector.cs" />
+    <Compile Include="Assets\Scripts\Title Screen\CustomModeMusicSelector.cs" />
     <Compile Include="Assets\Scripts\Title Screen\GuideToggler.cs" />
     <Compile Include="Assets\Scripts\Title Screen\HighScoreDisplayer.cs" />
     <Compile Include="Assets\Scripts\Title Screen\HighScorePopulator.cs" />
