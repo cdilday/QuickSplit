@@ -235,18 +235,10 @@ public class GameController : MonoBehaviour
 
         if (activeRuleSet.HasSpells)
         {
-            //TODO: Make unlocking pieces and piece order generic; might add option to customize unlock order but this is messy as a result of bad old code.
-            int unlockedPieces = activeRuleSet.UnlockedPieces;
-
-            // obviously need more than one
-            spellHandler.SpellReady[(int)PieceColor.Red] = true;
-            spellHandler.SpellReady[(int)PieceColor.Orange] = unlockedPieces >= 6;
-            spellHandler.SpellReady[(int)PieceColor.Yellow] = unlockedPieces >= 4;
-            spellHandler.SpellReady[(int)PieceColor.Green] = unlockedPieces >= 3;
-            spellHandler.SpellReady[(int)PieceColor.Blue] = unlockedPieces >= 2;
-            spellHandler.SpellReady[(int)PieceColor.Purple] = unlockedPieces >= 5;
-            spellHandler.SpellReady[(int)PieceColor.Cyan] = unlockedPieces >= 7;
-            spellHandler.SpellReady[(int)PieceColor.White] = unlockedPieces >= 8;
+            for (int i = 0; i < 8; i++)
+            {
+                spellHandler.SpellReady[i] = isPieceColorUnlocked((PieceColor)i);
+            }
         }
         else
         {
@@ -290,6 +282,32 @@ public class GameController : MonoBehaviour
         else
         {
             mc.StopSlowTick();
+        }
+    }
+
+    /// <summary>
+    /// Checks whether the given color of bit is currently unlocked and usable in the game
+    /// </summary>
+    public bool isPieceColorUnlocked(PieceColor color)
+    {
+        switch(color)
+        {
+            case PieceColor.Red:
+            case PieceColor.Green:
+            case PieceColor.Blue:
+                return true;
+            case PieceColor.Yellow:
+                return availableCount >= 4;
+            case PieceColor.Purple:
+                return availableCount >= 5;
+            case PieceColor.Orange:
+                return availableCount >= 6;
+            case PieceColor.Cyan:
+                return availableCount >= 7;
+            case PieceColor.White:
+                return availableCount >= 8;
+            default:
+                return true;
         }
     }
 

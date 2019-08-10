@@ -819,7 +819,8 @@ public class SpellHandler : MonoBehaviour
     //this is for score bits adding to the spells
     public void addBit(PieceColor colorOfBit)
     {
-        if (spellActive || colorOfBit == PieceColor.Empty)
+        if (spellActive || 
+            colorOfBit == PieceColor.Empty)
         {
             return;
         }

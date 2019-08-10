@@ -16,10 +16,7 @@ public class ScoreBit : MonoBehaviour
     public int value;
     private BitPool BitPool;
     private GameController gameController;
-    private bool spellActive = false;
     private SpellHandler spellHandler;
-
-    public bool charges;
 
     public Sprite[] sprites = new Sprite[8];
 
@@ -39,6 +36,13 @@ public class ScoreBit : MonoBehaviour
         PieceSplitterAssetHelper spriteHolder = GameObject.Find("Piece Sprite Holder").GetComponent<PieceSplitterAssetHelper>();
         sprites = spriteHolder.GetSprites();
         gameObject.SetActive(false);
+
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+
+        if (Game_Mode_Helper.ActiveRuleSet.HasSpells)
+        {
+            spellHandler = GameObject.Find("Spell Handler").GetComponent<SpellHandler>();
+        }
     }
 
     // Update is called once per frame
@@ -105,27 +109,6 @@ public class ScoreBit : MonoBehaviour
         moveVector = new Vector2(Random.Range(-1f, 1f), (Random.Range(-1f, 1f)));
         speed = 10f;
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
-        if (gameControllerObject != null)
-        {
-            gameController = gameControllerObject.GetComponent<GameController>();
-            if (gameController.gameMode == GameMode.Holy || gameController.gameMode == GameMode.Wiz)
-            {
-                spellActive = true;
-                spellHandler = GameObject.Find("Spell Handler").GetComponent<SpellHandler>();
-                if (spellHandler.spellActive)
-                {
-                    charges = false;
-                }
-                else
-                {
-                    charges = true;
-                }
-            }
-            else
-            {
-                spellActive = false;
-            }
-        }
     }
 
     //handles what should happen when the bit is finished
@@ -138,7 +121,7 @@ public class ScoreBit : MonoBehaviour
 
         gameController.score += value;
         gameController.updateScore();
-        if (spellActive && !gameController.gameOver)
+        if (Game_Mode_Helper.ActiveRuleSet.HasSpells && !gameController.gameOver)
         {
             for (int i = 0; i < value; i++)
             {
