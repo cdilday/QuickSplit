@@ -92,6 +92,10 @@ public class GameController : MonoBehaviour
 
     public AudioSource PauseSFX;
     public AudioSource UnpauseSFX;
+    public AudioSource ClearSFX;
+
+    // this is for easily adjusting pitch with a hard constant;
+    private float scale = Mathf.Pow(2f, 1.0f / 12f);
 
     private void Awake()
     {
@@ -639,6 +643,12 @@ public class GameController : MonoBehaviour
             }
         }
 
+        if (deleted)
+        {
+            ClearSFX.volume = PlayerPrefs.GetFloat(Constants.SfxVolumeLookup, 1);
+            ClearSFX.pitch = (float) Math.Pow((double)scale, (double)Math.Min(multiplier, 12));
+            ClearSFX.Play();
+        }
         return deleted;
     }
 
